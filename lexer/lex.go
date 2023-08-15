@@ -1,6 +1,7 @@
 package lexer
 
 import (
+	"fmt"
 	"golang/utils"
 )
 
@@ -130,4 +131,20 @@ func Lex(source string) *[]Token {
 	}
 
 	return &l.tokens
+}
+
+func Filter(tokens *[]Token) {
+	filter := func(item Token) bool {
+		return item.Type != Space && item.Type != NewLine
+	}
+	*tokens = utils.Filter(*tokens, filter)
+}
+
+func Stringify(tokens *[]Token) string {
+	str := "[]Token{\n"
+	for _, token := range *tokens {
+		str += "    " + fmt.Sprintln(token)
+	}
+
+	return str + "}"
 }

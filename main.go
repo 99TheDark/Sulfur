@@ -6,14 +6,10 @@ import (
 )
 
 func main() {
-	code := "1 abc Eeo(n)++ {  }"
+	code := "1 abc Eeo(n)++ {  [}]"
+
 	tokens := lexer.Lex(code)
+	lexer.Filter(tokens)
 
-	str := "[]Token{\n"
-	for _, token := range *tokens {
-		str += "    " + fmt.Sprintln(token)
-	}
-	str += "}"
-
-	fmt.Println(str)
+	fmt.Println(lexer.Stringify(tokens))
 }
