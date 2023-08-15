@@ -63,9 +63,6 @@ func (l *lexer) end() *Token {
 
 	l.mode = None
 
-	if !l.eof {
-		l.eat()
-	}
 	return token
 }
 
@@ -86,10 +83,10 @@ func (l *lexer) singleToken(tokentype TokenType) *Token {
 func (l *lexer) splitAdd(token *Token, endings ...TokenType) {
 	if utils.Contains(endings, l.mode) {
 		l.add(l.end())
-	} else {
-		l.eat()
 	}
 	l.add(token)
+
+	l.eat()
 }
 
 func Lex(source string) *[]Token {
