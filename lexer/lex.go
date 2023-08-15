@@ -1,6 +1,8 @@
 package lexer
 
-import "golang/utils"
+import (
+	"golang/utils"
+)
 
 type lexer struct {
 	source []rune
@@ -84,6 +86,8 @@ func (l *lexer) singleToken(tokentype TokenType) *Token {
 func (l *lexer) splitAdd(token *Token, endings ...TokenType) {
 	if utils.Contains(endings, l.mode) {
 		l.add(l.end())
+	} else {
+		l.eat()
 	}
 	l.add(token)
 }
@@ -101,36 +105,27 @@ func Lex(source string) *[]Token {
 	for !l.eof {
 		switch l.at() {
 		case ' ':
-			l.splitAdd(
-				l.singleToken(Space),
-				Identifier,
-			)
-			break
+			l.splitAdd(l.singleToken(Space), Identifier)
 		case '\n':
-			l.splitAdd(
-				l.singleToken(NewLine),
-				Identifier,
-			)
-			break
+			l.splitAdd(l.singleToken(NewLine), Identifier)
 		case '(':
-			l.splitAdd(
-				l.singleToken(LeftParen),
-				Identifier,
-			)
-			break
+			l.splitAdd(l.singleToken(LeftParen), Identifier)
 		case ')':
-			l.splitAdd(
-				l.singleToken(RightParen),
-				Identifier,
-			)
-			break
+			l.splitAdd(l.singleToken(RightParen), Identifier)
+		case '[':
+			l.splitAdd(l.singleToken(LeftBracket), Identifier)
+		case ']':
+			l.splitAdd(l.singleToken(RightBracket), Identifier)
+		case '{':
+			l.splitAdd(l.singleToken(LeftBrace), Identifier)
+		case '}':
+			l.splitAdd(l.singleToken(RightBrace), Identifier)
 		default:
 			if l.mode == None {
 				l.start(Identifier)
 			} else {
 				l.eat()
 			}
-			break
 		}
 	}
 	if l.mode != None {

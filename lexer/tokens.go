@@ -20,6 +20,10 @@ const (
 	NewLine
 	LeftParen
 	RightParen
+	LeftBracket
+	RightBracket
+	LeftBrace
+	RightBrace
 	EOF
 )
 
@@ -47,6 +51,14 @@ func (tt TokenType) String() string {
 		return "LeftParen"
 	case RightParen:
 		return "RightParen"
+	case LeftBracket:
+		return "LeftBracket"
+	case RightBracket:
+		return "RightBracket"
+	case LeftBrace:
+		return "LeftBrace"
+	case RightBrace:
+		return "RightBrace"
 	case EOF:
 		return "EOF"
 	default:

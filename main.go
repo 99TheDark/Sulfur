@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	code := "1 abc Eeo(n)++"
+	code := "1 abc Eeo(n)++ {  }"
 	tokens := lexer.Lex(code)
 
 	str := "[]Token{\n"
