@@ -46,6 +46,8 @@ func (tt TokenType) String() string {
 	switch tt {
 	case Identifier:
 		return "Identifier"
+	case Operator:
+		return "Operator"
 	case Space:
 		return "Space"
 	case NewLine:

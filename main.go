@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	code := "1 abc Eeo(n)++ {  [}]\nab +\n-%"
+	code := "int x = 5 + 3 - 2 * (1 + 4/3)"
 
 	tokens := lexer.Lex(code)
 	lexer.Filter(tokens)
