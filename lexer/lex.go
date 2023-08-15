@@ -131,6 +131,7 @@ func Lex(source string) *[]Token {
 	if l.mode != None {
 		l.add(l.end())
 	}
+	l.add(CreateToken(EOF, "EOF", l.loc.Row, l.loc.Col, l.loc.Idx))
 
 	return &l.tokens
 }

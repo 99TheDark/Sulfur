@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"golang/lexer"
+	"golang/parser"
 )
 
 func main() {
@@ -11,5 +12,8 @@ func main() {
 	tokens := lexer.Lex(code)
 	lexer.Filter(tokens)
 
-	fmt.Println(lexer.Stringify(tokens))
+	// fmt.Println(lexer.Stringify(tokens))
+	ast := parser.Parse(tokens)
+
+	fmt.Println(parser.Stringify(ast))
 }
