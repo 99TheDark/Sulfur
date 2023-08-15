@@ -16,6 +16,7 @@ type Token struct {
 const (
 	None TokenType = iota
 	Identifier
+	Operator
 	Space
 	NewLine
 	LeftParen
@@ -24,6 +25,8 @@ const (
 	RightBracket
 	LeftBrace
 	RightBrace
+	Comment
+	MultilineComment
 	EOF
 )
 
@@ -59,6 +62,10 @@ func (tt TokenType) String() string {
 		return "LeftBrace"
 	case RightBrace:
 		return "RightBrace"
+	case Comment:
+		return "Comment"
+	case MultilineComment:
+		return "MultilineComment"
 	case EOF:
 		return "EOF"
 	default:

@@ -118,6 +118,8 @@ func Lex(source string) *[]Token {
 			l.splitAdd(l.singleToken(LeftBrace), Identifier)
 		case '}':
 			l.splitAdd(l.singleToken(RightBrace), Identifier)
+		case '+', '-', '*', '/', '%':
+			l.splitAdd(l.singleToken(Operator), Identifier)
 		default:
 			if l.mode == None {
 				l.start(Identifier)
