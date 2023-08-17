@@ -19,10 +19,37 @@ func (p *parser) eat() lexer.Token {
 	return el
 }
 
+func (p *parser) expect(tokentype lexer.TokenType) {
+	token := p.eat()
+	if token.Type != tokentype {
+		panic("Expected " + tokentype.String() + ", but got " + token.Type.String() + " instead")
+	}
+}
+
+func (p *parser) op() lexer.Operation {
+	return lexer.Operation(p.at().Value)
+}
+
+func (p *parser) parseGroup() Expression {
+	expr := p.parseAdditive()
+	p.expect(lexer.RightParen)
+	return expr
+}
+
 func (p *parser) parseAdditive() Expression {
+	left := p.parseMultiplicative()
+	for p.op() == lexer.Add || p.op() == lexer.Subtract {
+		token := p.eat()
+		right := p.parseMultiplicative()
+
+		left = BinaryOperation{token.Location, left, right, lexer.Operation(token.Value)}
+	}
+	return left
+}
+
+func (p *parser) parseMultiplicative() Expression {
 	left := p.parsePrimary()
-	// todo: clean up
-	for lexer.Operation(p.at().Value) == lexer.Add || lexer.Operation(p.at().Value) == lexer.Subtract {
+	for p.op() == lexer.Multiply || p.op() == lexer.Divide {
 		token := p.eat()
 		right := p.parsePrimary()
 
@@ -36,6 +63,8 @@ func (p *parser) parsePrimary() Expression {
 	switch token.Type {
 	case lexer.Identifier:
 		return Identifier{token.Location, token.Value}
+	case lexer.LeftParen:
+		return p.parseGroup()
 	default:
 		return Identifier{token.Location, "Error"}
 	}

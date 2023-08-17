@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	code := "5 + 3 - 2"
+	code := "5 + 3 * (6 - 2)"
 
 	tokens := lexer.Lex(code)
 	lexer.Filter(tokens)

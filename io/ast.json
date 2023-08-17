@@ -2,18 +2,24 @@
     "Body": [
         {
             "Left": {
-                "Left": {
-                    "Symbol": "5"
-                },
-                "Right": {
-                    "Symbol": "3"
-                },
-                "Operator": "+"
+                "Symbol": "5"
             },
             "Right": {
-                "Symbol": "2"
+                "Left": {
+                    "Symbol": "3"
+                },
+                "Right": {
+                    "Left": {
+                        "Symbol": "6"
+                    },
+                    "Right": {
+                        "Symbol": "2"
+                    },
+                    "Operator": "-"
+                },
+                "Operator": "*"
             },
-            "Operator": "-"
+            "Operator": "+"
         }
     ]
 }
