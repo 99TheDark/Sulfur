@@ -3,7 +3,8 @@ package parser
 import (
 	"encoding/json"
 	"golang/lexer"
-	"os"
+	"golang/utils"
+	"log"
 	"strings"
 )
 
@@ -25,7 +26,7 @@ func (p *parser) eat() lexer.Token {
 func (p *parser) expect(tokentype lexer.TokenType) {
 	token := p.eat()
 	if token.Type != tokentype {
-		panic("Expected " + tokentype.String() + ", but got " + token.Type.String() + " instead")
+		log.Fatalln("Expected " + tokentype.String() + ", but got " + token.Type.String() + " '" + token.Value + "' instead")
 	}
 }
 
@@ -34,7 +35,7 @@ func (p *parser) op() lexer.Operation {
 }
 
 func (p *parser) parseGroup() Expression {
-	expr := p.parseAdditive()
+	expr := p.parseExpression()
 	p.expect(lexer.RightParen)
 	return expr
 }
@@ -42,10 +43,27 @@ func (p *parser) parseGroup() Expression {
 func (p *parser) parseBlock() []Expression {
 	block := []Expression{}
 	for p.at().Type != lexer.RightBrace {
-		block = append(block, p.parseAdditive())
+		block = append(block, p.parseExpression())
 	}
 	p.eat()
 	return block
+}
+
+func (p *parser) parseExpression() Expression {
+	return p.parseParameters()
+}
+
+func (p *parser) parseParameters() Expression {
+	list := []Expression{p.parseAdditive()}
+	for p.at().Type == lexer.Delimiter {
+		p.eat()
+		list = append(list, p.parseAdditive())
+	}
+
+	if len(list) == 1 {
+		return list[0]
+	}
+	return List{list}
 }
 
 func (p *parser) parseAdditive() Expression {
@@ -60,12 +78,24 @@ func (p *parser) parseAdditive() Expression {
 }
 
 func (p *parser) parseMultiplicative() Expression {
-	left := p.parsePrimary()
+	left := p.parseDatatype()
 	for p.op() == lexer.Multiply || p.op() == lexer.Divide {
 		token := p.eat()
-		right := p.parsePrimary()
+		right := p.parseDatatype()
 
 		left = BinaryOperation{token.Location, left, right, lexer.Operation(token.Value)}
+	}
+	return left
+}
+
+func (p *parser) parseDatatype() Expression {
+	// this function doesn't work :/
+	left := p.parsePrimary()
+	if datatype, ok := left.(Identifier); ok {
+		next := p.parsePrimary()
+		if variable, ok := next.(Identifier); ok {
+			return Datatype{datatype, variable}
+		}
 	}
 	return left
 }
@@ -80,6 +110,7 @@ func (p *parser) parsePrimary() Expression {
 	case lexer.LeftBrace:
 		return Block{token.Location, p.parseBlock()}
 	default:
+		// fmt.Println(token)
 		return Identifier{token.Location, "Error"}
 	}
 }
@@ -88,34 +119,16 @@ func Parse(tokens *[]lexer.Token) Program {
 	parser := parser{*tokens, 0}
 	statements := []Expression{}
 	for parser.at().Type != lexer.EOF {
-		statements = append(statements, parser.parseAdditive())
+		statements = append(statements, parser.parseExpression())
 	}
 	return Program{statements}
 }
 
-func SaveAST(ast Program, spaces int, location string) error {
-	var file *os.File
-
+func Save(ast Program, spaces int, location string) error {
 	json, err := json.MarshalIndent(ast, "", strings.Repeat(" ", spaces))
 	if err != nil {
 		return err
 	}
 
-	file, err = os.Create(location)
-	if err != nil {
-		return err
-	}
-
-	_, err = file.Write(json)
-	if err != nil {
-		file.Close()
-		return err
-	}
-
-	err = file.Close()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return utils.SaveFile(json, location)
 }

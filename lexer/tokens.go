@@ -25,6 +25,7 @@ const (
 	RightBracket
 	LeftBrace
 	RightBrace
+	Delimiter
 	Comment
 	MultilineComment
 	EOF
@@ -64,6 +65,8 @@ func (tt TokenType) String() string {
 		return "LeftBrace"
 	case RightBrace:
 		return "RightBrace"
+	case Delimiter:
+		return "Delimiter"
 	case Comment:
 		return "Comment"
 	case MultilineComment:

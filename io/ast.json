@@ -1,35 +1,7 @@
 {
   "Body": [
     {
-      "Body": [
-        {
-          "Left": {
-            "Symbol": "5"
-          },
-          "Right": {
-            "Symbol": "2"
-          },
-          "Operator": "+"
-        },
-        {
-          "Left": {
-            "Left": {
-              "Symbol": "5"
-            },
-            "Right": {
-              "Symbol": "7"
-            },
-            "Operator": "*"
-          },
-          "Right": {
-            "Symbol": "1"
-          },
-          "Operator": "-"
-        },
-        {
-          "Symbol": "3"
-        }
-      ]
+      "Symbol": "add"
     }
   ]
 }

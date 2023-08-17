@@ -1,0 +1,15 @@
+[]Token{
+    Token{LeftParen '(' at 0:0, #0}
+    Token{Identifier 'int' at 0:1, #1}
+    Token{Identifier 'x' at 0:5, #5}
+    Token{Delimiter ',' at 0:6, #6}
+    Token{Identifier 'int' at 0:8, #8}
+    Token{Identifier 'y' at 0:12, #12}
+    Token{RightParen ')' at 0:13, #13}
+    Token{LeftBrace '{' at 0:15, #15}
+    Token{Identifier 'x' at 1:4, #21}
+    Token{Operator '+' at 1:6, #23}
+    Token{Identifier 'y' at 1:8, #25}
+    Token{RightBrace '}' at 2:0, #27}
+    Token{EOF 'EOF' at 2:1, #28}
+}

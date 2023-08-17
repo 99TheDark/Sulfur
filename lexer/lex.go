@@ -26,7 +26,6 @@ func (l lexer) peek() rune {
 func (l *lexer) eat() rune {
 	ch := l.source[l.loc.Idx]
 
-	// todo, move
 	l.loc.Idx++
 	l.loc.Col++
 	if ch == '\n' {
@@ -121,6 +120,8 @@ func Lex(source string) *[]Token {
 			l.splitAdd(l.singleToken(RightBrace), Identifier)
 		case '+', '-', '*', '/', '%':
 			l.splitAdd(l.singleToken(Operator), Identifier)
+		case ',':
+			l.splitAdd(l.singleToken(Delimiter), Identifier)
 		default:
 			if l.mode == None {
 				l.start(Identifier)
@@ -151,6 +152,10 @@ func Stringify(tokens *[]Token) string {
 	}
 
 	return str + "}"
+}
+
+func Save(tokens *[]Token, location string) error {
+	return utils.SaveFile([]byte(Stringify(tokens)), location)
 }
 
 func GetSourceCode(location string) (string, error) {

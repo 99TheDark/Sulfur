@@ -16,10 +16,12 @@ func main() {
 
 	tokens := lexer.Lex(code)
 	lexer.Filter(tokens)
+	if err := lexer.Save(tokens, "io/tokens.txt"); err != nil {
+		log.Fatalln(err)
+	}
 
-	// fmt.Println(lexer.Stringify(tokens))
 	ast := parser.Parse(tokens)
-	if err := parser.SaveAST(ast, 2, "io/ast.json"); err != nil {
+	if err := parser.Save(ast, 2, "io/ast.json"); err != nil {
 		log.Fatalln(err)
 	}
 
