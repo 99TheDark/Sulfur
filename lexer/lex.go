@@ -3,6 +3,7 @@ package lexer
 import (
 	"fmt"
 	"golang/utils"
+	"os"
 )
 
 type lexer struct {
@@ -150,4 +151,13 @@ func Stringify(tokens *[]Token) string {
 	}
 
 	return str + "}"
+}
+
+func GetSourceCode(location string) (string, error) {
+	content, err := os.ReadFile(location)
+	if err != nil {
+		return "", err
+	}
+
+	return string(content), nil
 }
