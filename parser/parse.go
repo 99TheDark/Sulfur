@@ -2,7 +2,6 @@ package parser
 
 import (
 	"golang/lexer"
-	"reflect"
 )
 
 type parser struct {
@@ -20,6 +19,18 @@ func (p *parser) eat() lexer.Token {
 	return el
 }
 
+func (p *parser) parseAdditive() Expression {
+	left := p.parsePrimary()
+	// todo: clean up
+	for lexer.Operation(p.at().Value) == lexer.Add || lexer.Operation(p.at().Value) == lexer.Subtract {
+		token := p.eat()
+		right := p.parsePrimary()
+
+		left = BinaryOperation{token.Location, left, right, lexer.Operation(token.Value)}
+	}
+	return left
+}
+
 func (p *parser) parsePrimary() Expression {
 	token := p.eat()
 	switch token.Type {
@@ -34,16 +45,7 @@ func Parse(tokens *[]lexer.Token) Program {
 	parser := parser{*tokens, 0}
 	statements := []Expression{}
 	for parser.at().Type != lexer.EOF {
-		statements = append(statements, parser.parsePrimary())
+		statements = append(statements, parser.parseAdditive())
 	}
 	return Program{statements}
-}
-
-func Stringify(ast Program) string {
-	str := "Program{\n"
-	for _, expr := range ast.Body {
-		str += "    " + reflect.TypeOf(expr).String() + "{\n" + /* children joined with 8 spaces before */ "    }\n"
-	}
-
-	return str + "}"
 }

@@ -15,11 +15,12 @@ type (
 	}
 
 	Identifier struct {
-		Start  *lexer.Location
+		Loc    *lexer.Location `json:"-"`
 		Symbol string
 	}
 
 	BinaryOperation struct {
+		Loc      *lexer.Location `json:"-"`
 		Left     Expression
 		Right    Expression
 		Operator lexer.Operation
@@ -29,5 +30,5 @@ type (
 func (x Identifier) Children() []Expression      { return nil }
 func (x BinaryOperation) Children() []Expression { return []Expression{x.Left, x.Right} }
 
-func (x Identifier) Location() *lexer.Location      { return x.Start }
-func (x BinaryOperation) Location() *lexer.Location { return x.Left.Location() }
+func (x Identifier) Location() *lexer.Location      { return x.Loc }
+func (x BinaryOperation) Location() *lexer.Location { return x.Loc }

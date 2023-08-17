@@ -1,0 +1,19 @@
+{
+    "Body": [
+        {
+            "Left": {
+                "Left": {
+                    "Symbol": "5"
+                },
+                "Right": {
+                    "Symbol": "3"
+                },
+                "Operator": "+"
+            },
+            "Right": {
+                "Symbol": "2"
+            },
+            "Operator": "-"
+        }
+    ]
+}
