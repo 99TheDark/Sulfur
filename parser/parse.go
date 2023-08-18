@@ -122,16 +122,18 @@ func (p *parser) parseFunction() Expression {
 	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.LeftParen {
 		token := p.eat()
 		name := Identifier{token.Location, token.Value}
-		params, ret := p.listify(), p.listify()
-		if len(ret.Values) > 1 {
-			p.errgen.Error(
-				"More than 1 return value is not yet supported",
-				ret.Location(),
-			)
-		}
+		params := p.listify()
 
-		if p.at().Type == lexer.LeftBrace {
-			p.eat()
+		if p.at().Type == lexer.LeftParen {
+			ret := p.listify()
+			if len(ret.Values) > 1 {
+				p.errgen.Error(
+					"More than 1 return value is not yet supported",
+					ret.Location(),
+				)
+			}
+
+			p.expect(lexer.LeftBrace)
 			return FunctionLiteral{name, params, ret, p.parseBlock()}
 		} else {
 			return FunctionCall{name, params}
@@ -176,23 +178,12 @@ func (p *parser) parseAdditive() Expression {
 }
 
 func (p *parser) parseMultiplicative() Expression {
-	left := p.parseFunctionCall()
+	left := p.parseDatatype()
 	for p.op() == lexer.Multiply || p.op() == lexer.Divide {
 		token := p.eat()
-		right := p.parseFunctionCall()
+		right := p.parseDatatype()
 
 		left = BinaryOperation{token.Location, left, right, lexer.Operation(token.Value)}
-	}
-	return left
-}
-
-func (p *parser) parseFunctionCall() Expression {
-	left := p.parseDatatype()
-	if name, ok := left.(Identifier); ok && p.at().Type == lexer.LeftParen {
-		p.eat()
-		params := p.listify()
-
-		return FunctionCall{name, params}
 	}
 	return left
 }
