@@ -2,8 +2,4 @@ add(int x, int y) {
     x + y
 }
 
-oneParam(int param) {
-    param
-}
-
-noParams() {}
+call()

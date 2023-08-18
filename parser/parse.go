@@ -40,6 +40,7 @@ func (p *parser) op() lexer.Operation {
 
 func (p *parser) parseGroup() Expression {
 	if p.at().Type == lexer.RightParen {
+		p.eat()
 		return List{[]Expression{}}
 	}
 	expr := p.parseExpression()
@@ -76,7 +77,7 @@ func (p *parser) parseFunction() Expression {
 			p.eat()
 			return FunctionLiteral{name, params, p.parseBlock()}
 		} else {
-			// function call
+			return FunctionCall{name, params}
 		}
 	}
 
@@ -139,7 +140,6 @@ func (p *parser) parsePrimary() Expression {
 	case lexer.LeftBrace:
 		return Block{token.Location, p.parseBlock()}
 	default:
-		// fmt.Println(token)
 		return Identifier{token.Location, "Error"}
 	}
 }

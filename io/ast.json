@@ -38,34 +38,11 @@
     },
     {
       "Name": {
-        "Symbol": "oneParam"
+        "Symbol": "call"
       },
       "Params": {
-        "Values": [
-          {
-            "Type": {
-              "Symbol": "int"
-            },
-            "Variable": {
-              "Symbol": "param"
-            }
-          }
-        ]
-      },
-      "Body": [
-        {
-          "Symbol": "param"
-        }
-      ]
-    },
-    {
-      "Symbol": "noParams"
-    },
-    {
-      "Symbol": "Error"
-    },
-    {
-      "Body": []
+        "Values": []
+      }
     }
   ]
 }
