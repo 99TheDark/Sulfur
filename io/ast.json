@@ -24,6 +24,13 @@
      }
     ]
    },
+   "Return": {
+    "Values": [
+     {
+      "Symbol": "int"
+     }
+    ]
+   },
    "Body": [
     {
      "Left": {

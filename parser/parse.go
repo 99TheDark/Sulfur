@@ -38,6 +38,17 @@ func (p *parser) op() lexer.Operation {
 	return lexer.Operation(p.at().Value)
 }
 
+func (p *parser) listify() List {
+	p.eat()
+	group := p.parseGroup()
+
+	if list, ok := group.(List); ok {
+		return list
+	}
+
+	return List{[]Expression{group}}
+}
+
 func (p *parser) parseGroup() Expression {
 	if p.at().Type == lexer.RightParen {
 		p.eat()
@@ -62,20 +73,13 @@ func (p *parser) parseExpression() Expression {
 }
 
 func (p *parser) parseFunction() Expression {
-	left := p.parseParameters()
+	left := p.parseList()
 	if name, ok := left.(Identifier); ok && p.at().Type == lexer.LeftParen {
-		p.eat()
-		inner := p.parseGroup()
-		var params List
-		if list, ok := inner.(List); ok {
-			params = list
-		} else {
-			params = List{[]Expression{inner}}
-		}
+		params, ret := p.listify(), p.listify()
 
 		if p.at().Type == lexer.LeftBrace {
 			p.eat()
-			return FunctionLiteral{name, params, p.parseBlock()}
+			return FunctionLiteral{name, params, ret, p.parseBlock()}
 		} else {
 			return FunctionCall{name, params}
 		}
@@ -84,7 +88,7 @@ func (p *parser) parseFunction() Expression {
 	return left
 }
 
-func (p *parser) parseParameters() Expression {
+func (p *parser) parseList() Expression {
 	list := []Expression{p.parseAdditive()}
 	for p.at().Type == lexer.Delimiter {
 		p.eat()

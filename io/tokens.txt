@@ -7,10 +7,13 @@
     Token{Identifier 'int' at 0:11, #11}
     Token{Identifier 'y' at 0:15, #15}
     Token{RightParen ')' at 0:16, #16}
-    Token{LeftBrace '{' at 0:18, #18}
-    Token{Identifier 'x' at 1:4, #24}
-    Token{Operator '+' at 1:6, #26}
-    Token{Identifier 'y' at 1:8, #28}
-    Token{RightBrace '}' at 2:0, #30}
-    Token{EOF 'EOF' at 2:1, #31}
+    Token{LeftParen '(' at 0:18, #18}
+    Token{Identifier 'int' at 0:19, #19}
+    Token{RightParen ')' at 0:22, #22}
+    Token{LeftBrace '{' at 0:24, #24}
+    Token{Identifier 'x' at 1:4, #30}
+    Token{Operator '+' at 1:6, #32}
+    Token{Identifier 'y' at 1:8, #34}
+    Token{RightBrace '}' at 2:0, #36}
+    Token{EOF 'EOF' at 2:1, #37}
 }

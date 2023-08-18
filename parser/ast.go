@@ -42,6 +42,7 @@ type (
 	FunctionLiteral struct {
 		Name   Identifier
 		Params List
+		Return List
 		Body   []Expression
 	}
 
