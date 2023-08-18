@@ -11,9 +11,10 @@
     Token{Identifier 'int' at 0:19, #19}
     Token{RightParen ')' at 0:22, #22}
     Token{LeftBrace '{' at 0:24, #24}
-    Token{Identifier 'x' at 1:4, #30}
-    Token{Operator '+' at 1:6, #32}
-    Token{Identifier 'y' at 1:8, #34}
-    Token{RightBrace '}' at 2:0, #36}
-    Token{EOF 'EOF' at 2:1, #37}
+    Token{Keyword 'return' at 1:4, #30}
+    Token{Identifier 'x' at 1:11, #37}
+    Token{Operator '+' at 1:13, #39}
+    Token{Identifier 'y' at 1:15, #41}
+    Token{RightBrace '}' at 2:0, #43}
+    Token{EOF 'EOF' at 2:1, #44}
 }

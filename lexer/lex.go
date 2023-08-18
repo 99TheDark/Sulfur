@@ -54,9 +54,18 @@ func (l *lexer) start(mode TokenType) {
 }
 
 func (l *lexer) end() *Token {
+	value := l.all(l.begin.Idx, l.loc.Idx-1)
+
+	var tt TokenType
+	if l.mode == Identifier && IsKeyword(value) {
+		tt = Keyword
+	} else {
+		tt = l.mode
+	}
+
 	token := CreateToken(
-		l.mode,
-		l.all(l.begin.Idx, l.loc.Idx-1),
+		tt,
+		value,
 		l.begin.Row,
 		l.begin.Col,
 		l.begin.Idx,

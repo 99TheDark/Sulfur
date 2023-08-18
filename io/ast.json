@@ -33,13 +33,15 @@
    },
    "Body": [
     {
-     "Left": {
-      "Symbol": "x"
-     },
-     "Right": {
-      "Symbol": "y"
-     },
-     "Operator": "+"
+     "Value": {
+      "Left": {
+       "Symbol": "x"
+      },
+      "Right": {
+       "Symbol": "y"
+      },
+      "Operator": "+"
+     }
     }
    ]
   }

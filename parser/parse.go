@@ -38,6 +38,10 @@ func (p *parser) op() lexer.Operation {
 	return lexer.Operation(p.at().Value)
 }
 
+func (p *parser) key() lexer.Keywords {
+	return lexer.Keywords(p.at().Value)
+}
+
 func (p *parser) listify() List {
 	p.eat()
 	group := p.parseGroup()
@@ -69,6 +73,14 @@ func (p *parser) parseBlock() []Expression {
 }
 
 func (p *parser) parseExpression() Expression {
+	return p.parseReturn()
+}
+
+func (p *parser) parseReturn() Expression {
+	if p.key() == lexer.Return {
+		p.eat()
+		return Return{p.parseFunction()}
+	}
 	return p.parseFunction()
 }
 
@@ -144,7 +156,7 @@ func (p *parser) parsePrimary() Expression {
 	case lexer.LeftBrace:
 		return Block{token.Location, p.parseBlock()}
 	default:
-		return Identifier{token.Location, "Error"}
+		return Identifier{token.Location, "Error: '" + token.Value + "'"}
 	}
 }
 

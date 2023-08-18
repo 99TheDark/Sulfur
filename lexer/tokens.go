@@ -16,6 +16,7 @@ type Token struct {
 const (
 	None TokenType = iota
 	Identifier
+	Keyword
 	Operator
 	Space
 	NewLine
@@ -47,6 +48,8 @@ func (tt TokenType) String() string {
 	switch tt {
 	case Identifier:
 		return "Identifier"
+	case Keyword:
+		return "Keyword"
 	case Operator:
 		return "Operator"
 	case Space:

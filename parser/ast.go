@@ -50,6 +50,10 @@ type (
 		Name   Identifier
 		Params List
 	}
+
+	Return struct {
+		Value Expression
+	}
 )
 
 func (x Block) Location() *lexer.Location           { return x.Loc }
@@ -59,3 +63,4 @@ func (x List) Location() *lexer.Location            { return x.Values[0].Locatio
 func (x BinaryOperation) Location() *lexer.Location { return x.Loc }
 func (x FunctionLiteral) Location() *lexer.Location { return x.Name.Loc }
 func (x FunctionCall) Location() *lexer.Location    { return x.Name.Loc }
+func (x Return) Location() *lexer.Location          { return x.Value.Location() }
