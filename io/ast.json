@@ -1,29 +1,29 @@
 {
   "Body": [
     {
-      "Symbol": "add"
-    },
-    {
-      "Values": [
-        {
-          "Type": {
-            "Symbol": "int"
+      "Name": {
+        "Symbol": "add"
+      },
+      "Params": {
+        "Values": [
+          {
+            "Type": {
+              "Symbol": "int"
+            },
+            "Variable": {
+              "Symbol": "x"
+            }
           },
-          "Variable": {
-            "Symbol": "x"
+          {
+            "Type": {
+              "Symbol": "int"
+            },
+            "Variable": {
+              "Symbol": "y"
+            }
           }
-        },
-        {
-          "Type": {
-            "Symbol": "int"
-          },
-          "Variable": {
-            "Symbol": "y"
-          }
-        }
-      ]
-    },
-    {
+        ]
+      },
       "Body": [
         {
           "Left": {
@@ -35,6 +35,37 @@
           "Operator": "+"
         }
       ]
+    },
+    {
+      "Name": {
+        "Symbol": "oneParam"
+      },
+      "Params": {
+        "Values": [
+          {
+            "Type": {
+              "Symbol": "int"
+            },
+            "Variable": {
+              "Symbol": "param"
+            }
+          }
+        ]
+      },
+      "Body": [
+        {
+          "Symbol": "param"
+        }
+      ]
+    },
+    {
+      "Symbol": "noParams"
+    },
+    {
+      "Symbol": "Error"
+    },
+    {
+      "Body": []
     }
   ]
 }

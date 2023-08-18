@@ -5,7 +5,6 @@ import (
 )
 
 type Expression interface {
-	Children() []Expression
 	Location() *lexer.Location
 }
 
@@ -39,16 +38,23 @@ type (
 		Right    Expression
 		Operator lexer.Operation
 	}
-)
 
-func (x Block) Children() []Expression           { return x.Body }
-func (x Identifier) Children() []Expression      { return nil }
-func (x Datatype) Children() []Expression        { return []Expression{x.Type, x.Variable} }
-func (x List) Children() []Expression            { return x.Values }
-func (x BinaryOperation) Children() []Expression { return []Expression{x.Left, x.Right} }
+	FunctionLiteral struct {
+		Name   Identifier
+		Params List
+		Body   []Expression
+	}
+
+	FunctionCall struct {
+		Name   Identifier
+		Params List
+	}
+)
 
 func (x Block) Location() *lexer.Location           { return x.Loc }
 func (x Identifier) Location() *lexer.Location      { return x.Loc }
 func (x Datatype) Location() *lexer.Location        { return x.Type.Loc }
 func (x List) Location() *lexer.Location            { return x.Values[0].Location() } // Length always >= 2
 func (x BinaryOperation) Location() *lexer.Location { return x.Loc }
+func (x FunctionLiteral) Location() *lexer.Location { return x.Name.Loc }
+func (x FunctionCall) Location() *lexer.Location    { return x.Name.Loc }

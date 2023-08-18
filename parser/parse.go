@@ -39,6 +39,9 @@ func (p *parser) op() lexer.Operation {
 }
 
 func (p *parser) parseGroup() Expression {
+	if p.at().Type == lexer.RightParen {
+		return List{[]Expression{}}
+	}
 	expr := p.parseExpression()
 	p.expect(lexer.RightParen)
 	return expr
@@ -54,7 +57,30 @@ func (p *parser) parseBlock() []Expression {
 }
 
 func (p *parser) parseExpression() Expression {
-	return p.parseParameters()
+	return p.parseFunction()
+}
+
+func (p *parser) parseFunction() Expression {
+	left := p.parseParameters()
+	if name, ok := left.(Identifier); ok && p.at().Type == lexer.LeftParen {
+		p.eat()
+		inner := p.parseGroup()
+		var params List
+		if list, ok := inner.(List); ok {
+			params = list
+		} else {
+			params = List{[]Expression{inner}}
+		}
+
+		if p.at().Type == lexer.LeftBrace {
+			p.eat()
+			return FunctionLiteral{name, params, p.parseBlock()}
+		} else {
+			// function call
+		}
+	}
+
+	return left
 }
 
 func (p *parser) parseParameters() Expression {

@@ -12,5 +12,18 @@
     Token{Operator '+' at 1:6, #26}
     Token{Identifier 'y' at 1:8, #28}
     Token{RightBrace '}' at 2:0, #30}
-    Token{EOF 'EOF' at 2:1, #31}
+    Token{Identifier 'oneParam' at 4:0, #33}
+    Token{LeftParen '(' at 4:8, #41}
+    Token{Identifier 'int' at 4:9, #42}
+    Token{Identifier 'param' at 4:13, #46}
+    Token{RightParen ')' at 4:18, #51}
+    Token{LeftBrace '{' at 4:20, #53}
+    Token{Identifier 'param' at 5:4, #59}
+    Token{RightBrace '}' at 6:0, #65}
+    Token{Identifier 'noParams' at 8:0, #68}
+    Token{LeftParen '(' at 8:8, #76}
+    Token{RightParen ')' at 8:9, #77}
+    Token{LeftBrace '{' at 8:11, #79}
+    Token{RightBrace '}' at 8:12, #80}
+    Token{EOF 'EOF' at 8:13, #81}
 }
