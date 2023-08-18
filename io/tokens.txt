@@ -12,8 +12,5 @@
     Token{Operator '+' at 1:6, #26}
     Token{Identifier 'y' at 1:8, #28}
     Token{RightBrace '}' at 2:0, #30}
-    Token{Identifier 'call' at 4:0, #33}
-    Token{LeftParen '(' at 4:4, #37}
-    Token{RightParen ')' at 4:5, #38}
-    Token{EOF 'EOF' at 4:6, #39}
+    Token{EOF 'EOF' at 2:1, #31}
 }

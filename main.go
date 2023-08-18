@@ -21,7 +21,7 @@ func main() {
 	}
 
 	ast := parser.Parse(tokens)
-	if err := parser.Save(ast, 2, "io/ast.json"); err != nil {
+	if err := parser.Save(ast, 1, "io/ast.json"); err != nil {
 		log.Fatalln(err)
 	}
 

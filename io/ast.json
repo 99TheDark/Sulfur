@@ -1,48 +1,40 @@
 {
-  "Body": [
-    {
-      "Name": {
-        "Symbol": "add"
+ "Body": [
+  {
+   "Name": {
+    "Symbol": "add"
+   },
+   "Params": {
+    "Values": [
+     {
+      "Type": {
+       "Symbol": "int"
       },
-      "Params": {
-        "Values": [
-          {
-            "Type": {
-              "Symbol": "int"
-            },
-            "Variable": {
-              "Symbol": "x"
-            }
-          },
-          {
-            "Type": {
-              "Symbol": "int"
-            },
-            "Variable": {
-              "Symbol": "y"
-            }
-          }
-        ]
-      },
-      "Body": [
-        {
-          "Left": {
-            "Symbol": "x"
-          },
-          "Right": {
-            "Symbol": "y"
-          },
-          "Operator": "+"
-        }
-      ]
-    },
-    {
-      "Name": {
-        "Symbol": "call"
-      },
-      "Params": {
-        "Values": []
+      "Variable": {
+       "Symbol": "x"
       }
+     },
+     {
+      "Type": {
+       "Symbol": "int"
+      },
+      "Variable": {
+       "Symbol": "y"
+      }
+     }
+    ]
+   },
+   "Body": [
+    {
+     "Left": {
+      "Symbol": "x"
+     },
+     "Right": {
+      "Symbol": "y"
+     },
+     "Operator": "+"
     }
-  ]
+   ]
+  }
+ ]
 }
