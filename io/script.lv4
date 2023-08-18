@@ -9,7 +9,3 @@ if a > b {
 } else {
     print(ghi)
 }
-
-double(int a) (int, int) {
-    return a, a
-}

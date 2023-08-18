@@ -44,6 +44,78 @@
      }
     }
    ]
+  },
+  {
+   "Condition": {
+    "Left": {
+     "Symbol": "a"
+    },
+    "Right": {
+     "Symbol": "b"
+    },
+    "Comparator": ">"
+   },
+   "Then": [
+    {
+     "Name": {
+      "Symbol": "print"
+     },
+     "Params": {
+      "Values": [
+       {
+        "Symbol": "abc"
+       }
+      ]
+     }
+    }
+   ],
+   "Else": [
+    {
+     "Condition": {
+      "Left": {
+       "Left": {
+        "Symbol": "c"
+       },
+       "Right": {
+        "Symbol": "d"
+       },
+       "Operator": "*"
+      },
+      "Right": {
+       "Symbol": "f"
+      },
+      "Comparator": "<"
+     },
+     "Then": [
+      {
+       "Name": {
+        "Symbol": "print"
+       },
+       "Params": {
+        "Values": [
+         {
+          "Symbol": "def"
+         }
+        ]
+       }
+      }
+     ],
+     "Else": [
+      {
+       "Name": {
+        "Symbol": "print"
+       },
+       "Params": {
+        "Values": [
+         {
+          "Symbol": "ghi"
+         }
+        ]
+       }
+      }
+     ]
+    }
+   ]
   }
  ]
 }

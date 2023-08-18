@@ -45,21 +45,5 @@
     Token{Identifier 'ghi' at 9:10, #127}
     Token{RightParen ')' at 9:13, #130}
     Token{RightBrace '}' at 10:0, #132}
-    Token{Identifier 'double' at 12:0, #135}
-    Token{LeftParen '(' at 12:6, #141}
-    Token{Identifier 'int' at 12:7, #142}
-    Token{Identifier 'a' at 12:11, #146}
-    Token{RightParen ')' at 12:12, #147}
-    Token{LeftParen '(' at 12:14, #149}
-    Token{Identifier 'int' at 12:15, #150}
-    Token{Delimiter ',' at 12:18, #153}
-    Token{Identifier 'int' at 12:20, #155}
-    Token{RightParen ')' at 12:23, #158}
-    Token{LeftBrace '{' at 12:25, #160}
-    Token{Keyword 'return' at 13:4, #166}
-    Token{Identifier 'a' at 13:11, #173}
-    Token{Delimiter ',' at 13:12, #174}
-    Token{Identifier 'a' at 13:14, #176}
-    Token{RightBrace '}' at 14:0, #178}
-    Token{EOF 'EOF' at 14:1, #179}
+    Token{EOF 'EOF' at 10:1, #133}
 }
