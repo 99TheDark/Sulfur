@@ -88,6 +88,9 @@ func (p *parser) parseFunction() Expression {
 	left := p.parseList()
 	if name, ok := left.(Identifier); ok && p.at().Type == lexer.LeftParen {
 		params, ret := p.listify(), p.listify()
+		if len(ret.Values) > 1 {
+			log.Fatalln("More than 1 return value is not yet supported")
+		}
 
 		if p.at().Type == lexer.LeftBrace {
 			p.eat()

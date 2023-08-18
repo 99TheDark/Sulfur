@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"golang/compiler"
 	"golang/lexer"
 	"golang/parser"
@@ -26,5 +25,7 @@ func main() {
 	}
 
 	llvm := compiler.Assemble(ast)
-	fmt.Println(llvm)
+	if err := compiler.Save(llvm, "io/script.ll"); err != nil {
+		log.Fatalln(err)
+	}
 }

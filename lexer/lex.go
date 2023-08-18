@@ -163,10 +163,6 @@ func Stringify(tokens *[]Token) string {
 	return str + "}"
 }
 
-func Save(tokens *[]Token, location string) error {
-	return utils.SaveFile([]byte(Stringify(tokens)), location)
-}
-
 func GetSourceCode(location string) (string, error) {
 	content, err := os.ReadFile(location)
 	if err != nil {
@@ -174,4 +170,8 @@ func GetSourceCode(location string) (string, error) {
 	}
 
 	return string(content), nil
+}
+
+func Save(tokens *[]Token, location string) error {
+	return utils.SaveFile([]byte(Stringify(tokens)), location)
 }
