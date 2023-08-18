@@ -2,6 +2,14 @@ add(int x, int y) (int) {
     return x + y
 }
 
+if a > b {
+    print(abc)
+} elseif c * d < f {
+    print(def)
+} else {
+    print(ghi)
+}
+
 double(int a) (int, int) {
     return a, a
 }
