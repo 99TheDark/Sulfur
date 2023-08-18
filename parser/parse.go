@@ -29,7 +29,7 @@ func (p *parser) eat() lexer.Token {
 	return el
 }
 
-func (p *parser) expect(tokentype lexer.TokenType) {
+func (p *parser) expect(tokentype lexer.TokenType) lexer.Token {
 	token := p.eat()
 	if token.Type != tokentype {
 		p.errgen.Error(
@@ -37,6 +37,7 @@ func (p *parser) expect(tokentype lexer.TokenType) {
 			token.Location,
 		)
 	}
+	return token
 }
 
 func (p *parser) op() lexer.Operation {
@@ -72,30 +73,33 @@ func (p *parser) parseGroup() Expression {
 	return expr
 }
 
-func (p *parser) parseBlock() []Expression {
-	block := []Expression{}
+func (p *parser) parseBlock(hook lexer.Token) Block {
+	loc := hook.Location
+	body := []Expression{}
 	for p.at().Type != lexer.RightBrace {
-		block = append(block, p.parseExpression())
+		body = append(body, p.parseExpression())
 	}
 	p.eat()
-	return block
+
+	return Block{loc, body}
 }
 
 func (p *parser) parseIfStatement(token lexer.Token) Expression {
 	condition := p.parseReturn()
 
-	p.expect(lexer.LeftBrace)
-
-	body := p.parseBlock()
+	lbrace := p.expect(lexer.LeftBrace)
+	body := p.parseBlock(lbrace)
 	if p.key() == lexer.ElseIf {
 		next := p.eat()
-		return IfStatement{token.Location, condition, body, []Expression{p.parseIfStatement(next)}}
+		ifstmt := []Expression{p.parseIfStatement(next)}
+		return IfStatement{token.Location, condition, body, Block{next.Location, ifstmt}}
 	} else if p.key() == lexer.Else {
 		p.eat()
-		p.expect(lexer.LeftBrace)
-		return IfStatement{token.Location, condition, body, p.parseBlock()}
+		brace := p.expect(lexer.LeftBrace)
+		return IfStatement{token.Location, condition, body, p.parseBlock(brace)}
 	} else {
-		return IfStatement{token.Location, condition, body, []Expression{}}
+		loc := p.at().Location
+		return IfStatement{token.Location, condition, body, Block{loc, []Expression{}}}
 	}
 }
 
@@ -133,11 +137,11 @@ func (p *parser) parseFunction() Expression {
 				)
 			}
 
-			p.expect(lexer.LeftBrace)
-			return FunctionLiteral{name, params, ret, p.parseBlock()}
+			lbrace := p.expect(lexer.LeftBrace)
+			return FunctionLiteral{name, params, ret, p.parseBlock(lbrace).Body}
 		} else if p.at().Type == lexer.LeftBrace {
-			p.expect(lexer.LeftBrace)
-			return FunctionLiteral{name, params, List{[]Expression{}}, p.parseBlock()}
+			lbrace := p.expect(lexer.LeftBrace)
+			return FunctionLiteral{name, params, List{[]Expression{}}, p.parseBlock(lbrace).Body}
 		} else {
 			return FunctionCall{name, params}
 		}
@@ -210,7 +214,7 @@ func (p *parser) parsePrimary() Expression {
 	case lexer.LeftParen:
 		return p.parseGroup()
 	case lexer.LeftBrace:
-		return Block{token.Location, p.parseBlock()}
+		return p.parseBlock(token)
 	default:
 		return Identifier{token.Location, "Error: '" + token.Value + "'"}
 	}

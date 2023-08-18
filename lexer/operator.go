@@ -9,3 +9,11 @@ const (
 	Divide   Operation = "/"
 	Modulo   Operation = "%"
 )
+
+var Operators = []Operation{
+	Add,
+	Subtract,
+	Multiply,
+	Divide,
+	Modulo,
+}

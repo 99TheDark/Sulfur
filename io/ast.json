@@ -11,7 +11,7 @@
        "Symbol": "int"
       },
       "Variable": {
-       "Symbol": "x"
+       "Symbol": "a"
       }
      },
      {
@@ -19,7 +19,7 @@
        "Symbol": "int"
       },
       "Variable": {
-       "Symbol": "y"
+       "Symbol": "b"
       }
      }
     ]
@@ -33,29 +33,34 @@
    },
    "Body": [
     {
-     "Value": {
+     "Condition": {
       "Left": {
-       "Symbol": "x"
+       "Left": {
+        "Symbol": "2"
+       },
+       "Right": {
+        "Symbol": "1"
+       },
+       "Operator": "+"
       },
       "Right": {
-       "Symbol": "y"
+       "Symbol": "3"
       },
-      "Operator": "+"
+      "Comparator": ">"
+     },
+     "Then": {
+      "Body": []
+     },
+     "Else": {
+      "Body": []
+     }
+    },
+    {
+     "Value": {
+      "Symbol": "0"
      }
     }
    ]
-  },
-  {
-   "Name": {
-    "Symbol": "main"
-   },
-   "Params": {
-    "Values": []
-   },
-   "Return": {
-    "Values": []
-   },
-   "Body": []
   }
  ]
 }

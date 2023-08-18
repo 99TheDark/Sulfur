@@ -10,3 +10,12 @@ const (
 	Equal              Comparison = "=="
 	NotEqual           Comparison = "!="
 )
+
+var Comparators = []Comparison{
+	LessThan,
+	GreaterThan,
+	LessThanOrEqual,
+	GreaterThanOrEqual,
+	Equal,
+	NotEqual,
+}

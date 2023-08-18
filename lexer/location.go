@@ -17,3 +17,5 @@ func CreateLocation(row, col, idx int) *Location {
 		idx,
 	}
 }
+
+var NoLocation = CreateLocation(0, 0, 0)

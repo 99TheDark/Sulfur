@@ -19,7 +19,7 @@ func (l *lexer) at() rune {
 	return l.source[l.loc.Idx]
 }
 
-func (l lexer) peek() rune {
+func (l *lexer) peek() rune {
 	return l.source[l.loc.Idx+1]
 }
 
@@ -39,12 +39,12 @@ func (l *lexer) eat() rune {
 	return ch
 }
 
-func (l lexer) all(start, end int) string {
+func (l *lexer) all(start, end int) string {
 	return string(l.source[start:(end + 1)])
 }
 
-func (l lexer) ahead(ahead int) string {
-	return l.all(l.loc.Idx, l.loc.Idx)
+func (l *lexer) ahead(ahead int) string {
+	return l.all(l.loc.Idx, l.loc.Idx+ahead-1)
 }
 
 func (l *lexer) start(mode TokenType) {
@@ -95,13 +95,11 @@ func (l *lexer) singleToken(tokentype TokenType) {
 	l.eat()
 }
 
-func (l *lexer) splitAdd(token *Token, endings ...TokenType) {
-	if utils.Contains(endings, l.mode) {
-		l.add(l.end())
+func parseKeys[T ~string](l *lexer, keys []T) bool {
+	for _, key := range keys {
+		fmt.Println(key, len(key))
 	}
-	l.add(token)
-
-	l.eat()
+	return false
 }
 
 func Lex(source string) *[]Token {

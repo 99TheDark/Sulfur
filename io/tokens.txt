@@ -2,24 +2,28 @@
     Token{Identifier 'add' at 0:0, #0}
     Token{LeftParen '(' at 0:3, #3}
     Token{Identifier 'int' at 0:4, #4}
-    Token{Identifier 'x' at 0:8, #8}
+    Token{Identifier 'a' at 0:8, #8}
     Token{Delimiter ',' at 0:9, #9}
     Token{Identifier 'int' at 0:11, #11}
-    Token{Identifier 'y' at 0:15, #15}
+    Token{Identifier 'b' at 0:15, #15}
     Token{RightParen ')' at 0:16, #16}
     Token{LeftParen '(' at 0:18, #18}
     Token{Identifier 'int' at 0:19, #19}
     Token{RightParen ')' at 0:22, #22}
     Token{LeftBrace '{' at 0:24, #24}
-    Token{Keyword 'return' at 1:4, #30}
-    Token{Identifier 'x' at 1:11, #37}
-    Token{Operator '+' at 1:13, #39}
-    Token{Identifier 'y' at 1:15, #41}
-    Token{RightBrace '}' at 2:0, #43}
-    Token{Identifier 'main' at 4:0, #46}
-    Token{LeftParen '(' at 4:4, #50}
-    Token{RightParen ')' at 4:5, #51}
-    Token{LeftBrace '{' at 4:7, #53}
-    Token{RightBrace '}' at 6:0, #56}
-    Token{EOF 'EOF' at 6:1, #57}
+    Token{Identifier 'if' at 1:4, #30}
+    Token{Identifier '2' at 1:7, #33}
+    Token{Operator '+' at 1:9, #35}
+    Token{Identifier '1' at 1:11, #37}
+    Token{Comparator '>' at 1:13, #39}
+    Token{Identifier '3' at 1:15, #41}
+    Token{LeftBrace '{' at 1:17, #43}
+    Token{RightBrace '}' at 3:4, #50}
+    Token{Identifier 'else' at 3:6, #52}
+    Token{LeftBrace '{' at 3:11, #57}
+    Token{RightBrace '}' at 5:4, #64}
+    Token{Keyword 'return' at 6:4, #70}
+    Token{Identifier '0' at 6:11, #77}
+    Token{RightBrace '}' at 7:0, #79}
+    Token{EOF 'EOF' at 7:1, #80}
 }
