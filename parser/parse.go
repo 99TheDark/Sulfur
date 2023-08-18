@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"bytes"
 	"encoding/json"
 	"golang/lexer"
 	"golang/utils"
@@ -149,7 +150,7 @@ func (p *parser) parseComparison() Expression {
 	left := p.parseAdditive()
 	if p.at().Type == lexer.Comparator {
 		token := p.eat()
-		return Comparison{token.Location, left, p.parseAdditive(), p.cmp()}
+		return Comparison{token.Location, left, p.parseAdditive(), lexer.Comparison(token.Value)}
 	}
 	return left
 }
@@ -222,10 +223,18 @@ func Parse(tokens *[]lexer.Token) Program {
 }
 
 func Save(ast Program, spaces int, location string) error {
-	json, err := json.MarshalIndent(ast, "", strings.Repeat(" ", spaces))
+	buf := new(bytes.Buffer)
+	enc := json.NewEncoder(buf)
+
+	enc.SetEscapeHTML(false)
+	if spaces > 0 {
+		enc.SetIndent("", strings.Repeat(" ", spaces))
+	}
+
+	err := enc.Encode(ast)
 	if err != nil {
 		return err
 	}
 
-	return utils.SaveFile(json, location)
+	return utils.SaveFile(buf.Bytes(), location)
 }

@@ -46,7 +46,7 @@
     "Right": {
      "Symbol": "b"
     },
-    "Comparator": "{"
+    "Comparator": ">"
    },
    "Then": [
     {
@@ -58,7 +58,45 @@
      }
     }
    ],
-   "Else": []
+   "Else": [
+    {
+     "Condition": {
+      "Left": {
+       "Left": {
+        "Symbol": "c"
+       },
+       "Right": {
+        "Symbol": "d"
+       },
+       "Operator": "*"
+      },
+      "Right": {
+       "Symbol": "f"
+      },
+      "Comparator": "<"
+     },
+     "Then": [
+      {
+       "Name": {
+        "Symbol": "print"
+       },
+       "Params": {
+        "Values": []
+       }
+      }
+     ],
+     "Else": [
+      {
+       "Name": {
+        "Symbol": "print"
+       },
+       "Params": {
+        "Values": []
+       }
+      }
+     ]
+    }
+   ]
   }
  ]
 }
