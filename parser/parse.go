@@ -135,6 +135,9 @@ func (p *parser) parseFunction() Expression {
 
 			p.expect(lexer.LeftBrace)
 			return FunctionLiteral{name, params, ret, p.parseBlock()}
+		} else if p.at().Type == lexer.LeftBrace {
+			p.expect(lexer.LeftBrace)
+			return FunctionLiteral{name, params, List{[]Expression{}}, p.parseBlock()}
 		} else {
 			return FunctionCall{name, params}
 		}

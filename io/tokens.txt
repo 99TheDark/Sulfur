@@ -16,34 +16,10 @@
     Token{Operator '+' at 1:13, #39}
     Token{Identifier 'y' at 1:15, #41}
     Token{RightBrace '}' at 2:0, #43}
-    Token{Identifier 'if' at 4:0, #46}
-    Token{Identifier 'a' at 4:3, #49}
-    Token{Comparator '>' at 4:5, #51}
-    Token{Identifier 'b' at 4:7, #53}
-    Token{LeftBrace '{' at 4:9, #55}
-    Token{Identifier 'print' at 5:4, #61}
-    Token{LeftParen '(' at 5:9, #66}
-    Token{Identifier 'abc' at 5:10, #67}
-    Token{RightParen ')' at 5:13, #70}
-    Token{RightBrace '}' at 6:0, #72}
-    Token{Identifier 'elseif' at 6:2, #74}
-    Token{Identifier 'c' at 6:9, #81}
-    Token{Operator '*' at 6:11, #83}
-    Token{Identifier 'd' at 6:13, #85}
-    Token{Comparator '<' at 6:15, #87}
-    Token{Identifier 'f' at 6:17, #89}
-    Token{LeftBrace '{' at 6:19, #91}
-    Token{Identifier 'print' at 7:4, #97}
-    Token{LeftParen '(' at 7:9, #102}
-    Token{Identifier 'def' at 7:10, #103}
-    Token{RightParen ')' at 7:13, #106}
-    Token{RightBrace '}' at 8:0, #108}
-    Token{Identifier 'else' at 8:2, #110}
-    Token{LeftBrace '{' at 8:7, #115}
-    Token{Identifier 'print' at 9:4, #121}
-    Token{LeftParen '(' at 9:9, #126}
-    Token{Identifier 'ghi' at 9:10, #127}
-    Token{RightParen ')' at 9:13, #130}
-    Token{RightBrace '}' at 10:0, #132}
-    Token{EOF 'EOF' at 10:1, #133}
+    Token{Identifier 'main' at 4:0, #46}
+    Token{LeftParen '(' at 4:4, #50}
+    Token{RightParen ')' at 4:5, #51}
+    Token{LeftBrace '{' at 4:7, #53}
+    Token{RightBrace '}' at 6:0, #56}
+    Token{EOF 'EOF' at 6:1, #57}
 }
