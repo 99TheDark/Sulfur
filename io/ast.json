@@ -2,6 +2,39 @@
   "Body": [
     {
       "Symbol": "add"
+    },
+    {
+      "Values": [
+        {
+          "Type": {
+            "Symbol": "int"
+          },
+          "Variable": {
+            "Symbol": "x"
+          }
+        },
+        {
+          "Type": {
+            "Symbol": "int"
+          },
+          "Variable": {
+            "Symbol": "y"
+          }
+        }
+      ]
+    },
+    {
+      "Body": [
+        {
+          "Left": {
+            "Symbol": "x"
+          },
+          "Right": {
+            "Symbol": "y"
+          },
+          "Operator": "+"
+        }
+      ]
     }
   ]
 }

@@ -1,15 +1,16 @@
 []Token{
-    Token{LeftParen '(' at 0:0, #0}
-    Token{Identifier 'int' at 0:1, #1}
-    Token{Identifier 'x' at 0:5, #5}
-    Token{Delimiter ',' at 0:6, #6}
-    Token{Identifier 'int' at 0:8, #8}
-    Token{Identifier 'y' at 0:12, #12}
-    Token{RightParen ')' at 0:13, #13}
-    Token{LeftBrace '{' at 0:15, #15}
-    Token{Identifier 'x' at 1:4, #21}
-    Token{Operator '+' at 1:6, #23}
-    Token{Identifier 'y' at 1:8, #25}
-    Token{RightBrace '}' at 2:0, #27}
-    Token{EOF 'EOF' at 2:1, #28}
+    Token{Identifier 'add' at 0:0, #0}
+    Token{LeftParen '(' at 0:3, #3}
+    Token{Identifier 'int' at 0:4, #4}
+    Token{Identifier 'x' at 0:8, #8}
+    Token{Delimiter ',' at 0:9, #9}
+    Token{Identifier 'int' at 0:11, #11}
+    Token{Identifier 'y' at 0:15, #15}
+    Token{RightParen ')' at 0:16, #16}
+    Token{LeftBrace '{' at 0:18, #18}
+    Token{Identifier 'x' at 1:4, #24}
+    Token{Operator '+' at 1:6, #26}
+    Token{Identifier 'y' at 1:8, #28}
+    Token{RightBrace '}' at 2:0, #30}
+    Token{EOF 'EOF' at 2:1, #31}
 }

@@ -17,6 +17,10 @@ func (p *parser) at() lexer.Token {
 	return p.tokens[p.idx]
 }
 
+func (p *parser) peek() lexer.Token {
+	return p.tokens[p.idx+1]
+}
+
 func (p *parser) eat() lexer.Token {
 	el := p.at()
 	p.idx++
@@ -89,15 +93,14 @@ func (p *parser) parseMultiplicative() Expression {
 }
 
 func (p *parser) parseDatatype() Expression {
-	// this function doesn't work :/
-	left := p.parsePrimary()
-	if datatype, ok := left.(Identifier); ok {
-		next := p.parsePrimary()
-		if variable, ok := next.(Identifier); ok {
-			return Datatype{datatype, variable}
+	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.Identifier {
+		dt, val := p.eat(), p.eat()
+		return Datatype{
+			Identifier{dt.Location, dt.Value},
+			Identifier{val.Location, val.Value},
 		}
 	}
-	return left
+	return p.parsePrimary()
 }
 
 func (p *parser) parsePrimary() Expression {
