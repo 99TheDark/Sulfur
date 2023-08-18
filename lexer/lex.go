@@ -80,14 +80,19 @@ func (l *lexer) add(token *Token) {
 	l.tokens = append(l.tokens, *token)
 }
 
-func (l *lexer) singleToken(tokentype TokenType) *Token {
-	return CreateToken(
+func (l *lexer) singleToken(tokentype TokenType) {
+	if l.mode == Identifier {
+		l.add(l.end())
+	}
+	l.add(CreateToken(
 		tokentype,
 		string(l.at()),
 		l.loc.Row,
 		l.loc.Col,
 		l.loc.Idx,
-	)
+	))
+
+	l.eat()
 }
 
 func (l *lexer) splitAdd(token *Token, endings ...TokenType) {
@@ -112,30 +117,29 @@ func Lex(source string) *[]Token {
 	for !l.eof {
 		// TODO: multi-character key tokens (>=, ++, etc)
 		// TODO: add comments & multiline comments
-		// TODO: cleanup verbose code
 		switch l.at() {
 		case ' ':
-			l.splitAdd(l.singleToken(Space), Identifier)
+			l.singleToken(Space)
 		case '\n':
-			l.splitAdd(l.singleToken(NewLine), Identifier)
+			l.singleToken(NewLine)
 		case '(':
-			l.splitAdd(l.singleToken(LeftParen), Identifier)
+			l.singleToken(LeftParen)
 		case ')':
-			l.splitAdd(l.singleToken(RightParen), Identifier)
+			l.singleToken(RightParen)
 		case '[':
-			l.splitAdd(l.singleToken(LeftBracket), Identifier)
+			l.singleToken(LeftBracket)
 		case ']':
-			l.splitAdd(l.singleToken(RightBracket), Identifier)
+			l.singleToken(RightBracket)
 		case '{':
-			l.splitAdd(l.singleToken(LeftBrace), Identifier)
+			l.singleToken(LeftBrace)
 		case '}':
-			l.splitAdd(l.singleToken(RightBrace), Identifier)
+			l.singleToken(RightBrace)
 		case '+', '-', '*', '/', '%':
-			l.splitAdd(l.singleToken(Operator), Identifier)
+			l.singleToken(Operator)
 		case '>', '<':
-			l.splitAdd(l.singleToken(Comparator), Identifier)
+			l.singleToken(Comparator)
 		case ',':
-			l.splitAdd(l.singleToken(Delimiter), Identifier)
+			l.singleToken(Delimiter)
 		default:
 			if l.mode == None {
 				l.start(Identifier)
