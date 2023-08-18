@@ -7,12 +7,7 @@
    "Params": {
     "Values": [
      {
-      "Type": {
-       "Symbol": "int"
-      },
-      "Variable": {
-       "Symbol": "x"
-      }
+      "Symbol": "x"
      },
      {
       "Type": {
@@ -23,14 +18,12 @@
       }
      }
     ]
-   },
-   "Return": {
-    "Values": [
-     {
-      "Symbol": "int"
-     }
-    ]
-   },
+   }
+  },
+  {
+   "Symbol": "int"
+  },
+  {
    "Body": [
     {
      "Value": {
@@ -44,6 +37,28 @@
      }
     }
    ]
+  },
+  {
+   "Condition": {
+    "Left": {
+     "Symbol": "a"
+    },
+    "Right": {
+     "Symbol": "b"
+    },
+    "Comparator": "{"
+   },
+   "Then": [
+    {
+     "Name": {
+      "Symbol": "print"
+     },
+     "Params": {
+      "Values": []
+     }
+    }
+   ],
+   "Else": []
   }
  ]
 }

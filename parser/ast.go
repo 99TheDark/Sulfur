@@ -39,6 +39,13 @@ type (
 		Operator lexer.Operation
 	}
 
+	Comparison struct {
+		Loc        *lexer.Location `json:"-"`
+		Left       Expression
+		Right      Expression
+		Comparator lexer.Comparison
+	}
+
 	FunctionLiteral struct {
 		Name   Identifier
 		Params List
@@ -54,6 +61,13 @@ type (
 	Return struct {
 		Value Expression
 	}
+
+	IfStatement struct {
+		Loc       *lexer.Location `json:"-"`
+		Condition Expression
+		Then      []Expression
+		Else      []Expression
+	}
 )
 
 func (x Block) Location() *lexer.Location           { return x.Loc }
@@ -61,6 +75,8 @@ func (x Identifier) Location() *lexer.Location      { return x.Loc }
 func (x Datatype) Location() *lexer.Location        { return x.Type.Loc }
 func (x List) Location() *lexer.Location            { return x.Values[0].Location() } // Length always >= 2
 func (x BinaryOperation) Location() *lexer.Location { return x.Loc }
+func (x Comparison) Location() *lexer.Location      { return x.Loc }
 func (x FunctionLiteral) Location() *lexer.Location { return x.Name.Loc }
 func (x FunctionCall) Location() *lexer.Location    { return x.Name.Loc }
 func (x Return) Location() *lexer.Location          { return x.Value.Location() }
+func (x IfStatement) Location() *lexer.Location     { return x.Loc }

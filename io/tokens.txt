@@ -16,5 +16,15 @@
     Token{Operator '+' at 1:13, #39}
     Token{Identifier 'y' at 1:15, #41}
     Token{RightBrace '}' at 2:0, #43}
-    Token{EOF 'EOF' at 2:1, #44}
+    Token{Identifier 'if' at 4:0, #46}
+    Token{Identifier 'a' at 4:3, #49}
+    Token{Comparator '>' at 4:5, #51}
+    Token{Identifier 'b' at 4:7, #53}
+    Token{LeftBrace '{' at 4:9, #55}
+    Token{Identifier 'print' at 5:4, #61}
+    Token{LeftParen '(' at 5:9, #66}
+    Token{Identifier 'abc' at 5:10, #67}
+    Token{RightParen ')' at 5:13, #70}
+    Token{RightBrace '}' at 6:0, #72}
+    Token{EOF 'EOF' at 6:2, #74}
 }

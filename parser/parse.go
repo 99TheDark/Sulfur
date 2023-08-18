@@ -38,6 +38,10 @@ func (p *parser) op() lexer.Operation {
 	return lexer.Operation(p.at().Value)
 }
 
+func (p *parser) cmp() lexer.Comparison {
+	return lexer.Comparison(p.at().Value)
+}
+
 func (p *parser) key() lexer.Keywords {
 	return lexer.Keywords(p.at().Value)
 }
@@ -72,7 +76,32 @@ func (p *parser) parseBlock() []Expression {
 	return block
 }
 
+func (p *parser) parseIfStatement(token lexer.Token) Expression {
+	condition := p.parseReturn()
+
+	p.expect(lexer.LeftBrace)
+
+	body := p.parseBlock()
+	if p.key() == lexer.ElseIf {
+		next := p.eat()
+		return IfStatement{token.Location, condition, body, []Expression{p.parseIfStatement(next)}}
+	} else if p.key() == lexer.Else {
+		p.eat()
+		p.expect(lexer.LeftBrace)
+		return IfStatement{token.Location, condition, body, p.parseBlock()}
+	} else {
+		return IfStatement{token.Location, condition, body, []Expression{}}
+	}
+}
+
 func (p *parser) parseExpression() Expression {
+	return p.parseControl()
+}
+
+func (p *parser) parseControl() Expression {
+	if p.key() == lexer.If {
+		return p.parseIfStatement(p.eat())
+	}
 	return p.parseReturn()
 }
 
@@ -104,16 +133,25 @@ func (p *parser) parseFunction() Expression {
 }
 
 func (p *parser) parseList() Expression {
-	list := []Expression{p.parseAdditive()}
+	list := []Expression{p.parseComparison()}
 	for p.at().Type == lexer.Delimiter {
 		p.eat()
-		list = append(list, p.parseAdditive())
+		list = append(list, p.parseComparison())
 	}
 
 	if len(list) == 1 {
 		return list[0]
 	}
 	return List{list}
+}
+
+func (p *parser) parseComparison() Expression {
+	left := p.parseAdditive()
+	if p.at().Type == lexer.Comparator {
+		token := p.eat()
+		return Comparison{token.Location, left, p.parseAdditive(), p.cmp()}
+	}
+	return left
 }
 
 func (p *parser) parseAdditive() Expression {
@@ -128,12 +166,23 @@ func (p *parser) parseAdditive() Expression {
 }
 
 func (p *parser) parseMultiplicative() Expression {
-	left := p.parseDatatype()
+	left := p.parseFunctionCall()
 	for p.op() == lexer.Multiply || p.op() == lexer.Divide {
 		token := p.eat()
-		right := p.parseDatatype()
+		right := p.parseFunctionCall()
 
 		left = BinaryOperation{token.Location, left, right, lexer.Operation(token.Value)}
+	}
+	return left
+}
+
+func (p *parser) parseFunctionCall() Expression {
+	left := p.parseDatatype()
+	if name, ok := left.(Identifier); ok && p.at().Type == lexer.LeftParen {
+		p.eat()
+		params := p.listify()
+
+		return FunctionCall{name, params}
 	}
 	return left
 }

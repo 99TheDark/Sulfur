@@ -110,6 +110,9 @@ func Lex(source string) *[]Token {
 	}
 
 	for !l.eof {
+		// TODO: add comments & multiline comments
+		// TODO: cleanup verbose code
+		// TODO: multi-character key tokens (>=, ++, etc)
 		switch l.at() {
 		case ' ':
 			l.splitAdd(l.singleToken(Space), Identifier)
@@ -129,6 +132,8 @@ func Lex(source string) *[]Token {
 			l.splitAdd(l.singleToken(RightBrace), Identifier)
 		case '+', '-', '*', '/', '%':
 			l.splitAdd(l.singleToken(Operator), Identifier)
+		case '>', '<':
+			l.splitAdd(l.singleToken(Comparator), Identifier)
 		case ',':
 			l.splitAdd(l.singleToken(Delimiter), Identifier)
 		default:

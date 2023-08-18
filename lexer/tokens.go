@@ -18,6 +18,7 @@ const (
 	Identifier
 	Keyword
 	Operator
+	Comparator
 	Space
 	NewLine
 	LeftParen
@@ -52,6 +53,8 @@ func (tt TokenType) String() string {
 		return "Keyword"
 	case Operator:
 		return "Operator"
+	case Comparator:
+		return "Comparator"
 	case Space:
 		return "Space"
 	case NewLine:
