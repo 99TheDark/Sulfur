@@ -7,7 +7,12 @@
    "Params": {
     "Values": [
      {
-      "Symbol": "x"
+      "Type": {
+       "Symbol": "int"
+      },
+      "Variable": {
+       "Symbol": "x"
+      }
      },
      {
       "Type": {
@@ -18,12 +23,14 @@
       }
      }
     ]
-   }
-  },
-  {
-   "Symbol": "int"
-  },
-  {
+   },
+   "Return": {
+    "Values": [
+     {
+      "Symbol": "int"
+     }
+    ]
+   },
    "Body": [
     {
      "Value": {
@@ -35,66 +42,6 @@
       },
       "Operator": "+"
      }
-    }
-   ]
-  },
-  {
-   "Condition": {
-    "Left": {
-     "Symbol": "a"
-    },
-    "Right": {
-     "Symbol": "b"
-    },
-    "Comparator": ">"
-   },
-   "Then": [
-    {
-     "Name": {
-      "Symbol": "print"
-     },
-     "Params": {
-      "Values": []
-     }
-    }
-   ],
-   "Else": [
-    {
-     "Condition": {
-      "Left": {
-       "Left": {
-        "Symbol": "c"
-       },
-       "Right": {
-        "Symbol": "d"
-       },
-       "Operator": "*"
-      },
-      "Right": {
-       "Symbol": "f"
-      },
-      "Comparator": "<"
-     },
-     "Then": [
-      {
-       "Name": {
-        "Symbol": "print"
-       },
-       "Params": {
-        "Values": []
-       }
-      }
-     ],
-     "Else": [
-      {
-       "Name": {
-        "Symbol": "print"
-       },
-       "Params": {
-        "Values": []
-       }
-      }
-     ]
     }
    ]
   }

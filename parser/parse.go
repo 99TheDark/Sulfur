@@ -3,14 +3,15 @@ package parser
 import (
 	"bytes"
 	"encoding/json"
+	"golang/errors"
 	"golang/lexer"
 	"golang/utils"
-	"log"
 	"strings"
 )
 
 type parser struct {
 	tokens []lexer.Token
+	errgen errors.ErrorGenerator
 	idx    int
 }
 
@@ -31,7 +32,10 @@ func (p *parser) eat() lexer.Token {
 func (p *parser) expect(tokentype lexer.TokenType) {
 	token := p.eat()
 	if token.Type != tokentype {
-		log.Fatalln("Expected " + tokentype.String() + ", but got " + token.Type.String() + " '" + token.Value + "' instead")
+		p.errgen.Error(
+			"Expected "+tokentype.String()+", but got "+token.Type.String()+" '"+token.Value+"' instead",
+			token.Location,
+		)
 	}
 }
 
@@ -115,11 +119,15 @@ func (p *parser) parseReturn() Expression {
 }
 
 func (p *parser) parseFunction() Expression {
-	left := p.parseList()
-	if name, ok := left.(Identifier); ok && p.at().Type == lexer.LeftParen {
+	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.LeftParen {
+		token := p.eat()
+		name := Identifier{token.Location, token.Value}
 		params, ret := p.listify(), p.listify()
 		if len(ret.Values) > 1 {
-			log.Fatalln("More than 1 return value is not yet supported")
+			p.errgen.Error(
+				"More than 1 return value is not yet supported",
+				ret.Location(),
+			)
 		}
 
 		if p.at().Type == lexer.LeftBrace {
@@ -130,7 +138,8 @@ func (p *parser) parseFunction() Expression {
 		}
 	}
 
-	return left
+	return p.parseList()
+
 }
 
 func (p *parser) parseList() Expression {
@@ -213,8 +222,8 @@ func (p *parser) parsePrimary() Expression {
 	}
 }
 
-func Parse(tokens *[]lexer.Token) Program {
-	parser := parser{*tokens, 0}
+func Parse(source string, unfiltered, tokens *[]lexer.Token) Program {
+	parser := parser{*tokens, errors.New(source, unfiltered), 0}
 	statements := []Expression{}
 	for parser.at().Type != lexer.EOF {
 		statements = append(statements, parser.parseExpression())

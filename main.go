@@ -13,13 +13,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	tokens := lexer.Lex(code)
-	lexer.Filter(tokens)
+	unfiltered := lexer.Lex(code)
+	tokens := lexer.Filter(unfiltered)
 	if err := lexer.Save(tokens, "io/tokens.txt"); err != nil {
 		log.Fatalln(err)
 	}
 
-	ast := parser.Parse(tokens)
+	ast := parser.Parse(code, unfiltered, tokens)
 	if err := parser.Save(ast, 1, "io/ast.json"); err != nil {
 		log.Fatalln(err)
 	}

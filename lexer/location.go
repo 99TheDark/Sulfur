@@ -6,7 +6,7 @@ type Location struct {
 	Idx int
 }
 
-func (loc Location) Get() (int, int, int) {
+func (loc Location) Get() (row, col, idx int) {
 	return loc.Row, loc.Col, loc.Idx
 }
 

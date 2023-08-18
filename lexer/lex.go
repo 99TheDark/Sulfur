@@ -152,11 +152,12 @@ func Lex(source string) *[]Token {
 	return &l.tokens
 }
 
-func Filter(tokens *[]Token) {
+func Filter(tokens *[]Token) *[]Token {
 	filter := func(item Token) bool {
 		return item.Type != Space && item.Type != NewLine
 	}
-	*tokens = utils.Filter(*tokens, filter)
+	filtered := utils.Filter(*tokens, filter)
+	return &filtered
 }
 
 func Stringify(tokens *[]Token) string {
