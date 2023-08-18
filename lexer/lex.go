@@ -110,9 +110,9 @@ func Lex(source string) *[]Token {
 	}
 
 	for !l.eof {
+		// TODO: multi-character key tokens (>=, ++, etc)
 		// TODO: add comments & multiline comments
 		// TODO: cleanup verbose code
-		// TODO: multi-character key tokens (>=, ++, etc)
 		switch l.at() {
 		case ' ':
 			l.splitAdd(l.singleToken(Space), Identifier)
