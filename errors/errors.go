@@ -50,7 +50,7 @@ func (gen *ErrorGenerator) Error(msg string, loc *lexer.Location) string {
 	start, end := gen.rowStart(row-4), gen.rowEnd(row)
 	err := "\n" + string(gen.source[start:end+1]) + "\n"
 
-	sidebuf := strings.Repeat(" ", utils.Max(0, col-1))
+	sidebuf := strings.Repeat(" ", utils.Max(0, col))
 	err += sidebuf + "^\n"
 
 	err += msg + " (" + fmt.Sprint(row+1) + ":" + fmt.Sprint(col+1) + ")\n"

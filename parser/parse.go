@@ -157,7 +157,6 @@ func (p *parser) parseDeclaration() Expression {
 			datatype.Datatype,
 			datatype.Variable,
 			value,
-			NoType,
 		}
 	}
 	return left
@@ -248,7 +247,6 @@ func (p *parser) parseAdditive() Expression {
 			left,
 			right,
 			lexer.Operation(token.Value),
-			NoType,
 		}
 	}
 	return left
@@ -265,7 +263,6 @@ func (p *parser) parseMultiplicative() Expression {
 			left,
 			right,
 			lexer.Operation(token.Value),
-			NoType,
 		}
 	}
 	return left
@@ -283,7 +280,6 @@ func (p *parser) parseDatatype() Expression {
 				val.Location,
 				val.Value,
 			},
-			NoType,
 		}
 	}
 	return p.parsePrimary()
@@ -310,6 +306,16 @@ func (p *parser) parsePrimary() Expression {
 				token.Location,
 				"Numerical Error '" + token.Value + "'",
 			}
+		}
+	case lexer.Boolean:
+		val := true
+		if token.Value == "false" {
+			val = false
+		}
+
+		return BoolLiteral{
+			token.Location,
+			val,
 		}
 	case lexer.LeftParen:
 		return p.parseGroup()

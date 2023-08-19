@@ -2,7 +2,7 @@
  "Contents": {
   "Body": [
    {
-    "Type": {
+    "Datatype": {
      "Symbol": "int"
     },
     "Variable": {

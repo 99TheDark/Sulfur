@@ -17,6 +17,7 @@ const (
 	None TokenType = iota
 	Identifier
 	Number
+	Boolean
 	Keyword
 	Assignment
 	Operator
@@ -53,6 +54,8 @@ func (tt TokenType) String() string {
 		return "Identifier"
 	case Number:
 		return "Number"
+	case Boolean:
+		return "Boolean"
 	case Keyword:
 		return "Keyword"
 	case Assignment:

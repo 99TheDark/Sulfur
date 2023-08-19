@@ -164,7 +164,9 @@ func Lex(source string) *[]Token {
 			case '=':
 				l.singleToken(Assignment)
 			default:
-				if op := parseKeys(l, Operators); op != nil {
+				if tf := parseKeys(l, Booleans); tf != nil {
+					l.multiToken(Boolean, len(*tf))
+				} else if op := parseKeys(l, Operators); op != nil {
 					l.multiToken(Operator, len(*op))
 				} else if cmp := parseKeys(l, Comparators); cmp != nil {
 					l.multiToken(Comparator, len(*cmp))

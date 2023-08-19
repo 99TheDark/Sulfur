@@ -39,21 +39,18 @@ type (
 	Datatype struct {
 		Datatype Identifier
 		Variable Identifier
-		Type     string
 	}
 
 	Declaration struct {
 		Datatype Identifier
 		Variable Identifier
 		Value    Expression
-		Type     string
 	}
 
 	Assignment struct {
 		Variable Identifier
 		Value    Expression
 		Operator lexer.Operation
-		Type     string
 	}
 
 	List struct {
@@ -65,7 +62,6 @@ type (
 		Left     Expression
 		Right    Expression
 		Operator lexer.Operation
-		Type     string
 	}
 
 	Comparison struct {
@@ -151,22 +147,60 @@ func (x Return) Location() *lexer.Location          { return x.Value.Location() 
 func (x IfStatement) Location() *lexer.Location     { return x.Loc }
 
 // Infer Type
-func (x Program) InferType() string         { return "" }
-func (x Block) InferType() string           { return "" }
-func (x Identifier) InferType() string      { return "" }
-func (x Datatype) InferType() string        { return "" }
-func (x Declaration) InferType() string     { return "" }
-func (x Assignment) InferType() string      { return "" }
-func (x List) InferType() string            { return "" }
-func (x BinaryOperation) InferType() string { return "" }
-func (x Comparison) InferType() string      { return "" }
-func (x FunctionLiteral) InferType() string { return "" }
-func (x FunctionCall) InferType() string    { return "" }
-func (x IntegerLiteral) InferType() string  { return "" }
-func (x FloatLiteral) InferType() string    { return "" }
-func (x BoolLiteral) InferType() string     { return "" }
-func (x Return) InferType() string          { return "" }
-func (x IfStatement) InferType() string     { return "" }
+func (x Program) InferType() string {
+	x.Contents.InferType()
+	return ""
+}
+func (x Block) InferType() string {
+	for _, child := range x.Body {
+		child.InferType()
+	}
+	return ""
+}
+func (x Identifier) InferType() string { // tricky
+	return ""
+}
+func (x Datatype) InferType() string {
+	return x.Datatype.Symbol
+}
+func (x Declaration) InferType() string {
+	return confirm(x, x.Datatype.Symbol, x.Value.InferType())
+}
+func (x Assignment) InferType() string { // tricky
+	return ""
+}
+func (x List) InferType() string {
+	return ""
+}
+func (x BinaryOperation) InferType() string {
+	return confirm(x, x.Left.InferType(), x.Right.InferType())
+}
+func (x Comparison) InferType() string {
+	confirm(x, x.Left.InferType(), x.Right.InferType())
+	return "bool"
+}
+func (x FunctionLiteral) InferType() string {
+	return "func"
+}
+func (x FunctionCall) InferType() string { // tricky
+	return ""
+}
+func (x IntegerLiteral) InferType() string {
+	return "int"
+}
+func (x FloatLiteral) InferType() string {
+	return "float"
+}
+func (x BoolLiteral) InferType() string {
+	return "bool"
+}
+func (x Return) InferType() string { // tricky
+	x.Value.InferType()
+	return ""
+}
+func (x IfStatement) InferType() string {
+	return ""
+}
 
 // Generate
 func (x Program) Generate(bl *ir.Block) value.Value {
@@ -248,4 +282,9 @@ func confirm(expr Expression, types ...string) string {
 		}
 	}
 	return f
+}
+
+func Type(ast Program) Program {
+	ast.InferType()
+	return ast
 }

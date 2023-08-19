@@ -31,7 +31,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	typed := ast.InferType()
+	typed := parser.Type(ast)
 	if err := parser.Save(typed, 1, "io/typed.json"); err != nil {
 		log.Fatalln(err)
 	}
