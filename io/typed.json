@@ -3,37 +3,85 @@
   "Body": [
    {
     "Datatype": {
-     "Symbol": "int"
+     "Symbol": "int",
+     "Type": {
+      "Name": "int",
+      "Underlying": "int"
+     }
     },
     "Variable": {
-     "Symbol": "x"
+     "Symbol": "x",
+     "Type": {
+      "Name": "int",
+      "Underlying": "int"
+     }
     },
     "Value": {
      "Left": {
       "Left": {
-       "Value": 3
+       "Value": 3,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
       },
       "Right": {
        "Left": {
-        "Value": 5
+        "Value": 5,
+        "Type": {
+         "Name": "int",
+         "Underlying": "int"
+        }
        },
        "Right": {
-        "Value": 7
+        "Value": 7,
+        "Type": {
+         "Name": "int",
+         "Underlying": "int"
+        }
        },
-       "Operator": "*"
+       "Operator": "*",
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
       },
-      "Operator": "+"
+      "Operator": "+",
+      "Type": {
+       "Name": "int",
+       "Underlying": "int"
+      }
      },
      "Right": {
       "Left": {
-       "Value": 4
+       "Value": 4,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
       },
       "Right": {
-       "Value": 2
+       "Value": 2,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
       },
-      "Operator": "/"
+      "Operator": "/",
+      "Type": {
+       "Name": "int",
+       "Underlying": "int"
+      }
      },
-     "Operator": "-"
+     "Operator": "-",
+     "Type": {
+      "Name": "int",
+      "Underlying": "int"
+     }
+    },
+    "Type": {
+     "Name": "int",
+     "Underlying": "int"
     }
    }
   ],

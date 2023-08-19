@@ -15,10 +15,16 @@ type Expression interface {
 	Children() []Expression
 	Location() *lexer.Location
 	InferType() string
+	GetType() *Type
 	Generate(bl *ir.Block) value.Value
 }
 
-const NoType = ""
+type Type struct {
+	Name       string
+	Underlying typing.UnderlyingType
+}
+
+var NoType = &Type{"", typing.Void}
 
 type (
 	Program struct {
@@ -34,6 +40,7 @@ type (
 	Identifier struct {
 		Loc    *lexer.Location `json:"-"`
 		Symbol string
+		Type   *Type
 	}
 
 	Datatype struct {
@@ -45,12 +52,14 @@ type (
 		Datatype Identifier
 		Variable Identifier
 		Value    Expression
+		Type     *Type
 	}
 
 	Assignment struct {
 		Variable Identifier
 		Value    Expression
 		Operator lexer.Operation
+		Type     *Type
 	}
 
 	List struct {
@@ -62,6 +71,7 @@ type (
 		Left     Expression
 		Right    Expression
 		Operator lexer.Operation
+		Type     *Type
 	}
 
 	Comparison struct {
@@ -69,6 +79,7 @@ type (
 		Left       Expression
 		Right      Expression
 		Comparator lexer.Comparison
+		Type       *Type
 	}
 
 	FunctionLiteral struct {
@@ -76,26 +87,31 @@ type (
 		Params List
 		Return List
 		Body   []Expression
+		Type   *Type
 	}
 
 	FunctionCall struct {
 		Name   Identifier
 		Params List
+		Type   *Type
 	}
 
 	IntegerLiteral struct {
 		Loc   *lexer.Location `json:"-"`
 		Value int64
+		Type  *Type
 	}
 
 	FloatLiteral struct {
 		Loc   *lexer.Location `json:"-"`
 		Value float64
+		Type  *Type
 	}
 
 	BoolLiteral struct {
 		Loc   *lexer.Location `json:"-"`
 		Value bool
+		Type  *Type
 	}
 
 	Return struct {
@@ -164,7 +180,9 @@ func (x Datatype) InferType() string {
 	return x.Datatype.Symbol
 }
 func (x Declaration) InferType() string {
-	return confirm(x, x.Datatype.Symbol, x.Value.InferType())
+	typ := confirm(x, x.Datatype.Symbol, x.Value.InferType())
+	x.Type.Name, x.Type.Underlying = typ, typing.Underlying(typ)
+	return typ
 }
 func (x Assignment) InferType() string { // tricky
 	return ""
@@ -177,21 +195,26 @@ func (x BinaryOperation) InferType() string {
 }
 func (x Comparison) InferType() string {
 	confirm(x, x.Left.InferType(), x.Right.InferType())
+	x.Type.Name, x.Type.Underlying = "bool", typing.Bool
 	return "bool"
 }
 func (x FunctionLiteral) InferType() string {
+	x.Type.Name, x.Type.Underlying = "func", typing.Func
 	return "func"
 }
 func (x FunctionCall) InferType() string { // tricky
 	return ""
 }
 func (x IntegerLiteral) InferType() string {
+	x.Type.Name, x.Type.Underlying = "int", typing.Int
 	return "int"
 }
 func (x FloatLiteral) InferType() string {
+	x.Type.Name, x.Type.Underlying = "float", typing.Float
 	return "float"
 }
 func (x BoolLiteral) InferType() string {
+	x.Type.Name, x.Type.Underlying = "bool", typing.Bool
 	return "bool"
 }
 func (x Return) InferType() string { // tricky
@@ -199,8 +222,33 @@ func (x Return) InferType() string { // tricky
 	return ""
 }
 func (x IfStatement) InferType() string {
+	cond := x.Condition.InferType()
+	if cond != "bool" {
+		Errors.Error("Condition must be a boolean", x.Condition.Location())
+	}
+
+	x.Then.InferType()
+	x.Else.InferType()
 	return ""
 }
+
+// Get Type
+func (x Program) GetType() *Type         { return nil }
+func (x Block) GetType() *Type           { return nil }
+func (x Identifier) GetType() *Type      { return x.Type }
+func (x Datatype) GetType() *Type        { return nil }
+func (x Declaration) GetType() *Type     { return nil }
+func (x Assignment) GetType() *Type      { return nil }
+func (x List) GetType() *Type            { return nil }
+func (x BinaryOperation) GetType() *Type { return x.Type }
+func (x Comparison) GetType() *Type      { return x.Type }
+func (x FunctionLiteral) GetType() *Type { return x.Type }
+func (x FunctionCall) GetType() *Type    { return x.Type }
+func (x IntegerLiteral) GetType() *Type  { return x.Type }
+func (x FloatLiteral) GetType() *Type    { return x.Type }
+func (x BoolLiteral) GetType() *Type     { return x.Type }
+func (x Return) GetType() *Type          { return nil }
+func (x IfStatement) GetType() *Type     { return nil }
 
 // Generate
 func (x Program) Generate(bl *ir.Block) value.Value {
@@ -284,7 +332,7 @@ func confirm(expr Expression, types ...string) string {
 	return f
 }
 
-func Type(ast Program) Program {
+func Typecheck(ast Program) Program {
 	ast.InferType()
 	return ast
 }

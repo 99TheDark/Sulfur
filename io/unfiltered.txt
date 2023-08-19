@@ -24,6 +24,5 @@
     Token{Operator '/' at 0:24, #24}
     Token{Space ' ' at 0:25, #25}
     Token{Number '2' at 0:26, #26}
-    Token{NewLine '\n' at 0:27, #27}
-    Token{EOF 'EOF' at 1:0, #28}
+    Token{EOF 'EOF' at 0:27, #27}
 }

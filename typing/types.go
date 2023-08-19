@@ -12,6 +12,7 @@ const (
 	Float UnderlyingType = "float"
 	Bool  UnderlyingType = "bool"
 	Class UnderlyingType = "class"
+	Func  UnderlyingType = "func"
 )
 
 func (ut UnderlyingType) LLVMType() types.Type {
@@ -24,5 +25,15 @@ func (ut UnderlyingType) LLVMType() types.Type {
 		return types.Float
 	default:
 		return nil
+	}
+}
+
+func Underlying(str string) UnderlyingType {
+	typ := UnderlyingType(str)
+	switch typ {
+	case Void, Int, Float, Bool, Class, Func:
+		return typ
+	default:
+		return Class
 	}
 }

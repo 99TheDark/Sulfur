@@ -13,5 +13,5 @@
     Token{Number '4' at 0:22, #22}
     Token{Operator '/' at 0:24, #24}
     Token{Number '2' at 0:26, #26}
-    Token{EOF 'EOF' at 1:0, #28}
+    Token{EOF 'EOF' at 0:27, #27}
 }
