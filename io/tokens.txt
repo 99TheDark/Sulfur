@@ -4,10 +4,10 @@
     Token{Comparator '>=' at 0:5, #5}
     Token{Identifier '5' at 0:8, #8}
     Token{LeftBrace '{' at 0:10, #10}
-    Token{Identifier 'print' at 1:4, #16}
-    Token{LeftParen '(' at 1:9, #21}
-    Token{Identifier '9' at 1:10, #22}
-    Token{RightParen ')' at 1:11, #23}
-    Token{RightBrace '}' at 2:0, #25}
-    Token{EOF 'EOF' at 2:1, #26}
+    Token{Identifier 'print' at 2:4, #38}
+    Token{LeftParen '(' at 2:9, #43}
+    Token{Identifier '9' at 2:10, #44}
+    Token{RightParen ')' at 2:11, #45}
+    Token{RightBrace '}' at 3:0, #47}
+    Token{EOF 'EOF' at 3:1, #48}
 }

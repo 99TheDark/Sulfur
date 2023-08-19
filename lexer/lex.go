@@ -40,7 +40,8 @@ func (l *lexer) eat() rune {
 }
 
 func (l *lexer) all(start, end int) string {
-	return string(l.source[start:(end + 1)])
+	s, e := utils.Min(start, len(l.source)-1), utils.Min(end, len(l.source)-1)
+	return string(l.source[s:(e + 1)])
 }
 
 func (l *lexer) ahead(ahead int) string {
@@ -81,19 +82,23 @@ func (l *lexer) add(token *Token) {
 }
 
 func (l *lexer) multiToken(tokentype TokenType, count int) {
-	if l.mode == Identifier {
-		l.add(l.end())
-	}
-	l.add(CreateToken(
-		tokentype,
-		l.ahead(count),
-		l.loc.Row,
-		l.loc.Col,
-		l.loc.Idx,
-	))
-
-	for i := 0; i < count; i++ {
+	if l.mode == Comment {
 		l.eat()
+	} else {
+		if l.mode == Identifier {
+			l.add(l.end())
+		}
+		l.add(CreateToken(
+			tokentype,
+			l.ahead(count),
+			l.loc.Row,
+			l.loc.Col,
+			l.loc.Idx,
+		))
+
+		for i := 0; i < count; i++ {
+			l.eat()
+		}
 	}
 }
 
@@ -124,35 +129,42 @@ func Lex(source string) *[]Token {
 	}
 
 	for !l.eof {
-		// TODO: add comments & multiline comments
-		switch l.at() {
-		case ' ':
-			l.singleToken(Space)
-		case '\n':
-			l.singleToken(NewLine)
-		case '(':
-			l.singleToken(LeftParen)
-		case ')':
-			l.singleToken(RightParen)
-		case '[':
-			l.singleToken(LeftBracket)
-		case ']':
-			l.singleToken(RightBracket)
-		case '{':
-			l.singleToken(LeftBrace)
-		case '}':
-			l.singleToken(RightBrace)
-		case ',':
-			l.singleToken(Delimiter)
-		default:
-			if op := parseKeys(l, Operators); op != nil {
-				l.multiToken(Operator, len(*op))
-			} else if cmp := parseKeys(l, Comparators); cmp != nil {
-				l.multiToken(Comparator, len(*cmp))
-			} else if l.mode == None {
-				l.start(Identifier)
-			} else {
-				l.eat()
+		// TODO: add multiline comments
+		if l.ahead(2) == "//" {
+			l.start(Comment)
+		} else {
+			switch l.at() {
+			case ' ':
+				l.singleToken(Space)
+			case '\n':
+				if l.mode == Comment {
+					l.add(l.end())
+				}
+				l.singleToken(NewLine)
+			case '(':
+				l.singleToken(LeftParen)
+			case ')':
+				l.singleToken(RightParen)
+			case '[':
+				l.singleToken(LeftBracket)
+			case ']':
+				l.singleToken(RightBracket)
+			case '{':
+				l.singleToken(LeftBrace)
+			case '}':
+				l.singleToken(RightBrace)
+			case ',':
+				l.singleToken(Delimiter)
+			default:
+				if op := parseKeys(l, Operators); op != nil {
+					l.multiToken(Operator, len(*op))
+				} else if cmp := parseKeys(l, Comparators); cmp != nil {
+					l.multiToken(Comparator, len(*cmp))
+				} else if l.mode == None {
+					l.start(Identifier)
+				} else {
+					l.eat()
+				}
 			}
 		}
 	}
@@ -166,7 +178,7 @@ func Lex(source string) *[]Token {
 
 func Filter(tokens *[]Token) *[]Token {
 	filter := func(item Token) bool {
-		return item.Type != Space && item.Type != NewLine
+		return item.Type != Space && item.Type != NewLine && item.Type != Comment
 	}
 	filtered := utils.Filter(*tokens, filter)
 	return &filtered
