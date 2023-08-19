@@ -3,8 +3,9 @@ package parser
 import (
 	"bytes"
 	"encoding/json"
-	"golang/errors"
+	. "golang/errors"
 	"golang/lexer"
+	"golang/typing"
 	"golang/utils"
 	"strconv"
 	"strings"
@@ -12,7 +13,6 @@ import (
 
 type parser struct {
 	tokens []lexer.Token
-	errgen errors.ErrorGenerator
 	idx    int
 }
 
@@ -33,7 +33,7 @@ func (p *parser) eat() lexer.Token {
 func (p *parser) expect(tokentype lexer.TokenType) lexer.Token {
 	token := p.eat()
 	if token.Type != tokentype {
-		p.errgen.Error(
+		Errors.Error(
 			"Expected "+tokentype.String()+", but got "+token.Type.String()+" '"+token.Value+"' instead",
 			token.Location,
 		)
@@ -82,7 +82,7 @@ func (p *parser) parseBlock(hook lexer.Token) Block {
 	}
 	p.eat()
 
-	return Block{loc, body}
+	return Block{loc, body, typing.NewScope()}
 }
 
 func (p *parser) parseIfStatement(token lexer.Token) Expression {
@@ -93,14 +93,16 @@ func (p *parser) parseIfStatement(token lexer.Token) Expression {
 	if p.key() == lexer.ElseIf {
 		next := p.eat()
 		ifstmt := []Expression{p.parseIfStatement(next)}
-		return IfStatement{token.Location, condition, body, Block{next.Location, ifstmt}}
+		bl := Block{next.Location, ifstmt, typing.NewScope()}
+		return IfStatement{token.Location, condition, body, bl}
 	} else if p.key() == lexer.Else {
 		p.eat()
 		brace := p.expect(lexer.LeftBrace)
 		return IfStatement{token.Location, condition, body, p.parseBlock(brace)}
 	} else {
 		loc := p.at().Location
-		return IfStatement{token.Location, condition, body, Block{loc, []Expression{}}}
+		bl := Block{loc, []Expression{}, typing.NewScope()}
+		return IfStatement{token.Location, condition, body, bl}
 	}
 }
 
@@ -123,7 +125,6 @@ func (p *parser) parseReturn() Expression {
 	return p.parseDeclaration()
 }
 
-// TODO: add declaration and assignment
 func (p *parser) parseDeclaration() Expression {
 	left := p.parseFunction()
 	if datatype, ok := left.(Datatype); ok && p.at().Type == lexer.Assignment {
@@ -134,6 +135,8 @@ func (p *parser) parseDeclaration() Expression {
 	return left
 }
 
+// TODO: add assignment
+
 func (p *parser) parseFunction() Expression {
 	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.LeftParen {
 		token := p.eat()
@@ -143,7 +146,7 @@ func (p *parser) parseFunction() Expression {
 		if p.at().Type == lexer.LeftParen {
 			ret := p.listify()
 			if len(ret.Values) > 1 {
-				p.errgen.Error(
+				Errors.Error(
 					"More than 1 return value is not yet supported",
 					ret.Location(),
 				)
@@ -228,7 +231,7 @@ func (p *parser) parsePrimary() Expression {
 		if val, err := strconv.ParseInt(token.Value, 10, 64); err == nil {
 			return IntegerLiteral{token.Location, val}
 		} else {
-			p.errgen.Error("Numeric parser failed, something went wrong in the lexer", token.Location)
+			Errors.Error("Numeric parser failed, something went wrong in the lexer", token.Location)
 			return Identifier{token.Location, "Numerical Error '" + token.Value + "'"}
 		}
 	case lexer.LeftParen:
@@ -240,16 +243,16 @@ func (p *parser) parsePrimary() Expression {
 	}
 }
 
-func Parse(source string, unfiltered, tokens *[]lexer.Token) Program {
-	parser := parser{*tokens, errors.New(source, unfiltered), 0}
+func Parse(source string, tokens *[]lexer.Token) Program {
+	parser := parser{*tokens, 0}
 	statements := []Expression{}
 	for parser.at().Type != lexer.EOF {
 		statements = append(statements, parser.parseExpression())
 	}
-	return Program{statements}
+	return Program{Block{lexer.NoLocation, statements, typing.NewScope()}}
 }
 
-func Save(ast Program, spaces int, location string) error {
+func Save(ast any, spaces int, location string) error {
 	buf := new(bytes.Buffer)
 	enc := json.NewEncoder(buf)
 

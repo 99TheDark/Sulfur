@@ -1,7 +1,10 @@
 package parser
 
 import (
+	. "golang/errors"
 	"golang/lexer"
+	"golang/typing"
+	"golang/utils"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
@@ -12,17 +15,24 @@ import (
 type Expression interface {
 	Children() []Expression
 	Location() *lexer.Location
+	InferType() TypedExpression
 	Generate(bl *ir.Block) value.Value
+}
+
+type TypedExpression struct {
+	Expression Expression
+	Type       string
 }
 
 type (
 	Program struct {
-		Body []Expression
+		Contents Block
 	}
 
 	Block struct {
-		Loc  *lexer.Location `json:"-"`
-		Body []Expression
+		Loc   *lexer.Location `json:"-"`
+		Body  []Expression
+		Scope typing.Scope
 	}
 
 	Identifier struct {
@@ -104,7 +114,8 @@ type (
 	}
 )
 
-func (x Program) Children() []Expression         { return x.Body }
+// Children
+func (x Program) Children() []Expression         { return x.Contents.Body }
 func (x Block) Children() []Expression           { return x.Body }
 func (x Identifier) Children() []Expression      { return nil }
 func (x Datatype) Children() []Expression        { return nil }
@@ -121,6 +132,7 @@ func (x BoolLiteral) Children() []Expression     { return nil }
 func (x Return) Children() []Expression          { return []Expression{x.Value} }
 func (x IfStatement) Children() []Expression     { return []Expression{x.Then, x.Else} }
 
+// Location
 func (x Program) Location() *lexer.Location         { return lexer.NoLocation }
 func (x Block) Location() *lexer.Location           { return x.Loc }
 func (x Identifier) Location() *lexer.Location      { return x.Loc }
@@ -138,17 +150,88 @@ func (x BoolLiteral) Location() *lexer.Location     { return x.Loc }
 func (x Return) Location() *lexer.Location          { return x.Value.Location() }
 func (x IfStatement) Location() *lexer.Location     { return x.Loc }
 
-func (x Program) Generate(bl *ir.Block) {
+// Infer Type
+func (x Program) InferType() TypedExpression {
+	types := utils.Apply(x.Contents.Body, func(expr Expression) string {
+		return expr.InferType().Type
+	})
+	confirm(x, types...)
+
+	return TypedExpression{x, ""}
+}
+func (x Block) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x Identifier) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x Datatype) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x Declaration) InferType() TypedExpression {
+	typ := confirm(x, x.Type.Symbol, x.Value.InferType().Type)
+	return TypedExpression{x, typ}
+}
+func (x Assignment) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x List) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x BinaryOperation) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x Comparison) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x FunctionLiteral) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x FunctionCall) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x IntegerLiteral) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x FloatLiteral) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x BoolLiteral) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x Return) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+func (x IfStatement) InferType() TypedExpression {
+	return TypedExpression{x, ""}
+}
+
+// Generate
+func (x Program) Generate(bl *ir.Block) value.Value {
+	x.Contents.Generate(bl)
+	return nil
+}
+func (x Block) Generate(bl *ir.Block) value.Value {
 	for _, expr := range x.Body {
 		expr.Generate(bl)
 	}
+	return nil
 }
-func (x Block) Generate(bl *ir.Block) value.Value       { return nil }
-func (x Identifier) Generate(bl *ir.Block) value.Value  { return nil }
-func (x Datatype) Generate(bl *ir.Block) value.Value    { return nil }
-func (x Declaration) Generate(bl *ir.Block) value.Value { return nil }
-func (x Assignment) Generate(bl *ir.Block) value.Value  { return nil }
-func (x List) Generate(bl *ir.Block) value.Value        { return nil }
+func (x Identifier) Generate(bl *ir.Block) value.Value {
+	return nil
+}
+func (x Datatype) Generate(bl *ir.Block) value.Value {
+	return nil
+}
+func (x Declaration) Generate(bl *ir.Block) value.Value {
+	return nil
+}
+func (x Assignment) Generate(bl *ir.Block) value.Value {
+	return nil
+}
+func (x List) Generate(bl *ir.Block) value.Value {
+	return nil
+}
 func (x BinaryOperation) Generate(bl *ir.Block) value.Value {
 	switch x.Operator {
 	case lexer.Add:
@@ -165,13 +248,46 @@ func (x BinaryOperation) Generate(bl *ir.Block) value.Value {
 		return nil
 	}
 }
-func (x Comparison) Generate(bl *ir.Block) value.Value      { return nil }
-func (x FunctionLiteral) Generate(bl *ir.Block) value.Value { return nil }
-func (x FunctionCall) Generate(bl *ir.Block) value.Value    { return nil }
+func (x Comparison) Generate(bl *ir.Block) value.Value {
+	return nil
+}
+func (x FunctionLiteral) Generate(bl *ir.Block) value.Value {
+	return nil
+}
+func (x FunctionCall) Generate(bl *ir.Block) value.Value {
+	return nil
+}
 func (x IntegerLiteral) Generate(bl *ir.Block) value.Value {
 	return constant.NewInt(types.I64, x.Value)
 }
-func (x FloatLiteral) Generate(bl *ir.Block) value.Value { return nil }
-func (x BoolLiteral) Generate(bl *ir.Block) value.Value  { return nil }
-func (x Return) Generate(bl *ir.Block) value.Value       { return nil }
-func (x IfStatement) Generate(bl *ir.Block) value.Value  { return nil }
+func (x FloatLiteral) Generate(bl *ir.Block) value.Value {
+	return nil
+}
+func (x BoolLiteral) Generate(bl *ir.Block) value.Value {
+	return nil
+}
+func (x Return) Generate(bl *ir.Block) value.Value {
+	return nil
+}
+func (x IfStatement) Generate(bl *ir.Block) value.Value {
+	return nil
+}
+
+// Misc
+func Type(ast Program) TypedExpression {
+	return ast.InferType()
+}
+
+func confirm(expr Expression, types ...string) string {
+	f := types[0]
+	if len(types) < 2 {
+		return f
+	}
+
+	for _, el := range types {
+		if el != f {
+			Errors.Error("Type mismatch: '"+el+"' to '"+f+"'", expr.Location())
+		}
+	}
+	return f
+}

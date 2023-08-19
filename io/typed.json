@@ -1,0 +1,45 @@
+{
+ "Expression": {
+  "Contents": {
+   "Body": [
+    {
+     "Type": {
+      "Symbol": "int"
+     },
+     "Variable": {
+      "Symbol": "x"
+     },
+     "Value": {
+      "Left": {
+       "Left": {
+        "Value": 3
+       },
+       "Right": {
+        "Left": {
+         "Value": 5
+        },
+        "Right": {
+         "Value": 7
+        },
+        "Operator": "*"
+       },
+       "Operator": "+"
+      },
+      "Right": {
+       "Left": {
+        "Value": 4
+       },
+       "Right": {
+        "Value": 2
+       },
+       "Operator": "/"
+      },
+      "Operator": "-"
+     }
+    }
+   ],
+   "Scope": {}
+  }
+ },
+ "Type": ""
+}

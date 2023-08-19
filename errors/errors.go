@@ -10,9 +10,15 @@ import (
 
 const CodeBuffer int = 4
 
+var Errors ErrorGenerator
+
 type ErrorGenerator struct {
 	source []rune
-	tokens *[]lexer.Token
+	tokens []lexer.Token
+}
+
+func (gen *ErrorGenerator) final() lexer.Token {
+	return gen.tokens[len(gen.tokens)-1]
 }
 
 func (gen *ErrorGenerator) rowStart(row int) int {
@@ -20,25 +26,29 @@ func (gen *ErrorGenerator) rowStart(row int) int {
 		return 0
 	}
 
-	tokens := *gen.tokens
-	for _, token := range tokens {
+	for _, token := range gen.tokens {
 		if token.Location.Row == row {
 			return token.Location.Idx
 		}
 	}
 
-	return tokens[len(tokens)-1].Location.Idx
+	return gen.final().Location.Idx
 }
 
 func (gen *ErrorGenerator) rowEnd(row int) int {
-	return gen.rowStart(row+1) - 1
+	idx := gen.rowStart(row+1) - 1
+	if gen.source[idx] == '\n' {
+		return idx - 1
+	} else {
+		return idx
+	}
 }
 
 func (gen *ErrorGenerator) Error(msg string, loc *lexer.Location) string {
 	row, col, _ := loc.Get()
 
 	start, end := gen.rowStart(row-4), gen.rowEnd(row)
-	err := "\n" + string(gen.source[start:end+1])
+	err := "\n" + string(gen.source[start:end+1]) + "\n"
 
 	sidebuf := strings.Repeat(" ", utils.Max(0, col-1))
 	err += sidebuf + "^\n"
@@ -49,6 +59,6 @@ func (gen *ErrorGenerator) Error(msg string, loc *lexer.Location) string {
 	return err
 }
 
-func New(source string, tokens *[]lexer.Token) ErrorGenerator {
+func New(source string, tokens []lexer.Token) ErrorGenerator {
 	return ErrorGenerator{[]rune(source), tokens}
 }

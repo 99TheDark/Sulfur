@@ -1,6 +1,8 @@
 package typing
 
-import "github.com/llir/llvm/ir/types"
+import (
+	"github.com/llir/llvm/ir/types"
+)
 
 type UnderlyingType string
 
