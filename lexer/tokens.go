@@ -18,6 +18,7 @@ const (
 	Identifier
 	Number
 	Keyword
+	Assignment
 	Operator
 	Comparator
 	Space
@@ -54,6 +55,8 @@ func (tt TokenType) String() string {
 		return "Number"
 	case Keyword:
 		return "Keyword"
+	case Assignment:
+		return "Assignment"
 	case Operator:
 		return "Operator"
 	case Comparator:

@@ -161,6 +161,8 @@ func Lex(source string) *[]Token {
 				l.singleToken(RightBrace)
 			case ',':
 				l.singleToken(Delimiter)
+			case '=':
+				l.singleToken(Assignment)
 			default:
 				if op := parseKeys(l, Operators); op != nil {
 					l.multiToken(Operator, len(*op))

@@ -118,12 +118,21 @@ func (p *parser) parseControl() Expression {
 func (p *parser) parseReturn() Expression {
 	if p.key() == lexer.Return {
 		p.eat()
-		return Return{p.parseFunction()}
+		return Return{p.parseDeclaration()}
 	}
-	return p.parseFunction()
+	return p.parseDeclaration()
 }
 
 // TODO: add declaration and assignment
+func (p *parser) parseDeclaration() Expression {
+	left := p.parseFunction()
+	if datatype, ok := left.(Datatype); ok && p.at().Type == lexer.Assignment {
+		p.eat()
+		value := p.parseFunction()
+		return Declaration{datatype.Type, datatype.Variable, value}
+	}
+	return left
+}
 
 func (p *parser) parseFunction() Expression {
 	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.LeftParen {

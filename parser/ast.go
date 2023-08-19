@@ -38,12 +38,12 @@ type (
 	Declaration struct {
 		Type     Identifier
 		Variable Identifier
-		Value    Identifier
+		Value    Expression
 	}
 
 	Assignment struct {
 		Variable Identifier
-		Value    Identifier
+		Value    Expression
 		Operator lexer.Operation
 	}
 
@@ -125,6 +125,8 @@ func (x Program) Location() *lexer.Location         { return lexer.NoLocation }
 func (x Block) Location() *lexer.Location           { return x.Loc }
 func (x Identifier) Location() *lexer.Location      { return x.Loc }
 func (x Datatype) Location() *lexer.Location        { return x.Type.Loc }
+func (x Declaration) Location() *lexer.Location     { return x.Type.Loc }
+func (x Assignment) Location() *lexer.Location      { return x.Variable.Loc }
 func (x List) Location() *lexer.Location            { return x.Values[0].Location() } // Length always >= 2
 func (x BinaryOperation) Location() *lexer.Location { return x.Loc }
 func (x Comparison) Location() *lexer.Location      { return x.Loc }
@@ -141,10 +143,12 @@ func (x Program) Generate(bl *ir.Block) {
 		expr.Generate(bl)
 	}
 }
-func (x Block) Generate(bl *ir.Block) value.Value      { return nil }
-func (x Identifier) Generate(bl *ir.Block) value.Value { return nil }
-func (x Datatype) Generate(bl *ir.Block) value.Value   { return nil }
-func (x List) Generate(bl *ir.Block) value.Value       { return nil }
+func (x Block) Generate(bl *ir.Block) value.Value       { return nil }
+func (x Identifier) Generate(bl *ir.Block) value.Value  { return nil }
+func (x Datatype) Generate(bl *ir.Block) value.Value    { return nil }
+func (x Declaration) Generate(bl *ir.Block) value.Value { return nil }
+func (x Assignment) Generate(bl *ir.Block) value.Value  { return nil }
+func (x List) Generate(bl *ir.Block) value.Value        { return nil }
 func (x BinaryOperation) Generate(bl *ir.Block) value.Value {
 	switch x.Operator {
 	case lexer.Add:

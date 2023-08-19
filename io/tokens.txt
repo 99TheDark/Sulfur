@@ -1,14 +1,17 @@
 []Token{
-    Token{LeftParen '(' at 0:0, #0}
-    Token{Number '3' at 0:1, #1}
-    Token{Operator '+' at 0:3, #3}
-    Token{Number '5' at 0:5, #5}
-    Token{Operator '*' at 0:7, #7}
-    Token{Number '7' at 0:9, #9}
-    Token{RightParen ')' at 0:10, #10}
-    Token{Operator '-' at 0:12, #12}
-    Token{Number '4' at 0:14, #14}
-    Token{Operator '/' at 0:16, #16}
-    Token{Number '2' at 0:18, #18}
-    Token{EOF 'EOF' at 0:19, #19}
+    Token{Identifier 'int' at 0:0, #0}
+    Token{Identifier 'x' at 0:4, #4}
+    Token{Assignment '=' at 0:6, #6}
+    Token{LeftParen '(' at 0:8, #8}
+    Token{Number '3' at 0:9, #9}
+    Token{Operator '+' at 0:11, #11}
+    Token{Number '5' at 0:13, #13}
+    Token{Operator '*' at 0:15, #15}
+    Token{Number '7' at 0:17, #17}
+    Token{RightParen ')' at 0:18, #18}
+    Token{Operator '-' at 0:20, #20}
+    Token{Number '4' at 0:22, #22}
+    Token{Operator '/' at 0:24, #24}
+    Token{Number '2' at 0:26, #26}
+    Token{EOF 'EOF' at 0:27, #27}
 }
