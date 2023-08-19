@@ -4,7 +4,6 @@ import (
 	. "golang/errors"
 	"golang/lexer"
 	"golang/typing"
-	"golang/utils"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
@@ -15,14 +14,11 @@ import (
 type Expression interface {
 	Children() []Expression
 	Location() *lexer.Location
-	InferType() TypedExpression
+	InferType() string
 	Generate(bl *ir.Block) value.Value
 }
 
-type TypedExpression struct {
-	Expression Expression
-	Type       string
-}
+const NoType = ""
 
 type (
 	Program struct {
@@ -41,20 +37,23 @@ type (
 	}
 
 	Datatype struct {
-		Type     Identifier
+		Datatype Identifier
 		Variable Identifier
+		Type     string
 	}
 
 	Declaration struct {
-		Type     Identifier
+		Datatype Identifier
 		Variable Identifier
 		Value    Expression
+		Type     string
 	}
 
 	Assignment struct {
 		Variable Identifier
 		Value    Expression
 		Operator lexer.Operation
+		Type     string
 	}
 
 	List struct {
@@ -66,6 +65,7 @@ type (
 		Left     Expression
 		Right    Expression
 		Operator lexer.Operation
+		Type     string
 	}
 
 	Comparison struct {
@@ -136,8 +136,8 @@ func (x IfStatement) Children() []Expression     { return []Expression{x.Then, x
 func (x Program) Location() *lexer.Location         { return lexer.NoLocation }
 func (x Block) Location() *lexer.Location           { return x.Loc }
 func (x Identifier) Location() *lexer.Location      { return x.Loc }
-func (x Datatype) Location() *lexer.Location        { return x.Type.Loc }
-func (x Declaration) Location() *lexer.Location     { return x.Type.Loc }
+func (x Datatype) Location() *lexer.Location        { return x.Datatype.Loc }
+func (x Declaration) Location() *lexer.Location     { return x.Datatype.Loc }
 func (x Assignment) Location() *lexer.Location      { return x.Variable.Loc }
 func (x List) Location() *lexer.Location            { return x.Values[0].Location() } // Length always >= 2
 func (x BinaryOperation) Location() *lexer.Location { return x.Loc }
@@ -151,60 +151,22 @@ func (x Return) Location() *lexer.Location          { return x.Value.Location() 
 func (x IfStatement) Location() *lexer.Location     { return x.Loc }
 
 // Infer Type
-func (x Program) InferType() TypedExpression {
-	types := utils.Apply(x.Contents.Body, func(expr Expression) string {
-		return expr.InferType().Type
-	})
-	confirm(x, types...)
-
-	return TypedExpression{x, ""}
-}
-func (x Block) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x Identifier) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x Datatype) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x Declaration) InferType() TypedExpression {
-	typ := confirm(x, x.Type.Symbol, x.Value.InferType().Type)
-	return TypedExpression{x, typ}
-}
-func (x Assignment) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x List) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x BinaryOperation) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x Comparison) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x FunctionLiteral) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x FunctionCall) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x IntegerLiteral) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x FloatLiteral) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x BoolLiteral) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x Return) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
-func (x IfStatement) InferType() TypedExpression {
-	return TypedExpression{x, ""}
-}
+func (x Program) InferType() string         { return "" }
+func (x Block) InferType() string           { return "" }
+func (x Identifier) InferType() string      { return "" }
+func (x Datatype) InferType() string        { return "" }
+func (x Declaration) InferType() string     { return "" }
+func (x Assignment) InferType() string      { return "" }
+func (x List) InferType() string            { return "" }
+func (x BinaryOperation) InferType() string { return "" }
+func (x Comparison) InferType() string      { return "" }
+func (x FunctionLiteral) InferType() string { return "" }
+func (x FunctionCall) InferType() string    { return "" }
+func (x IntegerLiteral) InferType() string  { return "" }
+func (x FloatLiteral) InferType() string    { return "" }
+func (x BoolLiteral) InferType() string     { return "" }
+func (x Return) InferType() string          { return "" }
+func (x IfStatement) InferType() string     { return "" }
 
 // Generate
 func (x Program) Generate(bl *ir.Block) value.Value {
@@ -274,10 +236,6 @@ func (x IfStatement) Generate(bl *ir.Block) value.Value {
 }
 
 // Misc
-func Type(ast Program) TypedExpression {
-	return ast.InferType()
-}
-
 func confirm(expr Expression, types ...string) string {
 	f := types[0]
 	if len(types) < 2 {

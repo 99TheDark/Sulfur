@@ -82,7 +82,11 @@ func (p *parser) parseBlock(hook lexer.Token) Block {
 	}
 	p.eat()
 
-	return Block{loc, body, typing.NewScope()}
+	return Block{
+		loc,
+		body,
+		typing.NewScope(),
+	}
 }
 
 func (p *parser) parseIfStatement(token lexer.Token) Expression {
@@ -93,16 +97,35 @@ func (p *parser) parseIfStatement(token lexer.Token) Expression {
 	if p.key() == lexer.ElseIf {
 		next := p.eat()
 		ifstmt := []Expression{p.parseIfStatement(next)}
-		bl := Block{next.Location, ifstmt, typing.NewScope()}
-		return IfStatement{token.Location, condition, body, bl}
+		bl := Block{
+			next.Location,
+			ifstmt,
+			typing.NewScope(),
+		}
+		return IfStatement{
+			token.Location,
+			condition,
+			body,
+			bl,
+		}
 	} else if p.key() == lexer.Else {
 		p.eat()
 		brace := p.expect(lexer.LeftBrace)
-		return IfStatement{token.Location, condition, body, p.parseBlock(brace)}
+		return IfStatement{
+			token.Location,
+			condition,
+			body,
+			p.parseBlock(brace),
+		}
 	} else {
 		loc := p.at().Location
 		bl := Block{loc, []Expression{}, typing.NewScope()}
-		return IfStatement{token.Location, condition, body, bl}
+		return IfStatement{
+			token.Location,
+			condition,
+			body,
+			bl,
+		}
 	}
 }
 
@@ -130,7 +153,12 @@ func (p *parser) parseDeclaration() Expression {
 	if datatype, ok := left.(Datatype); ok && p.at().Type == lexer.Assignment {
 		p.eat()
 		value := p.parseFunction()
-		return Declaration{datatype.Type, datatype.Variable, value}
+		return Declaration{
+			datatype.Datatype,
+			datatype.Variable,
+			value,
+			NoType,
+		}
 	}
 	return left
 }
@@ -140,7 +168,10 @@ func (p *parser) parseDeclaration() Expression {
 func (p *parser) parseFunction() Expression {
 	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.LeftParen {
 		token := p.eat()
-		name := Identifier{token.Location, token.Value}
+		name := Identifier{
+			token.Location,
+			token.Value,
+		}
 		params := p.listify()
 
 		if p.at().Type == lexer.LeftParen {
@@ -153,12 +184,25 @@ func (p *parser) parseFunction() Expression {
 			}
 
 			lbrace := p.expect(lexer.LeftBrace)
-			return FunctionLiteral{name, params, ret, p.parseBlock(lbrace).Body}
+			return FunctionLiteral{
+				name,
+				params,
+				ret,
+				p.parseBlock(lbrace).Body,
+			}
 		} else if p.at().Type == lexer.LeftBrace {
 			lbrace := p.expect(lexer.LeftBrace)
-			return FunctionLiteral{name, params, List{[]Expression{}}, p.parseBlock(lbrace).Body}
+			return FunctionLiteral{
+				name,
+				params,
+				List{[]Expression{}},
+				p.parseBlock(lbrace).Body,
+			}
 		} else {
-			return FunctionCall{name, params}
+			return FunctionCall{
+				name,
+				params,
+			}
 		}
 	}
 
@@ -183,7 +227,12 @@ func (p *parser) parseComparison() Expression {
 	left := p.parseAdditive()
 	if p.at().Type == lexer.Comparator {
 		token := p.eat()
-		return Comparison{token.Location, left, p.parseAdditive(), lexer.Comparison(token.Value)}
+		return Comparison{
+			token.Location,
+			left,
+			p.parseAdditive(),
+			lexer.Comparison(token.Value),
+		}
 	}
 	return left
 }
@@ -194,7 +243,13 @@ func (p *parser) parseAdditive() Expression {
 		token := p.eat()
 		right := p.parseMultiplicative()
 
-		left = BinaryOperation{token.Location, left, right, lexer.Operation(token.Value)}
+		left = BinaryOperation{
+			token.Location,
+			left,
+			right,
+			lexer.Operation(token.Value),
+			NoType,
+		}
 	}
 	return left
 }
@@ -205,7 +260,13 @@ func (p *parser) parseMultiplicative() Expression {
 		token := p.eat()
 		right := p.parseDatatype()
 
-		left = BinaryOperation{token.Location, left, right, lexer.Operation(token.Value)}
+		left = BinaryOperation{
+			token.Location,
+			left,
+			right,
+			lexer.Operation(token.Value),
+			NoType,
+		}
 	}
 	return left
 }
@@ -214,8 +275,15 @@ func (p *parser) parseDatatype() Expression {
 	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.Identifier {
 		dt, val := p.eat(), p.eat()
 		return Datatype{
-			Identifier{dt.Location, dt.Value},
-			Identifier{val.Location, val.Value},
+			Identifier{
+				dt.Location,
+				dt.Value,
+			},
+			Identifier{
+				val.Location,
+				val.Value,
+			},
+			NoType,
 		}
 	}
 	return p.parsePrimary()
@@ -225,21 +293,33 @@ func (p *parser) parsePrimary() Expression {
 	token := p.eat()
 	switch token.Type {
 	case lexer.Identifier:
-		return Identifier{token.Location, token.Value}
+		return Identifier{
+			token.Location,
+			token.Value,
+		}
 	case lexer.Number:
 		// TODO: clean this up
 		if val, err := strconv.ParseInt(token.Value, 10, 64); err == nil {
-			return IntegerLiteral{token.Location, val}
+			return IntegerLiteral{
+				token.Location,
+				val,
+			}
 		} else {
 			Errors.Error("Numeric parser failed, something went wrong in the lexer", token.Location)
-			return Identifier{token.Location, "Numerical Error '" + token.Value + "'"}
+			return Identifier{
+				token.Location,
+				"Numerical Error '" + token.Value + "'",
+			}
 		}
 	case lexer.LeftParen:
 		return p.parseGroup()
 	case lexer.LeftBrace:
 		return p.parseBlock(token)
 	default:
-		return Identifier{token.Location, "Error: '" + token.Value + "'"}
+		return Identifier{
+			token.Location,
+			"Error: '" + token.Value + "'",
+		}
 	}
 }
 
@@ -249,7 +329,13 @@ func Parse(source string, tokens *[]lexer.Token) Program {
 	for parser.at().Type != lexer.EOF {
 		statements = append(statements, parser.parseExpression())
 	}
-	return Program{Block{lexer.NoLocation, statements, typing.NewScope()}}
+	return Program{
+		Block{
+			lexer.NoLocation,
+			statements,
+			typing.NewScope(),
+		},
+	}
 }
 
 func Save(ast any, spaces int, location string) error {
