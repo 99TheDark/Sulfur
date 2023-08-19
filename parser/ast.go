@@ -143,5 +143,8 @@ func (x BinaryOperation) Generate(m *ir.Module) {}
 func (x Comparison) Generate(m *ir.Module)      {}
 func (x FunctionLiteral) Generate(m *ir.Module) {}
 func (x FunctionCall) Generate(m *ir.Module)    {}
+func (x IntegerLiteral) Generate(m *ir.Module)  {}
+func (x FloatLiteral) Generate(m *ir.Module)    {}
+func (x BoolLiteral) Generate(m *ir.Module)     {}
 func (x Return) Generate(m *ir.Module)          {}
 func (x IfStatement) Generate(m *ir.Module)     {}

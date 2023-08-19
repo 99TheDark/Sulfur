@@ -6,6 +6,7 @@ import (
 	"golang/errors"
 	"golang/lexer"
 	"golang/utils"
+	"strconv"
 	"strings"
 )
 
@@ -211,6 +212,14 @@ func (p *parser) parsePrimary() Expression {
 	switch token.Type {
 	case lexer.Identifier:
 		return Identifier{token.Location, token.Value}
+	case lexer.Number:
+		// TODO: clean this up
+		if val, err := strconv.ParseInt(token.Value, 10, 64); err == nil {
+			return IntegerLiteral{token.Location, int(val)}
+		} else {
+			p.errgen.Error("Numeric parser failed, something went wrong in the lexer", token.Location)
+			return Identifier{token.Location, "Numerical Error '" + token.Value + "'"}
+		}
 	case lexer.LeftParen:
 		return p.parseGroup()
 	case lexer.LeftBrace:

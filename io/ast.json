@@ -3,10 +3,10 @@
   {
    "Condition": {
     "Left": {
-     "Symbol": "3"
+     "Value": 31
     },
     "Right": {
-     "Symbol": "5"
+     "Value": 5
     },
     "Comparator": ">="
    },
@@ -19,7 +19,7 @@
       "Params": {
        "Values": [
         {
-         "Symbol": "9"
+         "Value": 946
         }
        ]
       }
