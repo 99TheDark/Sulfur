@@ -1,13 +1,14 @@
 []Token{
-    Token{Identifier 'if' at 0:0, #0}
-    Token{Number '31' at 0:3, #3}
-    Token{Comparator '>=' at 0:6, #6}
-    Token{Number '5' at 0:9, #9}
-    Token{LeftBrace '{' at 0:11, #11}
-    Token{Identifier 'print' at 2:4, #39}
-    Token{LeftParen '(' at 2:9, #44}
-    Token{Number '946' at 2:10, #45}
-    Token{RightParen ')' at 2:13, #48}
-    Token{RightBrace '}' at 3:0, #50}
-    Token{EOF 'EOF' at 3:1, #51}
+    Token{LeftParen '(' at 0:0, #0}
+    Token{Number '3' at 0:1, #1}
+    Token{Operator '+' at 0:3, #3}
+    Token{Number '5' at 0:5, #5}
+    Token{Operator '*' at 0:7, #7}
+    Token{Number '7' at 0:9, #9}
+    Token{RightParen ')' at 0:10, #10}
+    Token{Operator '-' at 0:12, #12}
+    Token{Number '4' at 0:14, #14}
+    Token{Operator '/' at 0:16, #16}
+    Token{Number '2' at 0:18, #18}
+    Token{EOF 'EOF' at 0:19, #19}
 }

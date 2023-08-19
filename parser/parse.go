@@ -215,7 +215,7 @@ func (p *parser) parsePrimary() Expression {
 	case lexer.Number:
 		// TODO: clean this up
 		if val, err := strconv.ParseInt(token.Value, 10, 64); err == nil {
-			return IntegerLiteral{token.Location, int(val)}
+			return IntegerLiteral{token.Location, val}
 		} else {
 			p.errgen.Error("Numeric parser failed, something went wrong in the lexer", token.Location)
 			return Identifier{token.Location, "Numerical Error '" + token.Value + "'"}

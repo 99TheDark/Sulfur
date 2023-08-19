@@ -133,11 +133,10 @@ func Lex(source string) *[]Token {
 		// TODO: add multiline comments
 		if l.mode == None && unicode.IsDigit(l.at()) {
 			l.start(Number)
-		}
-		if l.mode == Number && !unicode.IsDigit(l.at()) {
+			continue
+		} else if l.mode == Number && !unicode.IsDigit(l.at()) {
 			l.add(l.end())
-		}
-		if l.ahead(2) == "//" {
+		} else if l.ahead(2) == "//" {
 			l.start(Comment)
 		} else {
 			switch l.at() {

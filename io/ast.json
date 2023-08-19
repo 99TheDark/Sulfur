@@ -1,34 +1,31 @@
 {
  "Body": [
   {
-   "Condition": {
+   "Left": {
     "Left": {
-     "Value": 31
+     "Value": 3
     },
     "Right": {
-     "Value": 5
+     "Left": {
+      "Value": 5
+     },
+     "Right": {
+      "Value": 7
+     },
+     "Operator": "*"
     },
-    "Comparator": ">="
+    "Operator": "+"
    },
-   "Then": {
-    "Body": [
-     {
-      "Name": {
-       "Symbol": "print"
-      },
-      "Params": {
-       "Values": [
-        {
-         "Value": 946
-        }
-       ]
-      }
-     }
-    ]
+   "Right": {
+    "Left": {
+     "Value": 4
+    },
+    "Right": {
+     "Value": 2
+    },
+    "Operator": "/"
    },
-   "Else": {
-    "Body": []
-   }
+   "Operator": "-"
   }
  ]
 }

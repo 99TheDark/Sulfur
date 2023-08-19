@@ -4,12 +4,15 @@ import (
 	"golang/lexer"
 
 	"github.com/llir/llvm/ir"
+	"github.com/llir/llvm/ir/constant"
+	"github.com/llir/llvm/ir/types"
+	"github.com/llir/llvm/ir/value"
 )
 
 type Expression interface {
 	Children() []Expression
 	Location() *lexer.Location
-	Generate(m *ir.Module)
+	Generate(bl *ir.Block) value.Value
 }
 
 type (
@@ -76,7 +79,7 @@ type (
 
 	IntegerLiteral struct {
 		Loc   *lexer.Location `json:"-"`
-		Value int
+		Value int64
 	}
 
 	FloatLiteral struct {
@@ -134,17 +137,38 @@ func (x Return) Location() *lexer.Location          { return x.Value.Location() 
 func (x IfStatement) Location() *lexer.Location     { return x.Loc }
 
 // TODO: add some of these
-func (x Program) Generate(m *ir.Module)         {}
-func (x Block) Generate(m *ir.Module)           {}
-func (x Identifier) Generate(m *ir.Module)      {}
-func (x Datatype) Generate(m *ir.Module)        {}
-func (x List) Generate(m *ir.Module)            {}
-func (x BinaryOperation) Generate(m *ir.Module) {}
-func (x Comparison) Generate(m *ir.Module)      {}
-func (x FunctionLiteral) Generate(m *ir.Module) {}
-func (x FunctionCall) Generate(m *ir.Module)    {}
-func (x IntegerLiteral) Generate(m *ir.Module)  {}
-func (x FloatLiteral) Generate(m *ir.Module)    {}
-func (x BoolLiteral) Generate(m *ir.Module)     {}
-func (x Return) Generate(m *ir.Module)          {}
-func (x IfStatement) Generate(m *ir.Module)     {}
+func (x Program) Generate(bl *ir.Block) {
+	for _, expr := range x.Body {
+		expr.Generate(bl)
+	}
+}
+func (x Block) Generate(bl *ir.Block) value.Value      { return nil }
+func (x Identifier) Generate(bl *ir.Block) value.Value { return nil }
+func (x Datatype) Generate(bl *ir.Block) value.Value   { return nil }
+func (x List) Generate(bl *ir.Block) value.Value       { return nil }
+func (x BinaryOperation) Generate(bl *ir.Block) value.Value {
+	switch x.Operator {
+	case lexer.Add:
+		return bl.NewAdd(x.Left.Generate(bl), x.Right.Generate(bl))
+	case lexer.Subtract:
+		return bl.NewSub(x.Left.Generate(bl), x.Right.Generate(bl))
+	case lexer.Multiply:
+		return bl.NewMul(x.Left.Generate(bl), x.Right.Generate(bl))
+	case lexer.Divide:
+		return bl.NewSDiv(x.Left.Generate(bl), x.Right.Generate(bl))
+	case lexer.Modulo:
+		return bl.NewSRem(x.Left.Generate(bl), x.Right.Generate(bl))
+	default:
+		return nil
+	}
+}
+func (x Comparison) Generate(bl *ir.Block) value.Value      { return nil }
+func (x FunctionLiteral) Generate(bl *ir.Block) value.Value { return nil }
+func (x FunctionCall) Generate(bl *ir.Block) value.Value    { return nil }
+func (x IntegerLiteral) Generate(bl *ir.Block) value.Value {
+	return constant.NewInt(types.I64, x.Value)
+}
+func (x FloatLiteral) Generate(bl *ir.Block) value.Value { return nil }
+func (x BoolLiteral) Generate(bl *ir.Block) value.Value  { return nil }
+func (x Return) Generate(bl *ir.Block) value.Value       { return nil }
+func (x IfStatement) Generate(bl *ir.Block) value.Value  { return nil }

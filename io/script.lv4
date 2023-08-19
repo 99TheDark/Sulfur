@@ -1,4 +1,1 @@
-if 31 >= 5 {
-    // no strings yet
-    print(946)
-}
+(3 + 5 * 7) - 4 / 2
