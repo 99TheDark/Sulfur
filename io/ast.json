@@ -1,66 +1,34 @@
 {
  "Body": [
   {
-   "Name": {
-    "Symbol": "add"
-   },
-   "Params": {
-    "Values": [
-     {
-      "Type": {
-       "Symbol": "int"
-      },
-      "Variable": {
-       "Symbol": "a"
-      }
-     },
-     {
-      "Type": {
-       "Symbol": "int"
-      },
-      "Variable": {
-       "Symbol": "b"
-      }
-     }
-    ]
-   },
-   "Return": {
-    "Values": [
-     {
-      "Symbol": "int"
-     }
-    ]
-   },
-   "Body": [
-    {
-     "Condition": {
-      "Left": {
-       "Left": {
-        "Symbol": "2"
-       },
-       "Right": {
-        "Symbol": "1"
-       },
-       "Operator": "+"
-      },
-      "Right": {
-       "Symbol": "3"
-      },
-      "Comparator": ">"
-     },
-     "Then": {
-      "Body": []
-     },
-     "Else": {
-      "Body": []
-     }
+   "Condition": {
+    "Left": {
+     "Symbol": "3"
     },
-    {
-     "Value": {
-      "Symbol": "0"
+    "Right": {
+     "Symbol": "5"
+    },
+    "Comparator": ">="
+   },
+   "Then": {
+    "Body": [
+     {
+      "Name": {
+       "Symbol": "print"
+      },
+      "Params": {
+       "Values": [
+        {
+         "Symbol": "9"
+        }
+       ]
+      }
      }
-    }
-   ]
+    ]
+   },
+   "Else": {
+    "Body": []
+   }
   }
  ]
 }

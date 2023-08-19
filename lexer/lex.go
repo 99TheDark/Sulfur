@@ -80,26 +80,37 @@ func (l *lexer) add(token *Token) {
 	l.tokens = append(l.tokens, *token)
 }
 
-func (l *lexer) singleToken(tokentype TokenType) {
+func (l *lexer) multiToken(tokentype TokenType, count int) {
 	if l.mode == Identifier {
 		l.add(l.end())
 	}
 	l.add(CreateToken(
 		tokentype,
-		string(l.at()),
+		l.ahead(count),
 		l.loc.Row,
 		l.loc.Col,
 		l.loc.Idx,
 	))
 
-	l.eat()
+	for i := 0; i < count; i++ {
+		l.eat()
+	}
 }
 
-func parseKeys[T ~string](l *lexer, keys []T) bool {
+func (l *lexer) singleToken(tokentype TokenType) {
+	l.multiToken(tokentype, 1)
+}
+
+func parseKeys[T ~string](l *lexer, keys []T) *T {
+	finalKey := (*T)(nil)
+	keyLen := 0
 	for _, key := range keys {
-		fmt.Println(key, len(key))
+		if len(key) > keyLen && string(key) == l.ahead(len(key)) {
+			finalKey = &key
+			keyLen = len(key)
+		}
 	}
-	return false
+	return finalKey
 }
 
 func Lex(source string) *[]Token {
@@ -113,7 +124,6 @@ func Lex(source string) *[]Token {
 	}
 
 	for !l.eof {
-		// TODO: multi-character key tokens (>=, ++, etc)
 		// TODO: add comments & multiline comments
 		switch l.at() {
 		case ' ':
@@ -132,14 +142,14 @@ func Lex(source string) *[]Token {
 			l.singleToken(LeftBrace)
 		case '}':
 			l.singleToken(RightBrace)
-		case '+', '-', '*', '/', '%':
-			l.singleToken(Operator)
-		case '>', '<':
-			l.singleToken(Comparator)
 		case ',':
 			l.singleToken(Delimiter)
 		default:
-			if l.mode == None {
+			if op := parseKeys(l, Operators); op != nil {
+				l.multiToken(Operator, len(*op))
+			} else if cmp := parseKeys(l, Comparators); cmp != nil {
+				l.multiToken(Comparator, len(*cmp))
+			} else if l.mode == None {
 				l.start(Identifier)
 			} else {
 				l.eat()
