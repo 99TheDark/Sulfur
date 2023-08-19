@@ -136,7 +136,6 @@ func (x BoolLiteral) Location() *lexer.Location     { return x.Loc }
 func (x Return) Location() *lexer.Location          { return x.Value.Location() }
 func (x IfStatement) Location() *lexer.Location     { return x.Loc }
 
-// TODO: add some of these
 func (x Program) Generate(bl *ir.Block) {
 	for _, expr := range x.Body {
 		expr.Generate(bl)

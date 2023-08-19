@@ -123,6 +123,8 @@ func (p *parser) parseReturn() Expression {
 	return p.parseFunction()
 }
 
+// TODO: add declaration and assignment
+
 func (p *parser) parseFunction() Expression {
 	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.LeftParen {
 		token := p.eat()
