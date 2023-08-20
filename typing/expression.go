@@ -15,9 +15,13 @@ type Variable struct {
 type Scope struct {
 	Block  *ir.Block
 	Parent *Scope `json:"-"`
-	Vars   map[string]value.Value
+	Vars   map[string]*Variable
 }
 
 func NewScope() *Scope {
-	return &Scope{nil, nil, make(map[string]value.Value)}
+	return &Scope{nil, nil, make(map[string]*Variable)}
+}
+
+func NewVar(typ string, under UnderlyingType, val value.Value) *Variable {
+	return &Variable{typ, under, val}
 }

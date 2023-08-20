@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	. "golang/errors"
 	"golang/lexer"
 	"golang/typing"
@@ -11,7 +12,7 @@ import (
 	"github.com/llir/llvm/ir/value"
 )
 
-type Expression interface {
+type Node interface {
 	Children() []Expression
 	Location() *lexer.Location
 	InferType() string
@@ -19,12 +20,26 @@ type Expression interface {
 	Generate(bl *ir.Block) value.Value
 }
 
-type Type struct {
-	Name       string
-	Underlying typing.UnderlyingType
+type Expression struct {
+	Node
+	Parent *Expression `json:"-"`
 }
 
-var NoType = &Type{"", typing.Void}
+func Wrap(node Node) Expression {
+	return Expression{
+		node,
+		nil,
+	}
+}
+
+type Type struct {
+	Name       string                `json:",omitempty"`
+	Underlying typing.UnderlyingType `json:",omitempty"`
+}
+
+func NoType() *Type {
+	return &Type{"", typing.Void}
+}
 
 type (
 	Program struct {
@@ -40,26 +55,28 @@ type (
 	Identifier struct {
 		Loc    *lexer.Location `json:"-"`
 		Symbol string
-		Type   *Type
+		Type   *Type `json:",omitempty"`
 	}
 
 	Datatype struct {
 		Datatype Identifier
 		Variable Identifier
+		Type     *Type `json:",omitempty"`
 	}
 
 	Declaration struct {
+		Outer    *Expression `json:"-"`
 		Datatype Identifier
 		Variable Identifier
 		Value    Expression
-		Type     *Type
+		Type     *Type `json:",omitempty"`
 	}
 
 	Assignment struct {
 		Variable Identifier
 		Value    Expression
 		Operator lexer.Operation
-		Type     *Type
+		Type     *Type `json:",omitempty"`
 	}
 
 	List struct {
@@ -71,7 +88,7 @@ type (
 		Left     Expression
 		Right    Expression
 		Operator lexer.Operation
-		Type     *Type
+		Type     *Type `json:",omitempty"`
 	}
 
 	Comparison struct {
@@ -79,7 +96,7 @@ type (
 		Left       Expression
 		Right      Expression
 		Comparator lexer.Comparison
-		Type       *Type
+		Type       *Type `json:",omitempty"`
 	}
 
 	FunctionLiteral struct {
@@ -87,31 +104,31 @@ type (
 		Params   List
 		Return   List
 		Contents Block
-		Type     *Type
+		Type     *Type `json:",omitempty"`
 	}
 
 	FunctionCall struct {
 		Name   Identifier
 		Params List
-		Type   *Type
+		Type   *Type `json:",omitempty"`
 	}
 
 	IntegerLiteral struct {
 		Loc   *lexer.Location `json:"-"`
 		Value int64
-		Type  *Type
+		Type  *Type `json:",omitempty"`
 	}
 
 	FloatLiteral struct {
 		Loc   *lexer.Location `json:"-"`
 		Value float64
-		Type  *Type
+		Type  *Type `json:",omitempty"`
 	}
 
 	BoolLiteral struct {
 		Loc   *lexer.Location `json:"-"`
 		Value bool
-		Type  *Type
+		Type  *Type `json:",omitempty"`
 	}
 
 	Return struct {
@@ -136,13 +153,13 @@ func (x Assignment) Children() []Expression      { return nil }
 func (x List) Children() []Expression            { return x.Values }
 func (x BinaryOperation) Children() []Expression { return []Expression{x.Left, x.Right} }
 func (x Comparison) Children() []Expression      { return []Expression{x.Left, x.Right} }
-func (x FunctionLiteral) Children() []Expression { return []Expression{x.Contents} }
+func (x FunctionLiteral) Children() []Expression { return []Expression{Wrap(x.Contents)} }
 func (x FunctionCall) Children() []Expression    { return nil }
 func (x IntegerLiteral) Children() []Expression  { return nil }
 func (x FloatLiteral) Children() []Expression    { return nil }
 func (x BoolLiteral) Children() []Expression     { return nil }
 func (x Return) Children() []Expression          { return []Expression{x.Value} }
-func (x IfStatement) Children() []Expression     { return []Expression{x.Then, x.Else} }
+func (x IfStatement) Children() []Expression     { return []Expression{Wrap(x.Then), Wrap(x.Else)} }
 
 // Location
 func (x Program) Location() *lexer.Location         { return lexer.NoLocation }
@@ -177,11 +194,23 @@ func (x Identifier) InferType() string { // tricky
 	return ""
 }
 func (x Datatype) InferType() string {
-	return x.Datatype.Symbol
+	dt := x.Datatype.Symbol
+	x.Type.Name, x.Type.Underlying = dt, typing.Underlying(dt)
+	return dt
 }
 func (x Declaration) InferType() string {
 	typ := confirm(x, x.Datatype.Symbol, x.Value.InferType())
 	x.Type.Name, x.Type.Underlying = typ, typing.Underlying(typ)
+
+	variable := typing.NewVar(
+		x.Type.Name,
+		x.Type.Underlying,
+		nil,
+	)
+
+	fmt.Println(x.Variable.Symbol, x.Outer)
+	create(x, *x.Outer, x.Variable.Symbol, variable)
+
 	return typ
 }
 func (x Assignment) InferType() string { // tricky
@@ -236,7 +265,7 @@ func (x IfStatement) InferType() string {
 func (x Program) GetType() *Type         { return nil }
 func (x Block) GetType() *Type           { return nil }
 func (x Identifier) GetType() *Type      { return x.Type }
-func (x Datatype) GetType() *Type        { return nil }
+func (x Datatype) GetType() *Type        { return x.Type }
 func (x Declaration) GetType() *Type     { return nil }
 func (x Assignment) GetType() *Type      { return nil }
 func (x List) GetType() *Type            { return nil }
@@ -318,7 +347,7 @@ func (x IfStatement) Generate(bl *ir.Block) value.Value {
 }
 
 // Misc
-func confirm(expr Expression, types ...string) string {
+func confirm(node Node, types ...string) string {
 	f := types[0]
 	if len(types) < 2 {
 		return f
@@ -326,7 +355,7 @@ func confirm(expr Expression, types ...string) string {
 
 	for _, el := range types {
 		if el != f {
-			Errors.Error("Type mismatch: '"+el+"' to '"+f+"'", expr.Location())
+			Errors.Error("Type mismatch: '"+el+"' to '"+f+"'", node.Location())
 		}
 	}
 	return f
@@ -334,18 +363,53 @@ func confirm(expr Expression, types ...string) string {
 
 func link(expr Expression, parent *typing.Scope) {
 	newParent := parent
-	if block, ok := expr.(Block); ok {
+	if block, ok := expr.Node.(Block); ok {
 		block.Scope.Parent = parent
 		newParent = block.Scope
 	}
+	if decl, ok := expr.Node.(Declaration); ok {
+		decl.Outer = &expr
+		fmt.Println(decl.Variable.Symbol, decl.Outer)
+	}
 
 	for _, child := range expr.Children() {
+		child.Parent = &expr
 		link(child, newParent)
 	}
 }
 
-func Typecheck(ast Program) Program {
+func access(start Node, expr Expression, name string) *typing.Variable {
+	if expr.Node == nil {
+		// Errors.Error("'"+name+"' is not defined", start.Location())
+		return nil
+	}
+	if block, ok := expr.Node.(Block); ok {
+		if val, ok := block.Scope.Vars[name]; ok {
+			return val
+		}
+	}
+	return access(start, *expr.Parent, name)
+}
+
+func create(start Node, expr Expression, name string, variable *typing.Variable) {
+	if expr.Node == nil {
+		Errors.Error("Something went wrong", start.Location())
+		return
+	}
+
+	if block, ok := expr.Node.(Block); ok {
+		_, exists := block.Scope.Vars[name]
+		if exists {
+			Errors.Error("'"+name+"' is already defined", start.Location())
+		}
+		block.Scope.Vars[name] = variable
+	} else {
+		create(start, *expr.Parent, name, variable)
+	}
+}
+
+func TypeCheck(ast Program) Program {
+	link(Wrap(ast), ast.Contents.Scope)
 	ast.InferType()
-	link(ast, ast.Contents.Scope)
 	return ast
 }

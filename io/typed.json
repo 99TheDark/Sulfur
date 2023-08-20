@@ -2,203 +2,88 @@
  "Contents": {
   "Body": [
    {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "func",
-      "Underlying": "func"
-     }
-    },
-    "Variable": {
-     "Symbol": "x",
-     "Type": {
-      "Name": "func",
-      "Underlying": "func"
-     }
-    },
-    "Value": {
-     "Left": {
-      "Left": {
-       "Value": 3,
-       "Type": {
-        "Name": "func",
-        "Underlying": "func"
-       }
-      },
-      "Right": {
+    "Node": {
+     "Datatype": {
+      "Symbol": "int",
+      "Type": {}
+     },
+     "Variable": {
+      "Symbol": "x",
+      "Type": {}
+     },
+     "Value": {
+      "Node": {
        "Left": {
-        "Value": 5,
-        "Type": {
-         "Name": "func",
-         "Underlying": "func"
+        "Node": {
+         "Left": {
+          "Node": {
+           "Value": 3,
+           "Type": {}
+          }
+         },
+         "Right": {
+          "Node": {
+           "Left": {
+            "Node": {
+             "Value": 5,
+             "Type": {}
+            }
+           },
+           "Right": {
+            "Node": {
+             "Value": 7,
+             "Type": {}
+            }
+           },
+           "Operator": "*",
+           "Type": {}
+          }
+         },
+         "Operator": "+",
+         "Type": {}
         }
        },
        "Right": {
-        "Value": 7,
-        "Type": {
-         "Name": "func",
-         "Underlying": "func"
+        "Node": {
+         "Left": {
+          "Node": {
+           "Value": 4,
+           "Type": {}
+          }
+         },
+         "Right": {
+          "Node": {
+           "Value": 2,
+           "Type": {}
+          }
+         },
+         "Operator": "/",
+         "Type": {}
         }
        },
-       "Operator": "*",
-       "Type": {
-        "Name": "func",
-        "Underlying": "func"
-       }
-      },
-      "Operator": "+",
-      "Type": {
-       "Name": "func",
-       "Underlying": "func"
+       "Operator": "-",
+       "Type": {}
       }
      },
-     "Right": {
-      "Left": {
-       "Value": 4,
-       "Type": {
-        "Name": "func",
-        "Underlying": "func"
-       }
-      },
-      "Right": {
-       "Value": 2,
-       "Type": {
-        "Name": "func",
-        "Underlying": "func"
-       }
-      },
-      "Operator": "/",
-      "Type": {
-       "Name": "func",
-       "Underlying": "func"
-      }
-     },
-     "Operator": "-",
-     "Type": {
-      "Name": "func",
-      "Underlying": "func"
-     }
-    },
-    "Type": {
-     "Name": "func",
-     "Underlying": "func"
+     "Type": {}
     }
    },
    {
-    "Name": {
-     "Symbol": "add",
-     "Type": {
-      "Name": "func",
-      "Underlying": "func"
-     }
-    },
-    "Params": {
-     "Values": [
-      {
-       "Datatype": {
-        "Symbol": "int",
-        "Type": {
-         "Name": "func",
-         "Underlying": "func"
-        }
-       },
-       "Variable": {
-        "Symbol": "a",
-        "Type": {
-         "Name": "func",
-         "Underlying": "func"
-        }
-       }
-      },
-      {
-       "Datatype": {
-        "Symbol": "int",
-        "Type": {
-         "Name": "func",
-         "Underlying": "func"
-        }
-       },
-       "Variable": {
-        "Symbol": "b",
-        "Type": {
-         "Name": "func",
-         "Underlying": "func"
-        }
-       }
+    "Node": {
+     "Left": {
+      "Node": {
+       "Symbol": "x",
+       "Type": {}
       }
-     ]
-    },
-    "Return": {
-     "Values": [
-      {
-       "Symbol": "int",
-       "Type": {
-        "Name": "func",
-        "Underlying": "func"
-       }
+     },
+     "Right": {
+      "Node": {
+       "Symbol": "x",
+       "Type": {}
       }
-     ]
-    },
-    "Contents": {
-     "Body": [
-      {
-       "Name": {
-        "Symbol": "inner",
-        "Type": {
-         "Name": "func",
-         "Underlying": "func"
-        }
-       },
-       "Params": {
-        "Values": []
-       },
-       "Return": {
-        "Values": []
-       },
-       "Contents": {
-        "Body": [],
-        "Scope": {
-         "Block": null,
-         "Vars": {}
-        }
-       },
-       "Type": {
-        "Name": "func",
-        "Underlying": "func"
-       }
-      },
-      {
-       "Value": {
-        "Left": {
-         "Symbol": "a",
-         "Type": {
-          "Name": "func",
-          "Underlying": "func"
-         }
-        },
-        "Right": {
-         "Symbol": "b",
-         "Type": {
-          "Name": "func",
-          "Underlying": "func"
-         }
-        },
-        "Operator": "+",
-        "Type": {
-         "Name": "func",
-         "Underlying": "func"
-        }
-       }
-      }
-     ],
-     "Scope": {
-      "Block": null,
-      "Vars": {}
-     }
-    },
-    "Type": {
-     "Name": "func",
-     "Underlying": "func"
+     },
+     "Operator": "*",
+     "Type": {}
     }
    }
   ],

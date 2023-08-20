@@ -2,203 +2,88 @@
  "Contents": {
   "Body": [
    {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "x",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Left": {
-      "Left": {
-       "Value": 3,
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
-      },
-      "Right": {
+    "Node": {
+     "Datatype": {
+      "Symbol": "int",
+      "Type": {}
+     },
+     "Variable": {
+      "Symbol": "x",
+      "Type": {}
+     },
+     "Value": {
+      "Node": {
        "Left": {
-        "Value": 5,
-        "Type": {
-         "Name": "",
-         "Underlying": ""
+        "Node": {
+         "Left": {
+          "Node": {
+           "Value": 3,
+           "Type": {}
+          }
+         },
+         "Right": {
+          "Node": {
+           "Left": {
+            "Node": {
+             "Value": 5,
+             "Type": {}
+            }
+           },
+           "Right": {
+            "Node": {
+             "Value": 7,
+             "Type": {}
+            }
+           },
+           "Operator": "*",
+           "Type": {}
+          }
+         },
+         "Operator": "+",
+         "Type": {}
         }
        },
        "Right": {
-        "Value": 7,
-        "Type": {
-         "Name": "",
-         "Underlying": ""
+        "Node": {
+         "Left": {
+          "Node": {
+           "Value": 4,
+           "Type": {}
+          }
+         },
+         "Right": {
+          "Node": {
+           "Value": 2,
+           "Type": {}
+          }
+         },
+         "Operator": "/",
+         "Type": {}
         }
        },
-       "Operator": "*",
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
-      },
-      "Operator": "+",
-      "Type": {
-       "Name": "",
-       "Underlying": ""
+       "Operator": "-",
+       "Type": {}
       }
      },
-     "Right": {
-      "Left": {
-       "Value": 4,
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
-      },
-      "Right": {
-       "Value": 2,
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
-      },
-      "Operator": "/",
-      "Type": {
-       "Name": "",
-       "Underlying": ""
-      }
-     },
-     "Operator": "-",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Type": {
-     "Name": "",
-     "Underlying": ""
+     "Type": {}
     }
    },
    {
-    "Name": {
-     "Symbol": "add",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Params": {
-     "Values": [
-      {
-       "Datatype": {
-        "Symbol": "int",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       },
-       "Variable": {
-        "Symbol": "a",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       }
-      },
-      {
-       "Datatype": {
-        "Symbol": "int",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       },
-       "Variable": {
-        "Symbol": "b",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       }
+    "Node": {
+     "Left": {
+      "Node": {
+       "Symbol": "x",
+       "Type": {}
       }
-     ]
-    },
-    "Return": {
-     "Values": [
-      {
-       "Symbol": "int",
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
+     },
+     "Right": {
+      "Node": {
+       "Symbol": "x",
+       "Type": {}
       }
-     ]
-    },
-    "Contents": {
-     "Body": [
-      {
-       "Name": {
-        "Symbol": "inner",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       },
-       "Params": {
-        "Values": []
-       },
-       "Return": {
-        "Values": []
-       },
-       "Contents": {
-        "Body": [],
-        "Scope": {
-         "Block": null,
-         "Vars": {}
-        }
-       },
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
-      },
-      {
-       "Value": {
-        "Left": {
-         "Symbol": "a",
-         "Type": {
-          "Name": "",
-          "Underlying": ""
-         }
-        },
-        "Right": {
-         "Symbol": "b",
-         "Type": {
-          "Name": "",
-          "Underlying": ""
-         }
-        },
-        "Operator": "+",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       }
-      }
-     ],
-     "Scope": {
-      "Block": null,
-      "Vars": {}
-     }
-    },
-    "Type": {
-     "Name": "",
-     "Underlying": ""
+     },
+     "Operator": "*",
+     "Type": {}
     }
    }
   ],

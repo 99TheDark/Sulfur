@@ -1,7 +1,6 @@
 package main
 
 import (
-	"golang/compiler"
 	"golang/errors"
 	"golang/lexer"
 	"golang/parser"
@@ -31,13 +30,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	typed := parser.Typecheck(ast)
+	typed := parser.TypeCheck(ast)
 	if err := parser.Save(typed, 1, "io/typed.json"); err != nil {
 		log.Fatalln(err)
 	}
 
-	llvm := compiler.Assemble(ast)
+	/*llvm := compiler.Assemble(ast)
 	if err := compiler.Save(llvm, "io/script.ll"); err != nil {
 		log.Fatalln(err)
-	}
+	}*/
 }
