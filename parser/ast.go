@@ -342,7 +342,6 @@ func link(expr Expression, parent *typing.Scope) {
 	for _, child := range expr.Children() {
 		link(child, newParent)
 	}
-
 }
 
 func Typecheck(ast Program) Program {
