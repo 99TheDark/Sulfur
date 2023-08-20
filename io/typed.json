@@ -5,15 +5,15 @@
     "Datatype": {
      "Symbol": "int",
      "Type": {
-      "Name": "int",
-      "Underlying": "int"
+      "Name": "func",
+      "Underlying": "func"
      }
     },
     "Variable": {
      "Symbol": "x",
      "Type": {
-      "Name": "int",
-      "Underlying": "int"
+      "Name": "func",
+      "Underlying": "func"
      }
     },
     "Value": {
@@ -21,70 +21,190 @@
       "Left": {
        "Value": 3,
        "Type": {
-        "Name": "int",
-        "Underlying": "int"
+        "Name": "func",
+        "Underlying": "func"
        }
       },
       "Right": {
        "Left": {
         "Value": 5,
         "Type": {
-         "Name": "int",
-         "Underlying": "int"
+         "Name": "func",
+         "Underlying": "func"
         }
        },
        "Right": {
         "Value": 7,
         "Type": {
-         "Name": "int",
-         "Underlying": "int"
+         "Name": "func",
+         "Underlying": "func"
         }
        },
        "Operator": "*",
        "Type": {
-        "Name": "int",
-        "Underlying": "int"
+        "Name": "func",
+        "Underlying": "func"
        }
       },
       "Operator": "+",
       "Type": {
-       "Name": "int",
-       "Underlying": "int"
+       "Name": "func",
+       "Underlying": "func"
       }
      },
      "Right": {
       "Left": {
        "Value": 4,
        "Type": {
-        "Name": "int",
-        "Underlying": "int"
+        "Name": "func",
+        "Underlying": "func"
        }
       },
       "Right": {
        "Value": 2,
        "Type": {
-        "Name": "int",
-        "Underlying": "int"
+        "Name": "func",
+        "Underlying": "func"
        }
       },
       "Operator": "/",
       "Type": {
-       "Name": "int",
-       "Underlying": "int"
+       "Name": "func",
+       "Underlying": "func"
       }
      },
      "Operator": "-",
      "Type": {
-      "Name": "int",
-      "Underlying": "int"
+      "Name": "func",
+      "Underlying": "func"
      }
     },
     "Type": {
-     "Name": "int",
-     "Underlying": "int"
+     "Name": "func",
+     "Underlying": "func"
+    }
+   },
+   {
+    "Name": {
+     "Symbol": "add",
+     "Type": {
+      "Name": "func",
+      "Underlying": "func"
+     }
+    },
+    "Params": {
+     "Values": [
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "func",
+         "Underlying": "func"
+        }
+       },
+       "Variable": {
+        "Symbol": "a",
+        "Type": {
+         "Name": "func",
+         "Underlying": "func"
+        }
+       }
+      },
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "func",
+         "Underlying": "func"
+        }
+       },
+       "Variable": {
+        "Symbol": "b",
+        "Type": {
+         "Name": "func",
+         "Underlying": "func"
+        }
+       }
+      }
+     ]
+    },
+    "Return": {
+     "Values": [
+      {
+       "Symbol": "int",
+       "Type": {
+        "Name": "func",
+        "Underlying": "func"
+       }
+      }
+     ]
+    },
+    "Contents": {
+     "Body": [
+      {
+       "Name": {
+        "Symbol": "inner",
+        "Type": {
+         "Name": "func",
+         "Underlying": "func"
+        }
+       },
+       "Params": {
+        "Values": []
+       },
+       "Return": {
+        "Values": []
+       },
+       "Contents": {
+        "Body": [],
+        "Scope": {
+         "Block": null,
+         "Vars": {}
+        }
+       },
+       "Type": {
+        "Name": "func",
+        "Underlying": "func"
+       }
+      },
+      {
+       "Value": {
+        "Left": {
+         "Symbol": "a",
+         "Type": {
+          "Name": "func",
+          "Underlying": "func"
+         }
+        },
+        "Right": {
+         "Symbol": "b",
+         "Type": {
+          "Name": "func",
+          "Underlying": "func"
+         }
+        },
+        "Operator": "+",
+        "Type": {
+         "Name": "func",
+         "Underlying": "func"
+        }
+       }
+      }
+     ],
+     "Scope": {
+      "Block": null,
+      "Vars": {}
+     }
+    },
+    "Type": {
+     "Name": "func",
+     "Underlying": "func"
     }
    }
   ],
-  "Scope": {}
+  "Scope": {
+   "Block": null,
+   "Vars": {}
+  }
  }
 }

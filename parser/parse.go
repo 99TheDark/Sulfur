@@ -189,7 +189,7 @@ func (p *parser) parseFunction() Expression {
 				name,
 				params,
 				ret,
-				p.parseBlock(lbrace).Body,
+				p.parseBlock(lbrace),
 				NoType,
 			}
 		} else if p.at().Type == lexer.LeftBrace {
@@ -198,7 +198,7 @@ func (p *parser) parseFunction() Expression {
 				name,
 				params,
 				List{[]Expression{}},
-				p.parseBlock(lbrace).Body,
+				p.parseBlock(lbrace),
 				NoType,
 			}
 		} else {

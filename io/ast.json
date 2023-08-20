@@ -83,8 +83,128 @@
      "Name": "",
      "Underlying": ""
     }
+   },
+   {
+    "Name": {
+     "Symbol": "add",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Params": {
+     "Values": [
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Variable": {
+        "Symbol": "a",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       }
+      },
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Variable": {
+        "Symbol": "b",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       }
+      }
+     ]
+    },
+    "Return": {
+     "Values": [
+      {
+       "Symbol": "int",
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      }
+     ]
+    },
+    "Contents": {
+     "Body": [
+      {
+       "Name": {
+        "Symbol": "inner",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Params": {
+        "Values": []
+       },
+       "Return": {
+        "Values": []
+       },
+       "Contents": {
+        "Body": [],
+        "Scope": {
+         "Block": null,
+         "Vars": {}
+        }
+       },
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      {
+       "Value": {
+        "Left": {
+         "Symbol": "a",
+         "Type": {
+          "Name": "",
+          "Underlying": ""
+         }
+        },
+        "Right": {
+         "Symbol": "b",
+         "Type": {
+          "Name": "",
+          "Underlying": ""
+         }
+        },
+        "Operator": "+",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       }
+      }
+     ],
+     "Scope": {
+      "Block": null,
+      "Vars": {}
+     }
+    },
+    "Type": {
+     "Name": "",
+     "Underlying": ""
+    }
    }
   ],
-  "Scope": {}
+  "Scope": {
+   "Block": null,
+   "Vars": {}
+  }
  }
 }

@@ -24,5 +24,63 @@
     Token{Operator '/' at 0:24, #24}
     Token{Space ' ' at 0:25, #25}
     Token{Number '2' at 0:26, #26}
-    Token{EOF 'EOF' at 0:27, #27}
+    Token{NewLine '\n' at 0:27, #27}
+    Token{NewLine '\n' at 1:0, #28}
+    Token{Identifier 'add' at 2:0, #29}
+    Token{LeftParen '(' at 2:3, #32}
+    Token{Identifier 'int' at 2:4, #33}
+    Token{Space ' ' at 2:7, #36}
+    Token{Identifier 'a' at 2:8, #37}
+    Token{Delimiter ',' at 2:9, #38}
+    Token{Space ' ' at 2:10, #39}
+    Token{Identifier 'int' at 2:11, #40}
+    Token{Space ' ' at 2:14, #43}
+    Token{Identifier 'b' at 2:15, #44}
+    Token{RightParen ')' at 2:16, #45}
+    Token{Space ' ' at 2:17, #46}
+    Token{LeftParen '(' at 2:18, #47}
+    Token{Identifier 'int' at 2:19, #48}
+    Token{RightParen ')' at 2:22, #51}
+    Token{Space ' ' at 2:23, #52}
+    Token{LeftBrace '{' at 2:24, #53}
+    Token{NewLine '\n' at 2:25, #54}
+    Token{Space ' ' at 3:0, #55}
+    Token{Space ' ' at 3:1, #56}
+    Token{Space ' ' at 3:2, #57}
+    Token{Space ' ' at 3:3, #58}
+    Token{Identifier 'inner' at 3:4, #59}
+    Token{LeftParen '(' at 3:9, #64}
+    Token{RightParen ')' at 3:10, #65}
+    Token{Space ' ' at 3:11, #66}
+    Token{LeftBrace '{' at 3:12, #67}
+    Token{NewLine '\n' at 3:13, #68}
+    Token{Space ' ' at 4:0, #69}
+    Token{Space ' ' at 4:1, #70}
+    Token{Space ' ' at 4:2, #71}
+    Token{Space ' ' at 4:3, #72}
+    Token{Space ' ' at 4:4, #73}
+    Token{Space ' ' at 4:5, #74}
+    Token{Space ' ' at 4:6, #75}
+    Token{Space ' ' at 4:7, #76}
+    Token{NewLine '\n' at 4:8, #77}
+    Token{Space ' ' at 5:0, #78}
+    Token{Space ' ' at 5:1, #79}
+    Token{Space ' ' at 5:2, #80}
+    Token{Space ' ' at 5:3, #81}
+    Token{RightBrace '}' at 5:4, #82}
+    Token{NewLine '\n' at 5:5, #83}
+    Token{Space ' ' at 6:0, #84}
+    Token{Space ' ' at 6:1, #85}
+    Token{Space ' ' at 6:2, #86}
+    Token{Space ' ' at 6:3, #87}
+    Token{Keyword 'return' at 6:4, #88}
+    Token{Space ' ' at 6:10, #94}
+    Token{Identifier 'a' at 6:11, #95}
+    Token{Space ' ' at 6:12, #96}
+    Token{Operator '+' at 6:13, #97}
+    Token{Space ' ' at 6:14, #98}
+    Token{Identifier 'b' at 6:15, #99}
+    Token{NewLine '\n' at 6:16, #100}
+    Token{RightBrace '}' at 7:0, #101}
+    Token{EOF 'EOF' at 7:1, #102}
 }

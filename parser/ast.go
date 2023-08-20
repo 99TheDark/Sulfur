@@ -34,7 +34,7 @@ type (
 	Block struct {
 		Loc   *lexer.Location `json:"-"`
 		Body  []Expression
-		Scope typing.Scope
+		Scope *typing.Scope
 	}
 
 	Identifier struct {
@@ -83,11 +83,11 @@ type (
 	}
 
 	FunctionLiteral struct {
-		Name   Identifier
-		Params List
-		Return List
-		Body   []Expression
-		Type   *Type
+		Name     Identifier
+		Params   List
+		Return   List
+		Contents Block
+		Type     *Type
 	}
 
 	FunctionCall struct {
@@ -136,7 +136,7 @@ func (x Assignment) Children() []Expression      { return nil }
 func (x List) Children() []Expression            { return x.Values }
 func (x BinaryOperation) Children() []Expression { return []Expression{x.Left, x.Right} }
 func (x Comparison) Children() []Expression      { return []Expression{x.Left, x.Right} }
-func (x FunctionLiteral) Children() []Expression { return x.Body }
+func (x FunctionLiteral) Children() []Expression { return []Expression{x.Contents} }
 func (x FunctionCall) Children() []Expression    { return nil }
 func (x IntegerLiteral) Children() []Expression  { return nil }
 func (x FloatLiteral) Children() []Expression    { return nil }
@@ -332,7 +332,21 @@ func confirm(expr Expression, types ...string) string {
 	return f
 }
 
+func link(expr Expression, parent *typing.Scope) {
+	newParent := parent
+	if block, ok := expr.(Block); ok {
+		block.Scope.Parent = parent
+		newParent = block.Scope
+	}
+
+	for _, child := range expr.Children() {
+		link(child, newParent)
+	}
+
+}
+
 func Typecheck(ast Program) Program {
 	ast.InferType()
+	link(ast, ast.Contents.Scope)
 	return ast
 }

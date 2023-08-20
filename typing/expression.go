@@ -6,11 +6,11 @@ import (
 )
 
 type Scope struct {
-	*ir.Block
-	parent *Scope
-	vars   map[string]value.Value
+	Block  *ir.Block
+	Parent *Scope `json:"-"`
+	Vars   map[string]value.Value
 }
 
-func NewScope() Scope {
-	return Scope{nil, nil, make(map[string]value.Value)}
+func NewScope() *Scope {
+	return &Scope{nil, nil, make(map[string]value.Value)}
 }
