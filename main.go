@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	code, err := lexer.GetSourceCode("io/script.lv4")
+	code, err := lexer.GetSourceCode("io/script.sulfur")
 	if err != nil {
 		log.Fatalln(err)
 	}
