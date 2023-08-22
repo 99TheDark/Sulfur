@@ -13,7 +13,7 @@ func Assemble(ast parser.Program) string {
 
 	main := mod.NewFunc("main", types.Void)
 	bl := main.NewBlock("entry")
-	ast.Generate(bl)
+	ast.Generate(mod, bl)
 	bl.NewRet(nil)
 
 	return mod.String()

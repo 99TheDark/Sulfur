@@ -1,6 +1,5 @@
-int x = (3 + 5 * 7) - 4 / 2
+// add(int a, int b) (int) {
+//     return a + b
+// }
 
-add(int a, int b) (int) {
-    bool x = true
-    return a + b * x
-}
+int x = (3 + 5 * 7) - 4 / 2

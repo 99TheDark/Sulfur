@@ -16,7 +16,7 @@ type Expression interface {
 	Location() *lexer.Location
 	InferType() string
 	GetType() *Type
-	Generate(bl *ir.Block) value.Value
+	Generate(mod *ir.Module, bl *ir.Block) value.Value
 }
 
 type Type struct {
@@ -284,69 +284,82 @@ func (x Return) GetType() *Type          { return nil }
 func (x IfStatement) GetType() *Type     { return nil }
 
 // Generate
-func (x Program) Generate(bl *ir.Block) value.Value {
-	x.Contents.Generate(bl)
+func (x Program) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+	x.Contents.Generate(mod, bl)
 	return nil
 }
-func (x Block) Generate(bl *ir.Block) value.Value {
+func (x Block) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	for _, expr := range x.Body {
-		expr.Generate(bl)
+		expr.Generate(mod, bl)
 	}
 	return nil
 }
-func (x Identifier) Generate(bl *ir.Block) value.Value {
+func (x Identifier) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
-func (x Datatype) Generate(bl *ir.Block) value.Value {
+func (x Datatype) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
-func (x Declaration) Generate(bl *ir.Block) value.Value {
+func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+	bl.NewAlloca(types.I64)
 	return nil
 }
-func (x Assignment) Generate(bl *ir.Block) value.Value {
+func (x Assignment) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
-func (x List) Generate(bl *ir.Block) value.Value {
+func (x List) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
-func (x BinaryOperation) Generate(bl *ir.Block) value.Value {
+func (x BinaryOperation) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	switch x.Operator {
 	case lexer.Add:
-		return bl.NewAdd(x.Left.Generate(bl), x.Right.Generate(bl))
+		return bl.NewAdd(x.Left.Generate(mod, bl), x.Right.Generate(mod, bl))
 	case lexer.Subtract:
-		return bl.NewSub(x.Left.Generate(bl), x.Right.Generate(bl))
+		return bl.NewSub(x.Left.Generate(mod, bl), x.Right.Generate(mod, bl))
 	case lexer.Multiply:
-		return bl.NewMul(x.Left.Generate(bl), x.Right.Generate(bl))
+		return bl.NewMul(x.Left.Generate(mod, bl), x.Right.Generate(mod, bl))
 	case lexer.Divide:
-		return bl.NewSDiv(x.Left.Generate(bl), x.Right.Generate(bl))
+		return bl.NewSDiv(x.Left.Generate(mod, bl), x.Right.Generate(mod, bl))
 	case lexer.Modulo:
-		return bl.NewSRem(x.Left.Generate(bl), x.Right.Generate(bl))
+		return bl.NewSRem(x.Left.Generate(mod, bl), x.Right.Generate(mod, bl))
 	default:
 		return nil
 	}
 }
-func (x Comparison) Generate(bl *ir.Block) value.Value {
+func (x Comparison) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
-func (x FunctionLiteral) Generate(bl *ir.Block) value.Value {
+func (x FunctionLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+	params := []*ir.Param{}
+	for _, parameter := range x.Params.Values {
+		param := parameter.(Datatype) // Already confirmed to be datatype in typechecker
+		p := ir.NewParam(param.Variable.Symbol, types.I32)
+
+		params = append(params, p)
+	}
+
+	fun := mod.NewFunc(x.Name.Symbol, types.I32, params...)
+	x.Contents.Generate(mod, fun.NewBlock(""))
+
+	return fun
+}
+func (x FunctionCall) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
-func (x FunctionCall) Generate(bl *ir.Block) value.Value {
-	return nil
-}
-func (x IntegerLiteral) Generate(bl *ir.Block) value.Value {
+func (x IntegerLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return constant.NewInt(types.I64, x.Value)
 }
-func (x FloatLiteral) Generate(bl *ir.Block) value.Value {
+func (x FloatLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
-func (x BoolLiteral) Generate(bl *ir.Block) value.Value {
+func (x BoolLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
-func (x Return) Generate(bl *ir.Block) value.Value {
+func (x Return) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+	bl.NewRet(x.Value.Generate(mod, bl))
 	return nil
 }
-func (x IfStatement) Generate(bl *ir.Block) value.Value {
+func (x IfStatement) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
 
