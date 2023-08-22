@@ -301,7 +301,9 @@ func (x Datatype) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
 func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
-	bl.NewAlloca(types.I64)
+	src := x.Value.Generate(mod, bl)
+	dst := bl.NewAlloca(types.I32)
+	bl.NewStore(src, dst)
 	return nil
 }
 func (x Assignment) Generate(mod *ir.Module, bl *ir.Block) value.Value {
@@ -347,7 +349,7 @@ func (x FunctionCall) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
 func (x IntegerLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
-	return constant.NewInt(types.I64, x.Value)
+	return constant.NewInt(types.I32, x.Value)
 }
 func (x FloatLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
