@@ -13,8 +13,5 @@
     Token{Number '4' at 0:22, #22}
     Token{Operator '/' at 0:24, #24}
     Token{Number '2' at 0:26, #26}
-    Token{Identifier 'x' at 2:0, #29}
-    Token{Operator '*' at 2:2, #31}
-    Token{Identifier 'x' at 2:4, #33}
-    Token{EOF 'EOF' at 7:3, #110}
+    Token{EOF 'EOF' at 7:3, #113}
 }

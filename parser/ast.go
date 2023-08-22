@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	. "golang/errors"
 	"golang/lexer"
 	"golang/typing"
@@ -12,24 +11,12 @@ import (
 	"github.com/llir/llvm/ir/value"
 )
 
-type Node interface {
+type Expression interface {
 	Children() []Expression
 	Location() *lexer.Location
 	InferType() string
 	GetType() *Type
 	Generate(bl *ir.Block) value.Value
-}
-
-type Expression struct {
-	Node
-	Parent *Expression `json:"-"`
-}
-
-func Wrap(node Node) Expression {
-	return Expression{
-		node,
-		nil,
-	}
 }
 
 type Type struct {
@@ -49,11 +36,12 @@ type (
 	Block struct {
 		Loc   *lexer.Location `json:"-"`
 		Body  []Expression
-		Scope *typing.Scope
+		Scope typing.Scope
 	}
 
 	Identifier struct {
 		Loc    *lexer.Location `json:"-"`
+		Parent *typing.Scope   `json:"-"`
 		Symbol string
 		Type   *Type `json:",omitempty"`
 	}
@@ -65,7 +53,6 @@ type (
 	}
 
 	Declaration struct {
-		Outer    *Expression `json:"-"`
 		Datatype Identifier
 		Variable Identifier
 		Value    Expression
@@ -148,18 +135,18 @@ func (x Program) Children() []Expression         { return x.Contents.Body }
 func (x Block) Children() []Expression           { return x.Body }
 func (x Identifier) Children() []Expression      { return nil }
 func (x Datatype) Children() []Expression        { return nil }
-func (x Declaration) Children() []Expression     { return nil }
-func (x Assignment) Children() []Expression      { return nil }
+func (x Declaration) Children() []Expression     { return []Expression{x.Datatype, x.Variable, x.Value} }
+func (x Assignment) Children() []Expression      { return []Expression{x.Variable, x.Value} }
 func (x List) Children() []Expression            { return x.Values }
 func (x BinaryOperation) Children() []Expression { return []Expression{x.Left, x.Right} }
 func (x Comparison) Children() []Expression      { return []Expression{x.Left, x.Right} }
-func (x FunctionLiteral) Children() []Expression { return []Expression{Wrap(x.Contents)} }
-func (x FunctionCall) Children() []Expression    { return nil }
+func (x FunctionLiteral) Children() []Expression { return []Expression{x.Contents} }
+func (x FunctionCall) Children() []Expression    { return []Expression{x.Name, x.Params} }
 func (x IntegerLiteral) Children() []Expression  { return nil }
 func (x FloatLiteral) Children() []Expression    { return nil }
 func (x BoolLiteral) Children() []Expression     { return nil }
 func (x Return) Children() []Expression          { return []Expression{x.Value} }
-func (x IfStatement) Children() []Expression     { return []Expression{Wrap(x.Then), Wrap(x.Else)} }
+func (x IfStatement) Children() []Expression     { return []Expression{x.Then, x.Else} }
 
 // Location
 func (x Program) Location() *lexer.Location         { return lexer.NoLocation }
@@ -208,8 +195,7 @@ func (x Declaration) InferType() string {
 		nil,
 	)
 
-	fmt.Println(x.Variable.Symbol, x.Outer)
-	create(x, *x.Outer, x.Variable.Symbol, variable)
+	create(x.Variable, x.Variable.Symbol, *variable)
 
 	return typ
 }
@@ -347,7 +333,7 @@ func (x IfStatement) Generate(bl *ir.Block) value.Value {
 }
 
 // Misc
-func confirm(node Node, types ...string) string {
+func confirm(Expression Expression, types ...string) string {
 	f := types[0]
 	if len(types) < 2 {
 		return f
@@ -355,61 +341,38 @@ func confirm(node Node, types ...string) string {
 
 	for _, el := range types {
 		if el != f {
-			Errors.Error("Type mismatch: '"+el+"' to '"+f+"'", node.Location())
+			Errors.Error("Type mismatch: '"+el+"' to '"+f+"'", Expression.Location())
 		}
 	}
 	return f
 }
 
-func link(expr Expression, parent *typing.Scope) {
-	newParent := parent
-	if block, ok := expr.Node.(Block); ok {
-		block.Scope.Parent = parent
-		newParent = block.Scope
-	}
-	if decl, ok := expr.Node.(Declaration); ok {
-		decl.Outer = &expr
-		fmt.Println(decl.Variable.Symbol, decl.Outer)
-	}
-
-	for _, child := range expr.Children() {
-		child.Parent = &expr
-		link(child, newParent)
-	}
-}
-
-func access(start Node, expr Expression, name string) *typing.Variable {
-	if expr.Node == nil {
-		// Errors.Error("'"+name+"' is not defined", start.Location())
-		return nil
-	}
-	if block, ok := expr.Node.(Block); ok {
-		if val, ok := block.Scope.Vars[name]; ok {
-			return val
-		}
-	}
-	return access(start, *expr.Parent, name)
-}
-
-func create(start Node, expr Expression, name string, variable *typing.Variable) {
-	if expr.Node == nil {
-		Errors.Error("Something went wrong", start.Location())
-		return
-	}
-
-	if block, ok := expr.Node.(Block); ok {
-		_, exists := block.Scope.Vars[name]
-		if exists {
-			Errors.Error("'"+name+"' is already defined", start.Location())
-		}
-		block.Scope.Vars[name] = variable
+func link(expr Expression, parent typing.Scope) {
+	if iden, ok := expr.(Identifier); ok {
+		*iden.Parent = parent
 	} else {
-		create(start, *expr.Parent, name, variable)
+		newParent := parent
+		if block, ok := expr.(Block); ok {
+			*block.Scope.Parent = parent
+			newParent = block.Scope
+		}
+
+		for _, child := range expr.Children() {
+			link(child, newParent)
+		}
+	}
+}
+
+func create(caller Identifier, name string, variable typing.Variable) {
+	if _, exists := caller.Parent.Vars[name]; exists {
+		Errors.Error("'"+name+"' is already defined", caller.Loc)
+	} else {
+		caller.Parent.Vars[name] = variable
 	}
 }
 
 func TypeCheck(ast Program) Program {
-	link(Wrap(ast), ast.Contents.Scope)
+	link(ast, ast.Contents.Scope)
 	ast.InferType()
 	return ast
 }

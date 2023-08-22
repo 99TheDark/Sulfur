@@ -26,19 +26,15 @@
     Token{Number '2' at 0:26, #26}
     Token{NewLine '\n' at 0:27, #27}
     Token{NewLine '\n' at 1:0, #28}
-    Token{Identifier 'x' at 2:0, #29}
-    Token{Space ' ' at 2:1, #30}
-    Token{Operator '*' at 2:2, #31}
-    Token{Space ' ' at 2:3, #32}
-    Token{Identifier 'x' at 2:4, #33}
-    Token{NewLine '\n' at 2:5, #34}
-    Token{NewLine '\n' at 3:0, #35}
-    Token{Comment '//add(int a, int b) (int) {' at 4:0, #36}
-    Token{NewLine '\n' at 4:27, #63}
-    Token{Comment '//    bool x = true' at 5:0, #64}
-    Token{NewLine '\n' at 5:19, #83}
-    Token{Comment '//    return a + b * x' at 6:0, #84}
-    Token{NewLine '\n' at 6:22, #106}
-    Token{Comment '//}' at 7:0, #107}
-    Token{EOF 'EOF' at 7:3, #110}
+    Token{Comment '// x * x' at 2:0, #29}
+    Token{NewLine '\n' at 2:8, #37}
+    Token{NewLine '\n' at 3:0, #38}
+    Token{Comment '//add(int a, int b) (int) {' at 4:0, #39}
+    Token{NewLine '\n' at 4:27, #66}
+    Token{Comment '//    bool x = true' at 5:0, #67}
+    Token{NewLine '\n' at 5:19, #86}
+    Token{Comment '//    return a + b * x' at 6:0, #87}
+    Token{NewLine '\n' at 6:22, #109}
+    Token{Comment '//}' at 7:0, #110}
+    Token{EOF 'EOF' at 7:3, #113}
 }

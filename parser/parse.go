@@ -57,7 +57,7 @@ func (p *parser) listify() List {
 	p.eat()
 	group := p.parseGroup()
 
-	if list, ok := group.Node.(List); ok {
+	if list, ok := group.(List); ok {
 		return list
 	}
 
@@ -69,9 +69,9 @@ func (p *parser) listify() List {
 func (p *parser) parseGroup() Expression {
 	if p.at().Type == lexer.RightParen {
 		p.eat()
-		return Wrap(List{
+		return List{
 			[]Expression{},
-		})
+		}
 	}
 	expr := p.parseExpression()
 	p.expect(lexer.RightParen)
@@ -89,7 +89,7 @@ func (p *parser) parseBlock(hook lexer.Token) Block {
 	return Block{
 		loc,
 		body,
-		typing.NewScope(),
+		*typing.NewScope(),
 	}
 }
 
@@ -104,36 +104,36 @@ func (p *parser) parseIfStatement(token lexer.Token) Expression {
 		bl := Block{
 			next.Location,
 			ifstmt,
-			typing.NewScope(),
+			*typing.NewScope(),
 		}
-		return Wrap(IfStatement{
+		return IfStatement{
 			token.Location,
 			condition,
 			body,
 			bl,
-		})
+		}
 	} else if p.key() == lexer.Else {
 		p.eat()
 		brace := p.expect(lexer.LeftBrace)
-		return Wrap(IfStatement{
+		return IfStatement{
 			token.Location,
 			condition,
 			body,
 			p.parseBlock(brace),
-		})
+		}
 	} else {
 		loc := p.at().Location
 		bl := Block{
 			loc,
 			[]Expression{},
-			typing.NewScope(),
+			*typing.NewScope(),
 		}
-		return Wrap(IfStatement{
+		return IfStatement{
 			token.Location,
 			condition,
 			body,
 			bl,
-		})
+		}
 	}
 }
 
@@ -151,25 +151,24 @@ func (p *parser) parseControl() Expression {
 func (p *parser) parseReturn() Expression {
 	if p.key() == lexer.Return {
 		p.eat()
-		return Wrap(Return{
+		return Return{
 			p.parseDeclaration(),
-		})
+		}
 	}
 	return p.parseDeclaration()
 }
 
 func (p *parser) parseDeclaration() Expression {
 	left := p.parseFunction()
-	if datatype, ok := left.Node.(Datatype); ok && p.at().Type == lexer.Assignment {
+	if datatype, ok := left.(Datatype); ok && p.at().Type == lexer.Assignment {
 		p.eat()
 		value := p.parseFunction()
-		return Wrap(Declaration{
-			nil,
+		return Declaration{
 			datatype.Datatype,
 			datatype.Variable,
 			value,
 			NoType(),
-		})
+		}
 	}
 	return left
 }
@@ -181,6 +180,7 @@ func (p *parser) parseFunction() Expression {
 		token := p.eat()
 		name := Identifier{
 			token.Location,
+			typing.NewScope(),
 			token.Value,
 			NoType(),
 		}
@@ -196,16 +196,16 @@ func (p *parser) parseFunction() Expression {
 			}
 
 			lbrace := p.expect(lexer.LeftBrace)
-			return Wrap(FunctionLiteral{
+			return FunctionLiteral{
 				name,
 				params,
 				ret,
 				p.parseBlock(lbrace),
 				NoType(),
-			})
+			}
 		} else if p.at().Type == lexer.LeftBrace {
 			lbrace := p.expect(lexer.LeftBrace)
-			return Wrap(FunctionLiteral{
+			return FunctionLiteral{
 				name,
 				params,
 				List{
@@ -213,13 +213,13 @@ func (p *parser) parseFunction() Expression {
 				},
 				p.parseBlock(lbrace),
 				NoType(),
-			})
+			}
 		} else {
-			return Wrap(FunctionCall{
+			return FunctionCall{
 				name,
 				params,
 				NoType(),
-			})
+			}
 		}
 	}
 
@@ -237,22 +237,22 @@ func (p *parser) parseList() Expression {
 	if len(list) == 1 {
 		return list[0]
 	}
-	return Wrap(List{
+	return List{
 		list,
-	})
+	}
 }
 
 func (p *parser) parseComparison() Expression {
 	left := p.parseAdditive()
 	if p.at().Type == lexer.Comparator {
 		token := p.eat()
-		return Wrap(Comparison{
+		return Comparison{
 			token.Location,
 			left,
 			p.parseAdditive(),
 			lexer.Comparison(token.Value),
 			NoType(),
-		})
+		}
 	}
 	return left
 }
@@ -263,13 +263,13 @@ func (p *parser) parseAdditive() Expression {
 		token := p.eat()
 		right := p.parseMultiplicative()
 
-		left = Wrap(BinaryOperation{
+		left = BinaryOperation{
 			token.Location,
 			left,
 			right,
 			lexer.Operation(token.Value),
 			NoType(),
-		})
+		}
 	}
 	return left
 }
@@ -280,13 +280,13 @@ func (p *parser) parseMultiplicative() Expression {
 		token := p.eat()
 		right := p.parseDatatype()
 
-		left = Wrap(BinaryOperation{
+		left = BinaryOperation{
 			token.Location,
 			left,
 			right,
 			lexer.Operation(token.Value),
 			NoType(),
-		})
+		}
 	}
 	return left
 }
@@ -294,19 +294,21 @@ func (p *parser) parseMultiplicative() Expression {
 func (p *parser) parseDatatype() Expression {
 	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.Identifier {
 		dt, val := p.eat(), p.eat()
-		return Wrap(Datatype{
+		return Datatype{
 			Identifier{
 				dt.Location,
+				typing.NewScope(),
 				dt.Value,
 				NoType(),
 			},
 			Identifier{
 				val.Location,
+				typing.NewScope(),
 				val.Value,
 				NoType(),
 			},
 			NoType(),
-		})
+		}
 	}
 	return p.parsePrimary()
 }
@@ -315,26 +317,28 @@ func (p *parser) parsePrimary() Expression {
 	token := p.eat()
 	switch token.Type {
 	case lexer.Identifier:
-		return Wrap(Identifier{
+		return Identifier{
 			token.Location,
+			typing.NewScope(),
 			token.Value,
 			NoType(),
-		})
+		}
 	case lexer.Number:
 		// TODO: clean this up
 		if val, err := strconv.ParseInt(token.Value, 10, 64); err == nil {
-			return Wrap(IntegerLiteral{
+			return IntegerLiteral{
 				token.Location,
 				val,
 				NoType(),
-			})
+			}
 		} else {
 			Errors.Error("Numeric parser failed, something went wrong in the lexer", token.Location)
-			return Wrap(Identifier{
+			return Identifier{
 				token.Location,
+				typing.NewScope(),
 				"Numerical Error '" + token.Value + "'",
 				NoType(),
-			})
+			}
 		}
 	case lexer.Boolean:
 		val := true
@@ -342,21 +346,22 @@ func (p *parser) parsePrimary() Expression {
 			val = false
 		}
 
-		return Wrap(BoolLiteral{
+		return BoolLiteral{
 			token.Location,
 			val,
 			NoType(),
-		})
+		}
 	case lexer.LeftParen:
 		return p.parseGroup()
 	case lexer.LeftBrace:
-		return Wrap(p.parseBlock(token))
+		return p.parseBlock(token)
 	default:
-		return Wrap(Identifier{
+		return Identifier{
 			token.Location,
+			typing.NewScope(),
 			"Error: '" + token.Value + "'",
 			NoType(),
-		})
+		}
 	}
 }
 
@@ -370,7 +375,7 @@ func Parse(source string, tokens *[]lexer.Token) Program {
 		Block{
 			lexer.NoLocation,
 			statements,
-			typing.NewScope(),
+			*typing.NewScope(),
 		},
 	}
 }

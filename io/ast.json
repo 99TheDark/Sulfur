@@ -2,93 +2,58 @@
  "Contents": {
   "Body": [
    {
-    "Node": {
-     "Datatype": {
-      "Symbol": "int",
-      "Type": {}
-     },
-     "Variable": {
-      "Symbol": "x",
-      "Type": {}
-     },
-     "Value": {
-      "Node": {
+    "Datatype": {
+     "Symbol": "int",
+     "Type": {}
+    },
+    "Variable": {
+     "Symbol": "x",
+     "Type": {}
+    },
+    "Value": {
+     "Left": {
+      "Left": {
+       "Value": 3,
+       "Type": {}
+      },
+      "Right": {
        "Left": {
-        "Node": {
-         "Left": {
-          "Node": {
-           "Value": 3,
-           "Type": {}
-          }
-         },
-         "Right": {
-          "Node": {
-           "Left": {
-            "Node": {
-             "Value": 5,
-             "Type": {}
-            }
-           },
-           "Right": {
-            "Node": {
-             "Value": 7,
-             "Type": {}
-            }
-           },
-           "Operator": "*",
-           "Type": {}
-          }
-         },
-         "Operator": "+",
-         "Type": {}
-        }
+        "Value": 5,
+        "Type": {}
        },
        "Right": {
-        "Node": {
-         "Left": {
-          "Node": {
-           "Value": 4,
-           "Type": {}
-          }
-         },
-         "Right": {
-          "Node": {
-           "Value": 2,
-           "Type": {}
-          }
-         },
-         "Operator": "/",
-         "Type": {}
-        }
+        "Value": 7,
+        "Type": {}
        },
-       "Operator": "-",
+       "Operator": "*",
        "Type": {}
-      }
-     },
-     "Type": {}
-    }
-   },
-   {
-    "Node": {
-     "Left": {
-      "Node": {
-       "Symbol": "x",
-       "Type": {}
-      }
+      },
+      "Operator": "+",
+      "Type": {}
      },
      "Right": {
-      "Node": {
-       "Symbol": "x",
+      "Left": {
+       "Value": 4,
        "Type": {}
-      }
+      },
+      "Right": {
+       "Value": 2,
+       "Type": {}
+      },
+      "Operator": "/",
+      "Type": {}
      },
-     "Operator": "*",
+     "Operator": "-",
      "Type": {}
-    }
+    },
+    "Type": {}
    }
   ],
   "Scope": {
-   "Block": null,
+   "Parent": {
+    "Parent": null,
+    "Vars": null
+   },
    "Vars": {}
   }
  }

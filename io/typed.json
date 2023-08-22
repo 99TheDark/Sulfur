@@ -1,95 +1,84 @@
 {
-    "Contents": {
-        "Body": [
-            {
-                "Node": {
-                    "Datatype": {
-                        "Symbol": "int",
-                        "Type": {}
-                    },
-                    "Variable": {
-                        "Symbol": "x",
-                        "Type": {}
-                    },
-                    "Value": {
-                        "Node": {
-                            "Left": {
-                                "Node": {
-                                    "Left": {
-                                        "Node": {
-                                            "Value": 3,
-                                            "Type": {}
-                                        }
-                                    },
-                                    "Right": {
-                                        "Node": {
-                                            "Left": {
-                                                "Node": {
-                                                    "Value": 5,
-                                                    "Type": {}
-                                                }
-                                            },
-                                            "Right": {
-                                                "Node": {
-                                                    "Value": 7,
-                                                    "Type": {}
-                                                }
-                                            },
-                                            "Operator": "*",
-                                            "Type": {}
-                                        }
-                                    },
-                                    "Operator": "+",
-                                    "Type": {}
-                                }
-                            },
-                            "Right": {
-                                "Node": {
-                                    "Left": {
-                                        "Node": {
-                                            "Value": 4,
-                                            "Type": {}
-                                        }
-                                    },
-                                    "Right": {
-                                        "Node": {
-                                            "Value": 2,
-                                            "Type": {}
-                                        }
-                                    },
-                                    "Operator": "/",
-                                    "Type": {}
-                                }
-                            },
-                            "Operator": "-",
-                            "Type": {}
-                        }
-                    },
-                    "Type": {}
-                }
-            },
-            {
-                "Node": {
-                    "Left": {
-                        "Node": {
-                            "Symbol": "x",
-                            "Type": {}
-                        }
-                    },
-                    "Right": {
-                        "Node": {
-                            "Symbol": "x",
-                            "Type": {}
-                        }
-                    },
-                    "Operator": "*",
-                    "Type": {}
-                }
-            }
-        ],
-        "Scope": {
-            "Block": null,
-            "Vars": {}
+ "Contents": {
+  "Body": [
+   {
+    "Datatype": {
+     "Symbol": "int",
+     "Type": {}
+    },
+    "Variable": {
+     "Symbol": "x",
+     "Type": {}
+    },
+    "Value": {
+     "Left": {
+      "Left": {
+       "Value": 3,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      "Right": {
+       "Left": {
+        "Value": 5,
+        "Type": {
+         "Name": "int",
+         "Underlying": "int"
         }
+       },
+       "Right": {
+        "Value": 7,
+        "Type": {
+         "Name": "int",
+         "Underlying": "int"
+        }
+       },
+       "Operator": "*",
+       "Type": {}
+      },
+      "Operator": "+",
+      "Type": {}
+     },
+     "Right": {
+      "Left": {
+       "Value": 4,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      "Right": {
+       "Value": 2,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      "Operator": "/",
+      "Type": {}
+     },
+     "Operator": "-",
+     "Type": {}
+    },
+    "Type": {
+     "Name": "int",
+     "Underlying": "int"
     }
+   }
+  ],
+  "Scope": {
+   "Parent": {
+    "Parent": null,
+    "Vars": null
+   },
+   "Vars": {
+    "x": {
+     "Type": "int",
+     "Underlying": "int",
+     "Value": null
+    }
+   }
+  }
+ }
 }
