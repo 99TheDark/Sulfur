@@ -400,27 +400,6 @@ func get(caller Identifier, scope *typing.Scope, name string) *typing.Variable {
 	}
 }
 
-func hasBlock(expr Expression) bool {
-	/*
-		if cond {
-			-> cond
-		} else {
-			-> cond
-		}
-
-		fun(int a) {
-			-> a
-		}
-	*/
-
-	for _, child := range expr.Children() {
-		if _, ok := child.(Block); ok {
-			return true
-		}
-	}
-	return false
-}
-
 func TypeCheck(ast Program) Program {
 	link(ast, ast.Contents.Scope)
 	ast.InferType()
