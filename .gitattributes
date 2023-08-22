@@ -1,0 +1,4 @@
+*.s linguist-language=Assembly
+*.o linguist-language=Assembly
+*.ll linguist-language=LLVM
+*.bc linguist-language=LLVM
