@@ -20,8 +20,8 @@ type Expression interface {
 }
 
 type Type struct {
-	Name       string                `json:",omitempty"`
-	Underlying typing.UnderlyingType `json:",omitempty"`
+	Name       string
+	Underlying typing.UnderlyingType
 }
 
 func NoType() *Type {
@@ -140,7 +140,7 @@ func (x Assignment) Children() []Expression      { return []Expression{x.Variabl
 func (x List) Children() []Expression            { return x.Values }
 func (x BinaryOperation) Children() []Expression { return []Expression{x.Left, x.Right} }
 func (x Comparison) Children() []Expression      { return []Expression{x.Left, x.Right} }
-func (x FunctionLiteral) Children() []Expression { return []Expression{x.Contents} }
+func (x FunctionLiteral) Children() []Expression { return []Expression{x.Params, x.Contents} }
 func (x FunctionCall) Children() []Expression    { return []Expression{x.Name, x.Params} }
 func (x IntegerLiteral) Children() []Expression  { return nil }
 func (x FloatLiteral) Children() []Expression    { return nil }
@@ -177,8 +177,10 @@ func (x Block) InferType() string {
 	}
 	return ""
 }
-func (x Identifier) InferType() string { // tricky
-	return ""
+func (x Identifier) InferType() string {
+	v := get(x, x.Parent, x.Symbol)
+	x.Type.Name, x.Type.Underlying = v.Type, v.Underlying
+	return v.Type
 }
 func (x Datatype) InferType() string {
 	dt := x.Datatype.Symbol
@@ -189,31 +191,47 @@ func (x Declaration) InferType() string {
 	typ := confirm(x, x.Datatype.Symbol, x.Value.InferType())
 	x.Type.Name, x.Type.Underlying = typ, typing.Underlying(typ)
 
-	variable := typing.NewVar(
-		x.Type.Name,
-		x.Type.Underlying,
-		nil,
-	)
-
+	variable := typing.NewVar(x.Type.Name, x.Type.Underlying)
 	create(x.Variable, x.Variable.Symbol, *variable)
 
 	return typ
 }
-func (x Assignment) InferType() string { // tricky
+func (x Assignment) InferType() string {
 	return ""
 }
 func (x List) InferType() string {
+	for _, child := range x.Values {
+		child.InferType()
+	}
 	return ""
 }
 func (x BinaryOperation) InferType() string {
-	return confirm(x, x.Left.InferType(), x.Right.InferType())
+	typ := confirm(x, x.Left.InferType(), x.Right.InferType())
+	x.Type.Name, x.Type.Underlying = typ, typing.Underlying(typ)
+	return typ
 }
 func (x Comparison) InferType() string {
 	confirm(x, x.Left.InferType(), x.Right.InferType())
+
 	x.Type.Name, x.Type.Underlying = "bool", typing.Bool
 	return "bool"
 }
 func (x FunctionLiteral) InferType() string {
+	for _, parameter := range x.Params.Values {
+		if param, ok := parameter.(Datatype); ok {
+			param.InferType()
+
+			variable := typing.NewVar(
+				param.Type.Name,
+				param.Type.Underlying,
+			)
+			x.Contents.Scope.Vars[param.Variable.Symbol] = *variable
+		} else {
+			Errors.Error("Non-parameter in function parameters", parameter.Location())
+		}
+	}
+	x.Contents.InferType()
+
 	x.Type.Name, x.Type.Underlying = "func", typing.Func
 	return "func"
 }
@@ -341,7 +359,7 @@ func confirm(Expression Expression, types ...string) string {
 
 	for _, el := range types {
 		if el != f {
-			Errors.Error("Type mismatch: '"+el+"' to '"+f+"'", Expression.Location())
+			Errors.Error("Mismatch of '"+el+"' to '"+f+"'", Expression.Location())
 		}
 	}
 	return f
@@ -369,6 +387,38 @@ func create(caller Identifier, name string, variable typing.Variable) {
 	} else {
 		caller.Parent.Vars[name] = variable
 	}
+}
+
+func get(caller Identifier, scope *typing.Scope, name string) *typing.Variable {
+	if scope == nil {
+		Errors.Error("'"+name+"' is undefined", caller.Loc)
+		return nil
+	} else if val, exists := scope.Vars[name]; exists {
+		return &val
+	} else {
+		return get(caller, scope.Parent, name)
+	}
+}
+
+func hasBlock(expr Expression) bool {
+	/*
+		if cond {
+			-> cond
+		} else {
+			-> cond
+		}
+
+		fun(int a) {
+			-> a
+		}
+	*/
+
+	for _, child := range expr.Children() {
+		if _, ok := child.(Block); ok {
+			return true
+		}
+	}
+	return false
 }
 
 func TypeCheck(ast Program) Program {

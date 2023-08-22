@@ -26,6 +26,6 @@ func NewScope() *Scope {
 	}
 }
 
-func NewVar(typ string, under UnderlyingType, val value.Value) *Variable {
-	return &Variable{typ, under, val}
+func NewVar(typ string, under UnderlyingType) *Variable {
+	return &Variable{typ, under, nil}
 }

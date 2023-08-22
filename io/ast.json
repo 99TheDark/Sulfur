@@ -4,49 +4,228 @@
    {
     "Datatype": {
      "Symbol": "int",
-     "Type": {}
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
     },
     "Variable": {
      "Symbol": "x",
-     "Type": {}
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
     },
     "Value": {
      "Left": {
       "Left": {
        "Value": 3,
-       "Type": {}
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
       },
       "Right": {
        "Left": {
         "Value": 5,
-        "Type": {}
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
        },
        "Right": {
         "Value": 7,
-        "Type": {}
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
        },
        "Operator": "*",
-       "Type": {}
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
       },
       "Operator": "+",
-      "Type": {}
+      "Type": {
+       "Name": "",
+       "Underlying": ""
+      }
      },
      "Right": {
       "Left": {
        "Value": 4,
-       "Type": {}
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
       },
       "Right": {
        "Value": 2,
-       "Type": {}
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
       },
       "Operator": "/",
-      "Type": {}
+      "Type": {
+       "Name": "",
+       "Underlying": ""
+      }
      },
      "Operator": "-",
-     "Type": {}
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
     },
-    "Type": {}
+    "Type": {
+     "Name": "",
+     "Underlying": ""
+    }
+   },
+   {
+    "Name": {
+     "Symbol": "add",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Params": {
+     "Values": [
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Variable": {
+        "Symbol": "a",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Variable": {
+        "Symbol": "b",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      }
+     ]
+    },
+    "Return": {
+     "Values": [
+      {
+       "Symbol": "int",
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      }
+     ]
+    },
+    "Contents": {
+     "Body": [
+      {
+       "Datatype": {
+        "Symbol": "bool",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Variable": {
+        "Symbol": "x",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Value": {
+        "Value": true,
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      {
+       "Value": {
+        "Left": {
+         "Symbol": "a",
+         "Type": {
+          "Name": "",
+          "Underlying": ""
+         }
+        },
+        "Right": {
+         "Left": {
+          "Symbol": "b",
+          "Type": {
+           "Name": "",
+           "Underlying": ""
+          }
+         },
+         "Right": {
+          "Symbol": "x",
+          "Type": {
+           "Name": "",
+           "Underlying": ""
+          }
+         },
+         "Operator": "*",
+         "Type": {
+          "Name": "",
+          "Underlying": ""
+         }
+        },
+        "Operator": "+",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       }
+      }
+     ],
+     "Scope": {
+      "Parent": {
+       "Parent": null,
+       "Vars": null
+      },
+      "Vars": {}
+     }
+    },
+    "Type": {
+     "Name": "",
+     "Underlying": ""
+    }
    }
   ],
   "Scope": {

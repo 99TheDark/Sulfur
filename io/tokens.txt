@@ -13,5 +13,28 @@
     Token{Number '4' at 0:22, #22}
     Token{Operator '/' at 0:24, #24}
     Token{Number '2' at 0:26, #26}
-    Token{EOF 'EOF' at 7:3, #113}
+    Token{Identifier 'add' at 2:0, #29}
+    Token{LeftParen '(' at 2:3, #32}
+    Token{Identifier 'int' at 2:4, #33}
+    Token{Identifier 'a' at 2:8, #37}
+    Token{Delimiter ',' at 2:9, #38}
+    Token{Identifier 'int' at 2:11, #40}
+    Token{Identifier 'b' at 2:15, #44}
+    Token{RightParen ')' at 2:16, #45}
+    Token{LeftParen '(' at 2:18, #47}
+    Token{Identifier 'int' at 2:19, #48}
+    Token{RightParen ')' at 2:22, #51}
+    Token{LeftBrace '{' at 2:24, #53}
+    Token{Identifier 'bool' at 3:4, #59}
+    Token{Identifier 'x' at 3:9, #64}
+    Token{Assignment '=' at 3:11, #66}
+    Token{Boolean 'true\n' at 3:13, #68}
+    Token{Keyword 'return' at 4:4, #77}
+    Token{Identifier 'a' at 4:11, #84}
+    Token{Operator '+' at 4:13, #86}
+    Token{Identifier 'b' at 4:15, #88}
+    Token{Operator '*' at 4:17, #90}
+    Token{Identifier 'x' at 4:19, #92}
+    Token{RightBrace '}' at 5:0, #94}
+    Token{EOF 'EOF' at 5:1, #95}
 }

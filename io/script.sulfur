@@ -1,8 +1,6 @@
 int x = (3 + 5 * 7) - 4 / 2
 
-// x * x
-
-//add(int a, int b) (int) {
-//    bool x = true
-//    return a + b * x
-//}
+add(int a, int b) (int) {
+    bool x = true
+    return a + b * x
+}
