@@ -18,7 +18,7 @@ _main:                                  ; @main
 	.p2align	2
 _add:                                   ; @add
 	.cfi_startproc
-; %bb.0:
+; %bb.0:                                ; %entry
 	add	w0, w0, w1
 	ret
 	.cfi_endproc

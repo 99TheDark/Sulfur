@@ -361,7 +361,7 @@ func (x FunctionLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	}
 
 	fun := mod.NewFunc(x.Name.Symbol, types.I32, params...)
-	x.Contents.Generate(mod, fun.NewBlock(""))
+	x.Contents.Generate(mod, fun.NewBlock("entry"))
 
 	return fun
 }
