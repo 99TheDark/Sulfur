@@ -1,3 +1,5 @@
+// All variables are currently only allowed to be integers (i32)
+
 // add(int a, int b) (int) {
 //     return a + b
 // }
