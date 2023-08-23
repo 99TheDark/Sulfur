@@ -17,7 +17,63 @@
      }
     },
     "Value": {
-     "Value": 504,
+     "Left": {
+      "Left": {
+       "Value": 3,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      "Right": {
+       "Left": {
+        "Value": 5,
+        "Type": {
+         "Name": "int",
+         "Underlying": "int"
+        }
+       },
+       "Right": {
+        "Value": 7,
+        "Type": {
+         "Name": "int",
+         "Underlying": "int"
+        }
+       },
+       "Operator": "*",
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      "Operator": "+",
+      "Type": {
+       "Name": "int",
+       "Underlying": "int"
+      }
+     },
+     "Right": {
+      "Left": {
+       "Value": 4,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      "Right": {
+       "Value": 2,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      "Operator": "/",
+      "Type": {
+       "Name": "int",
+       "Underlying": "int"
+      }
+     },
+     "Operator": "-",
      "Type": {
       "Name": "int",
       "Underlying": "int"

@@ -17,7 +17,63 @@
      }
     },
     "Value": {
-     "Value": 504,
+     "Left": {
+      "Left": {
+       "Value": 3,
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      "Right": {
+       "Left": {
+        "Value": 5,
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Right": {
+        "Value": 7,
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Operator": "*",
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      "Operator": "+",
+      "Type": {
+       "Name": "",
+       "Underlying": ""
+      }
+     },
+     "Right": {
+      "Left": {
+       "Value": 4,
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      "Right": {
+       "Value": 2,
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      "Operator": "/",
+      "Type": {
+       "Name": "",
+       "Underlying": ""
+      }
+     },
+     "Operator": "-",
      "Type": {
       "Name": "",
       "Underlying": ""

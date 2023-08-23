@@ -1,4 +1,3 @@
-; Expected output from 'int x = 504'
 define void @main() {
 entry:
 	%x = alloca i32, align 4
