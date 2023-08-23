@@ -2,6 +2,108 @@
  "Contents": {
   "Body": [
    {
+    "Name": {
+     "Symbol": "add",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Params": {
+     "Values": [
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Variable": {
+        "Symbol": "a",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Variable": {
+        "Symbol": "b",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      }
+     ]
+    },
+    "Return": {
+     "Values": [
+      {
+       "Symbol": "int",
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      }
+     ]
+    },
+    "Contents": {
+     "Body": [
+      {
+       "Value": {
+        "Left": {
+         "Symbol": "a",
+         "Type": {
+          "Name": "",
+          "Underlying": ""
+         }
+        },
+        "Right": {
+         "Symbol": "b",
+         "Type": {
+          "Name": "",
+          "Underlying": ""
+         }
+        },
+        "Operator": "+",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       }
+      }
+     ],
+     "Scope": {
+      "Parent": {
+       "Parent": null,
+       "Vars": null
+      },
+      "Vars": {}
+     }
+    },
+    "Type": {
+     "Name": "",
+     "Underlying": ""
+    }
+   },
+   {
     "Datatype": {
      "Symbol": "int",
      "Type": {
@@ -17,7 +119,63 @@
      }
     },
     "Value": {
-     "Value": 36,
+     "Left": {
+      "Left": {
+       "Value": 3,
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      "Right": {
+       "Left": {
+        "Value": 5,
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Right": {
+        "Value": 7,
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Operator": "*",
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      "Operator": "+",
+      "Type": {
+       "Name": "",
+       "Underlying": ""
+      }
+     },
+     "Right": {
+      "Left": {
+       "Value": 4,
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      "Right": {
+       "Value": 2,
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      "Operator": "/",
+      "Type": {
+       "Name": "",
+       "Underlying": ""
+      }
+     },
+     "Operator": "-",
      "Type": {
       "Name": "",
       "Underlying": ""

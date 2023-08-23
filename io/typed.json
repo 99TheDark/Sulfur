@@ -2,6 +2,133 @@
  "Contents": {
   "Body": [
    {
+    "Name": {
+     "Symbol": "add",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Params": {
+     "Values": [
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Variable": {
+        "Symbol": "a",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Variable": {
+        "Symbol": "b",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      }
+     ]
+    },
+    "Return": {
+     "Values": [
+      {
+       "Symbol": "int",
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      }
+     ]
+    },
+    "Contents": {
+     "Body": [
+      {
+       "Value": {
+        "Left": {
+         "Symbol": "a",
+         "Type": {
+          "Name": "int",
+          "Underlying": "int"
+         }
+        },
+        "Right": {
+         "Symbol": "b",
+         "Type": {
+          "Name": "int",
+          "Underlying": "int"
+         }
+        },
+        "Operator": "+",
+        "Type": {
+         "Name": "int",
+         "Underlying": "int"
+        }
+       }
+      }
+     ],
+     "Scope": {
+      "Parent": {
+       "Parent": {
+        "Parent": null,
+        "Vars": null
+       },
+       "Vars": {
+        "x": {
+         "Type": "int",
+         "Underlying": "int",
+         "Value": null
+        },
+        "y": {
+         "Type": "int",
+         "Underlying": "int",
+         "Value": null
+        }
+       }
+      },
+      "Vars": {
+       "a": {
+        "Type": "int",
+        "Underlying": "int",
+        "Value": null
+       },
+       "b": {
+        "Type": "int",
+        "Underlying": "int",
+        "Value": null
+       }
+      }
+     }
+    },
+    "Type": {
+     "Name": "func",
+     "Underlying": "func"
+    }
+   },
+   {
     "Datatype": {
      "Symbol": "int",
      "Type": {
@@ -17,7 +144,63 @@
      }
     },
     "Value": {
-     "Value": 36,
+     "Left": {
+      "Left": {
+       "Value": 3,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      "Right": {
+       "Left": {
+        "Value": 5,
+        "Type": {
+         "Name": "int",
+         "Underlying": "int"
+        }
+       },
+       "Right": {
+        "Value": 7,
+        "Type": {
+         "Name": "int",
+         "Underlying": "int"
+        }
+       },
+       "Operator": "*",
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      "Operator": "+",
+      "Type": {
+       "Name": "int",
+       "Underlying": "int"
+      }
+     },
+     "Right": {
+      "Left": {
+       "Value": 4,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      "Right": {
+       "Value": 2,
+       "Type": {
+        "Name": "int",
+        "Underlying": "int"
+       }
+      },
+      "Operator": "/",
+      "Type": {
+       "Name": "int",
+       "Underlying": "int"
+      }
+     },
+     "Operator": "-",
      "Type": {
       "Name": "int",
       "Underlying": "int"
