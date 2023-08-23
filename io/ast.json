@@ -27,47 +27,6 @@
      "Name": "",
      "Underlying": ""
     }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "y",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Left": {
-      "Symbol": "x",
-      "Type": {
-       "Name": "",
-       "Underlying": ""
-      }
-     },
-     "Right": {
-      "Value": 3,
-      "Type": {
-       "Name": "",
-       "Underlying": ""
-      }
-     },
-     "Operator": "*",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Type": {
-     "Name": "",
-     "Underlying": ""
-    }
    }
   ],
   "Scope": {

@@ -27,47 +27,6 @@
      "Name": "int",
      "Underlying": "int"
     }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "y",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Left": {
-      "Symbol": "x",
-      "Type": {
-       "Name": "int",
-       "Underlying": "int"
-      }
-     },
-     "Right": {
-      "Value": 3,
-      "Type": {
-       "Name": "int",
-       "Underlying": "int"
-      }
-     },
-     "Operator": "*",
-     "Type": {
-      "Name": "int",
-      "Underlying": "int"
-     }
-    },
-    "Type": {
-     "Name": "int",
-     "Underlying": "int"
-    }
    }
   ],
   "Scope": {
@@ -77,11 +36,6 @@
    },
    "Vars": {
     "x": {
-     "Type": "int",
-     "Underlying": "int",
-     "Value": null
-    },
-    "y": {
      "Type": "int",
      "Underlying": "int",
      "Value": null
