@@ -1,5 +1,6 @@
 #!/bin/bash
 cd io
+cd asm
 llvm-as script.ll -o script.bc
 llc script.bc -o script.s
 as -arch arm64 -o script.o script.s

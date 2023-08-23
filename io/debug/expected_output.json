@@ -1,0 +1,133 @@
+{
+    "TypeDefs": null,
+    "Globals": null,
+    "Funcs": [
+        {
+            "GlobalName": "main",
+            "GlobalID": 0,
+            "Sig": {
+                "TypeName": "",
+                "RetType": {
+                    "TypeName": ""
+                },
+                "Params": null,
+                "Variadic": false
+            },
+            "Params": null,
+            "Blocks": [
+                {
+                    "LocalName": "entry",
+                    "LocalID": 0,
+                    "Insts": [
+                        {
+                            "LocalName": "x",
+                            "LocalID": 0,
+                            "ElemType": {
+                                "TypeName": "",
+                                "BitSize": 32
+                            },
+                            "NElems": null,
+                            "Typ": {
+                                "TypeName": "",
+                                "ElemType": {
+                                    "TypeName": "",
+                                    "BitSize": 32
+                                },
+                                "AddrSpace": 0
+                            },
+                            "InAlloca": false,
+                            "SwiftError": false,
+                            "Align": 4,
+                            "AddrSpace": 0,
+                            "Metadata": null
+                        },
+                        {
+                            "Src": {
+                                "Typ": {
+                                    "TypeName": "",
+                                    "BitSize": 32
+                                },
+                                "X": 504
+                            },
+                            "Dst": {
+                                "LocalName": "x",
+                                "LocalID": 0,
+                                "ElemType": {
+                                    "TypeName": "",
+                                    "BitSize": 32
+                                },
+                                "NElems": null,
+                                "Typ": {
+                                    "TypeName": "",
+                                    "ElemType": {
+                                        "TypeName": "",
+                                        "BitSize": 32
+                                    },
+                                    "AddrSpace": 0
+                                },
+                                "InAlloca": false,
+                                "SwiftError": false,
+                                "Align": 4,
+                                "AddrSpace": 0,
+                                "Metadata": null
+                            },
+                            "Atomic": false,
+                            "Volatile": false,
+                            "SyncScope": "",
+                            "Ordering": 0,
+                            "Align": 4,
+                            "Metadata": null
+                        }
+                    ],
+                    "Term": {
+                        "X": null,
+                        "Metadata": null
+                    }
+                }
+            ],
+            "Typ": {
+                "TypeName": "",
+                "ElemType": {
+                    "TypeName": "",
+                    "RetType": {
+                        "TypeName": ""
+                    },
+                    "Params": null,
+                    "Variadic": false
+                },
+                "AddrSpace": 0
+            },
+            "Linkage": 0,
+            "Preemption": 0,
+            "Visibility": 0,
+            "DLLStorageClass": 0,
+            "CallingConv": 0,
+            "ReturnAttrs": null,
+            "UnnamedAddr": 0,
+            "AddrSpace": 0,
+            "FuncAttrs": null,
+            "Section": "",
+            "Partition": "",
+            "Comdat": null,
+            "Align": 0,
+            "GC": "",
+            "Prefix": null,
+            "Prologue": null,
+            "Personality": null,
+            "UseListOrders": null,
+            "Metadata": null
+        }
+    ],
+    "SourceFilename": "",
+    "DataLayout": "",
+    "TargetTriple": "",
+    "ModuleAsms": null,
+    "ComdatDefs": null,
+    "Aliases": null,
+    "IFuncs": null,
+    "AttrGroupDefs": null,
+    "NamedMetadataDefs": {},
+    "MetadataDefs": null,
+    "UseListOrders": null,
+    "UseListOrderBBs": null
+}

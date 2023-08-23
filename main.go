@@ -37,7 +37,7 @@ func main() {
 	}
 
 	llvm := compiler.Assemble(ast)
-	if err := compiler.Save(llvm, "io/script.ll"); err != nil {
+	if err := compiler.Save(llvm, "io/asm/script.ll"); err != nil {
 		log.Fatalln(err)
 	}
 }

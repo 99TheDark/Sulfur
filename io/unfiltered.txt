@@ -14,11 +14,9 @@
     Token{Space ' ' at 4:7, #62}
     Token{Number '504' at 4:8, #63}
     Token{NewLine '\n' at 4:11, #66}
-    Token{Comment '// int y = x * 3' at 5:0, #67}
-    Token{NewLine '\n' at 5:16, #83}
-    Token{NewLine '\n' at 6:0, #84}
-    Token{Comment '// int x = (3 + 5 * 7) - 4 / 2' at 7:0, #85}
-    Token{NewLine '\n' at 7:30, #115}
-    Token{Comment '// int z = 7 - x' at 8:0, #116}
-    Token{EOF 'EOF' at 8:16, #132}
+    Token{NewLine '\n' at 5:0, #67}
+    Token{Comment '// int x = (3 + 5 * 7) - 4 / 2' at 6:0, #68}
+    Token{NewLine '\n' at 6:30, #98}
+    Token{Comment '// int z = 7 - x' at 7:0, #99}
+    Token{EOF 'EOF' at 7:16, #115}
 }
