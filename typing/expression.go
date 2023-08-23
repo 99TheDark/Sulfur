@@ -5,10 +5,19 @@ import (
 	"github.com/llir/llvm/ir/value"
 )
 
+type VariableType string
+
+const (
+	Local  VariableType = "local"
+	Global VariableType = "global"
+	Param  VariableType = "param"
+)
+
 type Variable struct {
 	// TODO: ids in each block, example variable name: func_add.if_130956.name
 	Type       string
 	Underlying UnderlyingType
+	VarType    VariableType
 	Value      *value.Value
 }
 
@@ -26,6 +35,6 @@ func NewScope() *Scope {
 	}
 }
 
-func NewVar(typ string, under UnderlyingType) *Variable {
-	return &Variable{typ, under, new(value.Value)}
+func NewVar(typ string, under UnderlyingType, vtyp VariableType) *Variable {
+	return &Variable{typ, under, vtyp, new(value.Value)}
 }

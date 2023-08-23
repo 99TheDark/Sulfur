@@ -100,11 +100,13 @@
         "x": {
          "Type": "int",
          "Underlying": "int",
+         "VarType": "local",
          "Value": null
         },
         "y": {
          "Type": "int",
          "Underlying": "int",
+         "VarType": "local",
          "Value": null
         }
        }
@@ -113,11 +115,13 @@
        "a": {
         "Type": "int",
         "Underlying": "int",
+        "VarType": "param",
         "Value": null
        },
        "b": {
         "Type": "int",
         "Underlying": "int",
+        "VarType": "param",
         "Value": null
        }
       }
@@ -262,11 +266,13 @@
     "x": {
      "Type": "int",
      "Underlying": "int",
+     "VarType": "local",
      "Value": null
     },
     "y": {
      "Type": "int",
      "Underlying": "int",
+     "VarType": "local",
      "Value": null
     }
    }

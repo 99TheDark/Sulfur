@@ -191,7 +191,7 @@ func (x Declaration) InferType() string {
 	typ := confirm(x, x.Datatype.Symbol, x.Value.InferType())
 	x.Type.Name, x.Type.Underlying = typ, typing.Underlying(typ)
 
-	variable := typing.NewVar(x.Type.Name, x.Type.Underlying)
+	variable := typing.NewVar(x.Type.Name, x.Type.Underlying, typing.Local)
 	create(x.Variable, x.Variable.Symbol, *variable)
 
 	return typ
@@ -224,6 +224,7 @@ func (x FunctionLiteral) InferType() string {
 			variable := typing.NewVar(
 				param.Type.Name,
 				param.Type.Underlying,
+				typing.Param,
 			)
 			x.Contents.Scope.Vars[param.Variable.Symbol] = *variable
 		} else {
@@ -295,12 +296,20 @@ func (x Block) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
 func (x Identifier) Generate(mod *ir.Module, bl *ir.Block) value.Value {
-	val := *x.Parent.Vars[x.Symbol].Value
+	variable := x.Parent.Vars[x.Symbol]
+	val := *variable.Value
+	switch typ := variable.VarType; typ {
+	case typing.Local:
+		load := bl.NewLoad(types.I32, val)
+		load.Align = 4
 
-	load := bl.NewLoad(types.I32, val)
-	load.Align = 4
-
-	return load
+		return load
+	case typing.Param:
+		return ir.NewParam(x.Symbol, types.I32)
+	default:
+		Errors.Error("Invalid variable type '"+string(typ)+"'", x.Loc)
+		return nil
+	}
 }
 func (x Datatype) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil

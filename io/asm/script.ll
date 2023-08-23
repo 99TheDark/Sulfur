@@ -15,8 +15,6 @@ entry:
 
 define i32 @add(i32 %a, i32 %b) {
 0:
-	%1 = load i32, %!s(<nil>), align 4
-	%2 = load i32, %!s(<nil>), align 4
-	%3 = add i32 %1, %2
-	ret i32 %3
+	%1 = add i32 %a, %b
+	ret i32 %1
 }
