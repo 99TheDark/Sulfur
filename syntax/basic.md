@@ -76,7 +76,44 @@
         to string {
             return "$(my.name), $(my.age) years old"
         }
+    }
 
-        // TODO: Define operator overloading syntax
+    Vec3 {
+        int x, y, z
+
+        Vec3(int ~x, int ~y, int ~z) {}
+
+        // Must have either one or two parameters (unary/binary operator)
+        operator +(Vec3 a, Vec3 b) (Vec3) {
+            return Vec3(a.x + b.x, a.y + b.y, a.z + b.z)
+        }
+
+        operator -(Vec3 a, Vec3 b) (Vec3) {
+            return Vec3(a.x - b.x, a.y - b.y, a.z - b.z)
+        }
+
+        // Cross product
+        operator *(Vec3 a, Vec3 b) (Vec3) {
+            return Vec3(
+                a.y * b.z - a.z * b.y, 
+                a.z * b.x - a.x * b.z, 
+                a.x * b.y - a.y * b.x
+            )
+        }
+
+        // Scalar multiplication
+        /* 
+        This is makes: 
+        Vec3: *(int, Vec3) (Vec3) 
+        int: *(Vec3, int) (Vec3)
+        int: *(int, Vec3) (Vec3)
+        int: *(Vec3, int) (int)
+        int: *(int, Vec3) (int)
+        all illegal to write, as order on binary operations doesn't matter, 
+        and operations cannot get two results
+        */
+        operator *(Vec3 vec, int scalar) (Vec3) {
+
+        }
     }
     ```
