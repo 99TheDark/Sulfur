@@ -296,6 +296,9 @@ func (x Block) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 }
 func (x Identifier) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	variable := x.Parent.Vars[x.Symbol]
+	load := bl.NewLoad(types.I32, *variable.Value)
+	load.Align = 4
+
 	return *variable.Value
 }
 func (x Datatype) Generate(mod *ir.Module, bl *ir.Block) value.Value {

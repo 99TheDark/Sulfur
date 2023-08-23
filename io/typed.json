@@ -17,57 +17,42 @@
      }
     },
     "Value": {
+     "Value": 36,
+     "Type": {
+      "Name": "int",
+      "Underlying": "int"
+     }
+    },
+    "Type": {
+     "Name": "int",
+     "Underlying": "int"
+    }
+   },
+   {
+    "Datatype": {
+     "Symbol": "int",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Variable": {
+     "Symbol": "y",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Value": {
      "Left": {
-      "Left": {
-       "Value": 3,
-       "Type": {
-        "Name": "int",
-        "Underlying": "int"
-       }
-      },
-      "Right": {
-       "Left": {
-        "Value": 5,
-        "Type": {
-         "Name": "int",
-         "Underlying": "int"
-        }
-       },
-       "Right": {
-        "Value": 7,
-        "Type": {
-         "Name": "int",
-         "Underlying": "int"
-        }
-       },
-       "Operator": "*",
-       "Type": {
-        "Name": "int",
-        "Underlying": "int"
-       }
-      },
-      "Operator": "+",
+      "Value": 7,
       "Type": {
        "Name": "int",
        "Underlying": "int"
       }
      },
      "Right": {
-      "Left": {
-       "Value": 4,
-       "Type": {
-        "Name": "int",
-        "Underlying": "int"
-       }
-      },
-      "Right": {
-       "Value": 2,
-       "Type": {
-        "Name": "int",
-        "Underlying": "int"
-       }
-      },
-      "Operator": "/",
+      "Symbol": "x",
       "Type": {
        "Name": "int",
        "Underlying": "int"
@@ -92,6 +77,11 @@
    },
    "Vars": {
     "x": {
+     "Type": "int",
+     "Underlying": "int",
+     "Value": null
+    },
+    "y": {
      "Type": "int",
      "Underlying": "int",
      "Value": null

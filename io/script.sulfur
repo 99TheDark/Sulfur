@@ -2,5 +2,5 @@
 //     return a + b
 // }
 
-int x = (3 + 5 * 7) - 4 / 2
-// int z = 7 - x
+int x = 36 // (3 + 5 * 7) - 4 / 2
+int y = 7 - x
