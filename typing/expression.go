@@ -9,7 +9,7 @@ type Variable struct {
 	// TODO: ids in each block, example variable name: func_add.if_130956.name
 	Type       string
 	Underlying UnderlyingType
-	Value      value.Value
+	Value      *value.Value
 }
 
 type Scope struct {
@@ -27,5 +27,5 @@ func NewScope() *Scope {
 }
 
 func NewVar(typ string, under UnderlyingType) *Variable {
-	return &Variable{typ, under, nil}
+	return &Variable{typ, under, new(value.Value)}
 }

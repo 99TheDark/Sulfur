@@ -295,7 +295,8 @@ func (x Block) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
 func (x Identifier) Generate(mod *ir.Module, bl *ir.Block) value.Value {
-	return nil
+	variable := x.Parent.Vars[x.Symbol]
+	return *variable.Value
 }
 func (x Datatype) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
@@ -304,6 +305,9 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	src := x.Value.Generate(mod, bl)
 	dst := bl.NewAlloca(types.I32)
 	bl.NewStore(src, dst)
+
+	variable := x.Variable.Parent.Vars[x.Variable.Symbol]
+	*variable.Value = dst
 	return nil
 }
 func (x Assignment) Generate(mod *ir.Module, bl *ir.Block) value.Value {
