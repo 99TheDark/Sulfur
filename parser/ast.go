@@ -304,7 +304,10 @@ func (x Datatype) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	src := x.Value.Generate(mod, bl)
 	dst := bl.NewAlloca(types.I32)
-	bl.NewStore(src, dst)
+	store := bl.NewStore(src, dst)
+
+	store.Align, dst.Align = 4, 4 // size in bytes, i32 = 4 * 8 bits = 4 bytes
+	dst.LocalName = x.Variable.Symbol
 
 	variable := x.Variable.Parent.Vars[x.Variable.Symbol]
 	*variable.Value = dst
