@@ -1,31 +1,34 @@
 []Token{
-    Token{Comment '// add(int a, int b) (int) {' at 0:0, #0}
-    Token{NewLine '\n' at 0:28, #28}
-    Token{Comment '//     return a + b' at 1:0, #29}
-    Token{NewLine '\n' at 1:19, #48}
-    Token{Comment '// }' at 2:0, #49}
-    Token{NewLine '\n' at 2:4, #53}
-    Token{NewLine '\n' at 3:0, #54}
-    Token{Identifier 'int' at 4:0, #55}
-    Token{Space ' ' at 4:3, #58}
-    Token{Identifier 'x' at 4:4, #59}
-    Token{Space ' ' at 4:5, #60}
-    Token{Assignment '=' at 4:6, #61}
-    Token{Space ' ' at 4:7, #62}
-    Token{Number '36' at 4:8, #63}
-    Token{Space ' ' at 4:10, #65}
-    Token{Comment '// (3 + 5 * 7) - 4 / 2' at 4:11, #66}
-    Token{NewLine '\n' at 4:33, #88}
-    Token{Identifier 'int' at 5:0, #89}
-    Token{Space ' ' at 5:3, #92}
-    Token{Identifier 'y' at 5:4, #93}
-    Token{Space ' ' at 5:5, #94}
-    Token{Assignment '=' at 5:6, #95}
-    Token{Space ' ' at 5:7, #96}
-    Token{Number '7' at 5:8, #97}
-    Token{Space ' ' at 5:9, #98}
-    Token{Operator '-' at 5:10, #99}
-    Token{Space ' ' at 5:11, #100}
-    Token{Identifier 'x' at 5:12, #101}
-    Token{EOF 'EOF' at 5:13, #102}
+    Token{Comment '// All variables are currently only allowed to be integers (i32)' at 0:0, #0}
+    Token{NewLine '\n' at 0:64, #64}
+    Token{NewLine '\n' at 1:0, #65}
+    Token{Comment '// add(int a, int b) (int) {' at 2:0, #66}
+    Token{NewLine '\n' at 2:28, #94}
+    Token{Comment '//     return a + b' at 3:0, #95}
+    Token{NewLine '\n' at 3:19, #114}
+    Token{Comment '// }' at 4:0, #115}
+    Token{NewLine '\n' at 4:4, #119}
+    Token{NewLine '\n' at 5:0, #120}
+    Token{Identifier 'int' at 6:0, #121}
+    Token{Space ' ' at 6:3, #124}
+    Token{Identifier 'x' at 6:4, #125}
+    Token{Space ' ' at 6:5, #126}
+    Token{Assignment '=' at 6:6, #127}
+    Token{Space ' ' at 6:7, #128}
+    Token{Number '36' at 6:8, #129}
+    Token{Space ' ' at 6:10, #131}
+    Token{Comment '// (3 + 5 * 7) - 4 / 2' at 6:11, #132}
+    Token{NewLine '\n' at 6:33, #154}
+    Token{Identifier 'int' at 7:0, #155}
+    Token{Space ' ' at 7:3, #158}
+    Token{Identifier 'y' at 7:4, #159}
+    Token{Space ' ' at 7:5, #160}
+    Token{Assignment '=' at 7:6, #161}
+    Token{Space ' ' at 7:7, #162}
+    Token{Number '7' at 7:8, #163}
+    Token{Space ' ' at 7:9, #164}
+    Token{Operator '-' at 7:10, #165}
+    Token{Space ' ' at 7:11, #166}
+    Token{Identifier 'x' at 7:12, #167}
+    Token{EOF 'EOF' at 7:13, #168}
 }

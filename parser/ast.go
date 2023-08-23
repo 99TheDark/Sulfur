@@ -295,11 +295,12 @@ func (x Block) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
 func (x Identifier) Generate(mod *ir.Module, bl *ir.Block) value.Value {
-	variable := x.Parent.Vars[x.Symbol]
-	load := bl.NewLoad(types.I32, *variable.Value)
+	val := *x.Parent.Vars[x.Symbol].Value
+
+	load := bl.NewLoad(types.I32, val)
 	load.Align = 4
 
-	return *variable.Value
+	return load
 }
 func (x Datatype) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil

@@ -1,13 +1,13 @@
 []Token{
-    Token{Identifier 'int' at 4:0, #55}
-    Token{Identifier 'x' at 4:4, #59}
-    Token{Assignment '=' at 4:6, #61}
-    Token{Number '36' at 4:8, #63}
-    Token{Identifier 'int' at 5:0, #89}
-    Token{Identifier 'y' at 5:4, #93}
-    Token{Assignment '=' at 5:6, #95}
-    Token{Number '7' at 5:8, #97}
-    Token{Operator '-' at 5:10, #99}
-    Token{Identifier 'x' at 5:12, #101}
-    Token{EOF 'EOF' at 5:13, #102}
+    Token{Identifier 'int' at 6:0, #121}
+    Token{Identifier 'x' at 6:4, #125}
+    Token{Assignment '=' at 6:6, #127}
+    Token{Number '36' at 6:8, #129}
+    Token{Identifier 'int' at 7:0, #155}
+    Token{Identifier 'y' at 7:4, #159}
+    Token{Assignment '=' at 7:6, #161}
+    Token{Number '7' at 7:8, #163}
+    Token{Operator '-' at 7:10, #165}
+    Token{Identifier 'x' at 7:12, #167}
+    Token{EOF 'EOF' at 7:13, #168}
 }
