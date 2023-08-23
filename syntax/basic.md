@@ -13,8 +13,17 @@
     {
         // code omitted
     }
+
+    // Examples
+    if true {
+
+    }
+
+    someFunc() {
+
+    }
     ```
-- Array
+- Arrays
     ```
     // Arrays literals are made from the type, and filled with brackets
     float[] myArray = float[3.7, -6.4, 12.9, 5.0]
@@ -23,11 +32,15 @@
     ```
     int x = 5
 
-    // x = x + 2 (append)
+    // x = x + 2 
     x += 2
-
-    // x = 1 - x (prepend)
-    x =- 1
+    ```
+- Functions
+    ```
+    // func_name(params) (returns) {}
+    add(int a, int b) (int) { // parameter: type name
+        return a + b // return a value
+    }
     ```
 - Inference
     ```
