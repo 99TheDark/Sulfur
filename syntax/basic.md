@@ -101,7 +101,6 @@
             )
         }
 
-        // Scalar multiplication
         /* 
         This is makes: 
         Vec3: *(int, Vec3) (Vec3) 
@@ -112,8 +111,39 @@
         all illegal to write, as order on binary operations doesn't matter, 
         and operations cannot get two results
         */
+        // Scalar multiplication
         operator *(Vec3 vec, int scalar) (Vec3) {
+            return Vec3(vec.x * scalar, vec.y * scalar, vec.z * scalar)
+        }
 
+        // Scalar division
+        operator /(Vec3 vec, int scalar) (Vec3) {
+            return Vec3(vec.x / scalar, vec.y / scalar, vec.z / scalar)
         }
     }
+    ```
+- Enums 
+    ```
+    // Enum declaration
+    Season [
+        Winter
+        Spring
+        Summer
+        Fall
+    ]
+
+    Mood [
+        Happy
+        Sad
+        Angry
+    ]
+
+    // Illegal
+    Season.Winter == Mood.Happy
+
+    // Legal
+    int<Season.Winter> == int<Mood.Happy> // true
+
+    // Casting available
+    Season<0> == Season.Winter // true
     ```
