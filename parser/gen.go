@@ -11,6 +11,8 @@ import (
 	"github.com/llir/llvm/ir/value"
 )
 
+// TODO: Next add bools & strings
+
 // Generate
 func (x Program) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	x.Contents.Generate(mod, bl)
