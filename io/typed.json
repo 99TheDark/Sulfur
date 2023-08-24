@@ -97,154 +97,46 @@
     }
    },
    {
-    "Datatype": {
-     "Symbol": "int",
+    "Condition": {
+     "Value": true,
      "Type": {
-      "Name": "",
-      "Underlying": ""
+      "Name": "bool",
+      "Underlying": "bool"
      }
     },
-    "Variable": {
-     "Symbol": "x",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Left": {
-      "Left": {
-       "Value": 3,
-       "Type": {
-        "Name": "int",
-        "Underlying": "int"
-       }
-      },
-      "Right": {
-       "Left": {
+    "Then": {
+     "Body": [
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Variable": {
+        "Symbol": "x",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Value": {
         "Value": 5,
         "Type": {
          "Name": "int",
          "Underlying": "int"
         }
        },
-       "Right": {
-        "Value": 7,
-        "Type": {
-         "Name": "int",
-         "Underlying": "int"
-        }
-       },
-       "Operator": "*",
        "Type": {
         "Name": "int",
         "Underlying": "int"
        }
-      },
-      "Operator": "+",
-      "Type": {
-       "Name": "int",
-       "Underlying": "int"
       }
-     },
-     "Right": {
-      "Left": {
-       "Value": 4,
-       "Type": {
-        "Name": "int",
-        "Underlying": "int"
-       }
-      },
-      "Right": {
-       "Value": 2,
-       "Type": {
-        "Name": "int",
-        "Underlying": "int"
-       }
-      },
-      "Operator": "/",
-      "Type": {
-       "Name": "int",
-       "Underlying": "int"
-      }
-     },
-     "Operator": "-",
-     "Type": {
-      "Name": "int",
-      "Underlying": "int"
-     }
+     ]
     },
-    "Type": {
-     "Name": "int",
-     "Underlying": "int"
-    }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "y",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Left": {
-      "Value": 7,
-      "Type": {
-       "Name": "int",
-       "Underlying": "int"
-      }
-     },
-     "Right": {
-      "Symbol": "x",
-      "Type": {
-       "Name": "int",
-       "Underlying": "int"
-      }
-     },
-     "Operator": "-",
-     "Type": {
-      "Name": "int",
-      "Underlying": "int"
-     }
-    },
-    "Type": {
-     "Name": "int",
-     "Underlying": "int"
-    }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "z",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Value": 0,
-     "Type": {
-      "Name": "int",
-      "Underlying": "int"
-     }
-    },
-    "Type": {
-     "Name": "int",
-     "Underlying": "int"
+    "Else": {
+     "Body": []
     }
    }
   ]

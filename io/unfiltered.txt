@@ -34,50 +34,23 @@
     Token{RightBrace '}' at 3:0, #108}
     Token{NewLine '\n' at 3:1, #109}
     Token{NewLine '\n' at 4:0, #110}
-    Token{Identifier 'int' at 5:0, #111}
-    Token{Space ' ' at 5:3, #114}
-    Token{Identifier 'x' at 5:4, #115}
-    Token{Space ' ' at 5:5, #116}
-    Token{Assignment '=' at 5:6, #117}
-    Token{Space ' ' at 5:7, #118}
-    Token{LeftParen '(' at 5:8, #119}
-    Token{Number '3' at 5:9, #120}
-    Token{Space ' ' at 5:10, #121}
-    Token{Operator '+' at 5:11, #122}
-    Token{Space ' ' at 5:12, #123}
-    Token{Number '5' at 5:13, #124}
-    Token{Space ' ' at 5:14, #125}
-    Token{Operator '*' at 5:15, #126}
-    Token{Space ' ' at 5:16, #127}
-    Token{Number '7' at 5:17, #128}
-    Token{RightParen ')' at 5:18, #129}
-    Token{Space ' ' at 5:19, #130}
-    Token{Operator '-' at 5:20, #131}
-    Token{Space ' ' at 5:21, #132}
-    Token{Number '4' at 5:22, #133}
-    Token{Space ' ' at 5:23, #134}
-    Token{Operator '/' at 5:24, #135}
-    Token{Space ' ' at 5:25, #136}
-    Token{Number '2' at 5:26, #137}
-    Token{NewLine '\n' at 5:27, #138}
-    Token{Identifier 'int' at 6:0, #139}
-    Token{Space ' ' at 6:3, #142}
-    Token{Identifier 'y' at 6:4, #143}
-    Token{Space ' ' at 6:5, #144}
-    Token{Assignment '=' at 6:6, #145}
-    Token{Space ' ' at 6:7, #146}
-    Token{Number '7' at 6:8, #147}
-    Token{Space ' ' at 6:9, #148}
-    Token{Operator '-' at 6:10, #149}
-    Token{Space ' ' at 6:11, #150}
-    Token{Identifier 'x' at 6:12, #151}
-    Token{NewLine '\n' at 6:13, #152}
-    Token{Identifier 'int' at 7:0, #153}
-    Token{Space ' ' at 7:3, #156}
-    Token{Identifier 'z' at 7:4, #157}
-    Token{Space ' ' at 7:5, #158}
-    Token{Assignment '=' at 7:6, #159}
-    Token{Space ' ' at 7:7, #160}
-    Token{Number '0' at 7:8, #161}
-    Token{EOF 'EOF' at 7:9, #162}
+    Token{Identifier 'if' at 5:0, #111}
+    Token{Space ' ' at 5:2, #113}
+    Token{Boolean 'true ' at 5:3, #114}
+    Token{LeftBrace '{' at 5:8, #119}
+    Token{NewLine '\n' at 5:9, #120}
+    Token{Space ' ' at 6:0, #121}
+    Token{Space ' ' at 6:1, #122}
+    Token{Space ' ' at 6:2, #123}
+    Token{Space ' ' at 6:3, #124}
+    Token{Identifier 'int' at 6:4, #125}
+    Token{Space ' ' at 6:7, #128}
+    Token{Identifier 'x' at 6:8, #129}
+    Token{Space ' ' at 6:9, #130}
+    Token{Assignment '=' at 6:10, #131}
+    Token{Space ' ' at 6:11, #132}
+    Token{Number '5' at 6:12, #133}
+    Token{NewLine '\n' at 6:13, #134}
+    Token{RightBrace '}' at 7:0, #135}
+    Token{EOF 'EOF' at 7:1, #136}
 }

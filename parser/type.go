@@ -65,6 +65,8 @@ func (x Comparison) InferType() string {
 	return "bool"
 }
 func (x FunctionLiteral) InferType() string {
+	*x.Locator.Functions = append(*x.Locator.Functions, &x)
+
 	for _, parameter := range x.Params.Values {
 		if param, ok := parameter.(Datatype); ok {
 			param.InferType()
@@ -129,24 +131,26 @@ func confirm(Expression Expression, types ...string) string {
 	return f
 }
 
-func link(expr Expression, parent typing.Scope) {
+func link(expr Expression, parent typing.Scope, program Program) {
 	if iden, ok := expr.(Identifier); ok {
 		*iden.Parent = parent
 	} else {
 		newParent := parent
-		if block, ok := expr.(Block); ok {
+		if fun, ok := expr.(FunctionLiteral); ok {
+			*fun.Locator = program
+		} else if block, ok := expr.(Block); ok {
 			*block.Scope.Parent = parent
 			newParent = block.Scope
 		}
 
 		for _, child := range expr.Children() {
-			link(child, newParent)
+			link(child, newParent, program)
 		}
 	}
 }
 
 func TypeCheck(ast Program) Program {
-	link(ast, ast.Contents.Scope)
+	link(ast, ast.Contents.Scope, ast)
 	ast.InferType()
 	return ast
 }

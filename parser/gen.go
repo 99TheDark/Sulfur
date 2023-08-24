@@ -102,7 +102,7 @@ func (x FloatLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
 func (x BoolLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
-	return nil
+	return constant.NewBool(x.Value)
 }
 func (x Return) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	bl.NewRet(x.Value.Generate(mod, bl))

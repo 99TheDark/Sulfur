@@ -97,154 +97,46 @@
     }
    },
    {
-    "Datatype": {
-     "Symbol": "int",
+    "Condition": {
+     "Value": true,
      "Type": {
       "Name": "",
       "Underlying": ""
      }
     },
-    "Variable": {
-     "Symbol": "x",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Left": {
-      "Left": {
-       "Value": 3,
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
-      },
-      "Right": {
-       "Left": {
+    "Then": {
+     "Body": [
+      {
+       "Datatype": {
+        "Symbol": "int",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Variable": {
+        "Symbol": "x",
+        "Type": {
+         "Name": "",
+         "Underlying": ""
+        }
+       },
+       "Value": {
         "Value": 5,
         "Type": {
          "Name": "",
          "Underlying": ""
         }
        },
-       "Right": {
-        "Value": 7,
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       },
-       "Operator": "*",
        "Type": {
         "Name": "",
         "Underlying": ""
        }
-      },
-      "Operator": "+",
-      "Type": {
-       "Name": "",
-       "Underlying": ""
       }
-     },
-     "Right": {
-      "Left": {
-       "Value": 4,
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
-      },
-      "Right": {
-       "Value": 2,
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
-      },
-      "Operator": "/",
-      "Type": {
-       "Name": "",
-       "Underlying": ""
-      }
-     },
-     "Operator": "-",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
+     ]
     },
-    "Type": {
-     "Name": "",
-     "Underlying": ""
-    }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "y",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Left": {
-      "Value": 7,
-      "Type": {
-       "Name": "",
-       "Underlying": ""
-      }
-     },
-     "Right": {
-      "Symbol": "x",
-      "Type": {
-       "Name": "",
-       "Underlying": ""
-      }
-     },
-     "Operator": "-",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Type": {
-     "Name": "",
-     "Underlying": ""
-    }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "z",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Value": 0,
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Type": {
-     "Name": "",
-     "Underlying": ""
+    "Else": {
+     "Body": []
     }
    }
   ]

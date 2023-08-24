@@ -197,6 +197,7 @@ func (p *parser) parseFunction() Expression {
 
 			lbrace := p.expect(lexer.LeftBrace)
 			return FunctionLiteral{
+				new(Program),
 				name,
 				params,
 				ret,
@@ -206,6 +207,7 @@ func (p *parser) parseFunction() Expression {
 		} else if p.at().Type == lexer.LeftBrace {
 			lbrace := p.expect(lexer.LeftBrace)
 			return FunctionLiteral{
+				new(Program),
 				name,
 				params,
 				List{
@@ -368,6 +370,7 @@ func Parse(source string, tokens *[]lexer.Token) Program {
 		statements = append(statements, parser.parseExpression())
 	}
 	return Program{
+		&[]*FunctionLiteral{},
 		Block{
 			lexer.NoLocation,
 			statements,

@@ -3,6 +3,6 @@ add(int a, int b) (int) {
     return a + b
 }
 
-int x = (3 + 5 * 7) - 4 / 2
-int y = 7 - x
-int z = 0
+if true {
+    int x = 5
+}

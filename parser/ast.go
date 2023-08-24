@@ -19,7 +19,8 @@ type Expression interface {
 
 type (
 	Program struct {
-		Contents Block
+		Functions *[]*FunctionLiteral `json:"-"`
+		Contents  Block
 	}
 
 	Block struct {
@@ -76,6 +77,7 @@ type (
 	}
 
 	FunctionLiteral struct {
+		Locator  *Program `json:"-"`
 		Name     Identifier
 		Params   List
 		Return   List
