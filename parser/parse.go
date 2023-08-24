@@ -292,25 +292,25 @@ func (p *parser) parseMultiplicative() Expression {
 }
 
 func (p *parser) parseDatatype() Expression {
-	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.Identifier {
-		dt, val := p.eat(), p.eat()
-		return Datatype{
-			Identifier{
-				dt.Location,
-				typing.NewScope(),
-				dt.Value,
-				NoType(),
-			},
-			Identifier{
+	left := p.parsePrimary()
+	if typ, ok := left.(Identifier); ok && p.at().Type == lexer.Identifier {
+		if p.peek().Type != lexer.Identifier {
+			val := p.eat()
+			name := Identifier{
 				val.Location,
 				typing.NewScope(),
 				val.Value,
 				NoType(),
-			},
-			NoType(),
+			}
+
+			return Datatype{
+				typ,
+				name,
+				NoType(),
+			}
 		}
 	}
-	return p.parsePrimary()
+	return left
 }
 
 func (p *parser) parsePrimary() Expression {
@@ -357,13 +357,7 @@ func (p *parser) parsePrimary() Expression {
 		return p.parseBlock(token)
 	default:
 		Errors.Error("Unknown token '"+token.Value+"'", token.Location)
-
-		return Identifier{
-			token.Location,
-			typing.NewScope(),
-			"Error: '" + token.Value + "'",
-			NoType(),
-		}
+		return p.parsePrimary()
 	}
 }
 

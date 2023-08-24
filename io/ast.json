@@ -203,20 +203,7 @@
       }
      },
      "Right": {
-      "Datatype": {
-       "Symbol": "x",
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
-      },
-      "Variable": {
-       "Symbol": "int",
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
-      },
+      "Symbol": "x",
       "Type": {
        "Name": "",
        "Underlying": ""
@@ -234,21 +221,27 @@
     }
    },
    {
-    "Symbol": "z",
-    "Type": {
-     "Name": "",
-     "Underlying": ""
-    }
-   },
-   {
-    "Symbol": "Error: '='",
-    "Type": {
-     "Name": "",
-     "Underlying": ""
-    }
-   },
-   {
-    "Value": 0,
+    "Datatype": {
+     "Symbol": "int",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Variable": {
+     "Symbol": "z",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Value": {
+     "Value": 0,
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
     "Type": {
      "Name": "",
      "Underlying": ""

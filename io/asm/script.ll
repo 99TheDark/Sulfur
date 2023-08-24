@@ -10,6 +10,8 @@ entry:
 	%5 = sub i32 7, %4
 	%y = alloca i32, align 4
 	store i32 %5, i32* %y, align 4
+	%z = alloca i32, align 4
+	store i32 0, i32* %z, align 4
 	ret void
 }
 

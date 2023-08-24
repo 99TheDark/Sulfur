@@ -89,43 +89,7 @@
         }
        }
       }
-     ],
-     "Scope": {
-      "Parent": {
-       "Parent": {
-        "Parent": null,
-        "Vars": null
-       },
-       "Vars": {
-        "x": {
-         "Type": "int",
-         "Underlying": "int",
-         "VarType": "local",
-         "Value": null
-        },
-        "y": {
-         "Type": "int",
-         "Underlying": "int",
-         "VarType": "local",
-         "Value": null
-        }
-       }
-      },
-      "Vars": {
-       "a": {
-        "Type": "int",
-        "Underlying": "int",
-        "VarType": "param",
-        "Value": null
-       },
-       "b": {
-        "Type": "int",
-        "Underlying": "int",
-        "VarType": "param",
-        "Value": null
-       }
-      }
-     }
+     ]
     },
     "Type": {
      "Name": "func",
@@ -255,27 +219,34 @@
      "Name": "int",
      "Underlying": "int"
     }
-   }
-  ],
-  "Scope": {
-   "Parent": {
-    "Parent": null,
-    "Vars": null
    },
-   "Vars": {
-    "x": {
-     "Type": "int",
-     "Underlying": "int",
-     "VarType": "local",
-     "Value": null
+   {
+    "Datatype": {
+     "Symbol": "int",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
     },
-    "y": {
-     "Type": "int",
-     "Underlying": "int",
-     "VarType": "local",
-     "Value": null
+    "Variable": {
+     "Symbol": "z",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Value": {
+     "Value": 0,
+     "Type": {
+      "Name": "int",
+      "Underlying": "int"
+     }
+    },
+    "Type": {
+     "Name": "int",
+     "Underlying": "int"
     }
    }
-  }
+  ]
  }
 }
