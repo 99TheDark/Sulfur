@@ -5,3 +5,4 @@ add(int a, int b) (int) {
 
 int x = (3 + 5 * 7) - 4 / 2
 int y = 7 - x
+int z = 0

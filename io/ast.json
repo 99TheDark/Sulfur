@@ -89,14 +89,7 @@
         }
        }
       }
-     ],
-     "Scope": {
-      "Parent": {
-       "Parent": null,
-       "Vars": null
-      },
-      "Vars": {}
-     }
+     ]
     },
     "Type": {
      "Name": "",
@@ -210,7 +203,20 @@
       }
      },
      "Right": {
-      "Symbol": "x",
+      "Datatype": {
+       "Symbol": "x",
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
+      "Variable": {
+       "Symbol": "int",
+       "Type": {
+        "Name": "",
+        "Underlying": ""
+       }
+      },
       "Type": {
        "Name": "",
        "Underlying": ""
@@ -226,14 +232,28 @@
      "Name": "",
      "Underlying": ""
     }
-   }
-  ],
-  "Scope": {
-   "Parent": {
-    "Parent": null,
-    "Vars": null
    },
-   "Vars": {}
-  }
+   {
+    "Symbol": "z",
+    "Type": {
+     "Name": "",
+     "Underlying": ""
+    }
+   },
+   {
+    "Symbol": "Error: '='",
+    "Type": {
+     "Name": "",
+     "Underlying": ""
+    }
+   },
+   {
+    "Value": 0,
+    "Type": {
+     "Name": "",
+     "Underlying": ""
+    }
+   }
+  ]
  }
 }

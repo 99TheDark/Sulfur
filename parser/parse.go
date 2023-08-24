@@ -356,6 +356,8 @@ func (p *parser) parsePrimary() Expression {
 	case lexer.LeftBrace:
 		return p.parseBlock(token)
 	default:
+		Errors.Error("Unknown token '"+token.Value+"'", token.Location)
+
 		return Identifier{
 			token.Location,
 			typing.NewScope(),

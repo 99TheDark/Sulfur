@@ -44,6 +44,7 @@ func (gen *ErrorGenerator) rowEnd(row int) int {
 	}
 }
 
+// TODO: Add line numbers on the left-hand side
 func (gen *ErrorGenerator) Error(msg string, loc *lexer.Location) string {
 	row, col, _ := loc.Get()
 

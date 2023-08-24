@@ -36,5 +36,9 @@
     Token{Number '7' at 6:8, #147}
     Token{Operator '-' at 6:10, #149}
     Token{Identifier 'x' at 6:12, #151}
-    Token{EOF 'EOF' at 6:13, #152}
+    Token{Identifier 'int' at 7:0, #153}
+    Token{Identifier 'z' at 7:4, #157}
+    Token{Assignment '=' at 7:6, #159}
+    Token{Number '0' at 7:8, #161}
+    Token{EOF 'EOF' at 7:9, #162}
 }

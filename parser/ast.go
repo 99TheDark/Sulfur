@@ -25,7 +25,7 @@ type (
 	Block struct {
 		Loc   *lexer.Location `json:"-"`
 		Body  []Expression
-		Scope typing.Scope
+		Scope typing.Scope `json:"-"`
 	}
 
 	Identifier struct {
