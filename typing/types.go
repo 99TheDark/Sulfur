@@ -7,15 +7,16 @@ import (
 type UnderlyingType string
 
 const (
-	Void  UnderlyingType = ""
-	Int   UnderlyingType = "int"
-	Float UnderlyingType = "float"
-	Bool  UnderlyingType = "bool"
-	Class UnderlyingType = "class"
-	Func  UnderlyingType = "func"
+	Void   UnderlyingType = ""
+	Int    UnderlyingType = "int"
+	Float  UnderlyingType = "float"
+	Bool   UnderlyingType = "bool"
+	String UnderlyingType = "string"
+	Class  UnderlyingType = "class"
+	Func   UnderlyingType = "func"
 )
 
-func (ut UnderlyingType) LLVMType() types.Type {
+func (ut UnderlyingType) LLVMType(val any) types.Type {
 	switch ut {
 	case Void:
 		return types.Void
@@ -23,6 +24,8 @@ func (ut UnderlyingType) LLVMType() types.Type {
 		return types.I32
 	case Float:
 		return types.Float
+	case String:
+		return types.NewArray(uint64(len(val.(string))), types.I8)
 	default:
 		return nil
 	}
@@ -31,7 +34,7 @@ func (ut UnderlyingType) LLVMType() types.Type {
 func Underlying(str string) UnderlyingType {
 	typ := UnderlyingType(str)
 	switch typ {
-	case Void, Int, Float, Bool, Class, Func:
+	case Void, Int, Float, Bool, String, Class, Func:
 		return typ
 	default:
 		return Class

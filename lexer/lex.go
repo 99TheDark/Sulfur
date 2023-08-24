@@ -83,7 +83,7 @@ func (l *lexer) add(token *Token) {
 }
 
 func (l *lexer) multiToken(tokentype TokenType, count int) {
-	if l.mode == Comment {
+	if l.mode != Identifier && l.mode != None {
 		l.eat()
 	} else {
 		if l.mode == Identifier {
@@ -147,6 +147,14 @@ func Lex(source string) *[]Token {
 					l.add(l.end())
 				}
 				l.singleToken(NewLine)
+			case '"':
+				if l.mode == String {
+					l.add(l.end())
+					l.eat()
+				} else {
+					l.eat()
+					l.start(String)
+				}
 			case '(':
 				l.singleToken(LeftParen)
 			case ')':

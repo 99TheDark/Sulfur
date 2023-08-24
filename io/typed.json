@@ -2,141 +2,30 @@
  "Contents": {
   "Body": [
    {
-    "Name": {
-     "Symbol": "add",
+    "Datatype": {
+     "Symbol": "string",
      "Type": {
       "Name": "",
       "Underlying": ""
      }
     },
-    "Params": {
-     "Values": [
-      {
-       "Datatype": {
-        "Symbol": "int",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       },
-       "Variable": {
-        "Symbol": "a",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       },
-       "Type": {
-        "Name": "int",
-        "Underlying": "int"
-       }
-      },
-      {
-       "Datatype": {
-        "Symbol": "int",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       },
-       "Variable": {
-        "Symbol": "b",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       },
-       "Type": {
-        "Name": "int",
-        "Underlying": "int"
-       }
-      }
-     ]
-    },
-    "Return": {
-     "Values": [
-      {
-       "Symbol": "int",
-       "Type": {
-        "Name": "",
-        "Underlying": ""
-       }
-      }
-     ]
-    },
-    "Contents": {
-     "Body": [
-      {
-       "Value": {
-        "Left": {
-         "Symbol": "a",
-         "Type": {
-          "Name": "int",
-          "Underlying": "int"
-         }
-        },
-        "Right": {
-         "Symbol": "b",
-         "Type": {
-          "Name": "int",
-          "Underlying": "int"
-         }
-        },
-        "Operator": "+",
-        "Type": {
-         "Name": "int",
-         "Underlying": "int"
-        }
-       }
-      }
-     ]
-    },
-    "Type": {
-     "Name": "func",
-     "Underlying": "func"
-    }
-   },
-   {
-    "Condition": {
-     "Value": true,
+    "Variable": {
+     "Symbol": "greeting",
      "Type": {
-      "Name": "bool",
-      "Underlying": "bool"
+      "Name": "",
+      "Underlying": ""
      }
     },
-    "Then": {
-     "Body": [
-      {
-       "Datatype": {
-        "Symbol": "int",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       },
-       "Variable": {
-        "Symbol": "x",
-        "Type": {
-         "Name": "",
-         "Underlying": ""
-        }
-       },
-       "Value": {
-        "Value": 5,
-        "Type": {
-         "Name": "int",
-         "Underlying": "int"
-        }
-       },
-       "Type": {
-        "Name": "int",
-        "Underlying": "int"
-       }
-      }
-     ]
+    "Value": {
+     "Value": "Hello, world!",
+     "Type": {
+      "Name": "string",
+      "Underlying": "string"
+     }
     },
-    "Else": {
-     "Body": []
+    "Type": {
+     "Name": "string",
+     "Underlying": "string"
     }
    }
   ]

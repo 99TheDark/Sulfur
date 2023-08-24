@@ -18,6 +18,7 @@ const (
 	Identifier
 	Number
 	Boolean
+	String
 	Keyword
 	Assignment
 	Operator

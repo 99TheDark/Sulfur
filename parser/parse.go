@@ -353,6 +353,12 @@ func (p *parser) parsePrimary() Expression {
 			val,
 			NoType(),
 		}
+	case lexer.String:
+		return StringLiteral{
+			token.Location,
+			token.Value,
+			NoType(),
+		}
 	case lexer.LeftParen:
 		return p.parseGroup()
 	case lexer.LeftBrace:

@@ -44,16 +44,28 @@ func (x Datatype) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
 func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
-	src := x.Value.Generate(mod, bl)
-	dst := bl.NewAlloca(types.I32)
-	store := bl.NewStore(src, dst)
+	x.Variable.InferType()
+	if typ := x.Variable.Type.Underlying; typ == typing.String {
+		str, _ := x.Value.(StringLiteral)
+		arrtyp := typ.LLVMType(str.Value)
+		src := x.Value.Generate(mod, bl)
+		dst := bl.NewAlloca(arrtyp)
+		store := bl.NewStore(src, dst)
+		store.Align = 1
+		dst.LocalName = x.Variable.Symbol
+		return nil
+	} else {
+		src := x.Value.Generate(mod, bl)
+		dst := bl.NewAlloca(typ.LLVMType(nil))
+		store := bl.NewStore(src, dst)
 
-	store.Align, dst.Align = 4, 4 // size in bytes, i32 = 4 * 8 bits = 4 bytes
-	dst.LocalName = x.Variable.Symbol
+		store.Align, dst.Align = 4, 4 // size in bytes, i32 = 4 * 8 bits = 4 bytes
+		dst.LocalName = x.Variable.Symbol
 
-	variable := x.Variable.Parent.Vars[x.Variable.Symbol]
-	*variable.Value = dst
-	return nil
+		variable := x.Variable.Parent.Vars[x.Variable.Symbol]
+		*variable.Value = dst
+		return nil
+	}
 }
 func (x Assignment) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
@@ -105,6 +117,9 @@ func (x FloatLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 }
 func (x BoolLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return constant.NewBool(x.Value)
+}
+func (x StringLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+	return constant.NewCharArray([]byte(x.Value))
 }
 func (x Return) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	bl.NewRet(x.Value.Generate(mod, bl))

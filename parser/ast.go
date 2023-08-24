@@ -109,6 +109,12 @@ type (
 		Type  *Type `json:",omitempty"`
 	}
 
+	StringLiteral struct {
+		Loc   *lexer.Location `json:"-"`
+		Value string
+		Type  *Type `json:",omitempty"`
+	}
+
 	Return struct {
 		Value Expression
 	}
@@ -136,6 +142,7 @@ func (x FunctionCall) Children() []Expression    { return []Expression{x.Name, x
 func (x IntegerLiteral) Children() []Expression  { return nil }
 func (x FloatLiteral) Children() []Expression    { return nil }
 func (x BoolLiteral) Children() []Expression     { return nil }
+func (x StringLiteral) Children() []Expression   { return nil }
 func (x Return) Children() []Expression          { return []Expression{x.Value} }
 func (x IfStatement) Children() []Expression     { return []Expression{x.Then, x.Else} }
 
@@ -154,6 +161,7 @@ func (x FunctionCall) Location() *lexer.Location    { return x.Name.Loc }
 func (x IntegerLiteral) Location() *lexer.Location  { return x.Loc }
 func (x FloatLiteral) Location() *lexer.Location    { return x.Loc }
 func (x BoolLiteral) Location() *lexer.Location     { return x.Loc }
+func (x StringLiteral) Location() *lexer.Location   { return x.Loc }
 func (x Return) Location() *lexer.Location          { return x.Value.Location() }
 func (x IfStatement) Location() *lexer.Location     { return x.Loc }
 
@@ -172,6 +180,7 @@ func (x FunctionCall) GetType() *Type    { return x.Type }
 func (x IntegerLiteral) GetType() *Type  { return x.Type }
 func (x FloatLiteral) GetType() *Type    { return x.Type }
 func (x BoolLiteral) GetType() *Type     { return x.Type }
+func (x StringLiteral) GetType() *Type   { return x.Type }
 func (x Return) GetType() *Type          { return nil }
 func (x IfStatement) GetType() *Type     { return nil }
 

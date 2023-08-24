@@ -1,28 +1,7 @@
 []Token{
-    Token{Identifier 'add' at 1:0, #65}
-    Token{LeftParen '(' at 1:3, #68}
-    Token{Identifier 'int' at 1:4, #69}
-    Token{Identifier 'a' at 1:8, #73}
-    Token{Delimiter ',' at 1:9, #74}
-    Token{Identifier 'int' at 1:11, #76}
-    Token{Identifier 'b' at 1:15, #80}
-    Token{RightParen ')' at 1:16, #81}
-    Token{LeftParen '(' at 1:18, #83}
-    Token{Identifier 'int' at 1:19, #84}
-    Token{RightParen ')' at 1:22, #87}
-    Token{LeftBrace '{' at 1:24, #89}
-    Token{Keyword 'return' at 2:4, #95}
-    Token{Identifier 'a' at 2:11, #102}
-    Token{Operator '+' at 2:13, #104}
-    Token{Identifier 'b' at 2:15, #106}
-    Token{RightBrace '}' at 3:0, #108}
-    Token{Identifier 'if' at 5:0, #111}
-    Token{Boolean 'true ' at 5:3, #114}
-    Token{LeftBrace '{' at 5:8, #119}
-    Token{Identifier 'int' at 6:4, #125}
-    Token{Identifier 'x' at 6:8, #129}
-    Token{Assignment '=' at 6:10, #131}
-    Token{Number '5' at 6:12, #133}
-    Token{RightBrace '}' at 7:0, #135}
-    Token{EOF 'EOF' at 7:1, #136}
+    Token{Identifier 'string' at 0:0, #0}
+    Token{Identifier 'greeting' at 0:7, #7}
+    Token{Assignment '=' at 0:16, #16}
+    Token{Unknown 'Hello, world!' at 0:19, #19}
+    Token{EOF 'EOF' at 0:33, #33}
 }

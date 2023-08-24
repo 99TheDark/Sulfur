@@ -101,6 +101,10 @@ func (x BoolLiteral) InferType() string {
 	x.Type.Name, x.Type.Underlying = "bool", typing.Bool
 	return "bool"
 }
+func (x StringLiteral) InferType() string {
+	x.Type.Name, x.Type.Underlying = "string", typing.String
+	return "string"
+}
 func (x Return) InferType() string { // tricky
 	x.Value.InferType()
 	return ""
