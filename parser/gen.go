@@ -31,7 +31,6 @@ func (x Identifier) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	case typing.Local:
 		load := bl.NewLoad(types.I32, val)
 		load.Align = 4
-
 		return load
 	case typing.Param:
 		return ir.NewParam(x.Symbol, types.I32)
@@ -46,24 +45,18 @@ func (x Datatype) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	x.Variable.InferType()
 	if typ := x.Variable.Type.Underlying; typ == typing.String {
-		str, _ := x.Value.(StringLiteral)
-		arrtyp := typ.LLVMType(str.Value)
-		src := x.Value.Generate(mod, bl)
-		dst := bl.NewAlloca(arrtyp)
-		store := bl.NewStore(src, dst)
-		store.Align = 1
-		dst.LocalName = x.Variable.Symbol
 		return nil
 	} else {
+		variable := x.Variable.Parent.Vars[x.Variable.Symbol]
+
 		src := x.Value.Generate(mod, bl)
-		dst := bl.NewAlloca(typ.LLVMType(nil))
+		dst := bl.NewAlloca(variable.VarType)
 		store := bl.NewStore(src, dst)
 
 		store.Align, dst.Align = 4, 4 // size in bytes, i32 = 4 * 8 bits = 4 bytes
 		dst.LocalName = x.Variable.Symbol
 
-		variable := x.Variable.Parent.Vars[x.Variable.Symbol]
-		*variable.Value = dst
+		// *variable.Value = dst
 		return nil
 	}
 }
