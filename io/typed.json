@@ -27,13 +27,6 @@
      "Name": "string",
      "Underlying": "string"
     }
-   },
-   {
-    "Value": "Doe",
-    "Type": {
-     "Name": "string",
-     "Underlying": "string"
-    }
    }
   ]
  }

@@ -14,20 +14,9 @@ import (
 )
 
 // TODO: Next add bools & strings
-/*
-str, _ := x.Value.(StringLiteral)
-glob := mod.NewGlobalDef(x.Variable.Symbol, constant.NewCharArray([]byte(str.Value)))
-glob.Align = 1
-*/
 
 // Generate
 func (x Program) Generate(mod *ir.Module, bl *ir.Block) value.Value {
-	// TODO: Also generate functions here
-	for _, str := range *x.Strings {
-		glob := mod.NewGlobalDef("__const.anonymous"+fmt.Sprint(rand.Int31n(1000000000)), constant.NewCharArray([]byte(str.Value)))
-		glob.Align = 1
-	}
-
 	x.Contents.Generate(mod, bl)
 	return nil
 }
@@ -68,7 +57,9 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	x.Variable.InferType()
 	variable := x.Variable.Parent.Vars[x.Variable.Symbol]
 
-	if typ := x.Variable.Type.Underlying; typ != typing.String {
+	if typ := x.Variable.Type.Underlying; typ == typing.String {
+
+	} else {
 		src := x.Value.Generate(mod, bl)
 		store := bl.NewStore(src, *variable.Value)
 		store.Align = 4 // size in bytes, i32 = 4 * 8 bits = 4 bytes
@@ -127,7 +118,12 @@ func (x BoolLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return constant.NewBool(x.Value)
 }
 func (x StringLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
-	return constant.NewCharArray([]byte(x.Value))
+	glob := mod.NewGlobalDef(
+		"_const.anonymous"+fmt.Sprint(rand.Int31n(1000000000)), // Change with ID when added
+		constant.NewCharArray([]byte(x.Value)),
+	)
+	glob.Align = 1
+	return glob
 }
 func (x Return) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	bl.NewRet(x.Value.Generate(mod, bl))

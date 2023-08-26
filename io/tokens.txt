@@ -3,6 +3,5 @@
     Token{Identifier 'firstName' at 0:7, #7}
     Token{Assignment '=' at 0:17, #17}
     Token{Unknown 'John ' at 0:20, #20}
-    Token{Unknown 'Doe' at 1:22, #49}
     Token{EOF 'EOF' at 2:41, #95}
 }

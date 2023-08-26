@@ -7,7 +7,7 @@
     Token{Space ' ' at 0:18, #18}
     Token{Unknown 'John ' at 0:20, #20}
     Token{NewLine '\n' at 0:26, #26}
-    Token{Unknown 'Doe' at 1:22, #49}
+    Token{Comment '// string lastName = "Doe"' at 1:0, #27}
     Token{NewLine '\n' at 1:26, #53}
     Token{Comment '// string fullName = firstName + lastName' at 2:0, #54}
     Token{EOF 'EOF' at 2:41, #95}

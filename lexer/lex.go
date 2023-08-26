@@ -148,12 +148,16 @@ func Lex(source string) *[]Token {
 				}
 				l.singleToken(NewLine)
 			case '"':
-				if l.mode == String {
-					l.add(l.end())
-					l.eat()
+				if l.mode != Comment {
+					if l.mode == String {
+						l.add(l.end())
+						l.eat()
+					} else {
+						l.eat()
+						l.start(String)
+					}
 				} else {
 					l.eat()
-					l.start(String)
 				}
 			case '(':
 				l.singleToken(LeftParen)

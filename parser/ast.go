@@ -205,3 +205,12 @@ func get(caller Identifier, scope *typing.Scope, name string) *typing.Variable {
 		return get(caller, scope.Parent, name)
 	}
 }
+
+func isLiteral(expr Expression) bool {
+	switch expr.(type) {
+	case IntegerLiteral, FloatLiteral, BoolLiteral, StringLiteral, FunctionLiteral:
+		return true
+	default:
+		return false
+	}
+}
