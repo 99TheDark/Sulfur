@@ -7,15 +7,11 @@ _main:                                  ; @main
 ; %bb.0:                                ; %entry
 	sub	sp, sp, #16
 	.cfi_def_cfa_offset 16
-	mov	w9, #28490
-	mov	w8, #32
-	movk	w9, #28264, lsl #16
-	mov	w10, #28484
-	mov	w11, #101
-	strb	w8, [sp, #15]
-	stur	w9, [sp, #11]
-	strh	w10, [sp, #8]
-	strb	w11, [sp, #10]
+	mov	w8, #7
+	mov	w9, #31
+	mov	w10, #217
+	stp	w9, w8, [sp, #8]
+	str	w10, [sp, #4]
 	add	sp, sp, #16
 	ret
 	.cfi_endproc

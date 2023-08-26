@@ -19,6 +19,13 @@ func (x Program) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
 func (x Block) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+	for name, variable := range x.Scope.Vars {
+		dst := bl.NewAlloca(variable.Underlying.LLVMType())
+		dst.Align = 4
+		dst.LocalName = name
+
+		*variable.Value = dst
+	}
 	for _, expr := range x.Body {
 		expr.Generate(mod, bl)
 	}
@@ -29,7 +36,7 @@ func (x Identifier) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	val := *variable.Value
 	switch typ := variable.VarType; typ {
 	case typing.Local:
-		load := bl.NewLoad(types.I32, val)
+		load := bl.NewLoad(variable.Underlying.LLVMType(), val)
 		load.Align = 4
 		return load
 	case typing.Param:
@@ -50,11 +57,9 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 		variable := x.Variable.Parent.Vars[x.Variable.Symbol]
 
 		src := x.Value.Generate(mod, bl)
-		dst := bl.NewAlloca(variable.VarType)
-		store := bl.NewStore(src, dst)
+		store := bl.NewStore(src, *variable.Value)
 
-		store.Align, dst.Align = 4, 4 // size in bytes, i32 = 4 * 8 bits = 4 bytes
-		dst.LocalName = x.Variable.Symbol
+		store.Align = 4 // size in bytes, i32 = 4 * 8 bits = 4 bytes
 
 		// *variable.Value = dst
 		return nil
