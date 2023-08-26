@@ -1,20 +1,18 @@
-define void @main() {
+@__const.function.firstName = private unnamed_addr constant [6 x i8] c"John \00", align 1
+@__const.function.lastName = private unnamed_addr constant [4 x i8] c"Doe\00", align 1
+
+define dso_local void @function() {
 entry:
-	%0 = mul i32 5, 7
-	%1 = add i32 3, %0
-	%2 = sdiv i32 4, 2
-	%3 = sub i32 %1, %2
-	%x = alloca i32, align 4
-	store i32 %3, i32* %x, align 4
-	%4 = load i32, i32* %x, align 4
-	%5 = sub i32 7, %4
-	%y = alloca i32, align 4
-	store i32 %5, i32* %y, align 4
-	ret void
+  %firstName = alloca [6 x i8], align 1
+  %lastName = alloca [4 x i8], align 1
+  call void @llvm.memcpy.p0.p0.i64(ptr align 1 %firstName, ptr align 1 @__const.function.firstName, i64 6, i1 false)
+  call void @llvm.memcpy.p0.p0.i64(ptr align 1 %lastName, ptr align 1 @__const.function.lastName, i64 4, i1 false)
+  %arraydecay = getelementptr inbounds [6 x i8], ptr %firstName, i64 0, i64 0
+  %arraydecay1 = getelementptr inbounds [4 x i8], ptr %lastName, i64 0, i64 0
+  call void @llvm.memcpy.p0.p0.i64(ptr align 1 %arraydecay, ptr align 1 %arraydecay1, i64 3, i1 false)
+  ret void
 }
 
-define i32 @add(i32 %a, i32 %b) {
-entry:
-	%1 = add i32 %a, %b
-	ret i32 %1
-}
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+declare void @llvm.memcpy.p0.p0.i64(ptr noalias nocapture writeonly, ptr noalias nocapture readonly, i64, i1 immarg) #2

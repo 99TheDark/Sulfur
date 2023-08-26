@@ -16,7 +16,7 @@ const (
 	Func   UnderlyingType = "func"
 )
 
-func (ut UnderlyingType) LLVMType(val any) types.Type {
+func (ut UnderlyingType) LLVMType() types.Type {
 	switch ut {
 	case Void:
 		return types.Void
@@ -24,8 +24,6 @@ func (ut UnderlyingType) LLVMType(val any) types.Type {
 		return types.I32
 	case Float:
 		return types.Float
-	case String:
-		return types.NewArray(uint64(len(val.(string))), types.I8)
 	default:
 		return nil
 	}

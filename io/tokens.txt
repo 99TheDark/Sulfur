@@ -1,7 +1,21 @@
 []Token{
-    Token{Identifier 'string' at 0:0, #0}
-    Token{Identifier 'greeting' at 0:7, #7}
-    Token{Assignment '=' at 0:16, #16}
-    Token{Unknown 'Hello, world!' at 0:19, #19}
-    Token{EOF 'EOF' at 0:33, #33}
+    Token{Unknown 'John ' at 0:23, #23}
+    Token{Unknown 'Doe' at 1:22, #52}
+    Token{Identifier 'int' at 4:0, #100}
+    Token{Identifier 'a' at 4:4, #104}
+    Token{Assignment '=' at 4:6, #106}
+    Token{Number '5' at 4:8, #108}
+    Token{Operator '+' at 4:10, #110}
+    Token{Number '2' at 4:12, #112}
+    Token{Identifier 'int' at 5:0, #114}
+    Token{Identifier 'b' at 5:4, #118}
+    Token{Assignment '=' at 5:6, #120}
+    Token{Number '31' at 5:8, #122}
+    Token{Identifier 'int' at 6:0, #125}
+    Token{Identifier 'c' at 6:4, #129}
+    Token{Assignment '=' at 6:6, #131}
+    Token{Identifier 'a' at 6:8, #133}
+    Token{Operator '*' at 6:10, #135}
+    Token{Identifier 'b' at 6:12, #137}
+    Token{EOF 'EOF' at 6:13, #138}
 }

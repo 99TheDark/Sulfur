@@ -1,1 +1,7 @@
-string greeting = "Hello, world!"
+// string firstName = "John "
+// string lastName = "Doe"
+// string fullName = firstName + lastName
+
+int a = 5 + 2
+int b = 31
+int c = a * b

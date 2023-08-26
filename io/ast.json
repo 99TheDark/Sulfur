@@ -2,22 +2,118 @@
  "Contents": {
   "Body": [
    {
+    "Value": "John ",
+    "Type": {
+     "Name": "",
+     "Underlying": ""
+    }
+   },
+   {
+    "Value": "Doe",
+    "Type": {
+     "Name": "",
+     "Underlying": ""
+    }
+   },
+   {
     "Datatype": {
-     "Symbol": "string",
+     "Symbol": "int",
      "Type": {
       "Name": "",
       "Underlying": ""
      }
     },
     "Variable": {
-     "Symbol": "greeting",
+     "Symbol": "a",
      "Type": {
       "Name": "",
       "Underlying": ""
      }
     },
     "Value": {
-     "Value": "Hello, world!",
+     "Left": {
+      "Value": 5,
+      "Type": {
+       "Name": "",
+       "Underlying": ""
+      }
+     },
+     "Right": {
+      "Value": 2,
+      "Type": {
+       "Name": "",
+       "Underlying": ""
+      }
+     },
+     "Operator": "+",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Type": {
+     "Name": "",
+     "Underlying": ""
+    }
+   },
+   {
+    "Datatype": {
+     "Symbol": "int",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Variable": {
+     "Symbol": "b",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Value": {
+     "Value": 31,
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Type": {
+     "Name": "",
+     "Underlying": ""
+    }
+   },
+   {
+    "Datatype": {
+     "Symbol": "int",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Variable": {
+     "Symbol": "c",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Value": {
+     "Left": {
+      "Symbol": "a",
+      "Type": {
+       "Name": "",
+       "Underlying": ""
+      }
+     },
+     "Right": {
+      "Symbol": "b",
+      "Type": {
+       "Name": "",
+       "Underlying": ""
+      }
+     },
+     "Operator": "*",
      "Type": {
       "Name": "",
       "Underlying": ""
