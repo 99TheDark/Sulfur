@@ -20,6 +20,7 @@ type Expression interface {
 type (
 	Program struct {
 		Functions *[]*FunctionLiteral `json:"-"`
+		Strings   *[]*StringLiteral   `json:"-"`
 		Contents  Block
 	}
 
@@ -110,9 +111,10 @@ type (
 	}
 
 	StringLiteral struct {
-		Loc   *lexer.Location `json:"-"`
-		Value string
-		Type  *Type `json:",omitempty"`
+		Locator *Program        `json:"-"`
+		Loc     *lexer.Location `json:"-"`
+		Value   string
+		Type    *Type `json:",omitempty"`
 	}
 
 	Return struct {

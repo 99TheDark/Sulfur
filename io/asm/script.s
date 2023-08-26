@@ -5,15 +5,12 @@
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #16
-	.cfi_def_cfa_offset 16
-	mov	w8, #7
-	mov	w9, #31
-	mov	w10, #217
-	stp	w9, w8, [sp, #8]
-	str	w10, [sp, #4]
-	add	sp, sp, #16
 	ret
 	.cfi_endproc
                                         ; -- End function
+	.section	__DATA,__data
+	.globl	"_John "                        ; @"John "
+"_John ":
+	.ascii	"John "
+
 .subsections_via_symbols

@@ -1,41 +1,14 @@
 []Token{
-    Token{Unknown 'John ' at 0:23, #23}
-    Token{NewLine '\n' at 0:29, #29}
-    Token{Unknown 'Doe' at 1:22, #52}
-    Token{NewLine '\n' at 1:26, #56}
-    Token{Comment '// string fullName = firstName + lastName' at 2:0, #57}
-    Token{NewLine '\n' at 2:41, #98}
-    Token{NewLine '\n' at 3:0, #99}
-    Token{Identifier 'int' at 4:0, #100}
-    Token{Space ' ' at 4:3, #103}
-    Token{Identifier 'a' at 4:4, #104}
-    Token{Space ' ' at 4:5, #105}
-    Token{Assignment '=' at 4:6, #106}
-    Token{Space ' ' at 4:7, #107}
-    Token{Number '5' at 4:8, #108}
-    Token{Space ' ' at 4:9, #109}
-    Token{Operator '+' at 4:10, #110}
-    Token{Space ' ' at 4:11, #111}
-    Token{Number '2' at 4:12, #112}
-    Token{NewLine '\n' at 4:13, #113}
-    Token{Identifier 'int' at 5:0, #114}
-    Token{Space ' ' at 5:3, #117}
-    Token{Identifier 'b' at 5:4, #118}
-    Token{Space ' ' at 5:5, #119}
-    Token{Assignment '=' at 5:6, #120}
-    Token{Space ' ' at 5:7, #121}
-    Token{Number '31' at 5:8, #122}
-    Token{NewLine '\n' at 5:10, #124}
-    Token{Identifier 'int' at 6:0, #125}
-    Token{Space ' ' at 6:3, #128}
-    Token{Identifier 'c' at 6:4, #129}
-    Token{Space ' ' at 6:5, #130}
-    Token{Assignment '=' at 6:6, #131}
-    Token{Space ' ' at 6:7, #132}
-    Token{Identifier 'a' at 6:8, #133}
-    Token{Space ' ' at 6:9, #134}
-    Token{Operator '*' at 6:10, #135}
-    Token{Space ' ' at 6:11, #136}
-    Token{Identifier 'b' at 6:12, #137}
-    Token{EOF 'EOF' at 6:13, #138}
+    Token{Identifier 'string' at 0:0, #0}
+    Token{Space ' ' at 0:6, #6}
+    Token{Identifier 'firstName' at 0:7, #7}
+    Token{Space ' ' at 0:16, #16}
+    Token{Assignment '=' at 0:17, #17}
+    Token{Space ' ' at 0:18, #18}
+    Token{Unknown 'John ' at 0:20, #20}
+    Token{NewLine '\n' at 0:26, #26}
+    Token{Unknown 'Doe' at 1:22, #49}
+    Token{NewLine '\n' at 1:26, #53}
+    Token{Comment '// string fullName = firstName + lastName' at 2:0, #54}
+    Token{EOF 'EOF' at 2:41, #95}
 }

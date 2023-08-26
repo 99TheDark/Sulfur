@@ -102,6 +102,8 @@ func (x BoolLiteral) InferType() string {
 	return "bool"
 }
 func (x StringLiteral) InferType() string {
+	*x.Locator.Strings = append(*x.Locator.Strings, &x)
+
 	x.Type.Name, x.Type.Underlying = "string", typing.String
 	return "string"
 }
@@ -142,6 +144,8 @@ func link(expr Expression, parent typing.Scope, program Program) {
 		newParent := parent
 		if fun, ok := expr.(FunctionLiteral); ok {
 			*fun.Locator = program
+		} else if str, ok := expr.(StringLiteral); ok {
+			*str.Locator = program
 		} else if block, ok := expr.(Block); ok {
 			*block.Scope.Parent = parent
 			newParent = block.Scope

@@ -1,9 +1,11 @@
 package parser
 
 import (
+	"fmt"
 	. "golang/errors"
 	"golang/lexer"
 	"golang/typing"
+	"math/rand"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
@@ -12,19 +14,32 @@ import (
 )
 
 // TODO: Next add bools & strings
+/*
+str, _ := x.Value.(StringLiteral)
+glob := mod.NewGlobalDef(x.Variable.Symbol, constant.NewCharArray([]byte(str.Value)))
+glob.Align = 1
+*/
 
 // Generate
 func (x Program) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+	// TODO: Also generate functions here
+	for _, str := range *x.Strings {
+		glob := mod.NewGlobalDef("__const.anonymous"+fmt.Sprint(rand.Int31n(1000000000)), constant.NewCharArray([]byte(str.Value)))
+		glob.Align = 1
+	}
+
 	x.Contents.Generate(mod, bl)
 	return nil
 }
 func (x Block) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	for name, variable := range x.Scope.Vars {
-		dst := bl.NewAlloca(variable.Underlying.LLVMType())
-		dst.Align = 4
-		dst.LocalName = name
+		if variable.Underlying != typing.String {
+			dst := bl.NewAlloca(variable.Underlying.LLVMType())
+			dst.Align = 4
+			dst.LocalName = name
 
-		*variable.Value = dst
+			*variable.Value = dst
+		}
 	}
 	for _, expr := range x.Body {
 		expr.Generate(mod, bl)
@@ -51,19 +66,14 @@ func (x Datatype) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 }
 func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	x.Variable.InferType()
-	if typ := x.Variable.Type.Underlying; typ == typing.String {
-		return nil
-	} else {
-		variable := x.Variable.Parent.Vars[x.Variable.Symbol]
+	variable := x.Variable.Parent.Vars[x.Variable.Symbol]
 
+	if typ := x.Variable.Type.Underlying; typ != typing.String {
 		src := x.Value.Generate(mod, bl)
 		store := bl.NewStore(src, *variable.Value)
-
 		store.Align = 4 // size in bytes, i32 = 4 * 8 bits = 4 bytes
-
-		// *variable.Value = dst
-		return nil
 	}
+	return nil
 }
 func (x Assignment) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil

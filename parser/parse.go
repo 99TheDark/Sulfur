@@ -355,6 +355,7 @@ func (p *parser) parsePrimary() Expression {
 		}
 	case lexer.String:
 		return StringLiteral{
+			new(Program),
 			token.Location,
 			token.Value,
 			NoType(),
@@ -377,6 +378,7 @@ func Parse(source string, tokens *[]lexer.Token) Program {
 	}
 	return Program{
 		&[]*FunctionLiteral{},
+		&[]*StringLiteral{},
 		Block{
 			lexer.NoLocation,
 			statements,

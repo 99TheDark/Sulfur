@@ -2,7 +2,27 @@
  "Contents": {
   "Body": [
    {
-    "Value": "John ",
+    "Datatype": {
+     "Symbol": "string",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Variable": {
+     "Symbol": "firstName",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Value": {
+     "Value": "John ",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
     "Type": {
      "Name": "",
      "Underlying": ""
@@ -10,115 +30,6 @@
    },
    {
     "Value": "Doe",
-    "Type": {
-     "Name": "",
-     "Underlying": ""
-    }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "a",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Left": {
-      "Value": 5,
-      "Type": {
-       "Name": "",
-       "Underlying": ""
-      }
-     },
-     "Right": {
-      "Value": 2,
-      "Type": {
-       "Name": "",
-       "Underlying": ""
-      }
-     },
-     "Operator": "+",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Type": {
-     "Name": "",
-     "Underlying": ""
-    }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "b",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Value": 31,
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Type": {
-     "Name": "",
-     "Underlying": ""
-    }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "c",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Left": {
-      "Symbol": "a",
-      "Type": {
-       "Name": "",
-       "Underlying": ""
-      }
-     },
-     "Right": {
-      "Symbol": "b",
-      "Type": {
-       "Name": "",
-       "Underlying": ""
-      }
-     },
-     "Operator": "*",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
     "Type": {
      "Name": "",
      "Underlying": ""

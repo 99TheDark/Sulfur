@@ -2,7 +2,27 @@
  "Contents": {
   "Body": [
    {
-    "Value": "John ",
+    "Datatype": {
+     "Symbol": "string",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Variable": {
+     "Symbol": "firstName",
+     "Type": {
+      "Name": "",
+      "Underlying": ""
+     }
+    },
+    "Value": {
+     "Value": "John ",
+     "Type": {
+      "Name": "string",
+      "Underlying": "string"
+     }
+    },
     "Type": {
      "Name": "string",
      "Underlying": "string"
@@ -13,115 +33,6 @@
     "Type": {
      "Name": "string",
      "Underlying": "string"
-    }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "a",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Left": {
-      "Value": 5,
-      "Type": {
-       "Name": "int",
-       "Underlying": "int"
-      }
-     },
-     "Right": {
-      "Value": 2,
-      "Type": {
-       "Name": "int",
-       "Underlying": "int"
-      }
-     },
-     "Operator": "+",
-     "Type": {
-      "Name": "int",
-      "Underlying": "int"
-     }
-    },
-    "Type": {
-     "Name": "int",
-     "Underlying": "int"
-    }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "b",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Value": 31,
-     "Type": {
-      "Name": "int",
-      "Underlying": "int"
-     }
-    },
-    "Type": {
-     "Name": "int",
-     "Underlying": "int"
-    }
-   },
-   {
-    "Datatype": {
-     "Symbol": "int",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Variable": {
-     "Symbol": "c",
-     "Type": {
-      "Name": "",
-      "Underlying": ""
-     }
-    },
-    "Value": {
-     "Left": {
-      "Symbol": "a",
-      "Type": {
-       "Name": "int",
-       "Underlying": "int"
-      }
-     },
-     "Right": {
-      "Symbol": "b",
-      "Type": {
-       "Name": "int",
-       "Underlying": "int"
-      }
-     },
-     "Operator": "*",
-     "Type": {
-      "Name": "int",
-      "Underlying": "int"
-     }
-    },
-    "Type": {
-     "Name": "int",
-     "Underlying": "int"
     }
    }
   ]
