@@ -1,7 +1,7 @@
 []Token{
-    Token{Identifier 'string' at 0:0, #0}
-    Token{Identifier 'firstName' at 0:7, #7}
-    Token{Assignment '=' at 0:17, #17}
-    Token{Unknown 'John ' at 0:20, #20}
-    Token{EOF 'EOF' at 2:41, #95}
+    Token{Identifier 'string' at 4:0, #100}
+    Token{Identifier 'greeting' at 4:7, #107}
+    Token{Assignment '=' at 4:16, #116}
+    Token{Unknown 'Hello, world!' at 4:19, #119}
+    Token{EOF 'EOF' at 4:33, #133}
 }

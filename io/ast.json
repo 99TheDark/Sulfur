@@ -10,14 +10,14 @@
      }
     },
     "Variable": {
-     "Symbol": "firstName",
+     "Symbol": "greeting",
      "Type": {
       "Name": "",
       "Underlying": ""
      }
     },
     "Value": {
-     "Value": "John ",
+     "Value": "Hello, world!",
      "Type": {
       "Name": "",
       "Underlying": ""

@@ -1,14 +1,17 @@
 []Token{
-    Token{Identifier 'string' at 0:0, #0}
-    Token{Space ' ' at 0:6, #6}
-    Token{Identifier 'firstName' at 0:7, #7}
-    Token{Space ' ' at 0:16, #16}
-    Token{Assignment '=' at 0:17, #17}
-    Token{Space ' ' at 0:18, #18}
-    Token{Unknown 'John ' at 0:20, #20}
-    Token{NewLine '\n' at 0:26, #26}
-    Token{Comment '// string lastName = "Doe"' at 1:0, #27}
-    Token{NewLine '\n' at 1:26, #53}
-    Token{Comment '// string fullName = firstName + lastName' at 2:0, #54}
-    Token{EOF 'EOF' at 2:41, #95}
+    Token{Comment '// string firstName = "John "' at 0:0, #0}
+    Token{NewLine '\n' at 0:29, #29}
+    Token{Comment '// string lastName = "Doe"' at 1:0, #30}
+    Token{NewLine '\n' at 1:26, #56}
+    Token{Comment '// string fullName = firstName + lastName' at 2:0, #57}
+    Token{NewLine '\n' at 2:41, #98}
+    Token{NewLine '\n' at 3:0, #99}
+    Token{Identifier 'string' at 4:0, #100}
+    Token{Space ' ' at 4:6, #106}
+    Token{Identifier 'greeting' at 4:7, #107}
+    Token{Space ' ' at 4:15, #115}
+    Token{Assignment '=' at 4:16, #116}
+    Token{Space ' ' at 4:17, #117}
+    Token{Unknown 'Hello, world!' at 4:19, #119}
+    Token{EOF 'EOF' at 4:33, #133}
 }

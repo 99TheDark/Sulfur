@@ -1,3 +1,5 @@
-string firstName = "John "
+// string firstName = "John "
 // string lastName = "Doe"
 // string fullName = firstName + lastName
+
+string greeting = "Hello, world!"

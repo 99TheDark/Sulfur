@@ -58,7 +58,41 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	variable := x.Variable.Parent.Vars[x.Variable.Symbol]
 
 	if typ := x.Variable.Type.Underlying; typ == typing.String {
+		lit := x.Value.(StringLiteral)
+		val := x.Value.Generate(mod, bl)
 
+		str := bl.NewAlloca(String)
+		str.Align = 8
+		str.LocalName = x.Variable.Symbol
+
+		lenField := bl.NewGetElementPtr(
+			String,
+			str,
+			constant.NewInt(types.I32, int64(0)),
+			constant.NewInt(types.I32, int64(0)),
+		)
+		lenField.InBounds = true
+
+		lenStore := bl.NewStore(constant.NewInt(types.I64, int64(len(lit.Value))), lenField)
+		lenStore.Align = 8
+
+		ptrField := bl.NewGetElementPtr(
+			String,
+			str,
+			constant.NewInt(types.I32, int64(0)),
+			constant.NewInt(types.I32, int64(1)),
+		)
+		ptrField.InBounds = true
+
+		strPtr := bl.NewGetElementPtr(
+			val.Type(),
+			val,
+			constant.NewInt(types.I32, int64(0)),
+		)
+		strPtr.InBounds = true
+
+		ptrStore := bl.NewStore(strPtr, ptrField)
+		ptrStore.Align = 8
 	} else {
 		src := x.Value.Generate(mod, bl)
 		store := bl.NewStore(src, *variable.Value)
@@ -119,7 +153,7 @@ func (x BoolLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 }
 func (x StringLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	glob := mod.NewGlobalDef(
-		"_const.anonymous"+fmt.Sprint(rand.Int31n(1000000000)), // Change with ID when added
+		"_string"+fmt.Sprint(rand.Int31n(1000000000)), // Change with ID when added
 		constant.NewCharArray([]byte(x.Value)),
 	)
 	glob.Align = 1
