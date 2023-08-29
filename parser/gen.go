@@ -9,6 +9,7 @@ import (
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
+	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/types"
 	"github.com/llir/llvm/ir/value"
 )
@@ -58,8 +59,69 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	variable := x.Variable.Parent.Vars[x.Variable.Symbol]
 
 	if typ := x.Variable.Type.Underlying; typ == typing.String {
-		lit := x.Value.(StringLiteral)
-		val := x.Value.Generate(mod, bl)
+		// lit := x.Value.(StringLiteral)
+		val := "Hello, world!"
+		len := len(val)
+
+		arr := constant.NewCharArrayFromString(val)
+		strGlob := mod.NewGlobalDef(".str", arr)
+		strGlob.Linkage = enum.LinkagePrivate
+		strGlob.UnnamedAddr = enum.UnnamedAddrUnnamedAddr
+		strGlob.Immutable = true
+		strGlob.Align = 1
+
+		str := bl.NewAlloca(String)
+		str.Align = 8
+		str.LocalName = x.Variable.Symbol
+
+		lenPtr := bl.NewGetElementPtr(
+			String,
+			str,
+			constant.NewInt(types.I32, int64(0)),
+			constant.NewInt(types.I32, int64(0)),
+		)
+		lenPtr.InBounds = true
+
+		lenStore := bl.NewStore(
+			constant.NewInt(types.I64, int64(len)),
+			lenPtr,
+		)
+		lenStore.Align = 8
+
+		adrPtr := bl.NewGetElementPtr(
+			String,
+			str,
+			constant.NewInt(types.I32, int64(0)),
+			constant.NewInt(types.I32, int64(1)),
+		)
+		adrPtr.InBounds = true
+
+		elPtr := bl.NewGetElementPtr(
+			arr.Typ,
+			strGlob,
+			constant.NewInt(types.I32, int64(0)),
+			constant.NewInt(types.I32, int64(0)),
+		)
+		elPtr.InBounds = true
+
+		adrStore := bl.NewStore(
+			elPtr,
+			adrPtr,
+		)
+		adrStore.Align = 8
+
+		/*strPtr := bl.NewGetElementPtr(
+			array,
+
+		)
+		strPtr.InBounds = true
+
+		adrStore := bl.NewStore(
+
+		)
+		adrStore.Align = 8*/
+
+		/*val := x.Value.Generate(mod, bl)
 
 		str := bl.NewAlloca(String)
 		str.Align = 8
@@ -92,7 +154,7 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 		strPtr.InBounds = true
 
 		ptrStore := bl.NewStore(strPtr, ptrField)
-		ptrStore.Align = 8
+		ptrStore.Align = 8*/
 	} else {
 		src := x.Value.Generate(mod, bl)
 		store := bl.NewStore(src, *variable.Value)
