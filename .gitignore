@@ -1,4 +1,7 @@
+io/debug/*
+io/tokens.txt
+io/unfiltered.txt
+io/ast.json
+io/typed.json
 .DS_Store
 .DS_Store?
-syntax/behind.md
-io/debug/*
