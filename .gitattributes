@@ -2,3 +2,4 @@
 *.o linguist-language=Assembly
 *.ll linguist-language=LLVM
 *.bc linguist-language=LLVM
+*.sulfur linguist-language=Sulfur

@@ -16,6 +16,8 @@ func Assemble(ast parser.Program) string {
 		types.I8Ptr, // address of first character
 	))
 
+	mod.SourceFilename = "script.sulfur"
+
 	main := mod.NewFunc("main", types.Void)
 	bl := main.NewBlock("entry")
 	ast.Generate(mod, bl)
