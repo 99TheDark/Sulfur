@@ -1,5 +1,9 @@
-// string firstName = "John "
-// string lastName = "Doe"
-// string fullName = firstName + lastName
+print() {}
 
-string greeting = "Hello, world!"
+println(string str) {
+    print(str)
+    print("
+")
+}
+
+println("Hello, world!")

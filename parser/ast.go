@@ -19,9 +19,10 @@ type Expression interface {
 
 type (
 	Program struct {
-		Functions *[]*FunctionLiteral `json:"-"`
-		Strings   *[]*StringLiteral   `json:"-"`
-		Contents  Block
+		Functions     *[]*FunctionLiteral           `json:"-"`
+		LLVMFunctions map[*FunctionLiteral]*ir.Func `json:"-"`
+		Strings       *[]*StringLiteral             `json:"-"`
+		Contents      Block
 	}
 
 	Block struct {
@@ -87,9 +88,10 @@ type (
 	}
 
 	FunctionCall struct {
-		Name   Identifier
-		Params List
-		Type   *Type `json:",omitempty"`
+		Locator *Program `json:"-"`
+		Name    Identifier
+		Params  List
+		Type    *Type `json:",omitempty"`
 	}
 
 	IntegerLiteral struct {

@@ -59,9 +59,9 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	variable := x.Variable.Parent.Vars[x.Variable.Symbol]
 
 	if typ := x.Variable.Type.Underlying; typ == typing.String {
-		// lit := x.Value.(StringLiteral)
-		val := "Hello, world!"
-		len := len(val)
+		lit := x.Value.(StringLiteral)
+
+		val, len := lit.Value, len(lit.Value)
 
 		arr := constant.NewCharArrayFromString(val)
 		strGlob := mod.NewGlobalDef(".str", arr)
@@ -109,52 +109,6 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 			adrPtr,
 		)
 		adrStore.Align = 8
-
-		/*strPtr := bl.NewGetElementPtr(
-			array,
-
-		)
-		strPtr.InBounds = true
-
-		adrStore := bl.NewStore(
-
-		)
-		adrStore.Align = 8*/
-
-		/*val := x.Value.Generate(mod, bl)
-
-		str := bl.NewAlloca(String)
-		str.Align = 8
-		str.LocalName = x.Variable.Symbol
-
-		lenField := bl.NewGetElementPtr(
-			String,
-			str,
-			constant.NewInt(types.I32, int64(0)),
-			constant.NewInt(types.I32, int64(0)),
-		)
-		lenField.InBounds = true
-
-		lenStore := bl.NewStore(constant.NewInt(types.I64, int64(len(lit.Value))), lenField)
-		lenStore.Align = 8
-
-		ptrField := bl.NewGetElementPtr(
-			String,
-			str,
-			constant.NewInt(types.I32, int64(0)),
-			constant.NewInt(types.I32, int64(1)),
-		)
-		ptrField.InBounds = true
-
-		strPtr := bl.NewGetElementPtr(
-			val.Type(),
-			val,
-			constant.NewInt(types.I32, int64(0)),
-		)
-		strPtr.InBounds = true
-
-		ptrStore := bl.NewStore(strPtr, ptrField)
-		ptrStore.Align = 8*/
 	} else {
 		src := x.Value.Generate(mod, bl)
 		store := bl.NewStore(src, *variable.Value)
@@ -197,12 +151,28 @@ func (x FunctionLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	}
 
 	fun := mod.NewFunc(x.Name.Symbol, types.I32, params...)
-	x.Contents.Generate(mod, fun.NewBlock("entry"))
+	block := fun.NewBlock("entry")
+	x.Contents.Generate(mod, block)
+	block.NewRet(nil)
+
+	// No pointer reciever
+	for _, fn := range *x.Locator.Functions {
+		if fn.Name.Symbol == x.Name.Symbol {
+			x.Locator.LLVMFunctions[fn] = fun
+		}
+	}
 
 	return fun
 }
 func (x FunctionCall) Generate(mod *ir.Module, bl *ir.Block) value.Value {
-	return nil
+	callee := x.Locator.LLVMFunctions[find(x)]
+	params := []value.Value{}
+	for _, param := range x.Params.Values {
+		params = append(params, param.Generate(mod, bl))
+	}
+
+	call := bl.NewCall(callee, params...)
+	return call
 }
 func (x IntegerLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return constant.NewInt(types.I32, x.Value)

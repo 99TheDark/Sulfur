@@ -86,8 +86,15 @@ func (x FunctionLiteral) InferType() string {
 	x.Type.Name, x.Type.Underlying = "func", typing.Func
 	return "func"
 }
-func (x FunctionCall) InferType() string { // tricky
-	return ""
+func (x FunctionCall) InferType() string {
+	fun := find(x)
+	if fun == nil {
+		Errors.Error("'"+x.Name.Symbol+"' is not defined", x.Name.Loc)
+		return ""
+	} else {
+		// TODO: Check parameter types
+		return fun.Type.Name
+	}
 }
 func (x IntegerLiteral) InferType() string {
 	x.Type.Name, x.Type.Underlying = "int", typing.Int
@@ -144,6 +151,8 @@ func link(expr Expression, parent typing.Scope, program Program) {
 		newParent := parent
 		if fun, ok := expr.(FunctionLiteral); ok {
 			*fun.Locator = program
+		} else if call, ok := expr.(FunctionCall); ok {
+			*call.Locator = program
 		} else if str, ok := expr.(StringLiteral); ok {
 			*str.Locator = program
 		} else if block, ok := expr.(Block); ok {
@@ -155,6 +164,15 @@ func link(expr Expression, parent typing.Scope, program Program) {
 			link(child, newParent, program)
 		}
 	}
+}
+
+func find(call FunctionCall) *FunctionLiteral {
+	for _, fun := range *call.Locator.Functions {
+		if fun.Name.Symbol == call.Name.Symbol {
+			return fun
+		}
+	}
+	return nil
 }
 
 func TypeCheck(ast Program) Program {

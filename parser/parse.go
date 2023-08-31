@@ -9,6 +9,8 @@ import (
 	"golang/utils"
 	"strconv"
 	"strings"
+
+	"github.com/llir/llvm/ir"
 )
 
 type parser struct {
@@ -218,6 +220,7 @@ func (p *parser) parseFunction() Expression {
 			}
 		} else {
 			return FunctionCall{
+				new(Program),
 				name,
 				params,
 				NoType(),
@@ -378,6 +381,7 @@ func Parse(source string, tokens *[]lexer.Token) Program {
 	}
 	return Program{
 		&[]*FunctionLiteral{},
+		make(map[*FunctionLiteral]*ir.Func),
 		&[]*StringLiteral{},
 		Block{
 			lexer.NoLocation,
