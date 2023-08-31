@@ -42,7 +42,19 @@ func Underlying(str string) UnderlyingType {
 	}
 }
 
-func FillStruct(bl *ir.Block, size int, name string, typ types.Type, fields ...value.Value) {
+func FillPointer(bl *ir.Block, typ types.Type, val value.Value) *ir.InstGetElementPtr {
+	ptr := bl.NewGetElementPtr(
+		typ,
+		val,
+		constant.NewInt(types.I32, int64(0)),
+		constant.NewInt(types.I32, int64(0)),
+	)
+	ptr.InBounds = true
+
+	return ptr
+}
+
+func FillStruct(bl *ir.Block, size int, name string, typ types.Type, fields ...value.Value) *ir.InstAlloca {
 	structure := bl.NewAlloca(typ)
 	structure.Align = ir.Align(size)
 	structure.LocalName = name
@@ -62,4 +74,6 @@ func FillStruct(bl *ir.Block, size int, name string, typ types.Type, fields ...v
 		)
 		store.Align = ir.Align(size)
 	}
+
+	return structure
 }

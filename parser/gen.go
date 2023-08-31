@@ -70,21 +70,17 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 		strGlob.Immutable = true
 		strGlob.Align = 1
 
-		elPtr := bl.NewGetElementPtr(
-			arr.Typ,
-			strGlob,
-			constant.NewInt(types.I32, int64(0)),
-			constant.NewInt(types.I32, int64(0)),
-		)
-		elPtr.InBounds = true
-
 		typing.FillStruct(
 			bl,
 			8,
 			x.Variable.Symbol,
 			String,
 			constant.NewInt(types.I64, int64(len)),
-			elPtr,
+			typing.FillPointer(
+				bl,
+				arr.Typ,
+				strGlob,
+			),
 		)
 
 		/*str := bl.NewAlloca(String)

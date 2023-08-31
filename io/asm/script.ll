@@ -6,11 +6,11 @@ source_filename = "script.sulfur"
 
 define void @main() {
 entry:
-	%greeting = alloca %type.string, align 8										; Declare greeting
 	%0 = getelementptr inbounds [13 x i8], [13 x i8]* @.str, i32 0, i32 0			; global string
+	%greeting = alloca %type.string, align 8										; declare greeting
 	%1 = getelementptr inbounds %type.string, %type.string* %greeting, i32 0, i32 0 ; length pointer
 	store i64 13, i64* %1, align 8													; length = 13
-	%2 = getelementptr inbounds %type.string, %type.string* %greeting, i32 0, i32 1 ; address pointer
-	store i8* %0, i8** %2, align 8													; address = &global
+	%2 = getelementptr inbounds %type.string, %type.string* %greeting, i32 0, i32 1	; address pointer
+	store i8* %0, i8** %2, align 8													; adress = &global
 	ret void
 }
