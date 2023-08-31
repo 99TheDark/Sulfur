@@ -2,23 +2,15 @@ source_filename = "script.sulfur"
 
 %type.string = type { i64, i8* }
 
-@_string442929748 = global [1 x i8] c"\0A", align 1
-@_string191697822 = global [13 x i8] c"Hello, world!", align 1
+@.str = private unnamed_addr constant [13 x i8] c"Hello, world!", align 1
 
 define void @main() {
 entry:
-	%0 = call i32 @println([13 x i8]* @_string191697822)
-	ret void
-}
-
-define i32 @print() {
-entry:
-	ret void
-}
-
-define i32 @println(i32 %str) {
-entry:
-	%0 = call i32 @print(i32 %str)
-	%1 = call i32 @print([1 x i8]* @_string442929748)
+	%greeting = alloca %type.string, align 8										; Declare greeting
+	%0 = getelementptr inbounds [13 x i8], [13 x i8]* @.str, i32 0, i32 0			; global string
+	%1 = getelementptr inbounds %type.string, %type.string* %greeting, i32 0, i32 0 ; length pointer
+	store i64 13, i64* %1, align 8													; length = 13
+	%2 = getelementptr inbounds %type.string, %type.string* %greeting, i32 0, i32 1 ; address pointer
+	store i8* %0, i8** %2, align 8													; address = &global
 	ret void
 }

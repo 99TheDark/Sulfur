@@ -1,7 +1,10 @@
 package typing
 
 import (
+	"github.com/llir/llvm/ir"
+	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
+	"github.com/llir/llvm/ir/value"
 )
 
 type UnderlyingType string
@@ -36,5 +39,27 @@ func Underlying(str string) UnderlyingType {
 		return typ
 	default:
 		return Class
+	}
+}
+
+func FillStruct(bl *ir.Block, size int, name string, typ types.Type, fields ...value.Value) {
+	structure := bl.NewAlloca(typ)
+	structure.Align = ir.Align(size)
+	structure.LocalName = name
+
+	for idx, field := range fields {
+		ptr := bl.NewGetElementPtr(
+			typ,
+			structure,
+			constant.NewInt(types.I32, int64(0)),
+			constant.NewInt(types.I32, int64(idx)),
+		)
+		ptr.InBounds = true
+
+		store := bl.NewStore(
+			field,
+			ptr,
+		)
+		store.Align = ir.Align(size)
 	}
 }

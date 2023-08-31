@@ -1,9 +1,4 @@
-print() {}
+// print(string str) {}
+// print("Hello, world!")
 
-println(string str) {
-    print(str)
-    print("
-")
-}
-
-println("Hello, world!")
+string greeting = "Hello, world!"
