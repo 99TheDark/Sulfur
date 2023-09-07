@@ -138,6 +138,8 @@ func Lex(source string) *[]Token {
 			l.add(l.end())
 		} else if l.ahead(2) == "//" {
 			l.start(Comment)
+		} else if l.ahead(2) == ":=" {
+			l.multiToken(ImplicitAssignment, 2)
 		} else {
 			switch l.at() {
 			case ' ':

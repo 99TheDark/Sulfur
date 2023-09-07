@@ -51,6 +51,12 @@ type (
 		Type     *Type `json:",omitempty"`
 	}
 
+	ImplicitDeclaration struct {
+		Variable Identifier
+		Value    Expression
+		Type     *Type `json:",omitempty"`
+	}
+
 	Assignment struct {
 		Variable Identifier
 		Value    Expression
@@ -132,61 +138,64 @@ type (
 )
 
 // Children
-func (x Program) Children() []Expression         { return x.Contents.Body }
-func (x Block) Children() []Expression           { return x.Body }
-func (x Identifier) Children() []Expression      { return nil }
-func (x Datatype) Children() []Expression        { return nil }
-func (x Declaration) Children() []Expression     { return []Expression{x.Datatype, x.Variable, x.Value} }
-func (x Assignment) Children() []Expression      { return []Expression{x.Variable, x.Value} }
-func (x List) Children() []Expression            { return x.Values }
-func (x BinaryOperation) Children() []Expression { return []Expression{x.Left, x.Right} }
-func (x Comparison) Children() []Expression      { return []Expression{x.Left, x.Right} }
-func (x FunctionLiteral) Children() []Expression { return []Expression{x.Params, x.Contents} }
-func (x FunctionCall) Children() []Expression    { return []Expression{x.Name, x.Params} }
-func (x IntegerLiteral) Children() []Expression  { return nil }
-func (x FloatLiteral) Children() []Expression    { return nil }
-func (x BoolLiteral) Children() []Expression     { return nil }
-func (x StringLiteral) Children() []Expression   { return nil }
-func (x Return) Children() []Expression          { return []Expression{x.Value} }
-func (x IfStatement) Children() []Expression     { return []Expression{x.Then, x.Else} }
+func (x Program) Children() []Expression             { return x.Contents.Body }
+func (x Block) Children() []Expression               { return x.Body }
+func (x Identifier) Children() []Expression          { return nil }
+func (x Datatype) Children() []Expression            { return nil }
+func (x Declaration) Children() []Expression         { return []Expression{x.Datatype, x.Variable, x.Value} }
+func (x ImplicitDeclaration) Children() []Expression { return []Expression{x.Variable, x.Value} }
+func (x Assignment) Children() []Expression          { return []Expression{x.Variable, x.Value} }
+func (x List) Children() []Expression                { return x.Values }
+func (x BinaryOperation) Children() []Expression     { return []Expression{x.Left, x.Right} }
+func (x Comparison) Children() []Expression          { return []Expression{x.Left, x.Right} }
+func (x FunctionLiteral) Children() []Expression     { return []Expression{x.Params, x.Contents} }
+func (x FunctionCall) Children() []Expression        { return []Expression{x.Name, x.Params} }
+func (x IntegerLiteral) Children() []Expression      { return nil }
+func (x FloatLiteral) Children() []Expression        { return nil }
+func (x BoolLiteral) Children() []Expression         { return nil }
+func (x StringLiteral) Children() []Expression       { return nil }
+func (x Return) Children() []Expression              { return []Expression{x.Value} }
+func (x IfStatement) Children() []Expression         { return []Expression{x.Then, x.Else} }
 
 // Location
-func (x Program) Location() *lexer.Location         { return lexer.NoLocation }
-func (x Block) Location() *lexer.Location           { return x.Loc }
-func (x Identifier) Location() *lexer.Location      { return x.Loc }
-func (x Datatype) Location() *lexer.Location        { return x.Datatype.Loc }
-func (x Declaration) Location() *lexer.Location     { return x.Datatype.Loc }
-func (x Assignment) Location() *lexer.Location      { return x.Variable.Loc }
-func (x List) Location() *lexer.Location            { return x.Values[0].Location() } // Length always >= 2
-func (x BinaryOperation) Location() *lexer.Location { return x.Loc }
-func (x Comparison) Location() *lexer.Location      { return x.Loc }
-func (x FunctionLiteral) Location() *lexer.Location { return x.Name.Loc }
-func (x FunctionCall) Location() *lexer.Location    { return x.Name.Loc }
-func (x IntegerLiteral) Location() *lexer.Location  { return x.Loc }
-func (x FloatLiteral) Location() *lexer.Location    { return x.Loc }
-func (x BoolLiteral) Location() *lexer.Location     { return x.Loc }
-func (x StringLiteral) Location() *lexer.Location   { return x.Loc }
-func (x Return) Location() *lexer.Location          { return x.Value.Location() }
-func (x IfStatement) Location() *lexer.Location     { return x.Loc }
+func (x Program) Location() *lexer.Location             { return lexer.NoLocation }
+func (x Block) Location() *lexer.Location               { return x.Loc }
+func (x Identifier) Location() *lexer.Location          { return x.Loc }
+func (x Datatype) Location() *lexer.Location            { return x.Datatype.Loc }
+func (x Declaration) Location() *lexer.Location         { return x.Datatype.Loc }
+func (x ImplicitDeclaration) Location() *lexer.Location { return x.Variable.Loc }
+func (x Assignment) Location() *lexer.Location          { return x.Variable.Loc }
+func (x List) Location() *lexer.Location                { return x.Values[0].Location() } // Length always >= 2
+func (x BinaryOperation) Location() *lexer.Location     { return x.Loc }
+func (x Comparison) Location() *lexer.Location          { return x.Loc }
+func (x FunctionLiteral) Location() *lexer.Location     { return x.Name.Loc }
+func (x FunctionCall) Location() *lexer.Location        { return x.Name.Loc }
+func (x IntegerLiteral) Location() *lexer.Location      { return x.Loc }
+func (x FloatLiteral) Location() *lexer.Location        { return x.Loc }
+func (x BoolLiteral) Location() *lexer.Location         { return x.Loc }
+func (x StringLiteral) Location() *lexer.Location       { return x.Loc }
+func (x Return) Location() *lexer.Location              { return x.Value.Location() }
+func (x IfStatement) Location() *lexer.Location         { return x.Loc }
 
 // Get Type
-func (x Program) GetType() *Type         { return nil }
-func (x Block) GetType() *Type           { return nil }
-func (x Identifier) GetType() *Type      { return x.Type }
-func (x Datatype) GetType() *Type        { return x.Type }
-func (x Declaration) GetType() *Type     { return nil }
-func (x Assignment) GetType() *Type      { return nil }
-func (x List) GetType() *Type            { return nil }
-func (x BinaryOperation) GetType() *Type { return x.Type }
-func (x Comparison) GetType() *Type      { return x.Type }
-func (x FunctionLiteral) GetType() *Type { return x.Type }
-func (x FunctionCall) GetType() *Type    { return x.Type }
-func (x IntegerLiteral) GetType() *Type  { return x.Type }
-func (x FloatLiteral) GetType() *Type    { return x.Type }
-func (x BoolLiteral) GetType() *Type     { return x.Type }
-func (x StringLiteral) GetType() *Type   { return x.Type }
-func (x Return) GetType() *Type          { return nil }
-func (x IfStatement) GetType() *Type     { return nil }
+func (x Program) GetType() *Type             { return nil }
+func (x Block) GetType() *Type               { return nil }
+func (x Identifier) GetType() *Type          { return x.Type }
+func (x Datatype) GetType() *Type            { return x.Type }
+func (x Declaration) GetType() *Type         { return nil }
+func (x ImplicitDeclaration) GetType() *Type { return nil }
+func (x Assignment) GetType() *Type          { return nil }
+func (x List) GetType() *Type                { return nil }
+func (x BinaryOperation) GetType() *Type     { return x.Type }
+func (x Comparison) GetType() *Type          { return x.Type }
+func (x FunctionLiteral) GetType() *Type     { return x.Type }
+func (x FunctionCall) GetType() *Type        { return x.Type }
+func (x IntegerLiteral) GetType() *Type      { return x.Type }
+func (x FloatLiteral) GetType() *Type        { return x.Type }
+func (x BoolLiteral) GetType() *Type         { return x.Type }
+func (x StringLiteral) GetType() *Type       { return x.Type }
+func (x Return) GetType() *Type              { return nil }
+func (x IfStatement) GetType() *Type         { return nil }
 
 // Misc
 func create(caller Identifier, name string, variable typing.Variable) {

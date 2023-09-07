@@ -89,6 +89,9 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	}
 	return nil
 }
+func (x ImplicitDeclaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+	return nil
+}
 func (x Assignment) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }

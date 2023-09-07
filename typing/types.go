@@ -77,7 +77,7 @@ func FillStruct(bl *ir.Block, name string, typ types.Type, fields ...value.Value
 		)
 		stores = append(stores, store)
 
-		size += utils.BitCeiling(bitSize(field) / 8)
+		size += utils.BitCeiling(ByteSize(field))
 	}
 
 	for _, store := range stores {
@@ -88,7 +88,7 @@ func FillStruct(bl *ir.Block, name string, typ types.Type, fields ...value.Value
 	return structure
 }
 
-func bitSize(val value.Value) int {
+func BitSize(val value.Value) int {
 	switch val.Type() {
 	case types.I1: // bool
 		return 1
@@ -103,4 +103,8 @@ func bitSize(val value.Value) int {
 	default:
 		return 0
 	}
+}
+
+func ByteSize(val value.Value) int {
+	return BitSize(val) / 8
 }

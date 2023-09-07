@@ -44,6 +44,15 @@ func (x Declaration) InferType() string {
 
 	return typ
 }
+func (x ImplicitDeclaration) InferType() string {
+	typ := x.Value.InferType()
+	x.Type.Name, x.Type.Underlying = typ, typing.Underlying(typ)
+
+	variable := typing.NewVar(x.Type.Name, x.Type.Underlying, typing.Local)
+	create(x.Variable, x.Variable.Symbol, *variable)
+
+	return typ
+}
 func (x Assignment) InferType() string {
 	return ""
 }

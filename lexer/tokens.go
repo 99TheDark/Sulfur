@@ -21,6 +21,7 @@ const (
 	String
 	Keyword
 	Assignment
+	ImplicitAssignment
 	Operator
 	Comparator
 	Space

@@ -154,10 +154,24 @@ func (p *parser) parseReturn() Expression {
 	if p.key() == lexer.Return {
 		p.eat()
 		return Return{
-			p.parseDeclaration(),
+			p.parseImplicitDeclaration(),
 		}
 	}
-	return p.parseDeclaration()
+	return p.parseImplicitDeclaration()
+}
+
+func (p *parser) parseImplicitDeclaration() Expression {
+	left := p.parseDeclaration()
+	if iden, ok := left.(Identifier); ok && p.at().Type == lexer.ImplicitAssignment {
+		p.eat()
+		value := p.parseDeclaration()
+		return ImplicitDeclaration{
+			iden,
+			value,
+			NoType(),
+		}
+	}
+	return left
 }
 
 func (p *parser) parseDeclaration() Expression {

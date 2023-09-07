@@ -1,6 +1,7 @@
 package compiler
 
 import (
+	"golang/libc"
 	"golang/parser"
 	"golang/utils"
 
@@ -17,6 +18,8 @@ func Assemble(ast parser.Program) string {
 	))
 
 	mod.SourceFilename = "script.sulfur"
+
+	libc.Builtins(mod)
 
 	main := mod.NewFunc("main", types.Void)
 	bl := main.NewBlock("entry")
