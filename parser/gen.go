@@ -70,9 +70,8 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 		strGlob.Immutable = true
 		strGlob.Align = 1
 
-		typing.FillStruct(
+		str := typing.FillStruct(
 			bl,
-			8,
 			x.Variable.Symbol,
 			String,
 			constant.NewInt(types.I64, int64(len)),
@@ -82,46 +81,7 @@ func (x Declaration) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 				strGlob,
 			),
 		)
-
-		/*str := bl.NewAlloca(String)
-		str.Align = 8
 		str.LocalName = x.Variable.Symbol
-
-		lenPtr := bl.NewGetElementPtr(
-			String,
-			str,
-			constant.NewInt(types.I32, int64(0)),
-			constant.NewInt(types.I32, int64(0)),
-		)
-		lenPtr.InBounds = true
-
-		lenStore := bl.NewStore(
-			constant.NewInt(types.I64, int64(len)),
-			lenPtr,
-		)
-		lenStore.Align = 8
-
-		adrPtr := bl.NewGetElementPtr(
-			String,
-			str,
-			constant.NewInt(types.I32, int64(0)),
-			constant.NewInt(types.I32, int64(1)),
-		)
-		adrPtr.InBounds = true
-
-		elPtr := bl.NewGetElementPtr(
-			arr.Typ,
-			strGlob,
-			constant.NewInt(types.I32, int64(0)),
-			constant.NewInt(types.I32, int64(0)),
-		)
-		elPtr.InBounds = true
-
-		adrStore := bl.NewStore(
-			elPtr,
-			adrPtr,
-		)
-		adrStore.Align = 8*/
 	} else {
 		src := x.Value.Generate(mod, bl)
 		store := bl.NewStore(src, *variable.Value)

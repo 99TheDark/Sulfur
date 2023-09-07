@@ -26,3 +26,15 @@ func Max(a, b int) int {
 	}
 	return b
 }
+
+func BitCeiling(num int) int {
+	if num < 1 {
+		return 0
+	}
+
+	k := 1
+	for num > k {
+		k <<= 1
+	}
+	return k
+}

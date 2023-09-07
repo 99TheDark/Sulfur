@@ -1,6 +1,8 @@
 package typing
 
 import (
+	"golang/utils"
+
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
@@ -54,11 +56,12 @@ func FillPointer(bl *ir.Block, typ types.Type, val value.Value) *ir.InstGetEleme
 	return ptr
 }
 
-func FillStruct(bl *ir.Block, size int, name string, typ types.Type, fields ...value.Value) *ir.InstAlloca {
+func FillStruct(bl *ir.Block, name string, typ types.Type, fields ...value.Value) *ir.InstAlloca {
 	structure := bl.NewAlloca(typ)
-	structure.Align = ir.Align(size)
 	structure.LocalName = name
 
+	stores := []*ir.InstStore{}
+	size := 0
 	for idx, field := range fields {
 		ptr := bl.NewGetElementPtr(
 			typ,
@@ -72,8 +75,32 @@ func FillStruct(bl *ir.Block, size int, name string, typ types.Type, fields ...v
 			field,
 			ptr,
 		)
-		store.Align = ir.Align(size)
+		stores = append(stores, store)
+
+		size += utils.BitCeiling(bitSize(field) / 8)
 	}
 
+	for _, store := range stores {
+		store.Align = ir.Align(size)
+	}
+	structure.Align = ir.Align(size)
+
 	return structure
+}
+
+func bitSize(val value.Value) int {
+	switch val.Type() {
+	case types.I1: // bool
+		return 1
+	case types.I8: // char
+		return 8
+	case types.I32: // int
+		return 32
+	case types.I64: // long
+		return 64
+	case types.I1Ptr, types.I8Ptr, types.I32Ptr, types.I64Ptr: // pointer
+		return 8
+	default:
+		return 0
+	}
 }
