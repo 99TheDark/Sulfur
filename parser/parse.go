@@ -393,6 +393,7 @@ func Parse(source string, tokens *[]lexer.Token) Program {
 	for parser.at().Type != lexer.EOF {
 		statements = append(statements, parser.parseExpression())
 	}
+
 	return Program{
 		&[]*FunctionLiteral{},
 		make(map[*FunctionLiteral]*ir.Func),

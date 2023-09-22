@@ -5,9 +5,11 @@ import (
 	"github.com/llir/llvm/ir/types"
 )
 
-var Printf *ir.Func
+var PutChar *ir.Func
+var Funcs map[string]*ir.Func = make(map[string]*ir.Func)
 
 func Builtins(mod *ir.Module) {
-	Printf = mod.NewFunc("printf", types.I32, ir.NewParam("format", types.I8Ptr))
-	Printf.Sig.Variadic = true
+	PutChar = mod.NewFunc("putchar", types.Void, ir.NewParam("", types.I8))
+
+	Funcs["putchar"] = PutChar
 }

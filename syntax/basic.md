@@ -135,6 +135,16 @@
         }
     }
     ```
+- Extending Types
+    ```
+    // Extend integers
+    printFloat() {
+        println(float<my>)
+    } extends int
+
+    x := 5
+    x.printFloat() // prints "5.0"
+    ```
 - Enums 
     ```
     // Enum declaration
