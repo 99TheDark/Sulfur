@@ -170,3 +170,22 @@
     // Casting available
     Season<0> == Season.Winter // true
     ```
+- Loops
+    ```
+    // For loop
+    for x := 0; x < 5; x++ {
+        println("#$(x)")
+    }
+    
+    // While loop
+    for x < 5 {
+        x += 2
+    }
+
+    arr := [6, 5, -2, 8, -4, 0, -1]
+
+    // foreach / forin loop
+    for el, i in arr {
+        println("$(i). $(el)")
+    }
+    ```

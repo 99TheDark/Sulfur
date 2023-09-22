@@ -1,1 +1,7 @@
+putchar() {}
+print() {
+    putchar(65)
+}
+
 string greeting = "Hello, world!"
+print()

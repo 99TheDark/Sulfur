@@ -3,12 +3,12 @@ package parser
 import (
 	"bytes"
 	"encoding/json"
-	. "golang/errors"
-	"golang/lexer"
-	"golang/typing"
-	"golang/utils"
 	"strconv"
 	"strings"
+	. "sulfur/errors"
+	"sulfur/lexer"
+	"sulfur/typing"
+	"sulfur/utils"
 
 	"github.com/llir/llvm/ir"
 )
@@ -394,7 +394,7 @@ func Parse(source string, tokens *[]lexer.Token) Program {
 		statements = append(statements, parser.parseExpression())
 	}
 
-	return Program{
+	prog := Program{
 		&[]*FunctionLiteral{},
 		make(map[*FunctionLiteral]*ir.Func),
 		&[]*StringLiteral{},
@@ -404,6 +404,8 @@ func Parse(source string, tokens *[]lexer.Token) Program {
 			*typing.NewScope(),
 		},
 	}
+
+	return prog
 }
 
 func Save(ast any, spaces int, location string) error {

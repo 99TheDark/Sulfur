@@ -1,11 +1,11 @@
 package main
 
 import (
-	"golang/compiler"
-	"golang/errors"
-	"golang/lexer"
-	"golang/parser"
 	"log"
+	"sulfur/compiler"
+	"sulfur/errors"
+	"sulfur/lexer"
+	"sulfur/parser"
 )
 
 func main() {

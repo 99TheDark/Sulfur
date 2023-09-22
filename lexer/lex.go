@@ -2,8 +2,8 @@ package lexer
 
 import (
 	"fmt"
-	"golang/utils"
 	"os"
+	"sulfur/utils"
 	"unicode"
 )
 

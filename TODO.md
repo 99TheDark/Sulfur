@@ -1,5 +1,16 @@
 # TODO
 - Redo parsing
+    - One statement per line, otherwise seperated by semicolons, ex:
+        ```
+        // Legal
+        x, y := do(3, 1); a := 12 * x
+
+        // Legal
+        x, y := do(3, 1)
+        a := 12 * x
+
+        // Illegal
+        x, y := do(3, 1) a := 12 * x
+        ```
 - Add builtin functions
 - Structs in functions
-- Create function to calculate alignment of structs

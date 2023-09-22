@@ -1,7 +1,7 @@
 package typing
 
 import (
-	"golang/utils"
+	"sulfur/utils"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"

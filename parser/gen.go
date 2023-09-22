@@ -2,10 +2,10 @@ package parser
 
 import (
 	"fmt"
-	. "golang/errors"
-	"golang/lexer"
-	"golang/typing"
 	"math/rand"
+	. "sulfur/errors"
+	"sulfur/lexer"
+	"sulfur/typing"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"

@@ -1,4 +1,4 @@
-module golang
+module sulfur
 
 go 1.20
 

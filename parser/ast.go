@@ -1,13 +1,26 @@
 package parser
 
 import (
-	. "golang/errors"
-	"golang/lexer"
-	"golang/typing"
+	. "sulfur/errors"
+	"sulfur/lexer"
+	"sulfur/typing"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/value"
 )
+
+type Type struct {
+	Name       string
+	Underlying typing.UnderlyingType
+}
+
+func NoType() *Type {
+	return &Type{"", typing.Void}
+}
+
+func BloatType(ut typing.UnderlyingType) Type {
+	return Type{string(ut), ut}
+}
 
 type Expression interface {
 	Children() []Expression

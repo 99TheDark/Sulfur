@@ -1,9 +1,9 @@
 package compiler
 
 import (
-	"golang/libc"
-	"golang/parser"
-	"golang/utils"
+	"sulfur/libc"
+	"sulfur/parser"
+	"sulfur/utils"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/types"

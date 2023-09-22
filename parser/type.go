@@ -1,18 +1,9 @@
 package parser
 
 import (
-	. "golang/errors"
-	"golang/typing"
+	. "sulfur/errors"
+	"sulfur/typing"
 )
-
-type Type struct {
-	Name       string
-	Underlying typing.UnderlyingType
-}
-
-func NoType() *Type {
-	return &Type{"", typing.Void}
-}
 
 // Infer
 func (x Program) InferType() string {
@@ -98,6 +89,10 @@ func (x FunctionLiteral) InferType() string {
 func (x FunctionCall) InferType() string {
 	fun := find(x)
 	if fun == nil {
+		if x.Name.Symbol == "putchar" {
+			return string(typing.Func)
+		}
+
 		Errors.Error("'"+x.Name.Symbol+"' is not defined", x.Name.Loc)
 		return ""
 	} else {

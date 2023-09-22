@@ -2,10 +2,10 @@ package errors
 
 import (
 	"fmt"
-	"golang/lexer"
-	"golang/utils"
 	"log"
 	"strings"
+	"sulfur/lexer"
+	"sulfur/utils"
 )
 
 const CodeBuffer int = 4
