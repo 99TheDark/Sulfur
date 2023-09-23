@@ -83,7 +83,7 @@ func (l *lexer) add(token *Token) {
 }
 
 func (l *lexer) multiToken(tokentype TokenType, count int) {
-	if l.mode != Identifier && l.mode != None {
+	if l.mode != Identifier && l.mode != Space && l.mode != None {
 		l.eat()
 	} else {
 		if l.mode == Identifier {
@@ -130,6 +130,10 @@ func Lex(source string) *[]Token {
 	}
 
 	for !l.eof {
+		if l.mode == Space && l.peek() != ' ' {
+			l.add(l.end())
+		}
+
 		// TODO: add multiline comments
 		if l.mode == None && unicode.IsDigit(l.at()) {
 			l.start(Number)
@@ -143,7 +147,17 @@ func Lex(source string) *[]Token {
 		} else {
 			switch l.at() {
 			case ' ':
-				l.singleToken(Space)
+				if l.mode == Space {
+					l.eat()
+				}
+
+				if l.mode == Identifier {
+					l.add(l.end())
+				}
+				if l.mode == None {
+					l.eat()
+					l.start(Space)
+				}
 			case '\n':
 				if l.mode == Comment {
 					l.add(l.end())
@@ -161,6 +175,8 @@ func Lex(source string) *[]Token {
 				} else {
 					l.eat()
 				}
+			case ';':
+				l.singleToken(Semicolon)
 			case '(':
 				l.singleToken(LeftParen)
 			case ')':
@@ -198,14 +214,6 @@ func Lex(source string) *[]Token {
 	l.add(CreateToken(EOF, "EOF", l.loc.Row, l.loc.Col, l.loc.Idx))
 
 	return &l.tokens
-}
-
-func Filter(tokens *[]Token) *[]Token {
-	filter := func(item Token) bool {
-		return item.Type != Space && item.Type != NewLine && item.Type != Comment
-	}
-	filtered := utils.Filter(*tokens, filter)
-	return &filtered
 }
 
 func Stringify(tokens *[]Token) string {

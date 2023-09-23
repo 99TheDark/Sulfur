@@ -10,3 +10,6 @@ add(int x, int y) (int) {
 }
 
 println(add(x, y))
+
+z := "Hello, world"
+z += "!"

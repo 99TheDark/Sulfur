@@ -19,6 +19,7 @@ const (
 	Number
 	Boolean
 	String
+	Semicolon
 	Keyword
 	Assignment
 	ImplicitAssignment
@@ -58,6 +59,10 @@ func (tt TokenType) String() string {
 		return "Number"
 	case Boolean:
 		return "Boolean"
+	case String:
+		return "String"
+	case Semicolon:
+		return "Semicolon"
 	case Keyword:
 		return "Keyword"
 	case Assignment:

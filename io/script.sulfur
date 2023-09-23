@@ -1,7 +1,11 @@
-putchar() {}
-print() {
-    putchar(65)
-}
+int x = 5;  int y = 4
 
-string greeting = "Hello, world!"
-print()
+y += 3
+
+if !true {
+
+} elseif x < y {
+
+} else {
+
+}
