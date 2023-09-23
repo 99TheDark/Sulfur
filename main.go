@@ -4,7 +4,6 @@ import (
 	"log"
 	"sulfur/errors"
 	"sulfur/lexer"
-	"sulfur/parser"
 )
 
 func main() {
@@ -20,10 +19,12 @@ func main() {
 
 	errors.Errors = errors.New(code, *tokens)
 
-	ast := parser.Parse(code, tokens)
-	if err := parser.Save(ast, 1, "io/ast.json"); err != nil {
-		log.Fatalln(err)
-	}
+	/*
+		ast := parser.Parse(code, tokens)
+		if err := parser.Save(ast, 1, "io/ast.json"); err != nil {
+			log.Fatalln(err)
+		}
+	*/
 
 	/*
 		typed := parser.TypeCheck(ast)

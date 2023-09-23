@@ -3,19 +3,19 @@ package lexer
 type Comparison string
 
 const (
-	LessThan           Comparison = "<"
-	GreaterThan        Comparison = ">"
-	LessThanOrEqual    Comparison = "<="
-	GreaterThanOrEqual Comparison = ">="
-	Equal              Comparison = "=="
-	NotEqual           Comparison = "!="
+	IsLessThan           Comparison = "<"
+	IsGreaterThan        Comparison = ">"
+	IsLessThanOrEqual    Comparison = "<="
+	IsGreaterThanOrEqual Comparison = ">="
+	IsEqual              Comparison = "=="
+	IsNotEqual           Comparison = "!="
 )
 
 var Comparators = []Comparison{
-	LessThan,
-	GreaterThan,
-	LessThanOrEqual,
-	GreaterThanOrEqual,
-	Equal,
-	NotEqual,
+	IsLessThan,
+	IsGreaterThan,
+	IsLessThanOrEqual,
+	IsGreaterThanOrEqual,
+	IsEqual,
+	IsNotEqual,
 }

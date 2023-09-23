@@ -41,6 +41,31 @@
     add(int a, int b) (int) { // parameter: type name
         return a + b // return a value
     }
+    
+    varargs(int x, int y, string ...names, float z) {
+        println((x + y) * z, ...names)
+    }
+    
+    // Prints -33.6 John Jeff
+    varargs(3, 5, "John", "Jeff", "Tim", -4.2)
+    
+    // Multiple return values
+    combos(int a, int b, int c) (int, int, int, string) {
+        return a + b, a + c, b + c, "Combos of $(a), $(b), $(c)"
+    }
+    
+    // Underscores imply unused result
+    // All ignored values must be explicit, so the last '_' is necessary
+    firstCombo, _, thirdCombo, _ := combos(-6, 12, 5)
+    
+    // Prints 102
+    println(firstCombo * thirdCombo)
+    
+    // Chaining using the pipe operator
+    // Equivalent to: result := addExclamationMarks(substr(lower("John Cena"), 0, 4))
+    result := "John Cena" |> lower() |> substr(0, 4) |> addExclamationMarks(3)
+    
+    // result = "john!!!"
     ```
 - Inference
     ```
@@ -67,8 +92,8 @@
 - Classes
     ```
     // Person class
-    Person {
-        // fields — TODO: design getter & setter syntax
+    class Person {
+        // ! Design getter & setter syntax
         string name
         int    age
         int    days_old
@@ -78,8 +103,6 @@
             // my => this
             my.days_old = age * 365
         }
-
-        // TODO: Define destructor syntax
 
         talk() {
             println("Hello, my name is $(my.name).")
@@ -91,22 +114,48 @@
         }
     }
 
-    Vec3 {
+    // Extend classes
+    class Student extends Person {
+        int    grade
+        string school
+
+        // ! Add th / rd / nd / st suffixes after private/public syntax is created
+
+        Student(string ~name, int ~age, int ~grade, string ~school) {}
+
+        ~Student() {
+            println("$(my.name) left $(my.school)")
+        }
+
+        // Override
+        talk() {
+            // Any parent calls must be explicit
+            super.talk()
+            println("I am a student at $(my.school), in grade $(my.grade).")
+        }
+
+        to string {
+            // my.self and super.self return an actual object that can be passed through type casting and functions
+            return "$(my.school) student, $(string<super.self>), grade $(my.grade)"
+        }
+    }
+
+    class Vec3 {
         int x, y, z
 
         Vec3(int ~x, int ~y, int ~z) {}
 
         // Must have either one or two parameters (unary/binary operator)
-        operator +(Vec3 a, Vec3 b) (Vec3) {
+        operator + (Vec3 a, Vec3 b) (Vec3) {
             return Vec3(a.x + b.x, a.y + b.y, a.z + b.z)
         }
 
-        operator -(Vec3 a, Vec3 b) (Vec3) {
+        operator - (Vec3 a, Vec3 b) (Vec3) {
             return Vec3(a.x - b.x, a.y - b.y, a.z - b.z)
         }
 
         // Cross product
-        operator *(Vec3 a, Vec3 b) (Vec3) {
+        operator * (Vec3 a, Vec3 b) (Vec3) {
             return Vec3(
                 a.y * b.z - a.z * b.y, 
                 a.z * b.x - a.x * b.z, 
@@ -116,21 +165,21 @@
 
         /* 
         This is makes: 
-        Vec3: *(int, Vec3) (Vec3) 
-        int: *(Vec3, int) (Vec3)
-        int: *(int, Vec3) (Vec3)
-        int: *(Vec3, int) (int)
-        int: *(int, Vec3) (int)
+        Vec3: * (int, Vec3) (Vec3) 
+        int: * (Vec3, int) (Vec3)
+        int: * (int, Vec3) (Vec3)
+        int: * (Vec3, int) (int)
+        int: * (int, Vec3) (int)
         all illegal to write, as order on binary operations doesn't matter, 
         and operations cannot get two results
         */
         // Scalar multiplication
-        operator *(Vec3 vec, int scalar) (Vec3) {
+        operator * (Vec3 vec, int scalar) (Vec3) {
             return Vec3(vec.x * scalar, vec.y * scalar, vec.z * scalar)
         }
 
         // Scalar division
-        operator /(Vec3 vec, int scalar) (Vec3) {
+        operator / (Vec3 vec, int scalar) (Vec3) {
             return Vec3(vec.x / scalar, vec.y / scalar, vec.z / scalar)
         }
     }
@@ -148,18 +197,18 @@
 - Enums 
     ```
     // Enum declaration
-    Season [
+    enum Season {
         Winter
         Spring
         Summer
         Fall
-    ]
+    }
 
-    Mood [
+    enum Mood {
         Happy
         Sad
         Angry
-    ]
+    }
 
     // Illegal
     Season.Winter == Mood.Happy
@@ -169,6 +218,22 @@
 
     // Casting available
     Season<0> == Season.Winter // true
+
+    // Compact Declaration
+    enum Month {
+        January; February; March; April; May; June; July; August; September; October; November; December
+    }
+
+    // Subcatagory of a enum
+    enum WarmMonth from Month {
+        May
+        June
+        July
+        August
+    }
+
+    // True
+    WarmMonth.June == Month.June
     ```
 - Loops
     ```
@@ -178,14 +243,65 @@
     }
     
     // While loop
-    for x < 5 {
+    while x < 5 {
         x += 2
     }
 
+    float sum = 0
+    do {
+        sum += prompt("What number?")
+    } while sum < 100
+
     arr := [6, 5, -2, 8, -4, 0, -1]
 
-    // foreach / forin loop
+    // Foreach / forin loop
     for el, i in arr {
         println("$(i). $(el)")
     }
+    ```
+- Conditionals
+    ```
+    // If statement
+    if y * x < z {
+        println("Case A")
+    } else if y > x {
+        println("Case B")
+    } else {
+        println("Case C")
+    }
+
+    // Ternary operator
+    x := y < z ? x : 4
+    ```
+- Destructuring
+    ```
+    letters := ["a", "b", "c", "d", "e", "f"]
+    
+    // Similar to varargs
+    first, second, ...middle, last := letters
+    
+    /*
+    first = "a" 
+    second = "b" 
+    middle = ["c", "d", "e"]
+    last = "f"
+    */
+    ```
+- Null Handling
+    ```
+    // x is an int? (int or null)
+    int x? = null
+
+    // Illegal
+    string x = null
+
+    // Legal
+    x? := 5
+
+    // Illegal
+    x? := null
+
+    // y becomes 4 if x is null, otherwise is x
+    // y is an int
+    y := x ?? 4
     ```

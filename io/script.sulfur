@@ -1,11 +1,5 @@
-int x = 5;  int y = 4
+x := 3
 
-y += 3
-
-if !true {
-
-} elseif x < y {
-
-} else {
-
+if x <= 5 {
+    println("Hi")
 }

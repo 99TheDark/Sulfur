@@ -4,214 +4,98 @@ import (
 	"fmt"
 	"os"
 	"sulfur/utils"
-	"unicode"
 )
 
 type lexer struct {
 	source []rune
 	tokens []Token
+	iden   Location
 	loc    *Location
-	mode   TokenType
-	begin  *Location
-	eof    bool
 }
 
 func (l *lexer) at() rune {
 	return l.source[l.loc.Idx]
 }
 
-func (l *lexer) peek() rune {
-	return l.source[l.loc.Idx+1]
+func (l *lexer) get(loc Location, count int) string {
+	return string(l.source[loc.Idx : loc.Idx+count])
 }
 
-func (l *lexer) eat() rune {
-	ch := l.source[l.loc.Idx]
-
-	l.loc.Idx++
-	l.loc.Col++
-	if ch == '\n' {
-		l.loc.Col = 0
-		l.loc.Row++
-	}
-
-	if l.loc.Idx >= len(l.source) {
-		l.eof = true
-	}
-	return ch
+func (l *lexer) next(count int) string {
+	return l.get(*l.loc, count)
 }
 
-func (l *lexer) all(start, end int) string {
-	s, e := utils.Min(start, len(l.source)-1), utils.Min(end, len(l.source)-1)
-	return string(l.source[s:(e + 1)])
-}
-
-func (l *lexer) ahead(ahead int) string {
-	return l.all(l.loc.Idx, l.loc.Idx+ahead-1)
-}
-
-func (l *lexer) start(mode TokenType) {
-	l.mode = mode
-	*l.begin = *l.loc
-	l.eat()
-}
-
-func (l *lexer) end() *Token {
-	value := l.all(l.begin.Idx, l.loc.Idx-1)
-
-	var tt TokenType
-	if l.mode == Identifier && IsKeyword(value) {
-		tt = Keyword
-	} else {
-		tt = l.mode
-	}
-
+func (l *lexer) add(tt TokenType, value string) {
 	token := CreateToken(
 		tt,
 		value,
-		l.begin.Row,
-		l.begin.Col,
-		l.begin.Idx,
+		l.loc.Row,
+		l.loc.Col,
+		l.loc.Idx,
 	)
-
-	l.mode = None
-
-	return token
-}
-
-func (l *lexer) add(token *Token) {
 	l.tokens = append(l.tokens, *token)
 }
 
-func (l *lexer) multiToken(tokentype TokenType, count int) {
-	if l.mode != Identifier && l.mode != Space && l.mode != None {
-		l.eat()
-	} else {
-		if l.mode == Identifier {
-			l.add(l.end())
-		}
-		l.add(CreateToken(
-			tokentype,
-			l.ahead(count),
-			l.loc.Row,
-			l.loc.Col,
-			l.loc.Idx,
-		))
-
-		for i := 0; i < count; i++ {
-			l.eat()
+func (l *lexer) identifier() {
+	if l.loc.Idx != l.iden.Idx {
+		iden := l.get(l.iden, l.loc.Idx-l.iden.Idx)
+		if typ, ok := Keywords[iden]; ok {
+			l.add(typ, iden)
+		} else {
+			l.add(Identifier, iden)
 		}
 	}
 }
 
-func (l *lexer) singleToken(tokentype TokenType) {
-	l.multiToken(tokentype, 1)
-}
+func (l *lexer) symbol() bool {
+	longest := ""
+	length := 0
+	for symbol := range Symbols {
+		size := len(symbol)
+		if size < length {
+			continue
+		}
+		if l.loc.Idx+size > len(l.source) {
+			continue
+		}
 
-func parseKeys[T ~string](l *lexer, keys []T) *T {
-	finalKey := (*T)(nil)
-	keyLen := 0
-	for _, key := range keys {
-		if len(key) > keyLen && string(key) == l.ahead(len(key)) {
-			finalKey = &key
-			keyLen = len(key)
+		if l.next(size) == symbol {
+			longest, length = symbol, size
 		}
 	}
-	return finalKey
+
+	if length > 0 {
+		l.identifier()
+
+		l.add(
+			Symbols[longest],
+			longest,
+		)
+		l.loc.Row += length
+		l.loc.Idx += length
+		return true
+	}
+
+	return false
 }
 
 func Lex(source string) *[]Token {
-	l := &lexer{
+	l := lexer{
 		[]rune(source),
 		[]Token{},
+		*CreateLocation(0, 0, 0),
 		CreateLocation(0, 0, 0),
-		None,
-		CreateLocation(0, 0, 0),
-		false,
 	}
 
-	for !l.eof {
-		if l.mode == Space && l.peek() != ' ' {
-			l.add(l.end())
-		}
-
-		// TODO: add multiline comments
-		if l.mode == None && unicode.IsDigit(l.at()) {
-			l.start(Number)
-			continue
-		} else if l.mode == Number && !unicode.IsDigit(l.at()) {
-			l.add(l.end())
-		} else if l.ahead(2) == "//" {
-			l.start(Comment)
-		} else if l.ahead(2) == ":=" {
-			l.multiToken(ImplicitAssignment, 2)
+	for l.loc.Idx != len(l.source) {
+		if l.symbol() {
+			l.iden = *l.loc
 		} else {
-			switch l.at() {
-			case ' ':
-				if l.mode == Space {
-					l.eat()
-				}
-
-				if l.mode == Identifier {
-					l.add(l.end())
-				}
-				if l.mode == None {
-					l.eat()
-					l.start(Space)
-				}
-			case '\n':
-				if l.mode == Comment {
-					l.add(l.end())
-				}
-				l.singleToken(NewLine)
-			case '"':
-				if l.mode != Comment {
-					if l.mode == String {
-						l.add(l.end())
-						l.eat()
-					} else {
-						l.eat()
-						l.start(String)
-					}
-				} else {
-					l.eat()
-				}
-			case ';':
-				l.singleToken(Semicolon)
-			case '(':
-				l.singleToken(LeftParen)
-			case ')':
-				l.singleToken(RightParen)
-			case '[':
-				l.singleToken(LeftBracket)
-			case ']':
-				l.singleToken(RightBracket)
-			case '{':
-				l.singleToken(LeftBrace)
-			case '}':
-				l.singleToken(RightBrace)
-			case ',':
-				l.singleToken(Delimiter)
-			case '=':
-				l.singleToken(Assignment)
-			default:
-				if tf := parseKeys(l, Booleans); tf != nil {
-					l.multiToken(Boolean, len(*tf))
-				} else if op := parseKeys(l, Operators); op != nil {
-					l.multiToken(Operator, len(*op))
-				} else if cmp := parseKeys(l, Comparators); cmp != nil {
-					l.multiToken(Comparator, len(*cmp))
-				} else if l.mode == None {
-					l.start(Identifier)
-				} else {
-					l.eat()
-				}
-			}
+			l.loc.Idx++
+			l.loc.Row++
 		}
 	}
-	if l.mode != None {
-		l.add(l.end())
-	}
-	l.add(CreateToken(EOF, "EOF", l.loc.Row, l.loc.Col, l.loc.Idx))
+	l.identifier()
 
 	return &l.tokens
 }
