@@ -99,6 +99,7 @@ var Keywords = map[string]TokenType{
 }
 
 var Symbols = map[string]TokenType{
+	"\n":  NewLine,
 	"{":   OpenBrace,
 	"}":   CloseBrace,
 	"(":   OpenParen,

@@ -1,5 +1,12 @@
 x := 3
 
+// If statement
 if x <= 5 {
     println("Hi")
 }
+
+/* 
+
+Multiline comment
+
+*/

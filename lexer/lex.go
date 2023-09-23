@@ -4,17 +4,30 @@ import (
 	"fmt"
 	"os"
 	"sulfur/utils"
+	"unicode"
 )
 
 type lexer struct {
 	source []rune
 	tokens []Token
 	iden   Location
-	loc    *Location
+	begin  Location
+	mode   TokenType
+	loc    Location
 }
 
 func (l *lexer) at() rune {
 	return l.source[l.loc.Idx]
+}
+
+func (l *lexer) step() {
+	l.loc.Row++
+	l.loc.Idx++
+
+	if l.at() == '\n' {
+		l.loc.Row = 0
+		l.loc.Col++
+	}
 }
 
 func (l *lexer) get(loc Location, count int) string {
@@ -22,7 +35,7 @@ func (l *lexer) get(loc Location, count int) string {
 }
 
 func (l *lexer) next(count int) string {
-	return l.get(*l.loc, count)
+	return l.get(l.loc, count)
 }
 
 func (l *lexer) add(tt TokenType, value string) {
@@ -34,6 +47,20 @@ func (l *lexer) add(tt TokenType, value string) {
 		l.loc.Idx,
 	)
 	l.tokens = append(l.tokens, *token)
+}
+
+func (l *lexer) new(tt TokenType, value string) {
+	l.add(tt, value)
+	l.loc.Row += len(value)
+	l.loc.Idx += len(value)
+}
+
+func (l *lexer) match(value string) bool {
+	size := len(value)
+	if l.loc.Idx+size <= len(l.source) {
+		return l.next(size) == value
+	}
+	return false
 }
 
 func (l *lexer) identifier() {
@@ -66,16 +93,46 @@ func (l *lexer) symbol() bool {
 
 	if length > 0 {
 		l.identifier()
-
-		l.add(
+		l.new(
 			Symbols[longest],
 			longest,
 		)
-		l.loc.Row += length
-		l.loc.Idx += length
+
 		return true
 	}
 
+	return false
+}
+
+func (l *lexer) start(mode TokenType, starting string) bool {
+	if l.match(starting) {
+		l.identifier()
+
+		size := len(starting)
+		l.loc.Row += size
+		l.loc.Idx += size
+
+		l.begin = l.loc
+		l.mode = mode
+		return true
+	}
+	return false
+}
+
+func (l *lexer) end(ending string) bool {
+	if l.match(ending) {
+		v := l.get(l.begin, l.loc.Idx-l.begin.Idx)
+		l.add(l.mode, v)
+
+		size := len(ending)
+		l.loc.Row += size
+		l.loc.Idx += size
+
+		l.mode = None
+		return true
+	}
+
+	l.step()
 	return false
 }
 
@@ -83,16 +140,45 @@ func Lex(source string) *[]Token {
 	l := lexer{
 		[]rune(source),
 		[]Token{},
-		*CreateLocation(0, 0, 0),
-		CreateLocation(0, 0, 0),
+		*NoLocation,
+		*NoLocation,
+		None,
+		*NoLocation,
 	}
 
 	for l.loc.Idx != len(l.source) {
-		if l.symbol() {
-			l.iden = *l.loc
+		if l.mode == None {
+			if l.start(SingleLineComment, "//") ||
+				l.start(MultiLineComment, "/*") ||
+				l.start(String, "\"") {
+				continue
+			}
+
+			pass := true
+			if unicode.IsSpace(l.at()) {
+				l.identifier()
+				l.new(WhiteSpace, string(l.at()))
+			} else if !l.symbol() {
+				pass = false
+			}
+
+			if pass {
+				l.iden = l.loc
+			} else {
+				l.step()
+			}
 		} else {
-			l.loc.Idx++
-			l.loc.Row++
+			if l.mode == String {
+				l.end("\"")
+			} else if l.mode == SingleLineComment {
+				if l.end("\n") {
+					l.add(NewLine, "\n")
+				}
+			} else if l.mode == MultiLineComment {
+				l.end("*/")
+			}
+
+			l.iden = l.loc
 		}
 	}
 	l.identifier()
