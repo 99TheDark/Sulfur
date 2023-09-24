@@ -27,7 +27,7 @@ const (
 	CloseParen                     // ')'
 	OpenBracket                    // '['
 	CloseBracket                   // ']'
-	Number                         // '3.5', '7', '-2'
+	Number                         // '3',  '.15', '-2', '-6.2'
 	Boolean                        // 'true', 'false'
 	String                         // '"' -> some text -> '"'
 	Assignment                     // operator? -> '='

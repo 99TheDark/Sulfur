@@ -7,6 +7,10 @@ import (
 	"unicode"
 )
 
+func decimal(ch rune) bool {
+	return unicode.IsDigit(ch) || ch == '.'
+}
+
 type lexer struct {
 	source []rune
 	tokens []Token
@@ -24,13 +28,13 @@ func (l *lexer) at() rune {
 }
 
 func (l *lexer) step() {
-	l.loc.Col++
-	l.loc.Idx++
-
 	if l.at() == '\n' {
 		l.loc.Col = 0
 		l.loc.Row++
+	} else {
+		l.loc.Col++
 	}
+	l.loc.Idx++
 }
 
 func (l *lexer) move(str string) {
@@ -49,15 +53,19 @@ func (l *lexer) next(count int) string {
 	return l.get(l.loc, count)
 }
 
-func (l *lexer) add(tt TokenType, value string) {
+func (l *lexer) addAt(tt TokenType, value string, loc Location) {
 	token := CreateToken(
 		tt,
 		value,
-		l.loc.Row,
-		l.loc.Col,
-		l.loc.Idx,
+		loc.Row,
+		loc.Col,
+		loc.Idx,
 	)
 	l.tokens = append(l.tokens, *token)
+}
+
+func (l *lexer) add(tt TokenType, value string) {
+	l.addAt(tt, value, l.loc)
 }
 
 func (l *lexer) new(tt TokenType, value string) {
@@ -77,9 +85,9 @@ func (l *lexer) identifier() {
 	if l.loc.Idx != l.iden.Idx {
 		iden := l.get(l.iden, l.loc.Idx-l.iden.Idx)
 		if typ, ok := Keywords[iden]; ok {
-			l.add(typ, iden)
+			l.addAt(typ, iden, l.iden)
 		} else {
-			l.add(Identifier, iden)
+			l.addAt(Identifier, iden, l.iden)
 		}
 	}
 }
@@ -159,6 +167,10 @@ func Lex(source string) *[]Token {
 				l.start(String, "\"") {
 				continue
 			}
+			if decimal(l.at()) {
+				l.start(Number, "")
+				continue
+			}
 
 			pass := true
 			if l.at() == '\n' {
@@ -185,6 +197,15 @@ func Lex(source string) *[]Token {
 				}
 			} else if l.mode == MultiLineComment {
 				l.end("*/")
+			} else if l.mode == Number {
+				if !decimal(l.at()) {
+					num := l.get(l.begin, l.loc.Idx-l.begin.Idx)
+					l.addAt(Number, num, l.begin)
+
+					l.mode = None
+				} else {
+					l.step()
+				}
 			}
 
 			l.iden = l.loc

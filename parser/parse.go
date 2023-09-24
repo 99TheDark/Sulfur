@@ -3,7 +3,8 @@ package parser
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"math"
+	"strconv"
 	"strings"
 	. "sulfur/errors"
 	"sulfur/lexer"
@@ -57,6 +58,8 @@ func (p *parser) parseStatement() (stmt Statement) {
 		return
 	case lexer.If:
 		return p.parseIfStatement()
+	case lexer.For:
+		return p.parseForLoop()
 	default:
 		Errors.Error("Unknown token '"+p.at().Value+"'", p.at().Location)
 		return
@@ -92,8 +95,44 @@ func (p *parser) parseIfStatement() IfStatement {
 	}
 }
 
+func (p *parser) parseForLoop() ForLoop {
+	loc := p.expect(lexer.For)
+	init := p.parseExpression()
+	p.expect(lexer.Semicolon)
+	cond := p.parseExpression()
+	p.expect(lexer.Semicolon)
+	update := p.parseExpression()
+	body := p.parseBlock()
+	return ForLoop{
+		loc.Location,
+		init,
+		cond,
+		update,
+		body,
+	}
+}
+
 // Expressions (part of a statement, but not a statement)
 func (p *parser) parseExpression() Statement {
+	return p.parseImplicitDeclaration()
+}
+
+// TODO: parseExpressionList()
+
+func (p *parser) parseImplicitDeclaration() Statement {
+	if p.at().Type == lexer.Identifier {
+		iden := p.parseIdentifier()
+		if p.at().Type == lexer.ImplicitDeclaration {
+			loc := p.eat()
+			val := p.parseExpression()
+			return ImplicitDeclaration{
+				loc.Location,
+				iden,
+				val,
+				NoType(),
+			}
+		}
+	}
 	return p.parseComparison()
 }
 
@@ -150,6 +189,8 @@ func (p *parser) parsePrimary() Statement {
 	switch p.at().Type {
 	case lexer.Boolean:
 		return p.parseBoolean()
+	case lexer.Number:
+		return p.parseNumber()
 	case lexer.String:
 		return p.parseString()
 	case lexer.Identifier:
@@ -161,8 +202,7 @@ func (p *parser) parsePrimary() Statement {
 }
 
 func (p *parser) parseBoolean() BooleanLiteral {
-	token := p.eat()
-
+	token := p.expect(lexer.Boolean)
 	val := false
 	if token.Value == "true" {
 		val = true
@@ -175,8 +215,30 @@ func (p *parser) parseBoolean() BooleanLiteral {
 	}
 }
 
+func (p *parser) parseNumber() Statement {
+	token := p.expect(lexer.Number)
+	if f64, err := strconv.ParseFloat(token.Value, 64); err == nil {
+		if math.Mod(f64, 1) == 0 {
+			return IntegerLiteral{
+				token.Location,
+				int64(f64),
+				NoType(),
+			}
+		} else {
+			return FloatLiteral{
+				token.Location,
+				f64,
+				NoType(),
+			}
+		}
+	}
+
+	Errors.Error("Invalid number", token.Location)
+	return BadStatement{}
+}
+
 func (p *parser) parseString() StringLiteral {
-	token := p.eat()
+	token := p.expect(lexer.String)
 	return StringLiteral{
 		new(Program),
 		token.Location,
@@ -186,8 +248,7 @@ func (p *parser) parseString() StringLiteral {
 }
 
 func (p *parser) parseIdentifier() Identifier {
-	fmt.Println(p.at())
-	token := p.eat()
+	token := p.expect(lexer.Identifier)
 	return Identifier{
 		token.Location,
 		typing.NewScope(),

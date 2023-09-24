@@ -177,3 +177,9 @@ func (x Return) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 func (x IfStatement) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
+func (x ForLoop) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+	return nil
+}
+func (x WhileLoop) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+	return nil
+}

@@ -138,6 +138,8 @@
             // my.self and super.self return an actual object that can be passed through type casting and functions
             return "$(my.school) student, $(string<super.self>), grade $(my.grade)"
         }
+
+        // extends automatically creates to Person conversion
     }
 
     class Vec3 {
@@ -183,6 +185,11 @@
             return Vec3(vec.x / scalar, vec.y / scalar, vec.z / scalar)
         }
     }
+
+    Person person = new Student()
+    println(person is Student) // true
+    println(person is Person)  // true
+    println(person is Vec3)    // false
     ```
 - Extending Types
     ```

@@ -60,6 +60,7 @@ type (
 	}
 
 	Declaration struct {
+		Loc      *lexer.Location `json:"-"`
 		Datatype Identifier
 		Variable Identifier
 		Value    Statement
@@ -67,6 +68,7 @@ type (
 	}
 
 	ImplicitDeclaration struct {
+		Loc      *lexer.Location `json:"-"`
 		Variable Identifier
 		Value    Statement
 		Type     *Type `json:",omitempty"`
@@ -145,10 +147,24 @@ type (
 	}
 
 	IfStatement struct {
-		Loc       *lexer.Location `json:"-"`
-		Condition Statement
-		Then      Block
-		Else      Block
+		Loc  *lexer.Location `json:"-"`
+		Cond Statement
+		Then Block
+		Else Block
+	}
+
+	ForLoop struct {
+		Loc    *lexer.Location `json:"-"`
+		Init   Statement
+		Cond   Statement
+		Update Statement
+		Body   Block
+	}
+
+	WhileLoop struct {
+		Loc  *lexer.Location `json:"-"`
+		Cond Statement
+		Body Block
 	}
 )
 
@@ -172,6 +188,8 @@ func (x BooleanLiteral) Children() []Statement      { return nil }
 func (x StringLiteral) Children() []Statement       { return nil }
 func (x Return) Children() []Statement              { return []Statement{x.Value} }
 func (x IfStatement) Children() []Statement         { return []Statement{x.Then, x.Else} }
+func (x ForLoop) Children() []Statement             { return []Statement{x.Init, x.Cond, x.Update, x.Body} }
+func (x WhileLoop) Children() []Statement           { return []Statement{x.Cond, x.Body} }
 
 // Location
 func (x Program) Location() *lexer.Location             { return lexer.NoLocation }
@@ -179,8 +197,8 @@ func (x BadStatement) Location() *lexer.Location        { return lexer.NoLocatio
 func (x Block) Location() *lexer.Location               { return x.Loc }
 func (x Identifier) Location() *lexer.Location          { return x.Loc }
 func (x Datatype) Location() *lexer.Location            { return x.Datatype.Loc }
-func (x Declaration) Location() *lexer.Location         { return x.Datatype.Loc }
-func (x ImplicitDeclaration) Location() *lexer.Location { return x.Variable.Loc }
+func (x Declaration) Location() *lexer.Location         { return x.Loc }
+func (x ImplicitDeclaration) Location() *lexer.Location { return x.Loc }
 func (x Assignment) Location() *lexer.Location          { return x.Variable.Loc }
 func (x List) Location() *lexer.Location                { return x.Values[0].Location() } // Length always >= 2
 func (x BinaryOperation) Location() *lexer.Location     { return x.Loc }
@@ -193,6 +211,8 @@ func (x BooleanLiteral) Location() *lexer.Location      { return x.Loc }
 func (x StringLiteral) Location() *lexer.Location       { return x.Loc }
 func (x Return) Location() *lexer.Location              { return x.Value.Location() }
 func (x IfStatement) Location() *lexer.Location         { return x.Loc }
+func (x ForLoop) Location() *lexer.Location             { return x.Loc }
+func (x WhileLoop) Location() *lexer.Location           { return x.Loc }
 
 // Get Type
 func (x Program) GetType() *Type             { return nil }
@@ -214,6 +234,8 @@ func (x BooleanLiteral) GetType() *Type      { return x.Type }
 func (x StringLiteral) GetType() *Type       { return x.Type }
 func (x Return) GetType() *Type              { return nil }
 func (x IfStatement) GetType() *Type         { return nil }
+func (x ForLoop) GetType() *Type             { return nil }
+func (x WhileLoop) GetType() *Type           { return nil }
 
 // Misc
 func create(caller Identifier, name string, variable typing.Variable) {

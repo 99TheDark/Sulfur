@@ -126,13 +126,34 @@ func (x Return) InferType() string { // tricky
 	return ""
 }
 func (x IfStatement) InferType() string {
-	cond := x.Condition.InferType()
+	cond := x.Cond.InferType()
 	if cond != "bool" {
-		Errors.Error("Condition must be a boolean", x.Condition.Location())
+		Errors.Error("Condition must be a boolean", x.Cond.Location())
 	}
 
 	x.Then.InferType()
 	x.Else.InferType()
+	return ""
+}
+func (x ForLoop) InferType() string {
+	x.Init.InferType()
+
+	cond := x.Cond.InferType()
+	if cond != "bool" {
+		Errors.Error("Condition must be a boolean", x.Cond.Location())
+	}
+
+	x.Update.InferType()
+	x.Body.InferType()
+	return ""
+}
+func (x WhileLoop) InferType() string {
+	cond := x.Cond.InferType()
+	if cond != "bool" {
+		Errors.Error("Condition must be a boolean", x.Cond.Location())
+	}
+
+	x.Body.InferType()
 	return ""
 }
 
