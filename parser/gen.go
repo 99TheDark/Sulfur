@@ -156,7 +156,7 @@ func (x IntegerLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 func (x FloatLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return nil
 }
-func (x BoolLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+func (x BooleanLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	return constant.NewBool(x.Value)
 }
 func (x StringLiteral) Generate(mod *ir.Module, bl *ir.Block) value.Value {

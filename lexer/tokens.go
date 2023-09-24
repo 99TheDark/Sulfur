@@ -54,6 +54,7 @@ const (
 	Return                         // 'return'
 	Break                          // 'break'
 	Continue                       // 'continue'
+	Fallthrough                    // 'fallthrough'
 	My                             // 'my'
 	Class                          // 'class'
 	New                            // 'new'
@@ -73,29 +74,35 @@ const (
 	Null                           // 'null'
 	Spread                         // '...'
 	Semicolon                      // ';'
+	Import                         // 'import'
+	Export                         // 'export'
+	EOF
 )
 
 var Keywords = map[string]TokenType{
-	"true":     Boolean,
-	"false":    Boolean,
-	"return":   Return,
-	"break":    Break,
-	"continue": Continue,
-	"my":       My,
-	"class":    Class,
-	"new":      New,
-	"operator": Operator,
-	"to":       To,
-	"extends":  Extends,
-	"from":     From,
-	"enum":     Enum,
-	"for":      For,
-	"in":       In,
-	"while":    While,
-	"do":       Do,
-	"if":       If,
-	"else":     Else,
-	"null":     Null,
+	"true":        Boolean,
+	"false":       Boolean,
+	"return":      Return,
+	"break":       Break,
+	"continue":    Continue,
+	"fallthrough": Fallthrough,
+	"my":          My,
+	"class":       Class,
+	"new":         New,
+	"operator":    Operator,
+	"to":          To,
+	"extends":     Extends,
+	"from":        From,
+	"enum":        Enum,
+	"for":         For,
+	"in":          In,
+	"while":       While,
+	"do":          Do,
+	"if":          If,
+	"else":        Else,
+	"null":        Null,
+	"import":      Import,
+	"export":      Export,
 }
 
 var Symbols = map[string]TokenType{
@@ -225,6 +232,8 @@ func (tt TokenType) String() string {
 		return "Break"
 	case Continue:
 		return "Continue"
+	case Fallthrough:
+		return "Fallthrough"
 	case My:
 		return "My"
 	case Class:
@@ -263,6 +272,12 @@ func (tt TokenType) String() string {
 		return "Spread"
 	case Semicolon:
 		return "Semicolon"
+	case Import:
+		return "Import"
+	case Export:
+		return "Export"
+	case EOF:
+		return "EOF"
 	default:
 		return "Unknown"
 	}

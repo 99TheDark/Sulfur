@@ -108,7 +108,7 @@ func (x FloatLiteral) InferType() string {
 	x.Type.Name, x.Type.Underlying = "float", typing.Float
 	return "float"
 }
-func (x BoolLiteral) InferType() string {
+func (x BooleanLiteral) InferType() string {
 	x.Type.Name, x.Type.Underlying = "bool", typing.Bool
 	return "bool"
 }
@@ -134,7 +134,7 @@ func (x IfStatement) InferType() string {
 }
 
 // Misc
-func confirm(Expression Expression, types ...string) string {
+func confirm(Statement Statement, types ...string) string {
 	f := types[0]
 	if len(types) < 2 {
 		return f
@@ -142,13 +142,13 @@ func confirm(Expression Expression, types ...string) string {
 
 	for _, el := range types {
 		if el != f {
-			Errors.Error("Mismatch of '"+el+"' to '"+f+"'", Expression.Location())
+			Errors.Error("Mismatch of '"+el+"' to '"+f+"'", Statement.Location())
 		}
 	}
 	return f
 }
 
-func link(expr Expression, parent typing.Scope, program Program) {
+func link(expr Statement, parent typing.Scope, program Program) {
 	if iden, ok := expr.(Identifier); ok {
 		*iden.Parent = parent
 	} else {

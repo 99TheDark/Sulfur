@@ -17,16 +17,19 @@ type lexer struct {
 }
 
 func (l *lexer) at() rune {
+	if l.loc.Idx == len(l.source) {
+		return '\x00'
+	}
 	return l.source[l.loc.Idx]
 }
 
 func (l *lexer) step() {
-	l.loc.Row++
+	l.loc.Col++
 	l.loc.Idx++
 
 	if l.at() == '\n' {
-		l.loc.Row = 0
-		l.loc.Col++
+		l.loc.Col = 0
+		l.loc.Row++
 	}
 }
 
@@ -51,7 +54,7 @@ func (l *lexer) add(tt TokenType, value string) {
 
 func (l *lexer) new(tt TokenType, value string) {
 	l.add(tt, value)
-	l.loc.Row += len(value)
+	l.loc.Col += len(value)
 	l.loc.Idx += len(value)
 }
 
@@ -109,7 +112,7 @@ func (l *lexer) start(mode TokenType, starting string) bool {
 		l.identifier()
 
 		size := len(starting)
-		l.loc.Row += size
+		l.loc.Col += size
 		l.loc.Idx += size
 
 		l.begin = l.loc
@@ -125,7 +128,7 @@ func (l *lexer) end(ending string) bool {
 		l.add(l.mode, v)
 
 		size := len(ending)
-		l.loc.Row += size
+		l.loc.Col += size
 		l.loc.Idx += size
 
 		l.mode = None
@@ -155,7 +158,9 @@ func Lex(source string) *[]Token {
 			}
 
 			pass := true
-			if unicode.IsSpace(l.at()) {
+			if l.at() == '\n' {
+				l.new(NewLine, string(l.at()))
+			} else if unicode.IsSpace(l.at()) {
 				l.identifier()
 				l.new(WhiteSpace, string(l.at()))
 			} else if !l.symbol() {
@@ -183,7 +188,17 @@ func Lex(source string) *[]Token {
 	}
 	l.identifier()
 
+	l.new(EOF, "EOF")
+
 	return &l.tokens
+}
+
+func Filter(tokens *[]Token) *[]Token {
+	filter := func(item Token) bool {
+		return item.Type != WhiteSpace && item.Type != SingleLineComment && item.Type != MultiLineComment
+	}
+	filtered := utils.Filter(*tokens, filter)
+	return &filtered
 }
 
 func Stringify(tokens *[]Token) string {
