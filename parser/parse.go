@@ -3,6 +3,7 @@ package parser
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"strings"
 	. "sulfur/errors"
 	"sulfur/lexer"
@@ -44,6 +45,11 @@ func (p *parser) optional(typ lexer.TokenType) {
 	}
 }
 
+func (p *parser) is(catagory []lexer.TokenType) bool {
+	return utils.Contains(catagory, p.at().Type)
+}
+
+// Statements
 func (p *parser) parseStatement() (stmt Statement) {
 	switch p.at().Type {
 	case lexer.NewLine:
@@ -55,10 +61,6 @@ func (p *parser) parseStatement() (stmt Statement) {
 		Errors.Error("Unknown token '"+p.at().Value+"'", p.at().Location)
 		return
 	}
-}
-
-func (p *parser) parseSimpleStatement() Statement {
-	return Block{}
 }
 
 func (p *parser) parseBlock() Block {
@@ -79,17 +81,83 @@ func (p *parser) parseBlock() Block {
 }
 
 func (p *parser) parseIfStatement() IfStatement {
-	/*loc := p.expect(lexer.If)
-	cond := p.parseSimpleStatement()
+	loc := p.expect(lexer.If)
+	cond := p.parseExpression()
 	body := p.parseBlock()
 	return IfStatement{
 		loc.Location,
 		cond,
 		body,
 		Block{},
-	}*/
-	p.expect(lexer.If)
-	return IfStatement{}
+	}
+}
+
+// Expressions (part of a statement, but not a statement)
+func (p *parser) parseExpression() Statement {
+	return p.parseComparison()
+}
+
+func (p *parser) parseComparison() Statement {
+	left := p.parseAdditive()
+	if p.is(Comparator) {
+		token := p.eat()
+		return Comparison{
+			token.Location,
+			left,
+			p.parseAdditive(),
+			token.Type,
+			NoType(),
+		}
+	}
+	return left
+}
+
+func (p *parser) parseAdditive() Statement {
+	left := p.parseMultiplicative()
+	for p.at().Type == lexer.Addition || p.at().Type == lexer.Subtraction {
+		token := p.eat()
+		right := p.parseMultiplicative()
+
+		left = BinaryOperation{
+			token.Location,
+			left,
+			right,
+			token.Type,
+			NoType(),
+		}
+	}
+	return left
+}
+
+func (p *parser) parseMultiplicative() Statement {
+	left := p.parsePrimary()
+	for p.at().Type == lexer.Multiplication || p.at().Type == lexer.Division {
+		token := p.eat()
+		right := p.parsePrimary()
+
+		left = BinaryOperation{
+			token.Location,
+			left,
+			right,
+			token.Type,
+			NoType(),
+		}
+	}
+	return left
+}
+
+func (p *parser) parsePrimary() Statement {
+	switch p.at().Type {
+	case lexer.Boolean:
+		return p.parseBoolean()
+	case lexer.String:
+		return p.parseString()
+	case lexer.Identifier:
+		return p.parseIdentifier()
+	}
+
+	Errors.Error("Unknown token '"+p.at().Value+"'", p.at().Location)
+	return BadStatement{}
 }
 
 func (p *parser) parseBoolean() BooleanLiteral {
@@ -118,6 +186,7 @@ func (p *parser) parseString() StringLiteral {
 }
 
 func (p *parser) parseIdentifier() Identifier {
+	fmt.Println(p.at())
 	token := p.eat()
 	return Identifier{
 		token.Location,

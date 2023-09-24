@@ -38,6 +38,8 @@ type (
 		Contents      Block
 	}
 
+	BadStatement struct{}
+
 	Block struct {
 		Loc   *lexer.Location `json:"-"`
 		Body  []Statement
@@ -73,7 +75,7 @@ type (
 	Assignment struct {
 		Variable Identifier
 		Value    Statement
-		Operator lexer.Operation
+		Operator lexer.TokenType
 		Type     *Type `json:",omitempty"`
 	}
 
@@ -85,7 +87,7 @@ type (
 		Loc      *lexer.Location `json:"-"`
 		Left     Statement
 		Right    Statement
-		Operator lexer.Operation
+		Operator lexer.TokenType
 		Type     *Type `json:",omitempty"`
 	}
 
@@ -93,7 +95,7 @@ type (
 		Loc        *lexer.Location `json:"-"`
 		Left       Statement
 		Right      Statement
-		Comparator lexer.Comparison
+		Comparator lexer.TokenType
 		Type       *Type `json:",omitempty"`
 	}
 
@@ -152,6 +154,7 @@ type (
 
 // Children
 func (x Program) Children() []Statement             { return x.Contents.Body }
+func (x BadStatement) Children() []Statement        { return nil }
 func (x Block) Children() []Statement               { return x.Body }
 func (x Identifier) Children() []Statement          { return nil }
 func (x Datatype) Children() []Statement            { return nil }
@@ -172,6 +175,7 @@ func (x IfStatement) Children() []Statement         { return []Statement{x.Then,
 
 // Location
 func (x Program) Location() *lexer.Location             { return lexer.NoLocation }
+func (x BadStatement) Location() *lexer.Location        { return lexer.NoLocation }
 func (x Block) Location() *lexer.Location               { return x.Loc }
 func (x Identifier) Location() *lexer.Location          { return x.Loc }
 func (x Datatype) Location() *lexer.Location            { return x.Datatype.Loc }
@@ -192,6 +196,7 @@ func (x IfStatement) Location() *lexer.Location         { return x.Loc }
 
 // Get Type
 func (x Program) GetType() *Type             { return nil }
+func (x BadStatement) GetType() *Type        { return nil }
 func (x Block) GetType() *Type               { return nil }
 func (x Identifier) GetType() *Type          { return x.Type }
 func (x Datatype) GetType() *Type            { return x.Type }

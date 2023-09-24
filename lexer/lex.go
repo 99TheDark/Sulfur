@@ -33,6 +33,14 @@ func (l *lexer) step() {
 	}
 }
 
+func (l *lexer) move(str string) {
+	for i := 0; i < len(str); i++ {
+		if l.loc.Idx < len(l.source) {
+			l.step()
+		}
+	}
+}
+
 func (l *lexer) get(loc Location, count int) string {
 	return string(l.source[loc.Idx : loc.Idx+count])
 }
@@ -54,8 +62,7 @@ func (l *lexer) add(tt TokenType, value string) {
 
 func (l *lexer) new(tt TokenType, value string) {
 	l.add(tt, value)
-	l.loc.Col += len(value)
-	l.loc.Idx += len(value)
+	l.move(value)
 }
 
 func (l *lexer) match(value string) bool {
@@ -111,9 +118,7 @@ func (l *lexer) start(mode TokenType, starting string) bool {
 	if l.match(starting) {
 		l.identifier()
 
-		size := len(starting)
-		l.loc.Col += size
-		l.loc.Idx += size
+		l.move(starting)
 
 		l.begin = l.loc
 		l.mode = mode
@@ -127,9 +132,7 @@ func (l *lexer) end(ending string) bool {
 		v := l.get(l.begin, l.loc.Idx-l.begin.Idx)
 		l.add(l.mode, v)
 
-		size := len(ending)
-		l.loc.Col += size
-		l.loc.Idx += size
+		l.move(ending)
 
 		l.mode = None
 		return true
@@ -159,6 +162,7 @@ func Lex(source string) *[]Token {
 
 			pass := true
 			if l.at() == '\n' {
+				l.identifier()
 				l.new(NewLine, string(l.at()))
 			} else if unicode.IsSpace(l.at()) {
 				l.identifier()

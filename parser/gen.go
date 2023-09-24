@@ -21,6 +21,9 @@ func (x Program) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	x.Contents.Generate(mod, bl)
 	return nil
 }
+func (x BadStatement) Generate(mod *ir.Module, bl *ir.Block) value.Value {
+	return nil
+}
 func (x Block) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	for name, variable := range x.Scope.Vars {
 		if variable.Underlying != typing.String {
@@ -100,15 +103,15 @@ func (x List) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 }
 func (x BinaryOperation) Generate(mod *ir.Module, bl *ir.Block) value.Value {
 	switch x.Operator {
-	case lexer.Add:
+	case lexer.Addition:
 		return bl.NewAdd(x.Left.Generate(mod, bl), x.Right.Generate(mod, bl))
-	case lexer.Subtract:
+	case lexer.Subtraction:
 		return bl.NewSub(x.Left.Generate(mod, bl), x.Right.Generate(mod, bl))
-	case lexer.Multiply:
+	case lexer.Multiplication:
 		return bl.NewMul(x.Left.Generate(mod, bl), x.Right.Generate(mod, bl))
-	case lexer.Divide:
+	case lexer.Division:
 		return bl.NewSDiv(x.Left.Generate(mod, bl), x.Right.Generate(mod, bl))
-	case lexer.Modulo:
+	case lexer.Modulus:
 		return bl.NewSRem(x.Left.Generate(mod, bl), x.Right.Generate(mod, bl))
 	default:
 		return nil

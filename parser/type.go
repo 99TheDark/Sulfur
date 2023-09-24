@@ -10,6 +10,9 @@ func (x Program) InferType() string {
 	x.Contents.InferType()
 	return ""
 }
+func (x BadStatement) InferType() string {
+	return ""
+}
 func (x Block) InferType() string {
 	for _, child := range x.Body {
 		child.InferType()

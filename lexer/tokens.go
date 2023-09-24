@@ -1,6 +1,7 @@
 package lexer
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -72,6 +73,7 @@ const (
 	QuestionMark                   // '?'
 	Colon                          // ':'
 	Null                           // 'null'
+	Nullish                        // '??'
 	Spread                         // '...'
 	Semicolon                      // ';'
 	Import                         // 'import'
@@ -136,6 +138,7 @@ var Symbols = map[string]TokenType{
 	",":   Delimiter,
 	"?":   QuestionMark,
 	":":   Colon,
+	"??":  Nullish,
 	"...": Spread,
 	";":   Semicolon,
 }
@@ -268,6 +271,8 @@ func (tt TokenType) String() string {
 		return "Colon"
 	case Null:
 		return "Null"
+	case Nullish:
+		return "Nullish"
 	case Spread:
 		return "Spread"
 	case Semicolon:
@@ -281,6 +286,10 @@ func (tt TokenType) String() string {
 	default:
 		return "Unknown"
 	}
+}
+
+func (tt TokenType) MarshalJSON() ([]byte, error) {
+	return json.Marshal(tt.String())
 }
 
 func (t Token) String() string {
