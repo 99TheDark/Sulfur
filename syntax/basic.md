@@ -193,6 +193,7 @@
     ```
 - Extending Types
     ```
+    // ! Change this syntax so type conversions work as well
     // Extend integers
     printFloat() {
         println(float<my>)
@@ -261,9 +262,14 @@
 
     arr := [6, 5, -2, 8, -4, 0, -1]
 
-    // Foreach / forin loop
+    // For each loop
     for el, i in arr {
         println("$(i). $(el)")
+    }
+
+    // For in range loop
+    for i in -1:5 {
+        println(i)
     }
     ```
 - Conditionals
@@ -311,4 +317,25 @@
     // y becomes 4 if x is null, otherwise is x
     // y is an int
     y := x ?? 4
+    ```
+- Error Handling
+        ```
+    // Similar to enum syntax
+    error FileError {
+        FileNotFound,
+        AccessDenied
+    }
+
+    read(string path) (string) throws FileError {
+        if !fileExists() {
+            throw FileError.FileNotFound
+        }
+        if !hasAccess() {
+            throw FileError.AccessDenied
+        }
+
+        return safeRead(path)
+    }
+
+    // ! Add error catching
     ```

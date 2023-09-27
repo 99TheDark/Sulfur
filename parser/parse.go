@@ -23,6 +23,10 @@ func (p *parser) at() lexer.Token {
 	return p.tokens[p.idx]
 }
 
+func (p *parser) peek() lexer.Token {
+	return p.tokens[p.idx+1]
+}
+
 func (p *parser) eat() lexer.Token {
 	el := p.at()
 	p.idx++
@@ -51,19 +55,14 @@ func (p *parser) is(catagory []lexer.TokenType) bool {
 }
 
 // Statements
-func (p *parser) parseStatement() (stmt Statement) {
+func (p *parser) parseStatement() Statement {
 	switch p.at().Type {
-	case lexer.NewLine:
-		p.eat()
-		return
 	case lexer.If:
 		return p.parseIfStatement()
-	case lexer.For:
-		return p.parseForLoop()
-	default:
-		Errors.Error("Unknown token '"+p.at().Value+"'", p.at().Location)
-		return
 	}
+
+	Errors.Error("Unknown statement '"+p.at().Value+"'", p.at().Location)
+	return BadStatement{}
 }
 
 func (p *parser) parseBlock() Block {
@@ -83,7 +82,7 @@ func (p *parser) parseBlock() Block {
 	}
 }
 
-func (p *parser) parseIfStatement() IfStatement {
+func (p *parser) parseIfStatement() Statement {
 	loc := p.expect(lexer.If)
 	cond := p.parseExpression()
 	body := p.parseBlock()
@@ -95,42 +94,21 @@ func (p *parser) parseIfStatement() IfStatement {
 	}
 }
 
-func (p *parser) parseForLoop() ForLoop {
-	loc := p.expect(lexer.For)
-	init := p.parseExpression()
-	p.expect(lexer.Semicolon)
-	cond := p.parseExpression()
-	p.expect(lexer.Semicolon)
-	update := p.parseExpression()
-	body := p.parseBlock()
-	return ForLoop{
-		loc.Location,
-		init,
-		cond,
-		update,
-		body,
-	}
-}
-
-// Expressions (part of a statement, but not a statement)
+// Expressions
 func (p *parser) parseExpression() Statement {
 	return p.parseImplicitDeclaration()
 }
 
-// TODO: parseExpressionList()
-
 func (p *parser) parseImplicitDeclaration() Statement {
-	if p.at().Type == lexer.Identifier {
+	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.ImplicitDeclaration {
 		iden := p.parseIdentifier()
-		if p.at().Type == lexer.ImplicitDeclaration {
-			loc := p.eat()
-			val := p.parseExpression()
-			return ImplicitDeclaration{
-				loc.Location,
-				iden,
-				val,
-				NoType(),
-			}
+		loc := p.eat()
+		val := p.parseComparison()
+		return ImplicitDeclaration{
+			loc.Location,
+			iden,
+			val,
+			NoType(),
 		}
 	}
 	return p.parseComparison()

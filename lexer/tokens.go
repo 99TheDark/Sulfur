@@ -78,6 +78,9 @@ const (
 	Semicolon                      // ';'
 	Import                         // 'import'
 	Export                         // 'export'
+	Test                           // 'test'
+	Assert                         // 'assert'
+	Throws                         // 'throws'
 	EOF
 )
 
@@ -105,6 +108,9 @@ var Keywords = map[string]TokenType{
 	"null":        Null,
 	"import":      Import,
 	"export":      Export,
+	"test":        Test,
+	"assert":      Assert,
+	"throws":      Throws,
 }
 
 var Symbols = map[string]TokenType{
@@ -281,6 +287,12 @@ func (tt TokenType) String() string {
 		return "Import"
 	case Export:
 		return "Export"
+	case Test:
+		return "Test"
+	case Assert:
+		return "Assert"
+	case Throws:
+		return "Throws"
 	case EOF:
 		return "EOF"
 	default:
