@@ -48,6 +48,13 @@ for.end:
 	ret void
 }
 
+define void @println(%type.string* %str) {
+entry:
+	call void @print(%type.string* %str)
+	call void @putchar(i8 10)
+	ret void
+}
+
 ; main() {
 ; 	string greeting = "Hello, world!" // length = 16, size = 19
 ;	print(greeting)
@@ -62,6 +69,7 @@ entry:
 	store i32 19, i32* %2, align 8
 	%3 = getelementptr inbounds %type.string, %type.string* %greeting, i32 0, i32 2
 	store i8* %0, i8** %3, align 8
-	call void @print(%type.string* %greeting)
+	call void @println(%type.string* %greeting)
+	call void @println(%type.string* %greeting)
 	ret void
 }

@@ -38,6 +38,22 @@ LBB0_3:                                 ; %for.end
 	ret
 	.cfi_endproc
                                         ; -- End function
+	.globl	_println                        ; -- Begin function println
+	.p2align	2
+_println:                               ; @println
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 16
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	bl	_print
+	mov	w0, #10
+	bl	_putchar
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.cfi_endproc
+                                        ; -- End function
 	.globl	_main                           ; -- Begin function main
 	.p2align	2
 _main:                                  ; @main
@@ -56,7 +72,9 @@ Lloh1:
 	add	x9, x9, l_.str@PAGEOFF
 	mov	x0, sp
 	stp	x8, x9, [sp]
-	bl	_print
+	bl	_println
+	mov	x0, sp
+	bl	_println
 	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
 	add	sp, sp, #32
 	ret
