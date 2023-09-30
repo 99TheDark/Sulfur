@@ -1,6 +1,6 @@
 package parser
 
-import "sulfur/lexer"
+import "sulfur/src/lexer"
 
 var BinaryOperator = []lexer.TokenType{
 	lexer.Addition,

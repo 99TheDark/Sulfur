@@ -6,10 +6,10 @@ import (
 	"math"
 	"strconv"
 	"strings"
-	. "sulfur/errors"
-	"sulfur/lexer"
-	"sulfur/typing"
-	"sulfur/utils"
+	. "sulfur/src/errors"
+	"sulfur/src/lexer"
+	"sulfur/src/typing"
+	"sulfur/src/utils"
 
 	"github.com/llir/llvm/ir"
 )

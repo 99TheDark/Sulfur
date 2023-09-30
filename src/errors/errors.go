@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"sulfur/lexer"
-	"sulfur/utils"
+	"sulfur/src/lexer"
+	"sulfur/src/utils"
 )
 
 const CodeBuffer int = 4

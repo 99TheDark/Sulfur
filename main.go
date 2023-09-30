@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
-	"sulfur/errors"
-	"sulfur/lexer"
-	"sulfur/parser"
+	"sulfur/src/errors"
+	"sulfur/src/lexer"
+	"sulfur/src/parser"
 )
 
 func main() {

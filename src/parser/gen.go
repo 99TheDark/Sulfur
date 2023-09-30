@@ -3,9 +3,9 @@ package parser
 import (
 	"fmt"
 	"math/rand"
-	. "sulfur/errors"
-	"sulfur/lexer"
-	"sulfur/typing"
+	. "sulfur/src/errors"
+	"sulfur/src/lexer"
+	"sulfur/src/typing"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"

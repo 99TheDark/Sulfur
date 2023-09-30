@@ -3,7 +3,7 @@ package lexer
 import (
 	"fmt"
 	"os"
-	"sulfur/utils"
+	"sulfur/src/utils"
 	"unicode"
 )
 

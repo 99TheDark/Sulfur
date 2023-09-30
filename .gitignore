@@ -3,5 +3,6 @@ io/tokens.txt
 io/unfiltered.txt
 io/ast.json
 io/typed.json
+notes/*
 .DS_Store
 .DS_Store?

@@ -1,8 +1,8 @@
 package parser
 
 import (
-	. "sulfur/errors"
-	"sulfur/typing"
+	. "sulfur/src/errors"
+	"sulfur/src/typing"
 )
 
 // Infer

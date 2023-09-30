@@ -1,9 +1,9 @@
 package compiler
 
 import (
-	"sulfur/libc"
-	"sulfur/parser"
-	"sulfur/utils"
+	"sulfur/src/libc"
+	"sulfur/src/parser"
+	"sulfur/src/utils"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/types"

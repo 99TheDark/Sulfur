@@ -1,7 +1,7 @@
 package typing
 
 import (
-	"sulfur/utils"
+	"sulfur/src/utils"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
