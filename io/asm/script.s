@@ -48,10 +48,10 @@ _main:                                  ; @main
 	.cfi_def_cfa_offset 32
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	x8, #15
+	mov	x8, #16
 Lloh0:
 	adrp	x9, l_.str@PAGE
-	movk	x8, #16, lsl #32
+	movk	x8, #19, lsl #32
 Lloh1:
 	add	x9, x9, l_.str@PAGEOFF
 	mov	x0, sp
@@ -63,8 +63,8 @@ Lloh1:
 	.loh AdrpAdd	Lloh0, Lloh1
 	.cfi_endproc
                                         ; -- End function
-	.section	__TEXT,__literal16,16byte_literals
+	.section	__TEXT,__const
 l_.str:                                 ; @.str
-	.ascii	"Hello, world! \316\265"
+	.ascii	"Hello, world! \316\265\342\261\236"
 
 .subsections_via_symbols
