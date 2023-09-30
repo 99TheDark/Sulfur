@@ -73,8 +73,6 @@ Lloh1:
 	mov	x0, sp
 	stp	x8, x9, [sp]
 	bl	_println
-	mov	x0, sp
-	bl	_println
 	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
 	add	sp, sp, #32
 	ret

@@ -70,6 +70,5 @@ entry:
 	%3 = getelementptr inbounds %type.string, %type.string* %greeting, i32 0, i32 2
 	store i8* %0, i8** %3, align 8
 	call void @println(%type.string* %greeting)
-	call void @println(%type.string* %greeting)
 	ret void
 }
