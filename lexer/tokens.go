@@ -45,6 +45,7 @@ const (
 	Nor                            // '!|'
 	Nand                           // '!&'
 	Not                            // '!'
+	Is                             // 'is'
 	EqualTo                        // '=='
 	NotEqualTo                     // '!='
 	GreaterThan                    // '>'
@@ -53,6 +54,7 @@ const (
 	LessThanOrEqualTo              // '<='
 	Delimiter                      // ','
 	Return                         // 'return'
+	Pipe                           // '|>'
 	Break                          // 'break'
 	Continue                       // 'continue'
 	Fallthrough                    // 'fallthrough'
@@ -70,6 +72,8 @@ const (
 	Do                             // 'do'
 	If                             // 'if'
 	Else                           // 'else'
+	Match                          // 'match'
+	Yield                          // 'yield'
 	QuestionMark                   // '?'
 	Colon                          // ':'
 	Null                           // 'null'
@@ -81,12 +85,15 @@ const (
 	Test                           // 'test'
 	Assert                         // 'assert'
 	Throws                         // 'throws'
+	Catch                          // 'catch'
+	Okay                           // 'okay'
 	EOF
 )
 
 var Keywords = map[string]TokenType{
 	"true":        Boolean,
 	"false":       Boolean,
+	"is":          Is,
 	"return":      Return,
 	"break":       Break,
 	"continue":    Continue,
@@ -105,12 +112,16 @@ var Keywords = map[string]TokenType{
 	"do":          Do,
 	"if":          If,
 	"else":        Else,
+	"match":       Match,
+	"yield":       Yield,
 	"null":        Null,
 	"import":      Import,
 	"export":      Export,
 	"test":        Test,
 	"assert":      Assert,
 	"throws":      Throws,
+	"catch":       Catch,
+	"okay":        Okay,
 }
 
 var Symbols = map[string]TokenType{
@@ -142,6 +153,7 @@ var Symbols = map[string]TokenType{
 	">=":  GreaterThanOrEqualTo,
 	"<=":  LessThanOrEqualTo,
 	",":   Delimiter,
+	"|>":  Pipe,
 	"?":   QuestionMark,
 	":":   Colon,
 	"??":  Nullish,
@@ -221,6 +233,8 @@ func (tt TokenType) String() string {
 		return "Nand"
 	case Not:
 		return "Not"
+	case Is:
+		return "Is"
 	case EqualTo:
 		return "EqualTo"
 	case NotEqualTo:
@@ -237,6 +251,8 @@ func (tt TokenType) String() string {
 		return "Delimiter"
 	case Return:
 		return "Return"
+	case Pipe:
+		return "Pipe"
 	case Break:
 		return "Break"
 	case Continue:
@@ -271,6 +287,10 @@ func (tt TokenType) String() string {
 		return "If"
 	case Else:
 		return "Else"
+	case Match:
+		return "Match"
+	case Yield:
+		return "Yield"
 	case QuestionMark:
 		return "QuestionMark"
 	case Colon:
@@ -293,6 +313,10 @@ func (tt TokenType) String() string {
 		return "Assert"
 	case Throws:
 		return "Throws"
+	case Catch:
+		return "Catch"
+	case Okay:
+		return "Okay"
 	case EOF:
 		return "EOF"
 	default:

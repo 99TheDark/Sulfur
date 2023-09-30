@@ -1,0 +1,18 @@
+# Parser Layout
+- Program
+    - [] Functions 
+    - [] Classes
+    - [] Strings
+    - [] Body
+- Function
+    - Name
+    - [] Return Values
+        - Identifier
+    - [] Parameters 
+        - Field
+            - Type
+            - Name
+    - [] Declarations
+        - Type
+        - Name
+    - [] Body

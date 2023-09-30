@@ -37,7 +37,7 @@
     ```
 - Functions
     ```
-    // func_name(params) (returns) {}
+    // func_name(params) (return) {}
     add(int a, int b) (int) { // parameter: type name
         return a + b // return a value
     }
@@ -93,10 +93,10 @@
     ```
     // Person class
     class Person {
-        // ! Design getter & setter syntax
-        string name
-        int    age
-        int    days_old
+        val string name
+        pub int    age
+        pub int    days_old
+        pri
 
         // Constructor, ~param => my.param = param
         Person(string ~name, int ~age) {
@@ -283,8 +283,31 @@
         println("Case C")
     }
 
+    // The => operator creates a one-line group {}
+    if x > 3 => println("$(x) is bigger than 3")
+
     // Ternary operator
     x := y < z ? x : 4
+    ```
+- Match
+    ```
+    age := 12
+    match age {
+        case 0 => println("baby")
+        case 1 {
+            println("one")
+            fallthrough // goes to next pattern
+        }
+        case 2:4 => println("toddler)
+        case 5, 6, 7 => println("five, six or seven")
+        else => println("some other age")
+    }
+
+    boolean := true
+    bitBoolean := match boolean {
+        true => yield 1
+        false => yield 0
+    }
     ```
 - Destructuring
     ```
@@ -337,5 +360,14 @@
         return safeRead(path)
     }
 
-    // ! Add error catching
+    text := try read("/assets/text/secret.txt") {
+        catch FileError.FileNotFound {
+            println("File Error: File not found")
+            yield "404"
+        }
+        catch FileError.AccessDenied {
+            println("File Error: Access deined")
+        }
+        // ! success?
+    }
     ```

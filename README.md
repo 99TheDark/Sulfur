@@ -5,9 +5,9 @@ Inspired by Go, JavaScript, Rust, Julia, Odin, Zig, C#, Swift and Java
 
 Compilation Steps 
 - File Reader
-- Lexer v2
-- Parser (WIP v2)
-- Type Inferrer
-- LLVM Code Generator
+- Lexer
+- Parser (REDO)
+- Type Inferrer (REDO)
+- LLVM Code Generator (REDO)
 - Assembly Compiler
 - Code Runner
