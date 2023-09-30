@@ -18,7 +18,7 @@ _print:                                 ; @print
 LBB0_1:                                 ; %for.cond
                                         ; =>This Inner Loop Header: Depth=1
 	ldr	w8, [sp, #8]
-	ldr	w9, [x19]
+	ldr	w9, [x19, #4]
 	cmp	w8, w9
 	b.ge	LBB0_3
 ; %bb.2:                                ; %for.body
@@ -48,14 +48,14 @@ _main:                                  ; @main
 	.cfi_def_cfa_offset 32
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
+	mov	x8, #15
 Lloh0:
 	adrp	x9, l_.str@PAGE
-	mov	w8, #13
+	movk	x8, #16, lsl #32
 Lloh1:
 	add	x9, x9, l_.str@PAGEOFF
 	mov	x0, sp
-	str	w8, [sp]
-	str	x9, [sp, #8]
+	stp	x8, x9, [sp]
 	bl	_print
 	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
 	add	sp, sp, #32
@@ -63,8 +63,8 @@ Lloh1:
 	.loh AdrpAdd	Lloh0, Lloh1
 	.cfi_endproc
                                         ; -- End function
-	.section	__TEXT,__const
+	.section	__TEXT,__literal16,16byte_literals
 l_.str:                                 ; @.str
-	.ascii	"Hello, world!"
+	.ascii	"Hello, world! \316\265"
 
 .subsections_via_symbols
