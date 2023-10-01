@@ -8,7 +8,7 @@ source_filename = "script.sulfur"
 declare void @putchar(i8 %0)
 
 ; print(string str) {
-; 	for int i = 0; i < str.len; i++ {
+; 	for int i = 0; i < str.size; i++ {
 ; 		putchar(str.adr[i])
 ; 	}
 ; }

@@ -54,6 +54,18 @@ _println:                               ; @println
 	ret
 	.cfi_endproc
                                         ; -- End function
+	.globl	_.string.add                    ; -- Begin function .string.add
+	.p2align	2
+_.string.add:                           ; @.string.add
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #16
+	.cfi_def_cfa_offset 16
+	mov	x0, sp
+	add	sp, sp, #16
+	ret
+	.cfi_endproc
+                                        ; -- End function
 	.globl	_main                           ; -- Begin function main
 	.p2align	2
 _main:                                  ; @main
