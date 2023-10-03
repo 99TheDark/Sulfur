@@ -53,11 +53,13 @@ const (
 	GreaterThanOrEqualTo           // '>='
 	LessThanOrEqualTo              // '<='
 	Delimiter                      // ','
+	Access                         // '.'
 	Return                         // 'return'
 	Pipe                           // '|>'
 	Break                          // 'break'
 	Continue                       // 'continue'
 	Fallthrough                    // 'fallthrough'
+	Func                           // 'func'
 	My                             // 'my'
 	Class                          // 'class'
 	New                            // 'new'
@@ -99,6 +101,7 @@ var Keywords = map[string]TokenType{
 	"break":       Break,
 	"continue":    Continue,
 	"fallthrough": Fallthrough,
+	"func":        Func,
 	"my":          My,
 	"class":       Class,
 	"new":         New,
@@ -155,6 +158,7 @@ var Symbols = map[string]TokenType{
 	">=":  GreaterThanOrEqualTo,
 	"<=":  LessThanOrEqualTo,
 	",":   Delimiter,
+	".":   Access,
 	"|>":  Pipe,
 	"?":   QuestionMark,
 	":":   Colon,
@@ -262,6 +266,8 @@ func (tt TokenType) String() string {
 		return "Continue"
 	case Fallthrough:
 		return "Fallthrough"
+	case Func:
+		return "Func"
 	case My:
 		return "My"
 	case Class:

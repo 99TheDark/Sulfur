@@ -53,11 +53,10 @@ type (
 
 	Function struct {
 		Pos    *lexer.Location `json:"-"`
-		Name   string
-		Return Identifier
+		Name   Identifier
 		Params []Param
+		Return Identifier
 		Body   []Expr
-		// Decls possibly
 	}
 
 	Class struct {
@@ -73,9 +72,9 @@ type (
 
 	Enum struct {
 		Pos   *lexer.Location `json:"-"`
-		Name  string
+		Name  Identifier
 		From  Identifier `json:",omitempty"`
-		Elems []string
+		Elems []Identifier
 	}
 
 	Param struct {
@@ -131,7 +130,7 @@ type (
 	Assignment struct {
 		Name  Identifier
 		Value Expr
-		Op    *lexer.Token
+		Op    lexer.Token
 	}
 
 	IncDec struct {
