@@ -5,7 +5,7 @@ if y > x {
     println("Hi there!")
 }
 
-add(int x, int y) (int) {
+func add(int x, int y) (int) {
     return x + y
 }
 

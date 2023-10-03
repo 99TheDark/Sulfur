@@ -1,5 +1,7 @@
 package lexer
 
+import "fmt"
+
 type Location struct {
 	Row int
 	Col int
@@ -8,6 +10,10 @@ type Location struct {
 
 func (loc Location) Get() (row, col, idx int) {
 	return loc.Row, loc.Col, loc.Idx
+}
+
+func (loc *Location) MarshalJSON() ([]byte, error) {
+	return []byte("\"" + fmt.Sprint(loc.Row) + ":" + fmt.Sprint(loc.Col) + " #" + fmt.Sprint(loc.Idx) + "\""), nil
 }
 
 func CreateLocation(row, col, idx int) *Location {

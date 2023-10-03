@@ -1,6 +1,7 @@
 package compiler
 
 import (
+	"sulfur/src/ast"
 	"sulfur/src/libc"
 	"sulfur/src/parser"
 	"sulfur/src/utils"
@@ -9,7 +10,7 @@ import (
 	"github.com/llir/llvm/ir/types"
 )
 
-func Assemble(ast parser.Program) string {
+func Assemble(ast ast.Program) string {
 	mod := ir.NewModule()
 
 	parser.String = mod.NewTypeDef("type.string", types.NewStruct(

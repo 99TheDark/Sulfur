@@ -19,7 +19,7 @@
 
     }
 
-    someFunc() {
+    func someFunc() {
 
     }
     ```
@@ -37,12 +37,12 @@
     ```
 - Functions
     ```
-    // func_name(params) (return) {}
-    add(int a, int b) (int) { // parameter: type name
+    // func name(params) (return) {}
+    func add(int a, int b) (int) { // parameter: type name
         return a + b // return a value
     }
     
-    varargs(int x, int y, string ...names, float z) {
+    func varargs(int x, int y, string ...names, float z) {
         println((x + y) * z, ...names)
     }
     
@@ -50,7 +50,7 @@
     varargs(3, 5, "John", "Jeff", "Tim", -4.2)
     
     // Multiple return values
-    combos(int a, int b, int c) (int, int, int, string) {
+    func combos(int a, int b, int c) (int, int, int, string) {
         return a + b, a + c, b + c, "Combos of $(a), $(b), $(c)"
     }
     
@@ -195,7 +195,7 @@
     ```
     // ! Change this syntax so type conversions work as well
     // Extend integers
-    printFloat() {
+    func printFloat() {
         println(float<my>)
     } extends int
 

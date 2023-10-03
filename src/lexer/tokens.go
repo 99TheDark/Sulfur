@@ -30,7 +30,7 @@ const (
 	Number                         // '3',  '.15', '-2', '-6.2'
 	Boolean                        // 'true', 'false'
 	String                         // '"' -> some text -> '"'
-	Assignment                     // operator? -> '='
+	Assignment                     // '='
 	ImplicitDeclaration            // ':='
 	Increment                      // '++'
 	Decrement                      // '--'
@@ -87,6 +87,7 @@ const (
 	Throws                         // 'throws'
 	Catch                          // 'catch'
 	Okay                           // 'okay'
+	Arrow                          // '=>'
 	EOF
 )
 
@@ -132,6 +133,7 @@ var Symbols = map[string]TokenType{
 	")":   CloseParen,
 	"[":   OpenBracket,
 	"]":   CloseBracket,
+	"=":   Assignment,
 	":=":  ImplicitDeclaration,
 	"+":   Addition,
 	"-":   Subtraction,
@@ -159,6 +161,7 @@ var Symbols = map[string]TokenType{
 	"??":  Nullish,
 	"...": Spread,
 	";":   Semicolon,
+	"=>":  Arrow,
 }
 
 func formatValue(value string) string {
@@ -319,6 +322,8 @@ func (tt TokenType) String() string {
 		return "Okay"
 	case EOF:
 		return "EOF"
+	case Arrow:
+		return "Arrow"
 	default:
 		return "Unknown"
 	}

@@ -54,18 +54,6 @@ _println:                               ; @println
 	ret
 	.cfi_endproc
                                         ; -- End function
-	.globl	_.string.add                    ; -- Begin function .string.add
-	.p2align	2
-_.string.add:                           ; @.string.add
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #16
-	.cfi_def_cfa_offset 16
-	mov	x0, sp
-	add	sp, sp, #16
-	ret
-	.cfi_endproc
-                                        ; -- End function
 	.globl	_main                           ; -- Begin function main
 	.p2align	2
 _main:                                  ; @main
@@ -76,10 +64,10 @@ _main:                                  ; @main
 	.cfi_def_cfa_offset 32
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	x8, #16
+	mov	x8, #20
 Lloh0:
 	adrp	x9, l_.str@PAGE
-	movk	x8, #19, lsl #32
+	movk	x8, #20, lsl #32
 Lloh1:
 	add	x9, x9, l_.str@PAGEOFF
 	mov	x0, sp
@@ -93,6 +81,6 @@ Lloh1:
                                         ; -- End function
 	.section	__TEXT,__const
 l_.str:                                 ; @.str
-	.ascii	"Hello, world! \316\265\342\261\236"
+	.ascii	"\033[0;36mHi there!\033[0m"
 
 .subsections_via_symbols

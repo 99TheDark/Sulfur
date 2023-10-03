@@ -29,6 +29,46 @@
     ```
     Operations: `+`, `-`, `*`, `/`, `^`
 <br><br>
+- Array
+    ```
+    x := int[-8, 2, 6, -1, 0, 4]
+    ```
+    Operations: `[]`
+<br><br>
+- Function
+    ```
+    func add(int a, int b) (int) {
+        return a + b
+    }
+    ```
+    Operations: None
+<br><br>
+- Class
+    ```
+    class Person {
+        pub string name
+
+        Person(string name) {
+            my.name = name
+        }
+
+        talk() {
+            println("Hi, my name is $(my.name)!")
+        }
+    }
+    ```
+<br><br>
+- Enum
+    ```
+    enum Season {
+        Winter
+        Spring
+        Summer
+        Fall
+    }
+    ```
+    Operations: None
+<br><br>
 - Range
     ```
     range tenTimes = 1:10

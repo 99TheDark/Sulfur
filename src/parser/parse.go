@@ -6,48 +6,50 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"sulfur/src/ast"
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
-	"sulfur/src/typing"
 	"sulfur/src/utils"
-
-	"github.com/llir/llvm/ir"
 )
 
 type parser struct {
-	tokens []lexer.Token
+	source []lexer.Token
+	size   int
 	idx    int
 }
 
 func (p *parser) at() lexer.Token {
-	return p.tokens[p.idx]
+	return p.source[p.idx]
 }
 
-func (p *parser) peek() lexer.Token {
-	return p.tokens[p.idx+1]
+func (p *parser) peek(ahead int) lexer.Token {
+	if p.idx+ahead > p.size {
+		return p.source[p.size-1]
+	}
+	return p.source[p.idx+ahead]
 }
 
 func (p *parser) eat() lexer.Token {
-	el := p.at()
+	token := p.source[p.idx]
 	p.idx++
-	return el
-}
-
-func (p *parser) expect(typ lexer.TokenType) lexer.Token {
-	token := p.eat()
-	if token.Type != typ {
-		Errors.Error(
-			"Expected "+typ.String()+", but got "+token.Type.String()+" '"+token.Value+"' instead",
-			token.Location,
-		)
-	}
 	return token
 }
 
-func (p *parser) optional(typ lexer.TokenType) {
-	if p.at().Type == typ {
-		p.eat()
+func (p *parser) expect(symbols ...lexer.TokenType) lexer.Token {
+	tok := p.eat()
+	if !utils.Contains(symbols, tok.Type) {
+		length := len(symbols)
+		expected := symbols[0].String()
+		for i := 1; i < length-1; i++ {
+			expected += ", " + symbols[i].String()
+		}
+		if length > 1 {
+			expected += " or " + symbols[length-1].String()
+		}
+
+		Errors.Error("Expected "+expected+", but got "+tok.Type.String()+" instead", tok.Location)
 	}
+	return tok
 }
 
 func (p *parser) is(catagory []lexer.TokenType) bool {
@@ -55,210 +57,361 @@ func (p *parser) is(catagory []lexer.TokenType) bool {
 }
 
 // Statements
-func (p *parser) parseStatement() Statement {
-	switch p.at().Type {
+func (p *parser) parseStmt() ast.Expr {
+	tok := p.at()
+	switch tok.Type {
+	case lexer.Identifier:
+		return p.parseHybrid(true)
 	case lexer.If:
-		return p.parseIfStatement()
+		return p.parseIfStmt()
+	case lexer.For:
+		// TODO: For in
+		return p.parseForLoop()
+	case lexer.While:
+		return p.parseWhileLoop()
+	case lexer.Do:
+		return p.parseDoWhileLoop()
 	}
 
-	Errors.Error("Unknown statement '"+p.at().Value+"'", p.at().Location)
-	return BadStatement{}
+	Errors.Error("Invalid statement", tok.Location)
+	return &ast.BadExpr{
+		Pos: tok.Location,
+	}
 }
 
-func (p *parser) parseBlock() Block {
-	loc := p.expect(lexer.OpenBrace)
-	body := []Statement{}
-	for p.at().Type != lexer.CloseBrace {
-		if stmt := p.parseStatement(); stmt != nil {
-			body = append(body, stmt)
+func (p *parser) parseHybrid(errors bool) ast.Expr {
+	iden := p.parseIdentifier()
+	tok := p.at()
+	switch tok.Type {
+	case lexer.Identifier:
+		name := p.parseIdentifier()
+		p.expect(lexer.Assignment)
+		val := p.parseExpr()
+		return ast.Declaration{
+			Type:  iden,
+			Name:  name,
+			Value: val,
+		}
+	case lexer.ImplicitDeclaration:
+		p.eat()
+		val := p.parseExpr()
+		return ast.ImplicitDecl{
+			Name:  iden,
+			Value: val,
+		}
+	case lexer.Assignment:
+		p.eat()
+		val := p.parseExpr()
+		return ast.Assignment{
+			Name:  iden,
+			Value: val,
+			Op:    nil,
+		}
+	case lexer.Increment, lexer.Decrement:
+		p.eat()
+		return ast.IncDec{
+			Name: iden,
+			Op:   tok,
+		}
+	case lexer.OpenParen:
+		return p.parseGroup()
+	default:
+		p.eat()
+		if utils.Contains(lexer.BinaryOperator, tok.Type) {
+			op := p.eat()
+			val := p.parseExpr()
+			return ast.Assignment{
+				Name:  iden,
+				Value: val,
+				Op:    &op,
+			}
 		}
 	}
-	p.expect(lexer.CloseBrace)
 
-	return Block{
-		loc.Location,
-		body,
-		*typing.NewScope(),
+	if errors {
+		Errors.Error("Incomplete statement", tok.Location)
+	}
+	return &ast.BadExpr{
+		Pos: tok.Location,
 	}
 }
 
-func (p *parser) parseIfStatement() Statement {
-	loc := p.expect(lexer.If)
-	cond := p.parseExpression()
+func (p *parser) parseStmts(ending ...lexer.TokenType) []ast.Expr {
+	ending = append(ending, lexer.EOF)
+	stmts := []ast.Expr{}
+	for !p.is(ending) {
+		if p.at().Type == lexer.NewLine {
+			p.eat()
+			continue
+		}
+		stmts = append(stmts, p.parseStmt())
+
+		if !p.is(ending) {
+			p.expect(lexer.NewLine, lexer.Semicolon)
+		}
+	}
+	p.eat()
+	return stmts
+}
+
+func (p *parser) parseBlock() []ast.Expr {
+	tok := p.expect(lexer.OpenBrace, lexer.Arrow)
+	if tok.Type == lexer.Arrow {
+		return []ast.Expr{p.parseStmt()}
+	} else {
+		return p.parseStmts(lexer.CloseBrace)
+	}
+}
+
+func (p *parser) parseIfStmt() ast.IfStatement {
+	tok := p.expect(lexer.If)
+	cond := p.parseExpr()
 	body := p.parseBlock()
-	return IfStatement{
-		loc.Location,
-		cond,
-		body,
-		Block{},
+	elseBody := []ast.Expr{}
+	if p.at().Type == lexer.Else {
+		p.eat()
+		if p.at().Type == lexer.If {
+			elseBody = []ast.Expr{p.parseIfStmt()}
+		} else {
+			elseBody = p.parseBlock()
+		}
+	}
+
+	return ast.IfStatement{
+		Pos:  tok.Location,
+		Cond: cond,
+		Body: body,
+		Else: elseBody,
+	}
+}
+
+func (p *parser) parseForLoop() ast.ForLoop {
+	tok := p.expect(lexer.For)
+	init := p.parseHybrid(true)
+	p.expect(lexer.NewLine, lexer.Semicolon)
+	comp := p.parseComparison()
+	p.expect(lexer.NewLine, lexer.Semicolon)
+	inc := p.parseHybrid(true)
+	body := p.parseBlock()
+	return ast.ForLoop{
+		Pos:  tok.Location,
+		Init: init,
+		Cond: comp,
+		Inc:  inc,
+		Body: body,
+	}
+}
+
+func (p *parser) parseWhileLoop() ast.WhileLoop {
+	tok := p.expect(lexer.While)
+	cond := p.parseExpr()
+	body := p.parseBlock()
+	return ast.WhileLoop{
+		Pos:  tok.Location,
+		Cond: cond,
+		Body: body,
+	}
+}
+
+func (p *parser) parseDoWhileLoop() ast.DoWhileLoop {
+	tok := p.expect(lexer.Do)
+	body := p.parseBlock()
+	p.expect(lexer.While)
+	cond := p.parseExpr()
+	return ast.DoWhileLoop{
+		Pos:  tok.Location,
+		Body: body,
+		Cond: cond,
 	}
 }
 
 // Expressions
-func (p *parser) parseExpression() Statement {
-	return p.parseImplicitDeclaration()
+func (p *parser) parseExpr() ast.Expr {
+	return p.parseLogical()
 }
 
-func (p *parser) parseImplicitDeclaration() Statement {
-	if p.at().Type == lexer.Identifier && p.peek().Type == lexer.ImplicitDeclaration {
-		iden := p.parseIdentifier()
-		loc := p.eat()
-		val := p.parseComparison()
-		return ImplicitDeclaration{
-			loc.Location,
-			iden,
-			val,
-			NoType(),
-		}
-	}
-	return p.parseComparison()
-}
+func (p *parser) parseLogical() ast.Expr {
+	left := p.parseComparison()
+	for p.is(lexer.Logical) {
+		tok := p.eat()
+		right := p.parseComparison()
 
-func (p *parser) parseComparison() Statement {
-	left := p.parseAdditive()
-	if p.is(Comparator) {
-		token := p.eat()
-		return Comparison{
-			token.Location,
-			left,
-			p.parseAdditive(),
-			token.Type,
-			NoType(),
+		left = ast.BinaryOp{
+			Left:  left,
+			Right: right,
+			Op:    tok,
 		}
 	}
 	return left
 }
 
-func (p *parser) parseAdditive() Statement {
+func (p *parser) parseComparison() ast.Expr {
+	left := p.parseAdditive()
+	if p.is(lexer.Comparator) {
+		tok := p.expect(lexer.Comparator...)
+		return ast.Comparison{
+			Left:  left,
+			Right: p.parseAdditive(),
+			Comp:  tok,
+		}
+	}
+	return left
+}
+
+func (p *parser) parseAdditive() ast.Expr {
 	left := p.parseMultiplicative()
-	for p.at().Type == lexer.Addition || p.at().Type == lexer.Subtraction {
-		token := p.eat()
+	for p.is(lexer.Additive) {
+		tok := p.eat()
 		right := p.parseMultiplicative()
 
-		left = BinaryOperation{
-			token.Location,
-			left,
-			right,
-			token.Type,
-			NoType(),
+		left = ast.BinaryOp{
+			Left:  left,
+			Right: right,
+			Op:    tok,
 		}
 	}
 	return left
 }
 
-func (p *parser) parseMultiplicative() Statement {
-	left := p.parsePrimary()
-	for p.at().Type == lexer.Multiplication || p.at().Type == lexer.Division {
-		token := p.eat()
-		right := p.parsePrimary()
+func (p *parser) parseMultiplicative() ast.Expr {
+	left := p.parseExponential()
+	for p.is(lexer.Multiplicative) {
+		tok := p.eat()
+		right := p.parseExponential()
 
-		left = BinaryOperation{
-			token.Location,
-			left,
-			right,
-			token.Type,
-			NoType(),
+		left = ast.BinaryOp{
+			Left:  left,
+			Right: right,
+			Op:    tok,
 		}
 	}
 	return left
 }
 
-func (p *parser) parsePrimary() Statement {
-	switch p.at().Type {
+func (p *parser) parseExponential() ast.Expr {
+	left := p.parseUnary()
+	for p.is(lexer.Exponential) {
+		tok := p.eat()
+		right := p.parseUnary()
+
+		left = ast.BinaryOp{
+			Left:  left,
+			Right: right,
+			Op:    tok,
+		}
+	}
+	return left
+}
+
+func (p *parser) parseUnary() ast.Expr {
+	// TODO: Add
+	return p.parsePrimary()
+}
+
+func (p *parser) parsePrimary() ast.Expr {
+	tok := p.at()
+	switch tok.Type {
 	case lexer.Boolean:
 		return p.parseBoolean()
 	case lexer.Number:
 		return p.parseNumber()
 	case lexer.String:
 		return p.parseString()
+	case lexer.OpenParen:
+		return p.parseGroup()
 	case lexer.Identifier:
+		oldIdx := p.idx
+		hyrbid := p.parseHybrid(false)
+		if ast.Valid(hyrbid) {
+			return hyrbid
+		}
+		p.idx = oldIdx
+
 		return p.parseIdentifier()
 	}
 
 	Errors.Error("Unknown token '"+p.at().Value+"'", p.at().Location)
-	return BadStatement{}
+	return ast.BadExpr{
+		Pos: tok.Location,
+	}
 }
 
-func (p *parser) parseBoolean() BooleanLiteral {
+func (p *parser) parseBoolean() ast.Boolean {
 	token := p.expect(lexer.Boolean)
 	val := false
 	if token.Value == "true" {
 		val = true
 	}
 
-	return BooleanLiteral{
-		token.Location,
-		val,
-		NoType(),
+	return ast.Boolean{
+		Pos:   token.Location,
+		Value: val,
 	}
 }
 
-func (p *parser) parseNumber() Statement {
-	token := p.expect(lexer.Number)
-	if f64, err := strconv.ParseFloat(token.Value, 64); err == nil {
+func (p *parser) parseNumber() ast.Expr {
+	tok := p.expect(lexer.Number)
+	if f64, err := strconv.ParseFloat(tok.Value, 64); err == nil {
 		if math.Mod(f64, 1) == 0 {
-			return IntegerLiteral{
-				token.Location,
-				int64(f64),
-				NoType(),
+			return ast.Integer{
+				Pos:   tok.Location,
+				Value: int64(f64),
 			}
 		} else {
-			return FloatLiteral{
-				token.Location,
-				f64,
-				NoType(),
+			return ast.Float{
+				Pos:   tok.Location,
+				Value: f64,
 			}
 		}
 	}
 
-	Errors.Error("Invalid number", token.Location)
-	return BadStatement{}
-}
-
-func (p *parser) parseString() StringLiteral {
-	token := p.expect(lexer.String)
-	return StringLiteral{
-		new(Program),
-		token.Location,
-		token.Value,
-		NoType(),
+	Errors.Error("Invalid number", tok.Location)
+	return ast.BadExpr{
+		Pos: tok.Location,
 	}
 }
 
-func (p *parser) parseIdentifier() Identifier {
-	token := p.expect(lexer.Identifier)
-	return Identifier{
-		token.Location,
-		typing.NewScope(),
-		token.Value,
-		NoType(),
+func (p *parser) parseString() ast.String {
+	tok := p.expect(lexer.String)
+	return ast.String{
+		Pos:   tok.Location,
+		Value: tok.Value,
 	}
 }
 
-func Parse(source string, tokens *[]lexer.Token) Program {
-	parser := parser{*tokens, 0}
-	statements := []Statement{}
-	for parser.at().Type != lexer.EOF {
-		if stmt := parser.parseStatement(); stmt != nil {
-			statements = append(statements, stmt)
-		}
+func (p *parser) parseIdentifier() ast.Identifier {
+	tok := p.expect(lexer.Identifier)
+	return ast.Identifier{
+		Pos:  tok.Location,
+		Name: tok.Value,
 	}
-
-	prog := Program{
-		&[]*FunctionLiteral{},
-		make(map[*FunctionLiteral]*ir.Func),
-		&[]*StringLiteral{},
-		Block{
-			lexer.NoLocation,
-			statements,
-			*typing.NewScope(),
-		},
-	}
-
-	return prog
 }
 
-func Save(ast any, spaces int, location string) error {
+func (p *parser) parseGroup() ast.Expr {
+	p.expect(lexer.OpenParen)
+	body := p.parseExpr()
+	p.expect(lexer.CloseParen)
+	return body
+}
+
+func Parse(source string, tokens *[]lexer.Token) *ast.Program {
+	p := parser{
+		*tokens,
+		len(*tokens),
+		0,
+	}
+
+	prog := ast.Program{
+		Functions: []*ast.Function{},
+		Classes:   []*ast.Class{},
+		Strings:   []*ast.String{},
+		Scope:     *ast.NewScope(),
+		Body:      p.parseStmts(),
+	}
+	return &prog
+}
+
+func Save(prog *ast.Program, spaces int, path string) error {
 	buf := new(bytes.Buffer)
 	enc := json.NewEncoder(buf)
 
@@ -267,10 +420,10 @@ func Save(ast any, spaces int, location string) error {
 		enc.SetIndent("", strings.Repeat(" ", spaces))
 	}
 
-	err := enc.Encode(ast)
+	err := enc.Encode(prog)
 	if err != nil {
 		return err
 	}
 
-	return utils.SaveFile(buf.Bytes(), location)
+	return utils.SaveFile(buf.Bytes(), path)
 }

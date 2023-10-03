@@ -1,24 +1,23 @@
-package typing
+package ast
 
 import (
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/value"
 )
 
-type VariableType string
+type VariableType int
 
 const (
-	Local  VariableType = "local"
-	Global VariableType = "global"
-	Param  VariableType = "param"
+	Local VariableType = iota
+	Global
+	Parameter
 )
 
 type Variable struct {
 	// TODO: ids in each block, example variable name: func_add.if_130956.name
-	Type       string
-	Underlying UnderlyingType
-	VarType    VariableType
-	Value      *value.Value
+	Type   string
+	Status VariableType
+	Value  *value.Value
 }
 
 type Scope struct {
@@ -35,6 +34,6 @@ func NewScope() *Scope {
 	}
 }
 
-func NewVar(typ string, under UnderlyingType, vtyp VariableType) *Variable {
-	return &Variable{typ, under, vtyp, new(value.Value)}
+func NewVariable(typ string, status VariableType) *Variable {
+	return &Variable{typ, status, new(value.Value)}
 }

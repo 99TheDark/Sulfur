@@ -211,7 +211,12 @@ func Lex(source string) *[]Token {
 			l.iden = l.loc
 		}
 	}
-	l.identifier()
+	if l.mode == None {
+		l.identifier()
+	} else {
+		remaining := l.get(l.begin, l.loc.Idx-l.begin.Idx)
+		l.add(l.mode, remaining)
+	}
 
 	l.new(EOF, "EOF")
 
@@ -235,8 +240,8 @@ func Stringify(tokens *[]Token) string {
 	return str + "}"
 }
 
-func GetSourceCode(location string) (string, error) {
-	content, err := os.ReadFile(location)
+func GetSourceCode(path string) (string, error) {
+	content, err := os.ReadFile(path)
 	if err != nil {
 		return "", err
 	}
@@ -244,6 +249,6 @@ func GetSourceCode(location string) (string, error) {
 	return string(content), nil
 }
 
-func Save(tokens *[]Token, location string) error {
-	return utils.SaveFile([]byte(Stringify(tokens)), location)
+func Save(tokens *[]Token, path string) error {
+	return utils.SaveFile([]byte(Stringify(tokens)), path)
 }
