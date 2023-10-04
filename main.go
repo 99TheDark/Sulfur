@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"sulfur/src/checker"
 	"sulfur/src/errors"
 	"sulfur/src/lexer"
 	"sulfur/src/parser"
@@ -29,4 +30,6 @@ func main() {
 	if err := parser.Save(ast, 1, "io/ast.json"); err != nil {
 		log.Fatalln(err)
 	}
+
+	checker.TypeCheck(ast)
 }

@@ -2,7 +2,6 @@ package compiler
 
 import (
 	"sulfur/src/ast"
-	"sulfur/src/libc"
 	"sulfur/src/parser"
 	"sulfur/src/utils"
 
@@ -19,8 +18,6 @@ func Assemble(ast ast.Program) string {
 	))
 
 	mod.SourceFilename = "script.sulfur"
-
-	libc.Builtins(mod)
 
 	main := mod.NewFunc("main", types.Void)
 	bl := main.NewBlock("entry")

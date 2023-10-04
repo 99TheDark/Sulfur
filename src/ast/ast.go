@@ -13,12 +13,17 @@ type (
 		Functions []*Function `json:"-"`
 		Classes   []*Class    `json:"-"`
 		Strings   []*String   `json:"-"`
-		Scope     Scope       `json:"-"`
-		Body      []Expr
+		Contents  Block
 	}
 
 	BadExpr struct {
 		Pos *lexer.Location `json:"-"`
+	}
+
+	Block struct {
+		Pos   *lexer.Location `json:"-"`
+		Body  []Expr
+		Scope Scope
 	}
 
 	Identifier struct {
@@ -48,7 +53,7 @@ type (
 
 	Array struct {
 		Type  Identifier
-		Items []Expr
+		Items Block
 	}
 
 	Function struct {
@@ -56,12 +61,12 @@ type (
 		Name   Identifier
 		Params []Param
 		Return Identifier
-		Body   []Expr
+		Body   Block
 	}
 
 	Class struct {
 		Pos         *lexer.Location `json:"-"`
-		Name        string
+		Name        Identifier
 		Extends     []Identifier `json:",omitempty"`
 		Fields      []Field
 		Constuctor  Function `json:",omitempty"`
@@ -140,7 +145,7 @@ type (
 
 	FunctionCall struct {
 		Func   Identifier
-		Params []Expr
+		Params Block
 	}
 
 	TypeCast struct {
@@ -151,8 +156,8 @@ type (
 	IfStatement struct {
 		Pos  *lexer.Location `json:"-"`
 		Cond Expr
-		Body []Expr
-		Else []Expr
+		Body Block
+		Else Block
 	}
 
 	ForLoop struct {
@@ -160,25 +165,18 @@ type (
 		Init Expr
 		Cond Expr
 		Inc  Expr
-		Body []Expr
-	}
-
-	ForInLoop struct {
-		Pos      *lexer.Location `json:"-"`
-		Vals     []Expr
-		Iterable Expr
-		Body     []Expr
+		Body Block
 	}
 
 	WhileLoop struct {
 		Pos  *lexer.Location `json:"-"`
 		Cond Expr
-		Body []Expr
+		Body Block
 	}
 
 	DoWhileLoop struct {
 		Pos  *lexer.Location `json:"-"`
-		Body []Expr
+		Body Block
 		Cond Expr
 	}
 
@@ -190,6 +188,7 @@ type (
 
 func (x Program) Loc() *lexer.Location      { return lexer.NoLocation }
 func (x BadExpr) Loc() *lexer.Location      { return x.Pos }
+func (x Block) Loc() *lexer.Location        { return x.Pos }
 func (x Identifier) Loc() *lexer.Location   { return x.Pos }
 func (x Integer) Loc() *lexer.Location      { return x.Pos }
 func (x Float) Loc() *lexer.Location        { return x.Pos }
@@ -213,7 +212,6 @@ func (x FunctionCall) Loc() *lexer.Location { return x.Func.Pos }
 func (x TypeCast) Loc() *lexer.Location     { return x.Type.Pos }
 func (x IfStatement) Loc() *lexer.Location  { return x.Pos }
 func (x ForLoop) Loc() *lexer.Location      { return x.Pos }
-func (x ForInLoop) Loc() *lexer.Location    { return x.Pos }
 func (x WhileLoop) Loc() *lexer.Location    { return x.Pos }
 func (x DoWhileLoop) Loc() *lexer.Location  { return x.Pos }
 func (x Return) Loc() *lexer.Location       { return x.Pos }

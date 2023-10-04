@@ -1,53 +1,9 @@
-if x <= 50.3 {
-    for i := 0; i < 10; i++ {
-        x += 1
+if x < 5 {
+    if true {
+        if false {
+
+        }
     }
-} else if true {
-    println("Hi")
 } else {
-    z++
-    y *= z
-}
-
-string a = "Hello"
-int b = 5
-
-while b > 2 {
-    println(b)
-    b--
-}
-
-int age = 0
-do {
-    age = prompt("How old are you?")
-} while age <= 0 & age >= 120
-
-enum Month {
-    January
-    February
-    March
-    April
-    May
-    June
-    July
-    August
-    September
-    October
-    November
-    December
-}
-
-enum SummerMonth from Month {
-    June
-    July
-    August
-    September
-}
-
-func add(int a, int b) (int) {
-    return a + b
-}
-
-func doSomething() {
-    xyz := (abc * 3 - 2) / -5 + 1 % 6 ^ 8
+    println("Hiiiiii")
 }
