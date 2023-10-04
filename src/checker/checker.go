@@ -1,19 +1,30 @@
 package checker
 
 import (
-	"fmt"
 	"sulfur/src/ast"
 )
 
 type checker struct {
 	program *ast.Program
-	typ     map[*ast.Expr]string
+	typ     map[*ast.Expr]Type
 }
 
-func TypeCheck(program *ast.Program) {
+func (c *checker) get(x *ast.Expr) Type {
+	if typ, ok := c.typ[x]; ok {
+		return typ
+	}
+	return Void
+}
+
+func (c *checker) set(x *ast.Expr, typ Type) {
+	c.typ[x] = typ
+}
+
+func TypeCheck(program *ast.Program) map[*ast.Expr]Type {
 	c := checker{
 		program,
-		make(map[*ast.Expr]string),
+		make(map[*ast.Expr]Type),
 	}
-	fmt.Println(c)
+	c.inferBlock(program.Contents)
+	return c.typ
 }

@@ -1,9 +1,12 @@
 if x < 5 {
     if true {
         if false {
-
+            x := 5
         }
+        y := 3
     }
+    abc := "Hey" + " there"
+    k := !true & false | (true & false)
 } else {
     println("Hiiiiii")
 }
