@@ -6,25 +6,29 @@ import (
 
 type checker struct {
 	program *ast.Program
-	typ     map[*ast.Expr]Type
+	top     *ast.Scope
+	typ     map[*ast.Expr]ast.Type
 }
 
-func (c *checker) get(x *ast.Expr) Type {
+func (c *checker) get(x *ast.Expr) ast.Type {
 	if typ, ok := c.typ[x]; ok {
 		return typ
 	}
-	return Void
+	return ast.VoidType
 }
 
-func (c *checker) set(x *ast.Expr, typ Type) {
+func (c *checker) set(x *ast.Expr, typ ast.Type) {
 	c.typ[x] = typ
 }
 
-func TypeCheck(program *ast.Program) map[*ast.Expr]Type {
+func TypeCheck(program *ast.Program) map[*ast.Expr]ast.Type {
 	c := checker{
 		program,
-		make(map[*ast.Expr]Type),
+		&program.Contents.Scope,
+		make(map[*ast.Expr]ast.Type),
 	}
-	c.inferBlock(program.Contents)
+	for _, x := range program.Contents.Body {
+		c.inferStmt(x)
+	}
 	return c.typ
 }

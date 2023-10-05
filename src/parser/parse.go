@@ -65,15 +65,16 @@ func (p *parser) block(loc *lexer.Location, body []ast.Expr) ast.Block {
 	return ast.Block{
 		Pos:   loc,
 		Body:  body,
-		Scope: *scope,
+		Scope: scope,
 	}
 }
 
 func Parse(source string, tokens *[]lexer.Token) *ast.Program {
+	scope := ast.NewScope()
 	p := parser{
 		*tokens,
 		len(*tokens),
-		nil,
+		&scope,
 		0,
 	}
 
@@ -90,10 +91,11 @@ func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 		Functions: []*ast.Function{},
 		Classes:   []*ast.Class{},
 		Strings:   []*ast.String{},
-		Contents: p.block(
-			lexer.NoLocation,
-			body,
-		),
+		Contents: ast.Block{
+			Pos:   lexer.NoLocation,
+			Body:  body,
+			Scope: scope,
+		},
 	}
 	return &prog
 }

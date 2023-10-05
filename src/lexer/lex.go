@@ -54,7 +54,7 @@ func (l *lexer) next(count int) string {
 }
 
 func (l *lexer) addAt(tt TokenType, value string, loc Location) {
-	token := CreateToken(
+	token := NewToken(
 		tt,
 		value,
 		loc.Row,

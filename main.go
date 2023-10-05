@@ -24,7 +24,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	errors.Errors = errors.New(code, *unfiltered)
+	errors.Errors = errors.New(code)
 
 	ast := parser.Parse(code, tokens)
 	if err := parser.Save(ast, 1, "io/ast.json"); err != nil {

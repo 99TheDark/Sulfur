@@ -23,7 +23,7 @@ type (
 	Block struct {
 		Pos   *lexer.Location `json:"-"`
 		Body  []Expr
-		Scope Scope
+		Scope Scope // `json:"-"`
 	}
 
 	Identifier struct {
@@ -53,7 +53,7 @@ type (
 
 	Array struct {
 		Type  Identifier
-		Items Block
+		Items Block // TODO: Change from block to []Expr
 	}
 
 	Function struct {
@@ -221,4 +221,11 @@ func Valid(expr Expr) bool {
 		return false
 	}
 	return true
+}
+
+func Empty(expr Expr) bool {
+	if expr.Loc() == (*lexer.Location)(nil) {
+		return true
+	}
+	return false
 }

@@ -42,7 +42,6 @@ func (p *parser) parseHybrid(errors bool) ast.Expr {
 		name := p.parseIdentifier()
 		p.expect(lexer.Assignment)
 		val := p.parseExpr()
-		p.top.Vars[iden.Name] = ast.Variable{} // TODO: Fill variable
 		return ast.Declaration{
 			Type:  iden,
 			Name:  name,
@@ -51,7 +50,6 @@ func (p *parser) parseHybrid(errors bool) ast.Expr {
 	case lexer.ImplicitDeclaration:
 		p.eat()
 		val := p.parseExpr()
-		p.top.Vars[iden.Name] = ast.Variable{} // TODO: Fill variable
 		return ast.ImplicitDecl{
 			Name:  iden,
 			Value: val,
@@ -119,7 +117,7 @@ func (p *parser) parseBlock() ast.Block {
 	} else {
 		scope := ast.NewScope()
 		scope.Parent = p.top
-		p.top = scope
+		p.top = &scope
 
 		stmts := []ast.Expr{}
 		p.parseStmts(
@@ -134,7 +132,7 @@ func (p *parser) parseBlock() ast.Block {
 		return ast.Block{
 			Pos:   tok.Location,
 			Body:  stmts,
-			Scope: *scope,
+			Scope: scope,
 		}
 	}
 }
@@ -206,10 +204,17 @@ func (p *parser) parseIfStmt() ast.IfStatement {
 	if p.at().Type == lexer.Else {
 		elsePos := p.eat()
 		if p.at().Type == lexer.If {
-			elseBody = p.block(
-				elsePos.Location,
-				[]ast.Expr{p.parseIfStmt()},
-			)
+			scope := ast.NewScope()
+			scope.Parent = p.top
+			p.top = &scope
+			stmt := p.parseIfStmt()
+			p.top = scope.Parent
+
+			elseBody = ast.Block{
+				Pos:   elsePos.Location,
+				Body:  []ast.Expr{stmt},
+				Scope: scope,
+			}
 		} else {
 			elseBody = p.parseBlock()
 		}

@@ -13,53 +13,32 @@ const CodeBuffer int = 4
 var Errors ErrorGenerator
 
 type ErrorGenerator struct {
-	source []rune
-	tokens []lexer.Token
+	lines []string
 }
 
-func (gen *ErrorGenerator) final() lexer.Token {
-	return gen.tokens[len(gen.tokens)-1]
+func size(num int) int {
+	return len(fmt.Sprint(num))
 }
 
-func (gen *ErrorGenerator) rowStart(row int) int {
-	if row < 0 {
-		return 0
-	}
-
-	for _, token := range gen.tokens {
-		if token.Location.Row == row {
-			return token.Location.Idx
-		}
-	}
-
-	return gen.final().Location.Idx
-}
-
-func (gen *ErrorGenerator) rowEnd(row int) int {
-	idx := gen.rowStart(row+1) - 1
-	if gen.source[idx] == '\n' {
-		return idx - 1
-	} else {
-		return idx
-	}
-}
-
-// TODO: Add line numbers on the left-hand side
-func (gen *ErrorGenerator) Error(msg string, loc *lexer.Location) string {
+func (gen *ErrorGenerator) Error(msg string, loc *lexer.Location) {
 	row, col, _ := loc.Get()
 
-	start, end := gen.rowStart(row-4), gen.rowEnd(row)
-	err := "\n" + string(gen.source[start:end+1]) + "\n"
+	numSize := size(row)
 
-	sidebuf := strings.Repeat(" ", utils.Max(0, col))
+	err := "\n"
+	for i := utils.Max(row-4, 0); i < row; i++ {
+		err += fmt.Sprint(i+1) + ". " + strings.Repeat(" ", numSize-size(i+1))
+		err += gen.lines[i] + "\n"
+	}
+
+	sidebuf := strings.Repeat(" ", utils.Max(0, numSize+col+2))
 	err += sidebuf + "^\n"
 
 	err += msg + " (" + fmt.Sprint(row+1) + ":" + fmt.Sprint(col+1) + ")\n"
 
 	log.Fatalln(err)
-	return err
 }
 
-func New(source string, tokens []lexer.Token) ErrorGenerator {
-	return ErrorGenerator{[]rune(source), tokens}
+func New(source string) ErrorGenerator {
+	return ErrorGenerator{strings.Split(source, "\n")}
 }

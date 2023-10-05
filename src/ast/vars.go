@@ -1,6 +1,9 @@
 package ast
 
 import (
+	. "sulfur/src/errors"
+	"sulfur/src/lexer"
+
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/value"
 )
@@ -15,7 +18,7 @@ const (
 
 type Variable struct {
 	// TODO: ids in each block, example variable name: func_add.if_130956.name
-	Type   string
+	Type   Type
 	Status VariableType
 	Value  *value.Value
 }
@@ -26,14 +29,24 @@ type Scope struct {
 	Vars   map[string]Variable
 }
 
-func NewScope() *Scope {
-	return &Scope{
+func (s *Scope) Lookup(name string, loc *lexer.Location) Variable {
+	if val, ok := s.Vars[name]; ok {
+		return val
+	}
+	if s.Parent == nil {
+		Errors.Error("'"+name+"' is not defined", loc)
+	}
+	return s.Parent.Lookup(name, loc)
+}
+
+func NewScope() Scope {
+	return Scope{
 		new(ir.Block),
-		new(Scope),
+		nil,
 		make(map[string]Variable),
 	}
 }
 
-func NewVariable(typ string, status VariableType) *Variable {
-	return &Variable{typ, status, new(value.Value)}
+func NewVariable(typ Type, status VariableType) Variable {
+	return Variable{typ, status, new(value.Value)}
 }

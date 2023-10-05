@@ -93,14 +93,16 @@
     ```
     // Person class
     class Person {
+        // pub = public, readable and writable
+        // pri = private, unreadable and unwritable
+        // val = value/readonly, readable and unwriteable 
         val string name
         pub int    age
-        pub int    days_old
-        pri
+        pri int    days_old
 
         // Constructor, ~param => my.param = param
         Person(string ~name, int ~age) {
-            // my => this
+            // my is this
             my.days_old = age * 365
         }
 
@@ -119,7 +121,7 @@
         int    grade
         string school
 
-        // ! Add th / rd / nd / st suffixes after private/public syntax is created
+        // TODO: Add th / rd / nd / st suffixes after private/public syntax is created
 
         Student(string ~name, int ~age, int ~grade, string ~school) {}
 
@@ -193,7 +195,7 @@
     ```
 - Extending Types
     ```
-    // ! Change this syntax so type conversions work as well
+    // TODO: Change this syntax to prototyping / extending classes
     // Extend integers
     func printFloat() {
         println(float<my>)
@@ -368,6 +370,6 @@
         catch FileError.AccessDenied {
             println("File Error: Access deined")
         }
-        // ! success?
+        // TODO: Add success
     }
     ```

@@ -54,12 +54,15 @@ const (
 	LessThanOrEqualTo              // '<='
 	Delimiter                      // ','
 	Access                         // '.'
+	Index                          // '[]'
+	Module                         // 'mod'
 	Return                         // 'return'
 	Pipe                           // '|>'
 	Break                          // 'break'
 	Continue                       // 'continue'
 	Fallthrough                    // 'fallthrough'
 	Func                           // 'func'
+	Defer                          // 'defer'
 	My                             // 'my'
 	Class                          // 'class'
 	New                            // 'new'
@@ -90,6 +93,7 @@ const (
 	Catch                          // 'catch'
 	Okay                           // 'okay'
 	Arrow                          // '=>'
+	Atsign                         // '@'
 	EOF
 )
 
@@ -97,11 +101,13 @@ var Keywords = map[string]TokenType{
 	"true":        Boolean,
 	"false":       Boolean,
 	"is":          Is,
+	"mod":         Module,
 	"return":      Return,
 	"break":       Break,
 	"continue":    Continue,
 	"fallthrough": Fallthrough,
 	"func":        Func,
+	"defer":       Defer,
 	"my":          My,
 	"class":       Class,
 	"new":         New,
@@ -159,6 +165,7 @@ var Symbols = map[string]TokenType{
 	"<=":  LessThanOrEqualTo,
 	",":   Delimiter,
 	".":   Access,
+	"[]":  Index,
 	"|>":  Pipe,
 	"?":   QuestionMark,
 	":":   Colon,
@@ -166,17 +173,18 @@ var Symbols = map[string]TokenType{
 	"...": Spread,
 	";":   Semicolon,
 	"=>":  Arrow,
+	"@":   Atsign,
 }
 
 func formatValue(value string) string {
 	return strings.ReplaceAll(value, "\n", "\\n")
 }
 
-func CreateToken(tokentype TokenType, value string, row, col, idx int) *Token {
+func NewToken(tokentype TokenType, value string, row, col, idx int) *Token {
 	return &Token{
 		tokentype,
 		value,
-		CreateLocation(row, col, idx),
+		NewLocation(row, col, idx),
 	}
 }
 

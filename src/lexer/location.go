@@ -16,7 +16,7 @@ func (loc *Location) MarshalJSON() ([]byte, error) {
 	return []byte("\"" + fmt.Sprint(loc.Row) + ":" + fmt.Sprint(loc.Col) + " #" + fmt.Sprint(loc.Idx) + "\""), nil
 }
 
-func CreateLocation(row, col, idx int) *Location {
+func NewLocation(row, col, idx int) *Location {
 	return &Location{
 		row,
 		col,
@@ -24,4 +24,4 @@ func CreateLocation(row, col, idx int) *Location {
 	}
 }
 
-var NoLocation = CreateLocation(0, 0, 0)
+var NoLocation = NewLocation(0, 0, 0)
