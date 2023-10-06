@@ -66,9 +66,13 @@ const (
 	My                             // 'my'
 	Class                          // 'class'
 	New                            // 'new'
+	Delete                         // 'del'
 	Operator                       // 'operator'
 	To                             // 'to'
 	Extends                        // 'extends'
+	Public                         // 'pub'
+	Private                        // 'pri'
+	Value                          // 'val'
 	From                           // 'from'
 	Enum                           // 'enum'
 	For                            // 'for'
@@ -94,6 +98,7 @@ const (
 	Okay                           // 'okay'
 	Arrow                          // '=>'
 	Atsign                         // '@'
+	Autodef                        // '~'
 	EOF
 )
 
@@ -111,9 +116,13 @@ var Keywords = map[string]TokenType{
 	"my":          My,
 	"class":       Class,
 	"new":         New,
+	"del":         Delete,
 	"operator":    Operator,
 	"to":          To,
 	"extends":     Extends,
+	"pub":         Public,
+	"pri":         Private,
+	"val":         Value,
 	"from":        From,
 	"enum":        Enum,
 	"for":         For,

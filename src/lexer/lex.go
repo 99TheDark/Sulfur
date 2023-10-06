@@ -126,10 +126,9 @@ func (l *lexer) start(mode TokenType, starting string) bool {
 	if l.match(starting) {
 		l.identifier()
 
-		l.move(starting)
-
 		l.begin = l.loc
 		l.mode = mode
+		l.move(starting)
 		return true
 	}
 	return false
@@ -138,7 +137,7 @@ func (l *lexer) start(mode TokenType, starting string) bool {
 func (l *lexer) end(ending string) bool {
 	if l.match(ending) {
 		v := l.get(l.begin, l.loc.Idx-l.begin.Idx)
-		l.add(l.mode, v)
+		l.addAt(l.mode, v, l.begin)
 
 		l.move(ending)
 
@@ -215,7 +214,7 @@ func Lex(source string) *[]Token {
 		l.identifier()
 	} else {
 		remaining := l.get(l.begin, l.loc.Idx-l.begin.Idx)
-		l.add(l.mode, remaining)
+		l.addAt(l.mode, remaining, l.begin)
 	}
 
 	l.new(EOF, "EOF")

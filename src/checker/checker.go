@@ -7,6 +7,7 @@ import (
 type checker struct {
 	program *ast.Program
 	top     *ast.Scope
+	ret     *ast.Func
 	typ     map[*ast.Expr]ast.Type
 }
 
@@ -25,6 +26,7 @@ func TypeCheck(program *ast.Program) map[*ast.Expr]ast.Type {
 	c := checker{
 		program,
 		&program.Contents.Scope,
+		nil,
 		make(map[*ast.Expr]ast.Type),
 	}
 	for _, x := range program.Contents.Body {

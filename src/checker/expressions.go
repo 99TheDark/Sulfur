@@ -41,7 +41,7 @@ func (c *checker) inferBinaryOp(x ast.BinaryOp) ast.Type {
 	left := c.inferExpr(x.Left)
 	right := c.inferExpr(x.Right)
 	if left != right {
-		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Loc())
+		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Right.Loc())
 	}
 	return left
 }

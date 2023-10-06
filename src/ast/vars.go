@@ -29,6 +29,11 @@ type Scope struct {
 	Vars   map[string]Variable
 }
 
+type Func struct {
+	Parent *Func
+	Return Type
+}
+
 func (s *Scope) Lookup(name string, loc *lexer.Location) Variable {
 	if val, ok := s.Vars[name]; ok {
 		return val

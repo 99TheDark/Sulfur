@@ -69,10 +69,11 @@ type (
 		Name        Identifier
 		Extends     []Identifier `json:",omitempty"`
 		Fields      []Field
-		Constuctor  Function `json:",omitempty"`
-		Destructor  Function `json:",omitempty"`
+		Constuctors []Function `json:",omitempty"`
+		Destructors []Function `json:",omitempty"`
 		Methods     []Function
-		Conversions []Function
+		Conversions []To
+		Operations  []Operation
 	}
 
 	Enum struct {
@@ -83,8 +84,9 @@ type (
 	}
 
 	Param struct {
-		Type Identifier
-		Name Identifier
+		Type    Identifier
+		Name    Identifier
+		Autodef bool
 	}
 
 	Field struct {
@@ -92,6 +94,20 @@ type (
 		Write bool
 		Type  Identifier
 		Name  Identifier
+	}
+
+	To struct {
+		Pos  *lexer.Location `json:"-"`
+		Type Identifier
+		Body Block
+	}
+
+	Operation struct {
+		Pos    *lexer.Location `josn:"-"`
+		Op     *lexer.Token
+		Params []Param
+		Return []Identifier
+		Body   Block
 	}
 
 	BinaryOp struct {
@@ -200,6 +216,8 @@ func (x Class) Loc() *lexer.Location        { return x.Pos }
 func (x Enum) Loc() *lexer.Location         { return x.Pos }
 func (x Param) Loc() *lexer.Location        { return x.Type.Pos }
 func (x Field) Loc() *lexer.Location        { return x.Type.Pos }
+func (x To) Loc() *lexer.Location           { return x.Pos }
+func (x Operation) Loc() *lexer.Location    { return x.Pos }
 func (x BinaryOp) Loc() *lexer.Location     { return x.Left.Loc() }
 func (x UnaryOp) Loc() *lexer.Location      { return x.Value.Loc() }
 func (x Pipe) Loc() *lexer.Location         { return x.Left.Func.Pos }

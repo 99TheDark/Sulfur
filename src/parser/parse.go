@@ -22,7 +22,7 @@ func (p *parser) at() lexer.Token {
 }
 
 func (p *parser) peek(ahead int) lexer.Token {
-	if p.idx+ahead > p.size {
+	if p.idx+ahead >= p.size {
 		return p.source[p.size-1]
 	}
 	return p.source[p.idx+ahead]

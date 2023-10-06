@@ -14,6 +14,8 @@ func (p *parser) parseStmt() ast.Expr {
 		return p.parseHybrid(true)
 	case lexer.Func:
 		return p.parseFunction()
+	case lexer.Class:
+		return p.parseClass()
 	case lexer.Enum:
 		return p.parseEnum()
 	case lexer.If:
@@ -68,19 +70,19 @@ func (p *parser) parseHybrid(errors bool) ast.Expr {
 			Name: iden,
 			Op:   tok,
 		}
-	case lexer.LessThan:
-		p.eat()
-		val := p.parseExpr()
-		p.expect(lexer.GreaterThan)
-		return ast.TypeCast{
-			Type:  iden,
-			Value: val,
-		}
+	/*case lexer.LessThan:
+	p.eat()
+	val := p.parseExpr()
+	p.expect(lexer.GreaterThan)
+	return ast.TypeCast{
+		Type:  iden,
+		Value: val,
+	}*/
 	case lexer.OpenParen:
 		return p.parseGroup()
 	default:
 		op := p.eat()
-		if p.at().Type == lexer.Assignment && utils.Contains(lexer.BinaryOperator, tok.Type) {
+		if p.peek(0).Type == lexer.Assignment && utils.Contains(lexer.BinaryOperator, tok.Type) {
 			p.eat()
 			val := p.parseExpr()
 			return ast.Assignment{
@@ -280,8 +282,9 @@ func (p *parser) parseParam() ast.Param {
 	typ := p.parseIdentifier()
 	name := p.parseIdentifier()
 	return ast.Param{
-		Type: typ,
-		Name: name,
+		Type:    typ,
+		Name:    name,
+		Autodef: false,
 	}
 }
 

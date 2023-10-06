@@ -101,10 +101,12 @@
         pri int    days_old
 
         // Constructor, ~param => my.param = param
-        Person(string ~name, int ~age) {
+        new(string ~name, int ~age) {
             // my is this
             my.days_old = age * 365
         }
+
+        // del() is a destructor
 
         talk() {
             println("Hello, my name is $(my.name).")
@@ -123,9 +125,9 @@
 
         // TODO: Add th / rd / nd / st suffixes after private/public syntax is created
 
-        Student(string ~name, int ~age, int ~grade, string ~school) {}
+        new(string ~name, int ~age, int ~grade, string ~school) {}
 
-        ~Student() {
+        del() {
             println("$(my.name) left $(my.school)")
         }
 
@@ -147,7 +149,7 @@
     class Vec3 {
         int x, y, z
 
-        Vec3(int ~x, int ~y, int ~z) {}
+        new(int ~x, int ~y, int ~z) {}
 
         // Must have either one or two parameters (unary/binary operator)
         operator + (Vec3 a, Vec3 b) (Vec3) {
