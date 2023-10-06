@@ -16,6 +16,8 @@ func (c *checker) inferStmt(expr ast.Expr) {
 		c.inferAssignment(x)
 	case ast.IfStatement:
 		c.inferIfStmt(x)
+	case ast.WhileLoop:
+		c.inferWhileLoop(x)
 	default:
 		fmt.Println("Ignored type inferring statement")
 	}
@@ -39,6 +41,15 @@ func (c *checker) inferIfStmt(x ast.IfStatement) {
 	if !ast.Empty(x.Else) {
 		c.inferBlock(x.Else)
 	}
+}
+
+func (c *checker) inferWhileLoop(x ast.WhileLoop) {
+	cond := c.inferExpr(x.Cond)
+	if cond != ast.BooleanType {
+		Errors.Error("Expected "+ast.BooleanType+", but got "+cond.String()+" instead", x.Cond.Loc())
+	}
+
+	c.inferBlock(x.Body)
 }
 
 func (c *checker) inferDeclaration(x ast.Declaration) {

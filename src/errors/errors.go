@@ -26,7 +26,7 @@ func (gen *ErrorGenerator) Error(msg string, loc *lexer.Location) {
 	numSize := size(row)
 
 	err := "\n"
-	for i := utils.Max(row-4, 0); i < row; i++ {
+	for i := utils.Max(row-4, 0); i <= row; i++ {
 		err += fmt.Sprint(i+1) + ". " + strings.Repeat(" ", numSize-size(i+1))
 		err += gen.lines[i] + "\n"
 	}

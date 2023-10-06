@@ -62,7 +62,7 @@ func (c *checker) inferComparison(x ast.Comparison) ast.Type {
 }
 
 func (c *checker) inferTypeCast(x ast.TypeCast) ast.Type {
-	// TODO: Check if ast.Type can be casted
+	// TODO: Check if type can be casted
 	c.inferExpr(x.Value)
 	return ast.Type(x.Type.Name)
 }

@@ -53,7 +53,7 @@ type (
 
 	Array struct {
 		Type  Identifier
-		Items Block // TODO: Change from block to []Expr
+		Items []Expr
 	}
 
 	Function struct {

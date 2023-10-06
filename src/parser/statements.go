@@ -68,6 +68,14 @@ func (p *parser) parseHybrid(errors bool) ast.Expr {
 			Name: iden,
 			Op:   tok,
 		}
+	case lexer.LessThan:
+		p.eat()
+		val := p.parseExpr()
+		p.expect(lexer.GreaterThan)
+		return ast.TypeCast{
+			Type:  iden,
+			Value: val,
+		}
 	case lexer.OpenParen:
 		return p.parseGroup()
 	default:

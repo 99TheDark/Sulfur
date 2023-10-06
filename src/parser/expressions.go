@@ -3,6 +3,7 @@ package parser
 import (
 	"math"
 	"strconv"
+	"strings"
 	"sulfur/src/ast"
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
@@ -119,7 +120,7 @@ func (p *parser) parsePrimary() ast.Expr {
 		return p.parseIdentifier()
 	}
 
-	Errors.Error("Unknown token '"+p.at().Value+"'", p.at().Location)
+	Errors.Error("Unknown token '"+strings.ReplaceAll(p.at().Value, "\n", "\\n")+"'", p.at().Location)
 	return ast.BadExpr{
 		Pos: tok.Location,
 	}
