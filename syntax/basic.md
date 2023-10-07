@@ -93,14 +93,12 @@
     ```
     // Person class
     class Person {
-        // pub = public, readable and writable
-        // pri = private, unreadable and unwritable
-        // val = value/readonly, readable and unwriteable 
+        // All fields without a visibility modifier are public
         val string name
         pub int    age
         pri int    days_old
 
-        // Constructor, ~param => my.param = param
+        // Constructor, ~param means param is automatically initialized
         new(string ~name, int ~age) {
             // my is this
             my.days_old = age * 365
@@ -108,6 +106,7 @@
 
         // del() is a destructor
 
+        // Automatically public
         talk() {
             println("Hello, my name is $(my.name).")
         }
@@ -120,12 +119,16 @@
 
     // Extend classes
     class Student extends Person {
+        // Static variable
+        stat MaxGrade = 12
+
         int    grade
         string school
 
         // TODO: Add th / rd / nd / st suffixes after private/public syntax is created
 
-        new(string ~name, int ~age, int ~grade, string ~school) {}
+        // Braces omitted since there is no body
+        new(string ~name, int ~age, int ~grade, string ~school)
 
         del() {
             println("$(my.name) left $(my.school)")

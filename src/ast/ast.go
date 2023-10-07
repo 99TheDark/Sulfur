@@ -69,9 +69,9 @@ type (
 		Name        Identifier
 		Extends     []Identifier `json:",omitempty"`
 		Fields      []Field
-		Constuctors []Function `json:",omitempty"`
-		Destructors []Function `json:",omitempty"`
-		Methods     []Function
+		Constuctors []Method `json:",omitempty"`
+		Destructors []Method `json:",omitempty"`
+		Methods     []Method
 		Conversions []To
 		Operations  []Operation
 	}
@@ -84,16 +84,24 @@ type (
 	}
 
 	Param struct {
-		Type    Identifier
-		Name    Identifier
+		Type Identifier
+		Name Identifier
+	}
+
+	NewParam struct {
+		*Param
 		Autodef bool
 	}
 
+	Method struct {
+		*Function
+		Status Visibility
+	}
+
 	Field struct {
-		Read  bool
-		Write bool
-		Type  Identifier
-		Name  Identifier
+		Status Visibility
+		Type   Identifier
+		Name   Identifier
 	}
 
 	To struct {
@@ -215,6 +223,8 @@ func (x Function) Loc() *lexer.Location     { return x.Pos }
 func (x Class) Loc() *lexer.Location        { return x.Pos }
 func (x Enum) Loc() *lexer.Location         { return x.Pos }
 func (x Param) Loc() *lexer.Location        { return x.Type.Pos }
+func (x NewParam) Loc() *lexer.Location     { return x.Type.Pos }
+func (x Method) Loc() *lexer.Location       { return x.Pos }
 func (x Field) Loc() *lexer.Location        { return x.Type.Pos }
 func (x To) Loc() *lexer.Location           { return x.Pos }
 func (x Operation) Loc() *lexer.Location    { return x.Pos }

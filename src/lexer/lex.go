@@ -166,7 +166,7 @@ func Lex(source string) *[]Token {
 				l.start(String, "\"") {
 				continue
 			}
-			if decimal(l.at()) {
+			if l.iden == l.loc && decimal(l.at()) {
 				l.start(Number, "")
 				continue
 			}

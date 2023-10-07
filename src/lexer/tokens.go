@@ -73,6 +73,7 @@ const (
 	Public                         // 'pub'
 	Private                        // 'pri'
 	Value                          // 'val'
+	Static                         // 'stat'
 	From                           // 'from'
 	Enum                           // 'enum'
 	For                            // 'for'
@@ -123,6 +124,7 @@ var Keywords = map[string]TokenType{
 	"pub":         Public,
 	"pri":         Private,
 	"val":         Value,
+	"stat":        Static,
 	"from":        From,
 	"enum":        Enum,
 	"for":         For,

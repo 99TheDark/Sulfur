@@ -9,7 +9,7 @@ Compilation Steps
 - File Reader
 - Lexer
 - Parser 
-- Type Inferrer (REDO)
+- Type Inferrer 
 - LLVM Code Generator (REDO)
 - Assembly Compiler
 - Code Runner
