@@ -94,7 +94,7 @@ type (
 	}
 
 	Method struct {
-		*Function
+		Function
 		Status Visibility
 	}
 
@@ -130,8 +130,8 @@ type (
 	}
 
 	Pipe struct {
-		Left  FunctionCall
-		Right FunctionCall
+		Left  FuncCall
+		Right FuncCall
 	}
 
 	Comparison struct {
@@ -167,9 +167,9 @@ type (
 		Op   lexer.Token
 	}
 
-	FunctionCall struct {
+	FuncCall struct {
 		Func   Identifier
-		Params Block
+		Params []Expr
 	}
 
 	TypeCast struct {
@@ -236,7 +236,7 @@ func (x Declaration) Loc() *lexer.Location  { return x.Type.Pos }
 func (x ImplicitDecl) Loc() *lexer.Location { return x.Name.Pos }
 func (x Assignment) Loc() *lexer.Location   { return x.Name.Pos }
 func (x IncDec) Loc() *lexer.Location       { return x.Name.Pos }
-func (x FunctionCall) Loc() *lexer.Location { return x.Func.Pos }
+func (x FuncCall) Loc() *lexer.Location     { return x.Func.Pos }
 func (x TypeCast) Loc() *lexer.Location     { return x.Type.Pos }
 func (x IfStatement) Loc() *lexer.Location  { return x.Pos }
 func (x ForLoop) Loc() *lexer.Location      { return x.Pos }

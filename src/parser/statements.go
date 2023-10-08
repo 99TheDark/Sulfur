@@ -70,16 +70,29 @@ func (p *parser) parseHybrid(errors bool) ast.Expr {
 			Name: iden,
 			Op:   tok,
 		}
-	/*case lexer.LessThan:
-	p.eat()
-	val := p.parseExpr()
-	p.expect(lexer.GreaterThan)
-	return ast.TypeCast{
-		Type:  iden,
-		Value: val,
-	}*/
+	case lexer.OpenBrace:
+		p.eat()
+		val := p.parseExpr()
+		p.expect(lexer.CloseBrace)
+		return ast.TypeCast{
+			Type:  iden,
+			Value: val,
+		}
 	case lexer.OpenParen:
-		return p.parseGroup()
+		p.eat()
+		params := []ast.Expr{}
+		p.parseStmts(
+			func() {
+				params = append(params, p.parseExpr())
+			},
+			[]lexer.TokenType{lexer.CloseParen},
+			[]lexer.TokenType{lexer.Delimiter},
+			// TODO: Allow newlines
+		)
+		return ast.FuncCall{
+			Func:   iden,
+			Params: params,
+		}
 	default:
 		op := p.eat()
 		if p.peek(0).Type == lexer.Assignment && utils.Contains(lexer.BinaryOperator, tok.Type) {

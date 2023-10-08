@@ -11,9 +11,9 @@ func (p *parser) parseClass() ast.Class {
 	name := p.parseIdentifier()
 	p.expect(lexer.OpenBrace)
 	fields := []ast.Field{}
-	methods := []ast.Function{}
-	news := []ast.Function{}
-	dels := []ast.Function{}
+	methods := []ast.Method{}
+	news := []ast.Method{}
+	dels := []ast.Method{}
 	convs := []ast.To{}
 	opers := []ast.Operation{}
 	p.parseStmts(
@@ -63,25 +63,15 @@ func (p *parser) parseField() ast.Field {
 	status := p.eat()
 	typ := p.parseIdentifier()
 	val := p.parseIdentifier()
-	var read, write bool
-	switch status.Type {
-	case lexer.Public:
-		read, write = true, true
-	case lexer.Private:
-		read, write = false, false
-	case lexer.Value:
-		read, write = true, false
-	}
 
 	return ast.Field{
-		Read:  read,
-		Write: write,
-		Type:  typ,
-		Name:  val,
+		Status: ast.TokenVisibility(status),
+		Type:   typ,
+		Name:   val,
 	}
 }
 
-func (p *parser) parseMethod() ast.Function {
+func (p *parser) parseMethod() ast.Method {
 	name := p.parseIdentifier()
 	p.expect(lexer.OpenParen)
 	params := []ast.Param{}
@@ -102,16 +92,20 @@ func (p *parser) parseMethod() ast.Function {
 
 	body := p.parseBlock()
 
-	return ast.Function{
-		Pos:    name.Pos,
-		Name:   name,
-		Params: params,
-		Return: ret,
-		Body:   body,
+	// TODO: Parse status
+	return ast.Method{
+		Function: ast.Function{
+			Pos:    name.Pos,
+			Name:   name,
+			Params: params,
+			Return: ret,
+			Body:   body,
+		},
+		Status: -1,
 	}
 }
 
-func (p *parser) parseNewDel() ast.Function {
+func (p *parser) parseNewDel() ast.Method {
 	tok := p.eat()
 	params := []ast.Param{}
 	p.expect(lexer.OpenParen)
@@ -123,17 +117,22 @@ func (p *parser) parseNewDel() ast.Function {
 		[]lexer.TokenType{lexer.Delimiter},
 	)
 
+	// TODO: Don't require body on constructor
 	body := p.parseBlock()
 
-	return ast.Function{
-		Pos: tok.Location,
-		Name: ast.Identifier{
-			Pos:  tok.Location,
-			Name: tok.Value,
+	// TODO: Parse status
+	return ast.Method{
+		Function: ast.Function{
+			Pos: tok.Location,
+			Name: ast.Identifier{
+				Pos:  tok.Location,
+				Name: tok.Value,
+			},
+			Params: params,
+			Return: ast.Identifier{},
+			Body:   body,
 		},
-		Params: params,
-		Return: ast.Identifier{},
-		Body:   body,
+		Status: -1,
 	}
 }
 

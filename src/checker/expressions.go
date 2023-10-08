@@ -26,6 +26,8 @@ func (c *checker) inferExpr(expr ast.Expr) ast.Type {
 		return c.inferComparison(x)
 	case ast.TypeCast:
 		return c.inferTypeCast(x)
+	case ast.FuncCall:
+		return c.inferFuncCall(x)
 	default:
 		fmt.Println("Ignored type inferring expression")
 		return ast.VoidType
@@ -65,4 +67,14 @@ func (c *checker) inferTypeCast(x ast.TypeCast) ast.Type {
 	// TODO: Check if type can be casted
 	c.inferExpr(x.Value)
 	return ast.Type(x.Type.Name)
+}
+
+func (c *checker) inferFuncCall(x ast.FuncCall) ast.Type {
+	for _, fun := range c.program.Functions {
+		if fun.Name.Name == x.Func.Name {
+			// TODO: Check if parameters are correct
+			return ast.Type(fun.Return.Name)
+		}
+	}
+	return ast.VoidType
 }

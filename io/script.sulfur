@@ -2,6 +2,8 @@ func add(int a, int b) (int) {
     return a + b
 }
 
+x := string{3 + 5 * add(6, -2)}
+
 class Person {
     val string name
     pub int    age
@@ -23,7 +25,7 @@ class Person {
         return "$(my.name), $(my.age) years old"
     }
 
-    operator == (Person p1, Person p2) (bool) {
+    /*operator == (Person p1, Person p2) (bool) {
         if p1.val == p2.val {
             return true
         }
@@ -31,5 +33,5 @@ class Person {
             return true
         }
         return false
-    }
+    }*/
 }
