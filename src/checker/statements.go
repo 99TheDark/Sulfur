@@ -18,6 +18,8 @@ func (c *checker) inferStmt(expr ast.Expr) {
 		c.inferIncDec(x)
 	case ast.Function:
 		c.inferFunction(x)
+	case ast.Class:
+		c.inferClass(x)
 	case ast.IfStatement:
 		c.inferIfStmt(x)
 	case ast.ForLoop:

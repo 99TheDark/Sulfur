@@ -1,6 +1,9 @@
 package ast
 
-import "sulfur/src/lexer"
+import (
+	"encoding/json"
+	"sulfur/src/lexer"
+)
 
 type Visibility int
 
@@ -10,15 +13,37 @@ const (
 	Value
 )
 
-func TokenVisibility(t lexer.Token) Visibility {
-	switch t.Type {
-	case lexer.Public:
-		return Public
-	case lexer.Private:
-		return Private
-	case lexer.Value:
-		return Value
+func (v Visibility) String() string {
+	switch v {
+	case Public:
+		return "Public"
+	case Private:
+		return "Private"
+	case Value:
+		return "Value"
 	}
 
-	return -1
+	return "Invalid"
+}
+
+func (v Visibility) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.String())
+}
+
+func TokenVis(tok lexer.Token, auto Visibility, next *lexer.Location) (Visibility, *lexer.Location) {
+	switch tok.Type {
+	case lexer.Public:
+		return Public, tok.Location
+	case lexer.Private:
+		return Private, tok.Location
+	case lexer.Value:
+		return Value, tok.Location
+	}
+
+	return auto, next
+}
+
+func IsVisibility(tok lexer.Token) bool {
+	vis, _ := TokenVis(tok, -1, nil)
+	return vis != -1
 }

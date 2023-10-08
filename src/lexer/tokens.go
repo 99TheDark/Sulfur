@@ -11,7 +11,7 @@ type TokenType int
 type Token struct {
 	Type     TokenType
 	Value    string
-	Location *Location
+	Location *Location `json:"-"`
 }
 
 const (
@@ -185,6 +185,7 @@ var Symbols = map[string]TokenType{
 	";":   Semicolon,
 	"=>":  Arrow,
 	"@":   Atsign,
+	"~":   Autodef,
 }
 
 func formatValue(value string) string {
@@ -287,18 +288,30 @@ func (tt TokenType) String() string {
 		return "Fallthrough"
 	case Func:
 		return "Func"
+	case Defer:
+		return "Defer"
 	case My:
 		return "My"
 	case Class:
 		return "Class"
 	case New:
 		return "New"
+	case Delete:
+		return "Delete"
 	case Operator:
 		return "Operator"
 	case To:
 		return "To"
 	case Extends:
 		return "Extends"
+	case Public:
+		return "Public"
+	case Private:
+		return "Private"
+	case Value:
+		return "Value"
+	case Static:
+		return "Static"
 	case From:
 		return "From"
 	case Enum:
@@ -349,6 +362,10 @@ func (tt TokenType) String() string {
 		return "EOF"
 	case Arrow:
 		return "Arrow"
+	case Atsign:
+		return "Atsign"
+	case Autodef:
+		return "Autodef"
 	default:
 		return "Unknown"
 	}
@@ -363,4 +380,11 @@ func (t Token) String() string {
 
 	return "Token{" + t.Type.String() + " '" + formatValue(t.Value) + "' at " +
 		fmt.Sprint(row) + ":" + fmt.Sprint(col) + ", #" + fmt.Sprint(idx) + "}"
+}
+
+func Empty(tok Token) bool {
+	if tok.Location == (*Location)(nil) {
+		return true
+	}
+	return false
 }

@@ -8,6 +8,7 @@ import (
 	"sulfur/src/utils"
 )
 
+const DebugErrors = true
 const CodeBuffer int = 4
 
 var Errors ErrorGenerator
@@ -23,7 +24,7 @@ func size(num int) int {
 func (gen *ErrorGenerator) Error(msg string, loc *lexer.Location) {
 	row, col, _ := loc.Get()
 
-	numSize := size(row)
+	numSize := size(row + 1)
 
 	err := "\n"
 	for i := utils.Max(row-4, 0); i <= row; i++ {
@@ -36,7 +37,11 @@ func (gen *ErrorGenerator) Error(msg string, loc *lexer.Location) {
 
 	err += msg + " (" + fmt.Sprint(row+1) + ":" + fmt.Sprint(col+1) + ")\n"
 
-	log.Fatalln(err)
+	if DebugErrors {
+		panic(err)
+	} else {
+		log.Fatalln(err)
+	}
 }
 
 func New(source string) ErrorGenerator {

@@ -55,6 +55,13 @@ func (p *parser) expect(symbols ...lexer.TokenType) lexer.Token {
 	return tok
 }
 
+func (p *parser) prefix(symbols ...lexer.TokenType) lexer.Token {
+	if utils.Contains(symbols, p.at().Type) {
+		return p.eat()
+	}
+	return lexer.Token{}
+}
+
 func (p *parser) is(catagory []lexer.TokenType) bool {
 	return utils.Contains(catagory, p.at().Type)
 }

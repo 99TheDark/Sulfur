@@ -2,14 +2,12 @@ func add(int a, int b) (int) {
     return a + b
 }
 
-x := string{3 + 5 * add(6, -2)}
-
 class Person {
     val string name
     pub int    age
     pri int    days_old
 
-    new(string ~name, int ~age) {
+    pub new(string ~name, int ~age) {
         // my.days_old = age * 365
     }
 

@@ -84,12 +84,8 @@ type (
 	}
 
 	Param struct {
-		Type Identifier
-		Name Identifier
-	}
-
-	NewParam struct {
-		*Param
+		Type    Identifier
+		Name    Identifier
 		Autodef bool
 	}
 
@@ -99,6 +95,7 @@ type (
 	}
 
 	Field struct {
+		Pos    *lexer.Location `json:"-"`
 		Status Visibility
 		Type   Identifier
 		Name   Identifier
@@ -223,9 +220,8 @@ func (x Function) Loc() *lexer.Location     { return x.Pos }
 func (x Class) Loc() *lexer.Location        { return x.Pos }
 func (x Enum) Loc() *lexer.Location         { return x.Pos }
 func (x Param) Loc() *lexer.Location        { return x.Type.Pos }
-func (x NewParam) Loc() *lexer.Location     { return x.Type.Pos }
 func (x Method) Loc() *lexer.Location       { return x.Pos }
-func (x Field) Loc() *lexer.Location        { return x.Type.Pos }
+func (x Field) Loc() *lexer.Location        { return x.Pos }
 func (x To) Loc() *lexer.Location           { return x.Pos }
 func (x Operation) Loc() *lexer.Location    { return x.Pos }
 func (x BinaryOp) Loc() *lexer.Location     { return x.Left.Loc() }
