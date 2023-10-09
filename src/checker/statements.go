@@ -73,7 +73,7 @@ func (c *checker) inferIncDec(x ast.IncDec) {
 
 func (c *checker) inferFunction(x ast.Function) {
 	// TODO: Check if function already exists
-	c.program.Functions = append(c.program.Functions, &x)
+	c.program.Functions = append(c.program.Functions, x)
 
 	c.ret = &ast.Func{
 		Parent: c.ret,

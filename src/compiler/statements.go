@@ -3,6 +3,8 @@ package compiler
 import (
 	"fmt"
 	"sulfur/src/ast"
+
+	"github.com/llir/llvm/ir/types"
 )
 
 func (g *generator) genStmt(expr ast.Expr) {
@@ -15,9 +17,21 @@ func (g *generator) genStmt(expr ast.Expr) {
 }
 
 func (g *generator) genDecl(x ast.Declaration) {
-	g.typ(x.Value)
+	bl := g.bl()
+	alloca := bl.NewAlloca(g.typ(x.Value))
+	alloca.LocalName = x.Name.Name
 }
 
-func (g *generator) typ(x ast.Expr) {
-	fmt.Println(g.types[x])
+func (g *generator) typ(x ast.Expr) types.Type {
+	if typ, ok := g.types[x]; ok {
+		switch typ {
+		case ast.IntegerType:
+			return types.I32
+		case ast.BooleanType:
+			return types.I1
+		case ast.StringType:
+			return g.str
+		}
+	}
+	return types.Void
 }

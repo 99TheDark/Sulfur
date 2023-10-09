@@ -1,4 +1,7 @@
-bool y = true
 int x = 53
-// string greeting = "Hello, world!" 
+bool y = true
+string greeting = "Hello, world!" 
+string firstName = "John"
+string lastName = "Smith"
+
 // println(greeting)

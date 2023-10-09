@@ -13,28 +13,32 @@ type generator struct {
 	types   map[ast.Expr]ast.Type
 	mod     *ir.Module
 	top     *ast.Scope
+	str     types.Type
 }
 
-func (g *generator) basic() (*ir.Module, *ir.Block) {
-	return g.mod, g.top.Block
+func (g *generator) bl() *ir.Block {
+	return g.top.Block
 }
 
 func Generate(program *ast.Program, typ map[ast.Expr]ast.Type) string {
 	mod := ir.NewModule()
 	mod.SourceFilename = "script.sulfur"
 
+	str := mod.NewTypeDef("type.string", types.NewStruct(
+		types.I32,   // length
+		types.I32,   // size
+		types.I8Ptr, // address
+	))
+
 	g := generator{
 		program,
 		typ,
 		mod,
 		&program.Contents.Scope,
+		str,
 	}
 
-	mod.NewTypeDef("type.string", types.NewStruct(
-		types.I32,   // length
-		types.I32,   // size
-		types.I8Ptr, // address
-	))
+	g.genStrings()
 
 	main := mod.NewFunc("main", types.Void)
 	bl := main.NewBlock("entry")

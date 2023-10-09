@@ -17,6 +17,7 @@ func (c *checker) inferExpr(expr ast.Expr) ast.Type {
 	case ast.Boolean:
 		return c.typ(x, ast.BooleanType)
 	case ast.String:
+		c.program.Strings = append(c.program.Strings, x)
 		return c.typ(x, ast.StringType)
 	case ast.BinaryOp:
 		return c.inferBinaryOp(x)

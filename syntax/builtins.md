@@ -5,6 +5,12 @@
     ```
     Operations: `+`, `-`, `*`, `/`, `^`, `%`, `&`, `|`, `!`, `!&`, `!|`, `>>`, `<<`, `>>>`
 <br><br>
+- Unsigned Integer
+    ```
+    uint x = 572u
+    ```
+    Operations: `+`, `-`, `*`, `/`, `^`, `%`, `&`, `|`, `!`, `!&`, `!|`, `>>`, `<<`, `>>>`
+<br><br>
 - Float
     ```
     float y = 7.65
@@ -22,6 +28,12 @@
     string greeting = "Hello, world!"
     ```
     Operations: `+`
+<br><br>
+- Byte
+    ```
+    byte red = 237b
+    ```
+    Operations: `+`, `-`, `*`, `/`, `^`, `%`, `&`, `|`, `!`, `!&`, `!|`, `>>`, `<<`, `>>>`
 <br><br>
 - Complex 
     ```

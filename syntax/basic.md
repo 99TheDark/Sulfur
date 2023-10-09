@@ -249,6 +249,18 @@
 
     // True
     WarmMonth.June == Month.June
+
+    // Give the values of an enum a type and raw value
+    enum Response{uint} {
+        Ok         = 200u
+        Found      = 302u
+        Bad        = 400u
+        Forbidden  = 403u
+        NotFound   = 404u
+        BadGateway = 502u
+    }
+
+    Response.Ok == 200u // True
     ```
 - Loops
     ```

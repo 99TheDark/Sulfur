@@ -10,10 +10,11 @@ type Expr interface {
 
 type (
 	Program struct {
-		Functions []*Function `json:"-"`
-		Classes   []*Class    `json:"-"`
-		Strings   []*String   `json:"-"`
-		Contents  Block
+		Functions   []Function      `json:"-"`
+		Classes     []Class         `json:"-"`
+		Strings     []String        `json:"-"`
+		ExternFuncs []FuncSignature `json:"-"`
+		Contents    Block
 	}
 
 	BadExpr struct {

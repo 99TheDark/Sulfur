@@ -95,9 +95,9 @@ func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 	)
 
 	prog := ast.Program{
-		Functions: []*ast.Function{},
-		Classes:   []*ast.Class{},
-		Strings:   []*ast.String{},
+		Functions: []ast.Function{},
+		Classes:   []ast.Class{},
+		Strings:   []ast.String{},
 		Contents: ast.Block{
 			Pos:   lexer.NoLocation,
 			Body:  body,
