@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"sulfur/src/checker"
+	"sulfur/src/compiler"
 	"sulfur/src/errors"
 	"sulfur/src/lexer"
 	"sulfur/src/parser"
@@ -31,5 +32,10 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	checker.TypeCheck(ast)
+	types := checker.TypeCheck(ast)
+
+	llcode := compiler.Generate(ast, types)
+	if err := compiler.Save(llcode, "io/asm/script.ll"); err != nil {
+		log.Fatalln(err)
+	}
 }

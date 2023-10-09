@@ -126,9 +126,9 @@ func (l *lexer) start(mode TokenType, starting string) bool {
 	if l.match(starting) {
 		l.identifier()
 
+		l.move(starting)
 		l.begin = l.loc
 		l.mode = mode
-		l.move(starting)
 		return true
 	}
 	return false

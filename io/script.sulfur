@@ -1,35 +1,4 @@
-func add(int a, int b) (int) {
-    return a + b
-}
-
-class Person {
-    val string name
-    pub int    age
-    pri int    days_old
-
-    pub new(string ~name, int ~age) {
-        // my.days_old = age * 365
-    }
-
-    del() {
-        println("Bye-bye!")
-    }
-
-    talk() {
-        println("Hello, my name is $(my.name).")
-    }
-
-    to string {
-        return "$(my.name), $(my.age) years old"
-    }
-
-    /*operator == (Person p1, Person p2) (bool) {
-        if p1.val == p2.val {
-            return true
-        }
-        if p1.age == p2.age {
-            return true
-        }
-        return false
-    }*/
-}
+bool y = true
+int x = 53
+// string greeting = "Hello, world!" 
+// println(greeting)

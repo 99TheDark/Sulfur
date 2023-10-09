@@ -8,29 +8,23 @@ type checker struct {
 	program *ast.Program
 	top     *ast.Scope
 	ret     *ast.Func
-	typ     map[*ast.Expr]ast.Type
+	types   map[ast.Expr]ast.Type
 }
 
-func (c *checker) get(x *ast.Expr) ast.Type {
-	if typ, ok := c.typ[x]; ok {
-		return typ
-	}
-	return ast.VoidType
+func (c *checker) typ(x ast.Expr, typ ast.Type) ast.Type {
+	c.types[x] = typ
+	return typ
 }
 
-func (c *checker) set(x *ast.Expr, typ ast.Type) {
-	c.typ[x] = typ
-}
-
-func TypeCheck(program *ast.Program) map[*ast.Expr]ast.Type {
+func TypeCheck(program *ast.Program) map[ast.Expr]ast.Type {
 	c := checker{
 		program,
 		&program.Contents.Scope,
 		nil,
-		make(map[*ast.Expr]ast.Type),
+		make(map[ast.Expr]ast.Type),
 	}
 	for _, x := range program.Contents.Body {
 		c.inferStmt(x)
 	}
-	return c.typ
+	return c.types
 }

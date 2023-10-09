@@ -11,13 +11,13 @@ func (c *checker) inferExpr(expr ast.Expr) ast.Type {
 	case ast.Identifier:
 		return c.inferIdentifier(x)
 	case ast.Integer:
-		return ast.IntegerType
+		return c.typ(x, ast.IntegerType)
 	case ast.Float:
-		return ast.FloatType
+		return c.typ(x, ast.FloatType)
 	case ast.Boolean:
-		return ast.BooleanType
+		return c.typ(x, ast.BooleanType)
 	case ast.String:
-		return ast.StringType
+		return c.typ(x, ast.StringType)
 	case ast.BinaryOp:
 		return c.inferBinaryOp(x)
 	case ast.UnaryOp:
@@ -30,12 +30,12 @@ func (c *checker) inferExpr(expr ast.Expr) ast.Type {
 		return c.inferFuncCall(x)
 	default:
 		fmt.Println("Ignored type inferring expression")
-		return ast.VoidType
+		return c.typ(x, ast.VoidType)
 	}
 }
 
 func (c *checker) inferIdentifier(x ast.Identifier) ast.Type {
-	return c.top.Lookup(x.Name, x.Pos).Type
+	return c.typ(x, c.top.Lookup(x.Name, x.Pos).Type)
 }
 
 func (c *checker) inferBinaryOp(x ast.BinaryOp) ast.Type {
@@ -45,12 +45,12 @@ func (c *checker) inferBinaryOp(x ast.BinaryOp) ast.Type {
 	if left != right {
 		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Right.Loc())
 	}
-	return left
+	return c.typ(x, left)
 }
 
 func (c *checker) inferUnaryOp(x ast.UnaryOp) ast.Type {
 	// TODO: Check if operator exists
-	return c.inferExpr(x.Value)
+	return c.typ(x, c.inferExpr(x.Value))
 }
 
 func (c *checker) inferComparison(x ast.Comparison) ast.Type {
@@ -60,13 +60,13 @@ func (c *checker) inferComparison(x ast.Comparison) ast.Type {
 	if left != right {
 		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Loc())
 	}
-	return ast.BooleanType
+	return c.typ(x, ast.BooleanType)
 }
 
 func (c *checker) inferTypeCast(x ast.TypeCast) ast.Type {
 	// TODO: Check if type can be casted
 	c.inferExpr(x.Value)
-	return ast.Type(x.Type.Name)
+	return c.typ(x, ast.Type(x.Type.Name))
 }
 
 func (c *checker) inferFuncCall(x ast.FuncCall) ast.Type {
@@ -76,5 +76,5 @@ func (c *checker) inferFuncCall(x ast.FuncCall) ast.Type {
 			return ast.Type(fun.Return.Name)
 		}
 	}
-	return ast.VoidType
+	return c.typ(x, ast.VoidType)
 }
