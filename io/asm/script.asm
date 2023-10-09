@@ -59,28 +59,21 @@ _println:                               ; @println
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #32
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
+	sub	sp, sp, #16
+	.cfi_def_cfa_offset 16
 	mov	x8, #16
 Lloh0:
-	adrp	x9, l_.str1@PAGE
+	adrp	x9, l_.str0@PAGE
 	movk	x8, #19, lsl #32
 Lloh1:
-	add	x9, x9, l_.str1@PAGEOFF
-	mov	x0, sp
-	stp	x8, x9, [sp]
-	bl	_println
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #32
+	add	x9, x9, l_.str0@PAGEOFF
+	stp	x8, x9, [sp], #16
 	ret
 	.loh AdrpAdd	Lloh0, Lloh1
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__const
-l_.str1:                                ; @.str1
+l_.str0:                                ; @.str0
 	.ascii	"Hello, world! \316\265\342\261\236"
 
 .subsections_via_symbols

@@ -1,7 +1,2 @@
-int x = 53
-bool y = true
-string greeting = "Hello, world!" 
-string firstName = "John"
-string lastName = "Smith"
-
-// println(greeting)
+string greeting = "Hello, world! εⱞ" 
+println(greeting)

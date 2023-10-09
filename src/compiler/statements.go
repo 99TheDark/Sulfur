@@ -17,9 +17,7 @@ func (g *generator) genStmt(expr ast.Expr) {
 }
 
 func (g *generator) genDecl(x ast.Declaration) {
-	bl := g.bl()
-	alloca := bl.NewAlloca(g.typ(x.Value))
-	alloca.LocalName = x.Name.Name
+	g.genExpr(x.Value)
 }
 
 func (g *generator) typ(x ast.Expr) types.Type {
