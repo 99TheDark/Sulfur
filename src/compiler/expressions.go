@@ -24,9 +24,12 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 func (g *generator) genString(x ast.String) value.Value {
 	bl := g.bl()
 
+	strGlob := g.strs[x.Value]
+	glob, arr := strGlob.glob, strGlob.typ
+
 	str := bl.NewGetElementPtr(
-		g.strArrs[0].Typ,
-		g.strGlobs[0],
+		arr,
+		glob,
 		constant.NewInt(types.I32, int64(0)),
 		constant.NewInt(types.I32, int64(0)),
 	)

@@ -28,6 +28,8 @@ func (c *checker) inferStmt(expr ast.Expr) {
 		c.inferDoWhileLoop(x)
 	case ast.Return:
 		c.inferReturn(x)
+	case ast.FuncCall:
+		c.inferFuncCall(x)
 	default:
 		fmt.Println("Ignored type inferring statement")
 	}

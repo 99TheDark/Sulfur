@@ -1,2 +1,4 @@
-string greeting = "Hello, world! εⱞ" 
-println(greeting)
+func println(string str) {}
+
+println("Hello, world! εⱞ" )
+println("My name is...")

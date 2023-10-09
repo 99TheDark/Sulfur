@@ -17,6 +17,7 @@ func (c *checker) inferExpr(expr ast.Expr) ast.Type {
 	case ast.Boolean:
 		return c.typ(x, ast.BooleanType)
 	case ast.String:
+		fmt.Println(x.Value)
 		c.program.Strings = append(c.program.Strings, x)
 		return c.typ(x, ast.StringType)
 	case ast.BinaryOp:
@@ -74,8 +75,12 @@ func (c *checker) inferFuncCall(x ast.FuncCall) ast.Type {
 	for _, fun := range c.program.Functions {
 		if fun.Name.Name == x.Func.Name {
 			// TODO: Check if parameters are correct
+			for _, param := range x.Params {
+				c.inferExpr(param)
+			}
 			return ast.Type(fun.Return.Name)
 		}
 	}
+	Errors.Error("The function "+x.Func.Name+" is undefined", x.Func.Pos)
 	return c.typ(x, ast.VoidType)
 }

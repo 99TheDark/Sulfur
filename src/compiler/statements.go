@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"sulfur/src/ast"
 
-	"github.com/llir/llvm/ir/types"
+	"github.com/llir/llvm/ir/value"
 )
 
 func (g *generator) genStmt(expr ast.Expr) {
 	switch x := expr.(type) {
 	case ast.Declaration:
 		g.genDecl(x)
+	case ast.FuncCall:
+		g.genFuncCall(x)
 	default:
 		fmt.Println("Ignored generating statement")
 	}
@@ -20,16 +22,14 @@ func (g *generator) genDecl(x ast.Declaration) {
 	g.genExpr(x.Value)
 }
 
-func (g *generator) typ(x ast.Expr) types.Type {
-	if typ, ok := g.types[x]; ok {
-		switch typ {
-		case ast.IntegerType:
-			return types.I32
-		case ast.BooleanType:
-			return types.I1
-		case ast.StringType:
-			return g.str
-		}
+func (g *generator) genFuncCall(x ast.FuncCall) {
+	// TODO: Make work with non-builtins
+	bl := g.bl()
+
+	params := []value.Value{}
+	for _, param := range x.Params {
+		params = append(params, g.genExpr(param))
 	}
-	return types.Void
+
+	bl.NewCall(g.builtins[x.Func.Name], params...)
 }

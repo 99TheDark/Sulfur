@@ -5,7 +5,6 @@ import (
 	"sulfur/src/utils"
 
 	"github.com/llir/llvm/ir"
-	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
 )
 
@@ -15,12 +14,26 @@ type generator struct {
 	mod      *ir.Module
 	top      *ast.Scope
 	str      types.Type
-	strGlobs []*ir.Global
-	strArrs  []*constant.CharArray
+	strs     map[string]StringGlobal
+	builtins map[string]*ir.Func
 }
 
 func (g *generator) bl() *ir.Block {
 	return g.top.Block
+}
+
+func (g *generator) typ(x ast.Expr) types.Type {
+	if typ, ok := g.types[x]; ok {
+		switch typ {
+		case ast.IntegerType:
+			return types.I32
+		case ast.BooleanType:
+			return types.I1
+		case ast.StringType:
+			return g.str
+		}
+	}
+	return types.Void
 }
 
 func Generate(program *ast.Program, typ map[ast.Expr]ast.Type) string {
@@ -39,12 +52,12 @@ func Generate(program *ast.Program, typ map[ast.Expr]ast.Type) string {
 		mod,
 		&program.Contents.Scope,
 		str,
-		[]*ir.Global{},
-		[]*constant.CharArray{},
+		make(map[string]StringGlobal),
+		make(map[string]*ir.Func),
 	}
 
 	g.genStrings()
-	mod.NewFunc("println", types.Void, ir.NewParam("", types.NewPointer(str)))
+	g.builtins["println"] = mod.NewFunc("println", types.Void, ir.NewParam("", types.NewPointer(str)))
 
 	main := mod.NewFunc("main", types.Void)
 	bl := main.NewBlock("entry")
