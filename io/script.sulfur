@@ -4,8 +4,6 @@ lastName := "Smith"
 println(firstName + " " + lastName)
 println(lastName + ", " + firstName)
 
-println("")
-
 x := 7
 if x < 8 {
     println("x is less than 8")
@@ -13,5 +11,7 @@ if x < 8 {
     println("x is not less than 8")
 }
 
-println("")
-println("abcdefg")
+y := 19
+if y > 12 {
+    println("No else")
+}

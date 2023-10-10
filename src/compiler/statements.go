@@ -42,33 +42,37 @@ func (g *generator) genFuncCall(x ast.FuncCall) {
 }
 
 func (g *generator) genIfStmt(x ast.IfStatement) {
+	id := fmt.Sprint(g.top.BlockCount)
+
 	main := g.bl
 
 	cond := g.genExpr(x.Cond)
 
-	thenBl := g.topfunc.NewBlock("if.then")
+	thenBl := g.topfunc.NewBlock("if.then" + id)
 	main.NewBr(thenBl)
 
 	g.bl = thenBl
 	g.genBlock(x.Body)
 
 	if ast.Empty(x.Else) {
-		endBl := g.topfunc.NewBlock("if.end")
-		main.NewCondBr(cond, thenBl, endBl)
+		endBl := g.topfunc.NewBlock("if.end" + id)
+		thenBl.NewBr(endBl)
 
+		main.NewCondBr(cond, thenBl, endBl)
 		g.bl = endBl
 	} else {
-		elseBl := g.topfunc.NewBlock("if.else")
+		elseBl := g.topfunc.NewBlock("if.else" + id)
 
 		g.bl = elseBl
 		g.genBlock(x.Else)
 
-		endBl := g.topfunc.NewBlock("if.end")
+		endBl := g.topfunc.NewBlock("if.end" + id)
 		thenBl.NewBr(endBl)
 		elseBl.NewBr(endBl)
 
 		main.NewCondBr(cond, thenBl, elseBl)
-
 		g.bl = endBl
 	}
+
+	g.top.BlockCount++
 }

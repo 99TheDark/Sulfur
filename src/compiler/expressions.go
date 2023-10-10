@@ -172,6 +172,15 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 		switch typ {
 		case typing.Integer:
 			return bl.NewICmp(enum.IPredSLT, left, right)
+		case typing.Float:
+			return bl.NewFCmp(enum.FPredOLT, left, right)
+		}
+	case lexer.GreaterThan:
+		switch typ {
+		case typing.Integer:
+			return bl.NewICmp(enum.IPredSGT, left, right)
+		case typing.Float:
+			return bl.NewFCmp(enum.FPredOGT, left, right)
 		}
 	}
 
