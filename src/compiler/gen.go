@@ -26,15 +26,15 @@ func (g *generator) bl() *ir.Block {
 
 func (g *generator) lltyp(typ typing.Type) types.Type {
 	switch typ {
-	case typing.IntegerType, typing.UnsignedType:
+	case typing.Integer, typing.Unsigned:
 		return types.I32
-	case typing.FloatType:
+	case typing.Float:
 		return types.Float
-	case typing.BooleanType:
+	case typing.Boolean:
 		return types.I1
-	case typing.ByteType:
+	case typing.Byte:
 		return types.I8
-	case typing.StringType:
+	case typing.String:
 		return g.str
 	}
 	return types.Void

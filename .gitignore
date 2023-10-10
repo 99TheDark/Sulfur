@@ -1,4 +1,3 @@
-io/debug/*
 io/unfiltered.txt
 io/tokens.txt
 io/ast.json

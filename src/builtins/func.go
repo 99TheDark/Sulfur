@@ -6,8 +6,9 @@ import (
 )
 
 var Funcs = []FuncSignature{
-	QuickFunc("print", typing.VoidType, typing.StringType),
-	QuickFunc("println", typing.VoidType, typing.StringType),
+	QuickFunc("print", typing.Void, typing.String),
+	QuickFunc("println", typing.Void, typing.String),
+	QuickFunc("concat", typing.Void, typing.String, typing.String, typing.String), // Temporary
 }
 
 func QuickFunc(name string, ret string, params ...string) FuncSignature {

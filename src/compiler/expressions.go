@@ -2,6 +2,8 @@ package compiler
 
 import (
 	"sulfur/src/ast"
+	"sulfur/src/lexer"
+	"sulfur/src/typing"
 	"unicode/utf8"
 
 	. "sulfur/src/errors"
@@ -21,6 +23,8 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 		return constant.NewBool(x.Value)
 	case ast.String:
 		return g.genString(x)
+	case ast.BinaryOp:
+		return g.genBinaryOp(x)
 	}
 
 	Errors.Error("Expression cannot be generated", expr.Loc())
@@ -87,4 +91,26 @@ func (g *generator) genString(x ast.String) value.Value {
 	adrStore.Align = 8
 
 	return alloca
+}
+
+func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
+	bl := g.bl()
+	left := g.genExpr(x.Left)
+	right := g.genExpr(x.Right)
+	typ := g.types[x]
+	ll := g.lltyp(typ)
+	switch x.Op.Type {
+	case lexer.Addition:
+		switch typ {
+		case typing.String:
+			alloca := bl.NewAlloca(ll)
+			alloca.Align = 8
+
+			bl.NewCall(g.builtins["concat"], alloca, left, right)
+			return alloca
+		}
+	}
+
+	Errors.Error("Unexpected generating error during binary operation", x.Loc())
+	return constant.NewInt(types.I32, int64(0))
 }

@@ -3,19 +3,19 @@ package typing
 type Type string
 
 const (
-	VoidType     = ""
-	IntegerType  = "int"
-	UnsignedType = "uint"
-	FloatType    = "float"
-	BooleanType  = "bool"
-	StringType   = "string"
-	ByteType     = "byte"
-	ComplexType  = "complex"
-	AnyType      = "any"
+	Void     = ""
+	Integer  = "int"
+	Unsigned = "uint"
+	Float    = "float"
+	Boolean  = "bool"
+	String   = "string"
+	Byte     = "byte"
+	Complex  = "complex"
+	Any      = "any"
 )
 
 func (t Type) String() string {
-	if t == VoidType {
+	if t == Void {
 		return "no type"
 	}
 	return string(t)

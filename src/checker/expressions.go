@@ -13,14 +13,14 @@ func (c *checker) inferExpr(expr ast.Expr) typing.Type {
 	case ast.Identifier:
 		return c.inferIdentifier(x)
 	case ast.Integer:
-		return c.typ(x, typing.IntegerType)
+		return c.typ(x, typing.Integer)
 	case ast.Float:
-		return c.typ(x, typing.FloatType)
+		return c.typ(x, typing.Float)
 	case ast.Boolean:
-		return c.typ(x, typing.BooleanType)
+		return c.typ(x, typing.Boolean)
 	case ast.String:
 		c.program.Strings = append(c.program.Strings, x)
-		return c.typ(x, typing.StringType)
+		return c.typ(x, typing.String)
 	case ast.BinaryOp:
 		return c.inferBinaryOp(x)
 	case ast.UnaryOp:
@@ -33,7 +33,7 @@ func (c *checker) inferExpr(expr ast.Expr) typing.Type {
 		return c.inferFuncCall(x)
 	default:
 		fmt.Println("Ignored type inferring expression")
-		return c.typ(x, typing.VoidType)
+		return c.typ(x, typing.Void)
 	}
 }
 
@@ -63,7 +63,7 @@ func (c *checker) inferComparison(x ast.Comparison) typing.Type {
 	if left != right {
 		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Loc())
 	}
-	return c.typ(x, typing.BooleanType)
+	return c.typ(x, typing.Boolean)
 }
 
 func (c *checker) inferTypeCast(x ast.TypeCast) typing.Type {
@@ -112,5 +112,5 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 		}
 	}
 	Errors.Error("The function "+x.Func.Name+" is undefined", x.Func.Pos)
-	return c.typ(x, typing.VoidType)
+	return c.typ(x, typing.Void)
 }
