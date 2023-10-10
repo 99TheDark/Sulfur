@@ -2,12 +2,12 @@ source_filename = "lib/builtin/print"
 
 %type.string = type { i32, i32, i8* }
 
-declare void @putchar(i8 %0)
+declare void @putchar(i8)
 
 ; print(string str) {
-; 	for int i = 0; i < str.size; i++ {
-; 		putchar(str.adr[i])
-; 	}
+; 	  for int i = 0; i < str.size; i++ {
+; 		  putchar(str.adr[i])
+; 	  }
 ; }
 define void @print(%type.string* %str) {
 entry:
@@ -46,8 +46,8 @@ for.end:
 }
 
 ; println(string str) {
-;   print(str)
-;   putchar('\n')
+;     print(str)
+;     putchar('\n')
 ; }
 define void @println(%type.string* %str) {
 entry:
