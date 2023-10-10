@@ -13,6 +13,12 @@ import (
 
 func (g *generator) genExpr(expr ast.Expr) value.Value {
 	switch x := expr.(type) {
+	case ast.Integer:
+		return constant.NewInt(types.I32, x.Value)
+	case ast.Float:
+		return constant.NewFloat(types.Float, x.Value)
+	case ast.Boolean:
+		return constant.NewBool(x.Value)
 	case ast.String:
 		return g.genString(x)
 	}
