@@ -2,7 +2,7 @@
 cd io/asm
 llvm-as script.ll -o script.bc
 cd ../../
-sh lib/builtin/compile.sh
+sh lib/compile.sh
 llvm-link lib/builtin/print.bc io/asm/script.bc -o io/asm/script-linked.bc
 cd io/asm
 llvm-dis script-linked.bc -o script-linked.ll

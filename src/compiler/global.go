@@ -2,6 +2,7 @@ package compiler
 
 import (
 	"fmt"
+	"sulfur/src/builtins"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
@@ -34,5 +35,22 @@ func (g *generator) genStrings() {
 			strGlob,
 			arr.Typ,
 		}
+	}
+}
+
+func (g *generator) genFuncs() {
+	for _, fun := range builtins.Funcs {
+		params := []*ir.Param{}
+		for _, param := range fun.Params {
+			params = append(params, ir.NewParam("", g.llraw(param.Type)))
+		}
+
+		builtin := g.mod.NewFunc(
+			fun.Name,
+			g.llraw(fun.Return),
+			params...,
+		)
+
+		g.builtins[fun.Name] = builtin
 	}
 }

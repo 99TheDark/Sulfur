@@ -2,6 +2,8 @@ package compiler
 
 import (
 	"sulfur/src/ast"
+	"sulfur/src/checker"
+	"sulfur/src/typing"
 	"sulfur/src/utils"
 
 	"github.com/llir/llvm/ir"
@@ -10,7 +12,7 @@ import (
 
 type generator struct {
 	program  *ast.Program
-	types    map[ast.Expr]ast.Type
+	types    checker.TypeMap
 	mod      *ir.Module
 	top      *ast.Scope
 	str      types.Type
@@ -22,21 +24,38 @@ func (g *generator) bl() *ir.Block {
 	return g.top.Block
 }
 
-func (g *generator) typ(x ast.Expr) types.Type {
-	if typ, ok := g.types[x]; ok {
-		switch typ {
-		case ast.IntegerType:
-			return types.I32
-		case ast.BooleanType:
-			return types.I1
-		case ast.StringType:
-			return g.str
-		}
+func (g *generator) lltyp(typ typing.Type) types.Type {
+	switch typ {
+	case typing.IntegerType, typing.UnsignedType:
+		return types.I32
+	case typing.FloatType:
+		return types.Float
+	case typing.BooleanType:
+		return types.I1
+	case typing.ByteType:
+		return types.I8
+	case typing.StringType:
+		return g.str
 	}
 	return types.Void
 }
 
-func Generate(program *ast.Program, typ map[ast.Expr]ast.Type) string {
+func (g *generator) llraw(typ typing.Type) types.Type {
+	ll := g.lltyp(typ)
+	if _, ok := ll.(*types.StructType); ok {
+		return types.NewPointer(ll)
+	}
+	return ll
+}
+
+func (g *generator) typ(x ast.Expr) types.Type {
+	if typ, ok := g.types[x]; ok {
+		return g.lltyp(typ)
+	}
+	return types.Void
+}
+
+func Generate(program *ast.Program, typ checker.TypeMap) string {
 	mod := ir.NewModule()
 	mod.SourceFilename = "script.sulfur"
 
@@ -57,7 +76,7 @@ func Generate(program *ast.Program, typ map[ast.Expr]ast.Type) string {
 	}
 
 	g.genStrings()
-	g.builtins["println"] = mod.NewFunc("println", types.Void, ir.NewParam("", types.NewPointer(str)))
+	g.genFuncs()
 
 	main := mod.NewFunc("main", types.Void)
 	bl := main.NewBlock("entry")

@@ -1,5 +1,6 @@
+func print(string str) {}
 func println(string str) {}
 
 println("Hello, world! εⱞ" )
-println("My name is TheDark")
-println(3)
+print("My name is TheDark. ")
+println("π ≈ 3.14159")

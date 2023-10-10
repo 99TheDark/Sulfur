@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"sulfur/src/builtins"
 	"sulfur/src/lexer"
 )
 
@@ -10,10 +11,10 @@ type Expr interface {
 
 type (
 	Program struct {
-		Functions   []Function      `json:"-"`
-		Classes     []Class         `json:"-"`
-		Strings     []String        `json:"-"`
-		ExternFuncs []FuncSignature `json:"-"`
+		Functions   []Function               `json:"-"`
+		Classes     []Class                  `json:"-"`
+		Strings     []String                 `json:"-"`
+		ExternFuncs []builtins.FuncSignature `json:"-"`
 		Contents    Block
 	}
 

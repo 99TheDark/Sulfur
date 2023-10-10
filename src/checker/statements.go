@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sulfur/src/ast"
 	. "sulfur/src/errors"
+	"sulfur/src/typing"
 )
 
 func (c *checker) inferStmt(expr ast.Expr) {
@@ -48,10 +49,10 @@ func (c *checker) inferBlock(x ast.Block, header func()) {
 
 func (c *checker) inferDeclaration(x ast.Declaration) {
 	val := c.inferExpr(x.Value)
-	if ast.Type(x.Type.Name) != val {
+	if typing.Type(x.Type.Name) != val {
 		Errors.Error("Expected "+x.Type.Name+", but got "+val.String()+" instead", x.Loc())
 	}
-	c.top.Vars[x.Name.Name] = ast.NewVariable(ast.Type(x.Type.Name), ast.Local)
+	c.top.Vars[x.Name.Name] = ast.NewVariable(typing.Type(x.Type.Name), ast.Local)
 }
 
 func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
@@ -79,11 +80,11 @@ func (c *checker) inferFunction(x ast.Function) {
 
 	c.ret = &ast.Func{
 		Parent: c.ret,
-		Return: ast.Type(x.Return.Name),
+		Return: typing.Type(x.Return.Name),
 	}
 	c.inferBlock(x.Body, func() {
 		for _, param := range x.Params {
-			c.top.Vars[param.Name.Name] = ast.NewVariable(ast.Type(param.Type.Name), ast.Parameter)
+			c.top.Vars[param.Name.Name] = ast.NewVariable(typing.Type(param.Type.Name), ast.Parameter)
 		}
 	})
 	c.ret = c.ret.Parent
@@ -91,8 +92,8 @@ func (c *checker) inferFunction(x ast.Function) {
 
 func (c *checker) inferIfStmt(x ast.IfStatement) {
 	cond := c.inferExpr(x.Cond)
-	if cond != ast.BooleanType {
-		Errors.Error("Expected "+ast.BooleanType+", but got "+cond.String()+" instead", x.Cond.Loc())
+	if cond != typing.BooleanType {
+		Errors.Error("Expected "+typing.BooleanType+", but got "+cond.String()+" instead", x.Cond.Loc())
 	}
 
 	c.inferBlock(x.Body, nil)
@@ -105,8 +106,8 @@ func (c *checker) inferForLoop(x ast.ForLoop) {
 	c.inferBlock(x.Body, func() {
 		c.inferStmt(x.Init)
 		cond := c.inferExpr(x.Cond)
-		if cond != ast.BooleanType {
-			Errors.Error("Expected "+ast.BooleanType+", but got "+cond.String()+" instead", x.Cond.Loc())
+		if cond != typing.BooleanType {
+			Errors.Error("Expected "+typing.BooleanType+", but got "+cond.String()+" instead", x.Cond.Loc())
 		}
 		c.inferStmt(x.Inc)
 	})
@@ -114,8 +115,8 @@ func (c *checker) inferForLoop(x ast.ForLoop) {
 
 func (c *checker) inferWhileLoop(x ast.WhileLoop) {
 	cond := c.inferExpr(x.Cond)
-	if cond != ast.BooleanType {
-		Errors.Error("Expected "+ast.BooleanType+", but got "+cond.String()+" instead", x.Cond.Loc())
+	if cond != typing.BooleanType {
+		Errors.Error("Expected "+typing.BooleanType+", but got "+cond.String()+" instead", x.Cond.Loc())
 	}
 
 	c.inferBlock(x.Body, nil)
@@ -123,8 +124,8 @@ func (c *checker) inferWhileLoop(x ast.WhileLoop) {
 
 func (c *checker) inferDoWhileLoop(x ast.DoWhileLoop) {
 	cond := c.inferExpr(x.Cond)
-	if cond != ast.BooleanType {
-		Errors.Error("Expected "+ast.BooleanType+", but got "+cond.String()+" instead", x.Cond.Loc())
+	if cond != typing.BooleanType {
+		Errors.Error("Expected "+typing.BooleanType+", but got "+cond.String()+" instead", x.Cond.Loc())
 	}
 
 	c.inferBlock(x.Body, nil)

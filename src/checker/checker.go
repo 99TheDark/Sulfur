@@ -2,26 +2,29 @@ package checker
 
 import (
 	"sulfur/src/ast"
+	"sulfur/src/typing"
 )
+
+type TypeMap map[ast.Expr]typing.Type
 
 type checker struct {
 	program *ast.Program
 	top     *ast.Scope
 	ret     *ast.Func
-	types   map[ast.Expr]ast.Type
+	types   TypeMap
 }
 
-func (c *checker) typ(x ast.Expr, typ ast.Type) ast.Type {
+func (c *checker) typ(x ast.Expr, typ typing.Type) typing.Type {
 	c.types[x] = typ
 	return typ
 }
 
-func TypeCheck(program *ast.Program) map[ast.Expr]ast.Type {
+func TypeCheck(program *ast.Program) TypeMap {
 	c := checker{
 		program,
 		&program.Contents.Scope,
 		nil,
-		make(map[ast.Expr]ast.Type),
+		make(TypeMap),
 	}
 	for _, x := range program.Contents.Body {
 		c.inferStmt(x)

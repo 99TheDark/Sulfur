@@ -66,16 +66,6 @@ func (p *parser) is(catagory []lexer.TokenType) bool {
 	return utils.Contains(catagory, p.at().Type)
 }
 
-func (p *parser) block(loc *lexer.Location, body []ast.Expr) ast.Block {
-	scope := ast.NewScope()
-	scope.Parent = p.top
-	return ast.Block{
-		Pos:   loc,
-		Body:  body,
-		Scope: scope,
-	}
-}
-
 func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 	scope := ast.NewScope()
 	p := parser{

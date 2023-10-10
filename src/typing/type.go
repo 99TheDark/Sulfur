@@ -1,4 +1,4 @@
-package ast
+package typing
 
 type Type string
 

@@ -3,6 +3,7 @@ package ast
 import (
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
+	"sulfur/src/typing"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/value"
@@ -18,7 +19,7 @@ const (
 
 type Variable struct {
 	// TODO: ids in each block, example variable name: func_add.if_130956.name
-	Type   Type
+	Type   typing.Type
 	Status VariableType
 	Value  *value.Value
 }
@@ -31,7 +32,7 @@ type Scope struct {
 
 type Func struct {
 	Parent *Func
-	Return Type
+	Return typing.Type
 }
 
 func (s *Scope) Lookup(name string, loc *lexer.Location) Variable {
@@ -52,6 +53,6 @@ func NewScope() Scope {
 	}
 }
 
-func NewVariable(typ Type, status VariableType) Variable {
+func NewVariable(typ typing.Type, status VariableType) Variable {
 	return Variable{typ, status, new(value.Value)}
 }

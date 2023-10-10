@@ -133,10 +133,13 @@ func (p *parser) parseStmts(stmtgen func(), ending []lexer.TokenType, delim []le
 func (p *parser) parseBlock() ast.Block {
 	tok := p.expect(lexer.OpenBrace, lexer.Arrow)
 	if tok.Type == lexer.Arrow {
-		return p.block(
-			tok.Location,
-			[]ast.Expr{p.parseStmt()},
-		)
+		scope := ast.NewScope()
+		scope.Parent = p.top
+		return ast.Block{
+			Pos:   tok.Location,
+			Body:  []ast.Expr{p.parseStmt()},
+			Scope: scope,
+		}
 	} else {
 		scope := ast.NewScope()
 		scope.Parent = p.top
