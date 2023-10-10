@@ -9,6 +9,7 @@ import (
 	. "sulfur/src/errors"
 
 	"github.com/llir/llvm/ir/constant"
+	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/types"
 	"github.com/llir/llvm/ir/value"
 )
@@ -27,6 +28,8 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 		return g.genString(x)
 	case ast.BinaryOp:
 		return g.genBinaryOp(x)
+	case ast.Comparison:
+		return g.genComparison(x)
 	}
 
 	Errors.Error("Expression cannot be generated", expr.Loc())
@@ -34,7 +37,7 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 }
 
 func (g *generator) genIdentifier(x ast.Identifier) value.Value {
-	bl := g.bl()
+	bl := g.bl
 	vari := g.top.Lookup(x.Name, x.Pos)
 	val := *vari.Value
 	load := bl.NewLoad(g.typ(x), val)
@@ -42,7 +45,7 @@ func (g *generator) genIdentifier(x ast.Identifier) value.Value {
 }
 
 func (g *generator) genString(x ast.String) value.Value {
-	bl := g.bl()
+	bl := g.bl
 
 	strGlob := g.strs[x.Value]
 	glob, arr := strGlob.glob, strGlob.typ
@@ -104,7 +107,7 @@ func (g *generator) genString(x ast.String) value.Value {
 }
 
 func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
-	bl := g.bl()
+	bl := g.bl
 	left := g.genExpr(x.Left)
 	right := g.genExpr(x.Right)
 	typ := g.types[x]
@@ -154,5 +157,24 @@ func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
 	}
 
 	Errors.Error("Unexpected generating error during binary operation", x.Loc())
+	return constant.NewInt(types.I32, int64(0))
+}
+
+func (g *generator) genComparison(x ast.Comparison) value.Value {
+	bl := g.bl
+	left := g.genExpr(x.Left)
+	right := g.genExpr(x.Right)
+	comp := x.Comp
+	typ := g.types[x.Left] // or x.Right
+
+	switch comp.Type {
+	case lexer.LessThan:
+		switch typ {
+		case typing.Integer:
+			return bl.NewICmp(enum.IPredSLT, left, right)
+		}
+	}
+
+	Errors.Error("Unexpected generating error during comparison", x.Loc())
 	return constant.NewInt(types.I32, int64(0))
 }

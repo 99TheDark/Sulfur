@@ -5,7 +5,6 @@ import (
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
 
-	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/value"
 )
 
@@ -25,7 +24,6 @@ type Variable struct {
 }
 
 type Scope struct {
-	Block  *ir.Block `json:"-"`
 	Parent *Scope
 	Vars   map[string]Variable
 }
@@ -47,7 +45,6 @@ func (s *Scope) Lookup(name string, loc *lexer.Location) Variable {
 
 func NewScope() Scope {
 	return Scope{
-		new(ir.Block),
 		nil,
 		make(map[string]Variable),
 	}

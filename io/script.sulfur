@@ -1,10 +1,17 @@
-string firstName = "John "
-string lastName  = "Smith"
+firstName := "John"
+lastName := "Smith"
 
-println(firstName + lastName)
+println(firstName + " " + lastName)
+println(lastName + ", " + firstName)
 
-int x = 5 + 3
-int y = x * x - x
+println("")
 
-float abc = 7.7 - 0.1 % 2.06
-float def = 3.6 + abc
+x := 7
+if x < 8 {
+    println("x is less than 8")
+} else {
+    println("x is not less than 8")
+}
+
+println("")
+println("abcdefg")

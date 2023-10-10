@@ -15,13 +15,11 @@ type generator struct {
 	types    checker.TypeMap
 	mod      *ir.Module
 	top      *ast.Scope
+	topfunc  *ir.Func
+	bl       *ir.Block
 	str      types.Type
 	strs     map[string]StringGlobal
 	builtins map[string]*ir.Func
-}
-
-func (g *generator) bl() *ir.Block {
-	return g.top.Block
 }
 
 func (g *generator) lltyp(typ typing.Type) types.Type {
@@ -65,11 +63,16 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 		types.I8Ptr, // address
 	))
 
+	main := mod.NewFunc("main", types.Void)
+	bl := main.NewBlock("entry")
+
 	g := generator{
 		program,
 		typ,
 		mod,
 		&program.Contents.Scope,
+		main,
+		bl,
 		str,
 		make(map[string]StringGlobal),
 		make(map[string]*ir.Func),
@@ -78,13 +81,11 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 	g.genStrings()
 	g.genFuncs()
 
-	main := mod.NewFunc("main", types.Void)
-	bl := main.NewBlock("entry")
-	program.Contents.Scope.Block = bl
 	for _, x := range program.Contents.Body {
 		g.genStmt(x)
 	}
-	bl.NewRet(nil)
+
+	g.bl.NewRet(nil)
 
 	return mod.String()
 }

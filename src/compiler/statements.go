@@ -10,31 +10,28 @@ import (
 func (g *generator) genStmt(expr ast.Expr) {
 	switch x := expr.(type) {
 	case ast.Declaration:
-		g.genDecl(x)
+		g.genBasicDecl(x.Name.Name, x.Value)
+	case ast.ImplicitDecl:
+		g.genBasicDecl(x.Name.Name, x.Value)
 	case ast.FuncCall:
 		g.genFuncCall(x)
+	case ast.IfStatement:
+		g.genIfStmt(x)
 	default:
 		fmt.Println("Ignored generating statement")
 	}
 }
 
-func (g *generator) genDecl(x ast.Declaration) {
-	bl := g.bl()
-	val := g.genExpr(x.Value)
-
-	alloca := bl.NewAlloca(val.Type())
-	alloca.LocalName = x.Name.Name
-
-	bl.NewStore(val, alloca)
-
-	vari := g.top.Vars[x.Name.Name]
-	*vari.Value = alloca
+func (g *generator) genBlock(x ast.Block) {
+	for _, stmt := range x.Body {
+		g.genStmt(stmt)
+	}
 }
 
 func (g *generator) genFuncCall(x ast.FuncCall) {
 	// TODO: Make work with non-builtins
 	// TODO: Include return value in parameter as pointer if a struct
-	bl := g.bl()
+	bl := g.bl
 
 	params := []value.Value{}
 	for _, param := range x.Params {
@@ -42,4 +39,36 @@ func (g *generator) genFuncCall(x ast.FuncCall) {
 	}
 
 	bl.NewCall(g.builtins[x.Func.Name], params...)
+}
+
+func (g *generator) genIfStmt(x ast.IfStatement) {
+	main := g.bl
+
+	cond := g.genExpr(x.Cond)
+
+	thenBl := g.topfunc.NewBlock("if.then")
+	main.NewBr(thenBl)
+
+	g.bl = thenBl
+	g.genBlock(x.Body)
+
+	if ast.Empty(x.Else) {
+		endBl := g.topfunc.NewBlock("if.end")
+		main.NewCondBr(cond, thenBl, endBl)
+
+		g.bl = endBl
+	} else {
+		elseBl := g.topfunc.NewBlock("if.else")
+
+		g.bl = elseBl
+		g.genBlock(x.Else)
+
+		endBl := g.topfunc.NewBlock("if.end")
+		thenBl.NewBr(endBl)
+		elseBl.NewBr(endBl)
+
+		main.NewCondBr(cond, thenBl, elseBl)
+
+		g.bl = endBl
+	}
 }
