@@ -1,15 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"sulfur/src/checker"
 	"sulfur/src/compiler"
 	"sulfur/src/errors"
 	"sulfur/src/lexer"
 	"sulfur/src/parser"
+	"time"
 )
 
 func main() {
+	start := time.Now()
+
 	code, err := lexer.GetSourceCode("io/script.sulfur")
 	if err != nil {
 		log.Fatalln(err)
@@ -38,4 +42,6 @@ func main() {
 	if err := compiler.Save(llcode, "io/asm/script.ll"); err != nil {
 		log.Fatalln(err)
 	}
+
+	fmt.Println("Compile time:", time.Since(start))
 }

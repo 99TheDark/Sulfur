@@ -143,48 +143,42 @@ Lloh0:
 	adrp	x8, l_.str0@PAGE
 	mov	x9, #5
 Lloh1:
-	adrp	x10, l_.str1@PAGE
-	mov	x11, #2
-Lloh2:
 	add	x8, x8, l_.str0@PAGEOFF
-	movk	x9, #7, lsl #32
+	movk	x9, #5, lsl #32
+Lloh2:
+	adrp	x11, l_.str1@PAGE
+	add	x10, sp, #64
 Lloh3:
-	add	x10, x10, l_.str1@PAGEOFF
-	movk	x11, #5, lsl #32
-	add	x0, sp, #32
-	add	x1, sp, #64
-	add	x2, sp, #48
+	add	x11, x11, l_.str1@PAGEOFF
+	add	x0, sp, #16
 	stp	x9, x8, [sp, #64]
+	add	x8, sp, #40
+	add	x1, sp, #64
+	add	x2, sp, #40
 	stp	x11, x10, [sp, #48]
+	stp	x8, x9, [sp, #32]
 	bl	_concat
-Lloh4:
-	adrp	x9, l_.str2@PAGE
-	mov	x8, #12884901891
-Lloh5:
-	add	x9, x9, l_.str2@PAGEOFF
-	mov	x0, sp
-	add	x1, sp, #32
-	add	x2, sp, #16
-	stp	x8, x9, [sp, #16]
-	bl	_concat
-	mov	x0, sp
+	add	x0, sp, #16
 	bl	_println
+	mov	w10, #13107
+	mov	w11, #13107
 	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
-	add	sp, sp, #96
+	mov	w8, #8
+	mov	w9, #56
+	movk	w10, #16627, lsl #16
+	movk	w11, #16691, lsl #16
+	stp	w9, w8, [sp, #8]
+	stp	w11, w10, [sp], #96
 	ret
-	.loh AdrpAdd	Lloh4, Lloh5
-	.loh AdrpAdd	Lloh1, Lloh3
-	.loh AdrpAdd	Lloh0, Lloh2
+	.loh AdrpAdd	Lloh2, Lloh3
+	.loh AdrpAdd	Lloh0, Lloh1
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__const
 l_.str0:                                ; @.str0
-	.ascii	"a \316\262 \327\222"
+	.ascii	"John "
 
 l_.str1:                                ; @.str1
-	.ascii	"\317\211\342\261\236"
-
-l_.str2:                                ; @.str2
-	.ascii	":e!"
+	.ascii	"Smith"
 
 .subsections_via_symbols

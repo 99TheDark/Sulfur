@@ -10,6 +10,6 @@ Compilation Steps
 - Lexer
 - Parser 
 - Type Inferrer 
-- LLVM Code Generator (REDO)
+- LLVM Code Generator 
 - Assembly Compiler
 - Code Runner

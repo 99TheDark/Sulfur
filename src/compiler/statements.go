@@ -19,7 +19,16 @@ func (g *generator) genStmt(expr ast.Expr) {
 }
 
 func (g *generator) genDecl(x ast.Declaration) {
-	g.genExpr(x.Value)
+	bl := g.bl()
+	val := g.genExpr(x.Value)
+
+	alloca := bl.NewAlloca(val.Type())
+	alloca.LocalName = x.Name.Name
+
+	bl.NewStore(val, alloca)
+
+	vari := g.top.Vars[x.Name.Name]
+	*vari.Value = alloca
 }
 
 func (g *generator) genFuncCall(x ast.FuncCall) {

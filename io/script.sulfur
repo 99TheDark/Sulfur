@@ -1,1 +1,10 @@
-println("a β ג" + "ωⱞ" + ":e!")
+string firstName = "John "
+string lastName  = "Smith"
+
+println(firstName + lastName)
+
+int x = 5 + 3
+int y = x * x - x
+
+float abc = 7.7 - 0.1 % 2.06
+float def = 3.6 + abc

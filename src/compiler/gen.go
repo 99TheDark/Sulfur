@@ -50,7 +50,7 @@ func (g *generator) llraw(typ typing.Type) types.Type {
 
 func (g *generator) typ(x ast.Expr) types.Type {
 	if typ, ok := g.types[x]; ok {
-		return g.lltyp(typ)
+		return g.llraw(typ)
 	}
 	return types.Void
 }

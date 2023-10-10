@@ -52,7 +52,7 @@ func (c *checker) inferDeclaration(x ast.Declaration) {
 	if typing.Type(x.Type.Name) != val {
 		Errors.Error("Expected "+x.Type.Name+", but got "+val.String()+" instead", x.Loc())
 	}
-	c.top.Vars[x.Name.Name] = ast.NewVariable(typing.Type(x.Type.Name), ast.Local)
+	c.top.Vars[x.Name.Name] = ast.NewVariable(val, ast.Local)
 }
 
 func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {

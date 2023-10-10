@@ -15,6 +15,8 @@ import (
 
 func (g *generator) genExpr(expr ast.Expr) value.Value {
 	switch x := expr.(type) {
+	case ast.Identifier:
+		return g.genIdentifier(x)
 	case ast.Integer:
 		return constant.NewInt(types.I32, x.Value)
 	case ast.Float:
@@ -29,6 +31,14 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 
 	Errors.Error("Expression cannot be generated", expr.Loc())
 	return constant.NewInt(types.I32, 0)
+}
+
+func (g *generator) genIdentifier(x ast.Identifier) value.Value {
+	bl := g.bl()
+	vari := g.top.Lookup(x.Name, x.Pos)
+	val := *vari.Value
+	load := bl.NewLoad(g.typ(x), val)
+	return load
 }
 
 func (g *generator) genString(x ast.String) value.Value {
@@ -102,12 +112,44 @@ func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
 	switch x.Op.Type {
 	case lexer.Addition:
 		switch typ {
-		case typing.String:
+		case typing.String: // string + string
 			alloca := bl.NewAlloca(ll)
 			alloca.Align = 8
 
 			bl.NewCall(g.builtins["concat"], alloca, left, right)
 			return alloca
+		case typing.Integer: // int + int
+			return bl.NewAdd(left, right)
+		case typing.Float: // float + float
+			return bl.NewFAdd(left, right)
+		}
+	case lexer.Subtraction:
+		switch typ {
+		case typing.Integer: // int - int
+			return bl.NewSub(left, right)
+		case typing.Float: // float - float
+			return bl.NewFSub(left, right)
+		}
+	case lexer.Multiplication:
+		switch typ {
+		case typing.Integer: // int * int
+			return bl.NewMul(left, right)
+		case typing.Float: // float * float
+			return bl.NewFMul(left, right)
+		}
+	case lexer.Division:
+		switch typ {
+		case typing.Integer: // int / int
+			return bl.NewSDiv(left, right)
+		case typing.Float: // float / float
+			return bl.NewFDiv(left, right)
+		}
+	case lexer.Modulus:
+		switch typ {
+		case typing.Integer: // int % int
+			return bl.NewSRem(left, right)
+		case typing.Float: // float % float
+			return bl.NewFRem(left, right)
 		}
 	}
 

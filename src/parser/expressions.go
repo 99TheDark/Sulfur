@@ -141,6 +141,7 @@ func (p *parser) parseBoolean() ast.Boolean {
 
 func (p *parser) parseNumber() ast.Expr {
 	tok := p.expect(lexer.Number)
+	// TODO: Make 2.0 a float, not an int
 	if f64, err := strconv.ParseFloat(tok.Value, 64); err == nil {
 		if math.Mod(f64, 1) == 0 {
 			return ast.Integer{
