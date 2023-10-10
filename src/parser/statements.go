@@ -11,7 +11,7 @@ func (p *parser) parseStmt() ast.Expr {
 	tok := p.at()
 	switch tok.Type {
 	case lexer.Identifier:
-		return p.parseHybrid(true)
+		return p.parseHybrid()
 	case lexer.Func:
 		return p.parseFunction()
 	case lexer.Class:
@@ -36,7 +36,7 @@ func (p *parser) parseStmt() ast.Expr {
 	}
 }
 
-func (p *parser) parseHybrid(errors bool) ast.Expr {
+func (p *parser) parseHybrid() ast.Expr {
 	iden := p.parseIdentifier()
 	tok := p.at()
 	switch tok.Type {
@@ -87,7 +87,6 @@ func (p *parser) parseHybrid(errors bool) ast.Expr {
 			},
 			[]lexer.TokenType{lexer.CloseParen},
 			[]lexer.TokenType{lexer.Delimiter},
-			// TODO: Allow newlines
 		)
 		return ast.FuncCall{
 			Func:   iden,
@@ -106,9 +105,7 @@ func (p *parser) parseHybrid(errors bool) ast.Expr {
 		}
 	}
 
-	if errors {
-		Errors.Error("Incomplete statement", tok.Location)
-	}
+	Errors.Error("Incomplete statement", tok.Location)
 	return &ast.BadExpr{
 		Pos: tok.Location,
 	}
@@ -256,11 +253,11 @@ func (p *parser) parseIfStmt() ast.IfStatement {
 
 func (p *parser) parseForLoop() ast.ForLoop {
 	tok := p.expect(lexer.For)
-	init := p.parseHybrid(true)
+	init := p.parseHybrid()
 	p.expect(lexer.NewLine, lexer.Semicolon)
 	comp := p.parseComparison()
 	p.expect(lexer.NewLine, lexer.Semicolon)
-	inc := p.parseHybrid(true)
+	inc := p.parseHybrid()
 	body := p.parseBlock()
 	return ast.ForLoop{
 		Pos:  tok.Location,

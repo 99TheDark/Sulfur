@@ -15,3 +15,12 @@ y := 19
 if y > 12 {
     println("No else")
 }
+
+z := 7
+if z + x > y {
+    println("1: abc")
+} else if z < x {
+    println("2: def")
+} else {
+    println("3: ghi")
+}

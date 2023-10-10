@@ -43,6 +43,7 @@ func (g *generator) genFuncCall(x ast.FuncCall) {
 
 func (g *generator) genIfStmt(x ast.IfStatement) {
 	id := fmt.Sprint(g.top.BlockCount)
+	g.top.BlockCount++
 
 	main := g.bl
 
@@ -51,28 +52,58 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 	thenBl := g.topfunc.NewBlock("if.then" + id)
 	main.NewBr(thenBl)
 
-	g.bl = thenBl
-	g.genBlock(x.Body)
-
 	if ast.Empty(x.Else) {
-		endBl := g.topfunc.NewBlock("if.end" + id)
+		/*endBl := g.topfunc.NewBlock("if.end" + id)
 		thenBl.NewBr(endBl)
 
-		main.NewCondBr(cond, thenBl, endBl)
-		g.bl = endBl
+		g.bl = thenBl
+		g.genBlock(x.Body)
+
+		if g.bl == thenBl {
+			g.bl = endBl
+		}
+		main.NewCondBr(cond, thenBl, endBl)*/
 	} else {
 		elseBl := g.topfunc.NewBlock("if.else" + id)
 
+		g.bl = thenBl
+		g.genBlock(x.Body)
+
 		g.bl = elseBl
 		g.genBlock(x.Else)
+
+		main.NewCondBr(cond, thenBl, elseBl)
 
 		endBl := g.topfunc.NewBlock("if.end" + id)
 		thenBl.NewBr(endBl)
 		elseBl.NewBr(endBl)
 
-		main.NewCondBr(cond, thenBl, elseBl)
+		if g.bl != elseBl {
+			g.bl.NewBr(endBl)
+		}
 		g.bl = endBl
 	}
 
-	g.top.BlockCount++
+	/*
+		entry
+		if cond {
+
+		} else {
+			if cond {
+
+			} else {
+
+			}
+			end
+		}
+		end
+
+		entry -> if.cond1
+		if.then1
+		if.else1 -> if.cond2
+		if.then2
+		if.else2
+		if.end1
+		if.end2
+	*/
 }

@@ -110,12 +110,13 @@ func (p *parser) parsePrimary() ast.Expr {
 	case lexer.OpenParen:
 		return p.parseGroup()
 	case lexer.Identifier:
-		oldIdx := p.idx
-		hyrbid := p.parseHybrid(false)
+		// TODO: Make this work with expressions
+		/*oldIdx := p.idx
+		hyrbid := p.parseHybrid()
 		if ast.Valid(hyrbid) {
 			return hyrbid
 		}
-		p.idx = oldIdx
+		p.idx = oldIdx*/
 
 		return p.parseIdentifier()
 	}
