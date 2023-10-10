@@ -59,54 +59,40 @@ _println:                               ; @println
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #64
-	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 64
+	sub	sp, sp, #48
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 48
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	x8, #16
 Lloh0:
 	adrp	x9, l_.str0@PAGE
-	movk	x8, #19, lsl #32
+	mov	x8, #25769803782
 Lloh1:
 	add	x9, x9, l_.str0@PAGEOFF
-	add	x0, sp, #32
-	stp	x8, x9, [sp, #32]
-	bl	_println
-	mov	x8, #20
-Lloh2:
-	adrp	x9, l_.str1@PAGE
-	movk	x8, #20, lsl #32
-Lloh3:
-	add	x9, x9, l_.str1@PAGEOFF
 	add	x0, sp, #16
 	stp	x8, x9, [sp, #16]
-	bl	_print
-	mov	x8, #11
-Lloh4:
-	adrp	x9, l_.str2@PAGE
-	movk	x8, #14, lsl #32
-Lloh5:
-	add	x9, x9, l_.str2@PAGEOFF
+	bl	_println
+	mov	x8, #5
+Lloh2:
+	adrp	x9, l_.str1@PAGE
+	movk	x8, #5, lsl #32
+Lloh3:
+	add	x9, x9, l_.str1@PAGEOFF
 	mov	x0, sp
 	stp	x8, x9, [sp]
 	bl	_println
-	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
-	add	sp, sp, #64
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #48
 	ret
-	.loh AdrpAdd	Lloh4, Lloh5
 	.loh AdrpAdd	Lloh2, Lloh3
 	.loh AdrpAdd	Lloh0, Lloh1
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__const
 l_.str0:                                ; @.str0
-	.ascii	"Hello, world! \316\265\342\261\236"
+	.ascii	"Hello "
 
 l_.str1:                                ; @.str1
-	.ascii	"My name is TheDark. "
-
-l_.str2:                                ; @.str2
-	.ascii	"\317\200 \342\211\210 3.14159"
+	.ascii	"world"
 
 .subsections_via_symbols
