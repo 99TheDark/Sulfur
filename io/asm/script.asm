@@ -144,12 +144,13 @@ Lloh0:
 	mov	x9, #5
 Lloh1:
 	adrp	x10, l_.str1@PAGE
+	mov	x11, #2
 Lloh2:
 	add	x8, x8, l_.str0@PAGEOFF
-	movk	x9, #5, lsl #32
+	movk	x9, #7, lsl #32
 Lloh3:
 	add	x10, x10, l_.str1@PAGEOFF
-	mov	x11, #8589934594
+	movk	x11, #5, lsl #32
 	add	x0, sp, #32
 	add	x1, sp, #64
 	add	x2, sp, #48
@@ -158,7 +159,7 @@ Lloh3:
 	bl	_concat
 Lloh4:
 	adrp	x9, l_.str2@PAGE
-	mov	x8, #25769803782
+	mov	x8, #12884901891
 Lloh5:
 	add	x9, x9, l_.str2@PAGEOFF
 	mov	x0, sp
@@ -178,12 +179,12 @@ Lloh5:
                                         ; -- End function
 	.section	__TEXT,__const
 l_.str0:                                ; @.str0
-	.ascii	"Hello"
+	.ascii	"a \316\262 \327\222"
 
 l_.str1:                                ; @.str1
-	.ascii	", "
+	.ascii	"\317\211\342\261\236"
 
 l_.str2:                                ; @.str2
-	.ascii	"world!"
+	.ascii	":e!"
 
 .subsections_via_symbols

@@ -24,6 +24,7 @@ func (g *generator) genDecl(x ast.Declaration) {
 
 func (g *generator) genFuncCall(x ast.FuncCall) {
 	// TODO: Make work with non-builtins
+	// TODO: Include return value in parameter as pointer if a struct
 	bl := g.bl()
 
 	params := []value.Value{}
