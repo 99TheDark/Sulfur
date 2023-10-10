@@ -1,6 +1,3 @@
-func print(string str) {}
-func println(string str) {}
-
 println("Hello, world! εⱞ" )
 print("My name is TheDark. ")
 println("π ≈ 3.14159")

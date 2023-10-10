@@ -3,6 +3,7 @@ package checker
 import (
 	"fmt"
 	"sulfur/src/ast"
+	"sulfur/src/builtins"
 	. "sulfur/src/errors"
 	"sulfur/src/typing"
 )
@@ -73,9 +74,8 @@ func (c *checker) inferTypeCast(x ast.TypeCast) typing.Type {
 }
 
 func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
-	// TODO: Allow builtins
+	// TODO: Allow function overloading
 	for _, fun := range c.program.Functions {
-		// TODO: Allow function overloading
 		if fun.Name.Name == x.Func.Name {
 			l1, l2 := len(fun.Params), len(x.Params)
 			if l1 != l2 {
@@ -91,6 +91,24 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 			}
 
 			return typing.Type(fun.Return.Name)
+		}
+	}
+	for _, fun := range builtins.Funcs {
+		if fun.Name == x.Func.Name {
+			l1, l2 := len(fun.Params), len(x.Params)
+			if l1 != l2 {
+				Errors.Error("Only "+fmt.Sprint(l1)+" parameters given, but "+fmt.Sprint(l2)+" expected", x.Func.Pos)
+			}
+
+			for i, param := range x.Params {
+				typ := c.inferExpr(param)
+				paramTyp := fun.Params[i].Type
+				if typ != paramTyp {
+					Errors.Error("Expected "+paramTyp.String()+", but got "+typ.String()+" instead", param.Loc())
+				}
+			}
+
+			return fun.Return
 		}
 	}
 	Errors.Error("The function "+x.Func.Name+" is undefined", x.Func.Pos)
