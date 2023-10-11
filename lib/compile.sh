@@ -1,8 +1,11 @@
 #!/bin/bash
 cd lib/builtin
+rm linked.bc
+
 for file in ./*.ll; do 
     [ -e "$file" ] || continue
     llvm-as "$file" -o "${file%.ll}.bc"
 done
 
-llvm-link print.bc string.bc -o linked.bc
+bc=(./*.bc)
+llvm-link "${bc[@]}" -o linked.bc
