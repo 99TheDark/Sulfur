@@ -251,12 +251,12 @@ _main:                                  ; @main
 	.cfi_offset w29, -16
 Lloh0:
 	adrp	x9, l_.str1@PAGE
-	mov	w1, #47302
+	mov	w1, #18235
 	mov	x8, #64424509455
 Lloh1:
 	add	x9, x9, l_.str1@PAGEOFF
 	add	x0, sp, #16
-	movk	w1, #65177, lsl #16
+	movk	w1, #358, lsl #16
 	stp	x8, x9, [sp, #32]
 	bl	_.conv.int_string
 	mov	x0, sp

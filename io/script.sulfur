@@ -1,3 +1,4 @@
+// Should genertate: void @formatName(string*, string*, string*)
 func formatName(string firstName, string lastName) (string) {
     return lastName + ", " + firstName
 }
@@ -10,4 +11,4 @@ func fibonacci(int x) (int) {
     }
 }
 
-println("The number is: " + string!(-23480123))
+println("The number is: " + string!(-23480123 * -1))

@@ -183,9 +183,9 @@ func (g *generator) genUnaryOp(x ast.UnaryOp) value.Value {
 	case lexer.Subtraction:
 		switch typ {
 		case typing.Integer: // -int
-			return bl.NewSub(One, val)
+			return bl.NewSub(Zero, val)
 		case typing.Float: // -float
-			return bl.NewFSub(One, val)
+			return bl.NewFSub(FZero, val)
 		}
 	}
 

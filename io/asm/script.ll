@@ -15,12 +15,14 @@ entry:
 	store i32 15, i32* %3, align 8
 	%4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
 	store i8* %0, i8** %4, align 8
-	%5 = sub i32 1, 23480123
-	%6 = alloca %type.string, align 8
-	call void @.conv.int_string(%type.string* %6, i32 %5)
-	%7 = alloca %type.string, align 8
-	call void @.add.string_string(%type.string* %7, %type.string* %1, %type.string* %6)
-	call void @.println(%type.string* %7)
+	%5 = sub i32 0, 23480123
+	%6 = sub i32 0, 1
+	%7 = mul i32 %5, %6
+	%8 = alloca %type.string, align 8
+	call void @.conv.int_string(%type.string* %8, i32 %7)
+	%9 = alloca %type.string, align 8
+	call void @.add.string_string(%type.string* %9, %type.string* %1, %type.string* %8)
+	call void @.println(%type.string* %9)
 	ret void
 }
 
