@@ -1,4 +1,4 @@
-func formatName(string firstName, string lastName) (string) {
+/*func formatName(string firstName, string lastName) (string) {
     return lastName + ", " + firstName
 }
 
@@ -8,4 +8,4 @@ func fibonacci(int x) (int) {
     } else {
         return fibonacci(x - 2) + fibonacci(x - 1)
     }
-}
+}*/

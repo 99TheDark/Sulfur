@@ -9,6 +9,7 @@ var Funcs = []FuncSignature{
 	QuickFunc("print", typing.Void, typing.String),
 	QuickFunc("println", typing.Void, typing.String),
 	QuickFunc("concat", typing.Void, typing.String, typing.String, typing.String), // Temporary
+	QuickFunc("int_string", typing.Void, typing.String, typing.Integer),           // Temporary
 }
 
 func QuickFunc(name string, ret string, params ...string) FuncSignature {
