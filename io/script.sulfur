@@ -11,4 +11,4 @@ func fibonacci(int x) (int) {
     }
 }
 
-println("The number is: " + string!(-23480123 * -1))
+println("The numbers are: " + string!(-43201) + ", " + string!(0) + ", and " + string!(762))

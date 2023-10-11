@@ -10,7 +10,6 @@ _.conv.int_string:                      ; @.conv.int_string
 	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
 	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
 	add	x29, sp, #48
-	sub	sp, sp, #32
 	.cfi_def_cfa w29, 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
@@ -21,74 +20,103 @@ _.conv.int_string:                      ; @.conv.int_string
 	.cfi_offset w23, -56
 	.cfi_offset w24, -64
 	mov	x19, x0
+	cbz	w1, LBB0_7
+; %bb.1:                                ; %if.end
+	mov	x20, sp
+	sub	x21, x20, #16
+	mov	sp, x21
+	mov	x24, sp
+	stur	w1, [x20, #-16]
+	sub	x8, x24, #16
+	mov	sp, x8
 	mov	w0, #10
-	stur	w1, [x29, #-52]
-	mov	w21, #10
+	mov	w23, #10
 	bl	_malloc
-	mov	x20, x0
-	mov	w9, #9
-	ldur	w8, [x29, #-52]
-	stur	x0, [x29, #-64]
-	stp	wzr, w9, [x29, #-72]
-	tbz	w8, #31, LBB0_2
-; %bb.1:                                ; %if.then
-	neg	w8, w8
-	mov	w9, #1
-	stur	w8, [x29, #-52]
-	stur	w9, [x29, #-72]
-LBB0_2:                                 ; %while.cond.preheader
-	mov	w8, #26215
-	movk	w8, #26214, lsl #16
-	ldur	w9, [x29, #-52]
-	cmp	w9, #1
-	b.lt	LBB0_4
-LBB0_3:                                 ; %while.body
-                                        ; =>This Inner Loop Header: Depth=1
-	smull	x10, w9, w8
-	lsr	x11, x10, #63
-	asr	x10, x10, #34
-	add	w10, w10, w11
-	ldursw	x11, [x29, #-68]
-	msub	w9, w10, w21, w9
-	sub	w12, w11, #1
-	stur	w10, [x29, #-52]
-	add	w9, w9, #48
-	strb	w9, [x20, x11]
-	stur	w12, [x29, #-68]
-	mov	w9, w10
-	cmp	w9, #1
-	b.ge	LBB0_3
-LBB0_4:                                 ; %while.end
 	mov	x8, sp
-	sub	x9, x8, #16
-	mov	sp, x9
-	ldp	w22, w23, [x29, #-72]
-	sub	w9, w22, w23
-	add	w21, w9, #9
+	stur	x0, [x24, #-16]
+	sub	x22, x8, #16
+	mov	sp, x22
+	mov	w9, #9
+	mov	x10, sp
+	stur	w9, [x8, #-16]
+	sub	x8, x10, #16
+	mov	sp, x8
+	ldur	w9, [x20, #-16]
+	mov	x20, x0
+	stur	wzr, [x10, #-16]
+	tbz	w9, #31, LBB0_3
+; %bb.2:                                ; %if.then1
+	neg	w9, w9
+	mov	w10, #1
+	str	w9, [x21]
+	str	w10, [x8]
+LBB0_3:                                 ; %while.cond.preheader
+	mov	w9, #26215
+	movk	w9, #26214, lsl #16
+	ldr	w10, [x21]
+	cmp	w10, #1
+	b.lt	LBB0_5
+LBB0_4:                                 ; %while.body
+                                        ; =>This Inner Loop Header: Depth=1
+	smull	x11, w10, w9
+	lsr	x12, x11, #63
+	asr	x11, x11, #34
+	add	w11, w11, w12
+	ldrsw	x12, [x22]
+	msub	w10, w11, w23, w10
+	sub	w13, w12, #1
+	str	w11, [x21]
+	add	w10, w10, #48
+	strb	w10, [x20, x12]
+	str	w13, [x22]
+	mov	w10, w11
+	cmp	w10, #1
+	b.ge	LBB0_4
+LBB0_5:                                 ; %while.end
+	mov	x9, sp
+	sub	x10, x9, #16
+	mov	sp, x10
+	ldr	w24, [x22]
+	ldr	w23, [x8]
+	sub	w8, w23, w24
+	add	w21, w8, #9
 	mov	w0, w21
-	stur	w21, [x8, #-16]
+	stur	w21, [x9, #-16]
 	stp	w21, w21, [x19]
 	bl	_malloc
 	str	x0, [x19, #8]
-	cbz	w22, LBB0_6
-; %bb.5:                                ; %if.then2
+	cbz	w23, LBB0_8
+; %bb.6:                                ; %if.then2
 	ldr	x8, [x19, #8]
 	mov	w9, #45
 	strb	w9, [x8]
-	b	LBB0_7
-LBB0_6:                                 ; %if.else2
-	add	w8, w23, #1
-	stur	w8, [x29, #-68]
-LBB0_7:                                 ; %if.end2
+	b	LBB0_9
+LBB0_7:                                 ; %if.then
+Lloh0:
+	adrp	x9, l_.str0@PAGE
+	mov	x8, #4294967297
+Lloh1:
+	add	x9, x9, l_.str0@PAGEOFF
+	stp	x8, x9, [x19]
+	sub	sp, x29, #48
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	ret
+LBB0_8:                                 ; %if.else2
+	add	w8, w24, #1
+	str	w8, [x22]
+LBB0_9:                                 ; %if.end2
 	mov	x10, sp
 	sub	x8, x10, #16
 	mov	sp, x8
-	ldur	w9, [x29, #-68]
-	stur	w22, [x10, #-16]
+	ldr	w9, [x22]
+	stur	w23, [x10, #-16]
 	ldr	w10, [x8]
 	cmp	w10, w21
-	b.ge	LBB0_9
-LBB0_8:                                 ; %for.body
+	b.ge	LBB0_11
+LBB0_10:                                ; %for.body
                                         ; =>This Inner Loop Header: Depth=1
 	add	w11, w9, w10
 	add	w13, w10, #1
@@ -98,8 +126,8 @@ LBB0_8:                                 ; %for.body
 	strb	w11, [x12, w10, sxtw]
 	mov	w10, w13
 	cmp	w10, w21
-	b.lt	LBB0_8
-LBB0_9:                                 ; %for.end
+	b.lt	LBB0_10
+LBB0_11:                                ; %for.end
 	mov	x0, x20
 	bl	_free
 	sub	sp, x29, #48
@@ -108,6 +136,7 @@ LBB0_9:                                 ; %for.end
 	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
 	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
 	ret
+	.loh AdrpAdd	Lloh0, Lloh1
 	.cfi_endproc
                                         ; -- End function
 	.globl	_.print                         ; -- Begin function .print
@@ -244,20 +273,54 @@ LBB3_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #64
-	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 64
+	sub	sp, sp, #192
+	stp	x29, x30, [sp, #176]            ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 192
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-Lloh0:
+	mov	x8, #17
+Lloh2:
 	adrp	x9, l_.str1@PAGE
-	mov	w1, #18235
-	mov	x8, #64424509455
-Lloh1:
+	movk	x8, #17, lsl #32
+Lloh3:
 	add	x9, x9, l_.str1@PAGEOFF
+	add	x0, sp, #144
+	mov	w1, #-43201
+	stp	x8, x9, [sp, #160]
+	bl	_.conv.int_string
+	add	x0, sp, #128
+	add	x1, sp, #160
+	add	x2, sp, #144
+	bl	_.add.string_string
+Lloh4:
+	adrp	x9, l_.str0.1@PAGE
+	mov	x8, #8589934594
+Lloh5:
+	add	x9, x9, l_.str0.1@PAGEOFF
+	add	x0, sp, #96
+	add	x1, sp, #128
+	add	x2, sp, #112
+	stp	x8, x9, [sp, #112]
+	bl	_.add.string_string
+	add	x0, sp, #80
+	mov	w1, wzr
+	bl	_.conv.int_string
+	add	x0, sp, #64
+	add	x1, sp, #96
+	add	x2, sp, #80
+	bl	_.add.string_string
+Lloh6:
+	adrp	x9, l_.str3@PAGE
+	mov	x8, #25769803782
+Lloh7:
+	add	x9, x9, l_.str3@PAGEOFF
+	add	x0, sp, #32
+	add	x1, sp, #64
+	add	x2, sp, #48
+	stp	x8, x9, [sp, #48]
+	bl	_.add.string_string
 	add	x0, sp, #16
-	movk	w1, #358, lsl #16
-	stp	x8, x9, [sp, #32]
+	mov	w1, #762
 	bl	_.conv.int_string
 	mov	x0, sp
 	add	x1, sp, #32
@@ -265,14 +328,25 @@ Lloh1:
 	bl	_.add.string_string
 	mov	x0, sp
 	bl	_.println
-	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
-	add	sp, sp, #64
+	ldp	x29, x30, [sp, #176]            ; 16-byte Folded Reload
+	add	sp, sp, #192
 	ret
-	.loh AdrpAdd	Lloh0, Lloh1
+	.loh AdrpAdd	Lloh6, Lloh7
+	.loh AdrpAdd	Lloh4, Lloh5
+	.loh AdrpAdd	Lloh2, Lloh3
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__const
+l_.str0:                                ; @.str0
+	.byte	48
+
+l_.str0.1:                              ; @.str0.1
+	.ascii	", "
+
 l_.str1:                                ; @.str1
-	.ascii	"The number is: "
+	.ascii	"The numbers are: "
+
+l_.str3:                                ; @.str3
+	.ascii	", and "
 
 .subsections_via_symbols

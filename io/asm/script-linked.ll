@@ -3,10 +3,27 @@ source_filename = "llvm-link"
 
 %type.string = type { i32, i32, i8* }
 
-@.str1 = private unnamed_addr constant [15 x i8] c"The number is: ", align 1
+@.str0 = private unnamed_addr constant [1 x i8] c"0", align 1
+@.str0.1 = private unnamed_addr constant [2 x i8] c", ", align 1
+@.str1 = private unnamed_addr constant [17 x i8] c"The numbers are: ", align 1
+@.str3 = private unnamed_addr constant [6 x i8] c", and ", align 1
 
 define void @.conv.int_string(%type.string* %ret, i32 %num) {
 entry:
+  %0 = icmp eq i32 %num, 0
+  br i1 %0, label %if.then, label %if.end
+
+if.then:                                          ; preds = %entry
+  %1 = getelementptr inbounds [1 x i8], [1 x i8]* @.str0, i32 0, i32 0
+  %2 = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 0
+  store i32 1, i32* %2, align 8
+  %3 = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 1
+  store i32 1, i32* %3, align 8
+  %4 = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 2
+  store i8* %1, i8** %4, align 8
+  br label %exit
+
+if.end:                                           ; preds = %entry
   %num.adr = alloca i32, align 4
   store i32 %num, i32* %num.adr, align 4
   %buf = alloca i8*, align 8
@@ -16,95 +33,98 @@ entry:
   store i32 9, i32* %i, align 4
   %sign = alloca i32, align 4
   store i32 0, i32* %sign, align 4
-  %0 = load i32, i32* %num.adr, align 4
-  %1 = load i8*, i8** %buf, align 8
-  %2 = icmp slt i32 %0, 0
-  br i1 %2, label %if.then, label %if.end
+  %5 = load i32, i32* %num.adr, align 4
+  %6 = load i8*, i8** %buf, align 8
+  %7 = icmp slt i32 %5, 0
+  br i1 %7, label %if.then1, label %if.end1
 
-if.then:                                          ; preds = %entry
-  %3 = sub i32 0, %0
-  store i32 %3, i32* %num.adr, align 4
+if.then1:                                         ; preds = %if.end
+  %8 = sub i32 0, %5
+  store i32 %8, i32* %num.adr, align 4
   store i32 1, i32* %sign, align 4
-  br label %if.end
+  br label %if.end1
 
-if.end:                                           ; preds = %if.then, %entry
+if.end1:                                          ; preds = %if.then1, %if.end
   br label %while.cond
 
-while.cond:                                       ; preds = %while.body, %if.end
-  %4 = load i32, i32* %num.adr, align 4
-  %5 = icmp sgt i32 %4, 0
-  br i1 %5, label %while.body, label %while.end
+while.cond:                                       ; preds = %while.body, %if.end1
+  %9 = load i32, i32* %num.adr, align 4
+  %10 = icmp sgt i32 %9, 0
+  br i1 %10, label %while.body, label %while.end
 
 while.body:                                       ; preds = %while.cond
-  %6 = srem i32 %4, 10
-  %7 = add i32 48, %6
-  %8 = trunc i32 %7 to i8
-  %9 = load i32, i32* %i, align 4
-  %10 = getelementptr inbounds i8, i8* %1, i32 %9
-  store i8 %8, i8* %10, align 1
-  %11 = sdiv i32 %4, 10
-  store i32 %11, i32* %num.adr, align 4
-  %12 = add i32 %9, -1
-  store i32 %12, i32* %i, align 4
+  %11 = srem i32 %9, 10
+  %12 = add i32 48, %11
+  %13 = trunc i32 %12 to i8
+  %14 = load i32, i32* %i, align 4
+  %15 = getelementptr inbounds i8, i8* %6, i32 %14
+  store i8 %13, i8* %15, align 1
+  %16 = sdiv i32 %9, 10
+  store i32 %16, i32* %num.adr, align 4
+  %17 = add i32 %14, -1
+  store i32 %17, i32* %i, align 4
   br label %while.cond
 
 while.end:                                        ; preds = %while.cond
   %size = alloca i32, align 4
-  %13 = load i32, i32* %i, align 4
-  %14 = sub i32 9, %13
-  %15 = load i32, i32* %sign, align 4
-  %16 = add i32 %14, %15
-  store i32 %16, i32* %size, align 4
-  %17 = load i32, i32* %size, align 4
+  %18 = load i32, i32* %i, align 4
+  %19 = sub i32 9, %18
+  %20 = load i32, i32* %sign, align 4
+  %21 = add i32 %19, %20
+  store i32 %21, i32* %size, align 4
+  %22 = load i32, i32* %size, align 4
   %ret.len = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 0
-  store i32 %17, i32* %ret.len, align 8
+  store i32 %22, i32* %ret.len, align 8
   %ret.size = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 1
-  store i32 %17, i32* %ret.size, align 8
+  store i32 %22, i32* %ret.size, align 8
   %ret.adr = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 2
-  %18 = call i8* @malloc(i32 %17)
-  store i8* %18, i8** %ret.adr, align 8
-  %19 = icmp ne i32 %15, 0
-  br i1 %19, label %if.then2, label %if.else2
+  %23 = call i8* @malloc(i32 %22)
+  store i8* %23, i8** %ret.adr, align 8
+  %24 = icmp ne i32 %20, 0
+  br i1 %24, label %if.then2, label %if.else2
 
 if.then2:                                         ; preds = %while.end
-  %20 = load i8*, i8** %ret.adr, align 8
-  %21 = getelementptr inbounds i8, i8* %20, i32 0
-  store i8 45, i8* %21, align 1
+  %25 = load i8*, i8** %ret.adr, align 8
+  %26 = getelementptr inbounds i8, i8* %25, i32 0
+  store i8 45, i8* %26, align 1
   br label %if.end2
 
 if.else2:                                         ; preds = %while.end
-  %22 = add i32 %13, 1
-  store i32 %22, i32* %i, align 4
+  %27 = add i32 %18, 1
+  store i32 %27, i32* %i, align 4
   br label %if.end2
 
 if.end2:                                          ; preds = %if.else2, %if.then2
   %j = alloca i32, align 4
-  store i32 %15, i32* %j, align 4
-  %23 = load i32, i32* %i, align 4
+  store i32 %20, i32* %j, align 4
+  %28 = load i32, i32* %i, align 4
   br label %for.cond
 
 for.cond:                                         ; preds = %for.inc, %if.end2
-  %24 = load i32, i32* %j, align 4
-  %25 = icmp slt i32 %24, %17
-  br i1 %25, label %for.body, label %for.end
+  %29 = load i32, i32* %j, align 4
+  %30 = icmp slt i32 %29, %22
+  br i1 %30, label %for.body, label %for.end
 
 for.body:                                         ; preds = %for.cond
-  %26 = add i32 %23, %24
-  %27 = getelementptr inbounds i8, i8* %1, i32 %26
-  %28 = load i8, i8* %27, align 1
+  %31 = add i32 %28, %29
+  %32 = getelementptr inbounds i8, i8* %6, i32 %31
+  %33 = load i8, i8* %32, align 1
   %ret.adr2 = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 2
-  %29 = load i8*, i8** %ret.adr2, align 8
-  %30 = getelementptr inbounds i8, i8* %29, i32 %24
-  store i8 %28, i8* %30, align 1
+  %34 = load i8*, i8** %ret.adr2, align 8
+  %35 = getelementptr inbounds i8, i8* %34, i32 %29
+  store i8 %33, i8* %35, align 1
   br label %for.inc
 
 for.inc:                                          ; preds = %for.body
-  %31 = add i32 %24, 1
-  store i32 %31, i32* %j, align 4
+  %36 = add i32 %29, 1
+  store i32 %36, i32* %j, align 4
   br label %for.cond
 
 for.end:                                          ; preds = %for.cond
-  call void @free(i8* %1)
+  call void @free(i8* %6)
+  br label %exit
+
+exit:                                             ; preds = %for.end, %if.then
   ret void
 }
 
@@ -233,21 +253,47 @@ while2.end:                                       ; preds = %while2.cond
 
 define void @main() {
 entry:
-  %0 = getelementptr inbounds [15 x i8], [15 x i8]* @.str1, i32 0, i32 0
+  %0 = getelementptr inbounds [17 x i8], [17 x i8]* @.str1, i32 0, i32 0
   %1 = alloca %type.string, align 8
   %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 15, i32* %2, align 8
+  store i32 17, i32* %2, align 8
   %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-  store i32 15, i32* %3, align 8
+  store i32 17, i32* %3, align 8
   %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
   store i8* %0, i8** %4, align 8
-  %5 = sub i32 0, 23480123
-  %6 = sub i32 0, 1
-  %7 = mul i32 %5, %6
-  %8 = alloca %type.string, align 8
-  call void @.conv.int_string(%type.string* %8, i32 %7)
+  %5 = sub i32 0, 43201
+  %6 = alloca %type.string, align 8
+  call void @.conv.int_string(%type.string* %6, i32 %5)
+  %7 = alloca %type.string, align 8
+  call void @.add.string_string(%type.string* %7, %type.string* %1, %type.string* %6)
+  %8 = getelementptr inbounds [2 x i8], [2 x i8]* @.str0.1, i32 0, i32 0
   %9 = alloca %type.string, align 8
-  call void @.add.string_string(%type.string* %9, %type.string* %1, %type.string* %8)
-  call void @.println(%type.string* %9)
+  %10 = getelementptr inbounds %type.string, %type.string* %9, i32 0, i32 0
+  store i32 2, i32* %10, align 8
+  %11 = getelementptr inbounds %type.string, %type.string* %9, i32 0, i32 1
+  store i32 2, i32* %11, align 8
+  %12 = getelementptr inbounds %type.string, %type.string* %9, i32 0, i32 2
+  store i8* %8, i8** %12, align 8
+  %13 = alloca %type.string, align 8
+  call void @.add.string_string(%type.string* %13, %type.string* %7, %type.string* %9)
+  %14 = alloca %type.string, align 8
+  call void @.conv.int_string(%type.string* %14, i32 0)
+  %15 = alloca %type.string, align 8
+  call void @.add.string_string(%type.string* %15, %type.string* %13, %type.string* %14)
+  %16 = getelementptr inbounds [6 x i8], [6 x i8]* @.str3, i32 0, i32 0
+  %17 = alloca %type.string, align 8
+  %18 = getelementptr inbounds %type.string, %type.string* %17, i32 0, i32 0
+  store i32 6, i32* %18, align 8
+  %19 = getelementptr inbounds %type.string, %type.string* %17, i32 0, i32 1
+  store i32 6, i32* %19, align 8
+  %20 = getelementptr inbounds %type.string, %type.string* %17, i32 0, i32 2
+  store i8* %16, i8** %20, align 8
+  %21 = alloca %type.string, align 8
+  call void @.add.string_string(%type.string* %21, %type.string* %15, %type.string* %17)
+  %22 = alloca %type.string, align 8
+  call void @.conv.int_string(%type.string* %22, i32 762)
+  %23 = alloca %type.string, align 8
+  call void @.add.string_string(%type.string* %23, %type.string* %21, %type.string* %22)
+  call void @.println(%type.string* %23)
   ret void
 }
