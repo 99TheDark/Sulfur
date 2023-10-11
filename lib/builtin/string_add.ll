@@ -5,7 +5,7 @@ source_filename = "lib/builtin/string"
 declare i8* @malloc(i32)
 
 ; sret not working?
-define void @concat(%type.string* %ret, %type.string* %a, %type.string* %b) {
+define void @.add.string_string(%type.string* %ret, %type.string* %a, %type.string* %b) {
 entry:
     ; ret.len = a.len + b.len
     %0 = getelementptr inbounds %type.string, %type.string* %a, i32 0, i32 0

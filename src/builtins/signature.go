@@ -24,9 +24,8 @@ type (
 		Return typing.Type
 	}
 
-	UnaryOpSignature struct {
-		Value  typing.Type
-		Op     lexer.TokenType
-		Return typing.Type
+	TypeConvSignature struct {
+		From typing.Type
+		To   typing.Type
 	}
 )

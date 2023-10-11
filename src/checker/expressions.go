@@ -78,7 +78,7 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 		if fun.Name.Name == x.Func.Name {
 			l1, l2 := len(fun.Params), len(*x.Params)
 			if l1 != l2 {
-				Errors.Error(fmt.Sprint(l1)+" parameters given, but "+fmt.Sprint(l2)+" expected", x.Func.Pos)
+				Errors.Error(fmt.Sprint(l2)+" parameters given, but "+fmt.Sprint(l1)+" expected", x.Func.Pos)
 			}
 
 			for i, param := range *x.Params {
@@ -96,7 +96,7 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 		if fun.Name == x.Func.Name {
 			l1, l2 := len(fun.Params), len(*x.Params)
 			if l1 != l2 {
-				Errors.Error(fmt.Sprint(l1)+" parameters given, but "+fmt.Sprint(l2)+" expected", x.Func.Pos)
+				Errors.Error(fmt.Sprint(l2)+" parameters given, but "+fmt.Sprint(l1)+" expected", x.Func.Pos)
 			}
 
 			for i, param := range *x.Params {

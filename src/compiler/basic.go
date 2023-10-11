@@ -1,6 +1,8 @@
 package compiler
 
-import "sulfur/src/ast"
+import (
+	"sulfur/src/ast"
+)
 
 func (g *generator) genBasicDecl(name string, value ast.Expr) {
 	bl := g.bl

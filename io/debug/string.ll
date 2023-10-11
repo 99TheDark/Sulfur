@@ -4,7 +4,7 @@ source_filename = "script.sulfur"
 
 @.str0 = private unnamed_addr constant [19 x i8] c"Hello, world! εⱞ", align 1
 
-declare void @println(%type.string* %0)
+declare void @.println(%type.string* %0)
 
 define void @main() {
 entry:
@@ -16,6 +16,6 @@ entry:
 	store i32 19, i32* %2, align 8
 	%3 = getelementptr inbounds %type.string, %type.string* %greeting, i32 0, i32 2
 	store i8* %0, i8** %3, align 8
-	call void @println(%type.string* %greeting)
+	call void @.println(%type.string* %greeting)
 	ret void
 }

@@ -5,7 +5,7 @@ source_filename = "lib/builtin/int_string"
 declare i8* @malloc(i32)
 declare void @free(i8*)
 
-define void @int_string(%type.string* %ret, i32 %num) {
+define void @.conv.int_string(%type.string* %ret, i32 %num) {
 entry:
     %num.adr = alloca i32, align 4
     store i32 %num, i32* %num.adr, align 4

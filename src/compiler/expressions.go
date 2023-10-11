@@ -26,6 +26,8 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 		return constant.NewBool(x.Value)
 	case ast.String:
 		return g.genString(x)
+	case ast.TypeConv:
+		return g.genTypeConv(x)
 	case ast.BinaryOp:
 		return g.genBinaryOp(x)
 	case ast.Comparison:
@@ -44,6 +46,7 @@ func (g *generator) genIdentifier(x ast.Identifier) value.Value {
 	return load
 }
 
+// TODO: Simplify
 func (g *generator) genString(x ast.String) value.Value {
 	bl := g.bl
 
@@ -106,6 +109,17 @@ func (g *generator) genString(x ast.String) value.Value {
 	return alloca
 }
 
+func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
+	bl := g.bl
+	val := g.genExpr(x.Value)
+
+	alloca := bl.NewAlloca(g.lltyp(typing.Type(x.Type.Name)))
+	alloca.Align = 8
+
+	bl.NewCall(g.biConv(string(g.types[x.Value]), x.Type.Name), alloca, val)
+	return alloca
+}
+
 func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
 	bl := g.bl
 	left := g.genExpr(x.Left)
@@ -118,8 +132,7 @@ func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
 		case typing.String: // string + string
 			alloca := bl.NewAlloca(ll)
 			alloca.Align = 8
-
-			bl.NewCall(g.builtins["concat"], alloca, left, right)
+			bl.NewCall(g.biBinop(lexer.Addition, typing.String, typing.String), alloca, left, right)
 			return alloca
 		case typing.Integer: // int + int
 			return bl.NewAdd(left, right)

@@ -89,10 +89,23 @@ func (p *parser) parseExponential() ast.Expr {
 func (p *parser) parseUnary() ast.Expr {
 	if p.is(lexer.UnaryOperator) {
 		tok := p.eat()
-		val := p.parsePrimary()
+		val := p.parseTypeConv()
 		return ast.UnaryOp{
 			Value: val,
 			Op:    tok,
+		}
+	}
+	return p.parseTypeConv()
+}
+
+func (p *parser) parseTypeConv() ast.Expr {
+	if p.tt() == lexer.Identifier && p.peek(1).Type == lexer.Not {
+		typ := p.parseIdentifier()
+		p.expect(lexer.Not)
+		val := p.parseGroup()
+		return ast.TypeConv{
+			Type:  typ,
+			Value: val,
 		}
 	}
 	return p.parsePrimary()

@@ -1,8 +1,8 @@
 	.section	__TEXT,__text,regular,pure_instructions
 	.build_version macos, 13, 0
-	.globl	_int_string                     ; -- Begin function int_string
+	.globl	_.conv.int_string               ; -- Begin function .conv.int_string
 	.p2align	2
-_int_string:                            ; @int_string
+_.conv.int_string:                      ; @.conv.int_string
 	.cfi_startproc
 ; %bb.0:                                ; %entry
 	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
@@ -110,9 +110,9 @@ LBB0_9:                                 ; %for.end
 	ret
 	.cfi_endproc
                                         ; -- End function
-	.globl	_print                          ; -- Begin function print
+	.globl	_.print                         ; -- Begin function .print
 	.p2align	2
-_print:                                 ; @print
+_.print:                                ; @.print
 	.cfi_startproc
 ; %bb.0:                                ; %entry
 	sub	sp, sp, #48
@@ -149,25 +149,25 @@ LBB1_2:                                 ; %for.end
 	ret
 	.cfi_endproc
                                         ; -- End function
-	.globl	_println                        ; -- Begin function println
+	.globl	_.println                       ; -- Begin function .println
 	.p2align	2
-_println:                               ; @println
+_.println:                              ; @.println
 	.cfi_startproc
 ; %bb.0:                                ; %entry
 	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
 	.cfi_def_cfa_offset 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	bl	_print
+	bl	_.print
 	mov	w0, #10
 	bl	_putchar
 	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret
 	.cfi_endproc
                                         ; -- End function
-	.globl	_concat                         ; -- Begin function concat
+	.globl	_.add.string_string             ; -- Begin function .add.string_string
 	.p2align	2
-_concat:                                ; @concat
+_.add.string_string:                    ; @.add.string_string
 	.cfi_startproc
 ; %bb.0:                                ; %entry
 	sub	sp, sp, #80
@@ -244,19 +244,35 @@ LBB3_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #32
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
+	sub	sp, sp, #64
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 64
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
+Lloh0:
+	adrp	x9, l_.str0@PAGE
+	mov	w1, #13640
+	mov	x8, #64424509455
+Lloh1:
+	add	x9, x9, l_.str0@PAGEOFF
+	add	x0, sp, #16
+	movk	w1, #113, lsl #16
+	stp	x8, x9, [sp, #32]
+	bl	_.conv.int_string
 	mov	x0, sp
-	mov	w1, #1443
-	bl	_int_string
+	add	x1, sp, #32
+	add	x2, sp, #16
+	bl	_.add.string_string
 	mov	x0, sp
-	bl	_println
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #32
+	bl	_.println
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	add	sp, sp, #64
 	ret
+	.loh AdrpAdd	Lloh0, Lloh1
 	.cfi_endproc
                                         ; -- End function
+	.section	__TEXT,__const
+l_.str0:                                ; @.str0
+	.ascii	"The number is: "
+
 .subsections_via_symbols

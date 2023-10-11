@@ -3,7 +3,9 @@ source_filename = "llvm-link"
 
 %type.string = type { i32, i32, i8* }
 
-define void @int_string(%type.string* %ret, i32 %num) {
+@.str0 = private unnamed_addr constant [15 x i8] c"The number is: ", align 1
+
+define void @.conv.int_string(%type.string* %ret, i32 %num) {
 entry:
   %num.adr = alloca i32, align 4
   store i32 %num, i32* %num.adr, align 4
@@ -110,7 +112,7 @@ declare i8* @malloc(i32)
 
 declare void @free(i8*)
 
-define void @print(%type.string* %str) {
+define void @.print(%type.string* %str) {
 entry:
   %i = alloca i32, align 8
   %0 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
@@ -148,14 +150,14 @@ for.end:                                          ; preds = %for.cond
 
 declare void @putchar(i8)
 
-define void @println(%type.string* %str) {
+define void @.println(%type.string* %str) {
 entry:
-  call void @print(%type.string* %str)
+  call void @.print(%type.string* %str)
   call void @putchar(i8 10)
   ret void
 }
 
-define void @concat(%type.string* %ret, %type.string* %a, %type.string* %b) {
+define void @.add.string_string(%type.string* %ret, %type.string* %a, %type.string* %b) {
 entry:
   %0 = getelementptr inbounds %type.string, %type.string* %a, i32 0, i32 0
   %1 = load i32, i32* %0, align 4
@@ -231,8 +233,18 @@ while2.end:                                       ; preds = %while2.cond
 
 define void @main() {
 entry:
-  %0 = alloca %type.string, align 8
-  call void @int_string(%type.string* %0, i32 1443)
-  call void @println(%type.string* %0)
+  %0 = getelementptr inbounds [15 x i8], [15 x i8]* @.str0, i32 0, i32 0
+  %1 = alloca %type.string, align 8
+  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
+  store i32 15, i32* %2, align 8
+  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
+  store i32 15, i32* %3, align 8
+  %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
+  store i8* %0, i8** %4, align 8
+  %5 = alloca %type.string, align 8
+  call void @.conv.int_string(%type.string* %5, i32 7419208)
+  %6 = alloca %type.string, align 8
+  call void @.add.string_string(%type.string* %6, %type.string* %1, %type.string* %5)
+  call void @.println(%type.string* %6)
   ret void
 }

@@ -5,9 +5,9 @@ source_filename = "script.sulfur"
 @.str0 = private unnamed_addr constant [6 x i8] c"Hello ", align 1
 @.str1 = private unnamed_addr constant [5 x i8] c"world", align 1
 
-declare void @print(%type.string*)
-declare void @println(%type.string*)
-declare void @concat(%type.string*, %type.string*, %type.string*)
+declare void @.print(%type.string*)
+declare void @.println(%type.string*)
+declare void @.add.string_string(%type.string*, %type.string*, %type.string*)
 
 define void @main() {
 entry:
@@ -33,9 +33,9 @@ entry:
 
 	; concat("Hello ", "world")
 	%10 = alloca %type.string, align 8
-	call void @concat(%type.string* %10, %type.string* %1, %type.string* %6)
+	call void @.add.string_string(%type.string* %10, %type.string* %1, %type.string* %6)
 
 	; println
-	call void @println(%type.string* %10)
+	call void @.println(%type.string* %10)
 	ret void
 }

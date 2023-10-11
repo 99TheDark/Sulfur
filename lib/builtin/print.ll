@@ -9,7 +9,7 @@ declare void @putchar(i8)
 ; 		  putchar(str.adr[i])
 ; 	  }
 ; }
-define void @print(%type.string* %str) {
+define void @.print(%type.string* %str) {
 entry:
 	%i = alloca i32, align 8
 	%0 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
@@ -49,9 +49,9 @@ for.end:
 ;     print(str)
 ;     putchar('\n')
 ; }
-define void @println(%type.string* %str) {
+define void @.println(%type.string* %str) {
 entry:
-	call void @print(%type.string* %str)
+	call void @.print(%type.string* %str)
 	call void @putchar(i8 10)
 	ret void
 }

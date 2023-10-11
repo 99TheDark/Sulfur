@@ -5,13 +5,6 @@ import (
 	"sulfur/src/typing"
 )
 
-var Funcs = []FuncSignature{
-	QuickFunc("print", typing.Void, typing.String),
-	QuickFunc("println", typing.Void, typing.String),
-	QuickFunc("concat", typing.Void, typing.String, typing.String, typing.String), // Temporary
-	QuickFunc("int_string", typing.Void, typing.String, typing.Integer),           // Temporary
-}
-
 func QuickFunc(name string, ret string, params ...string) FuncSignature {
 	paramArr := []ParamSignature{}
 	for _, param := range params {
@@ -34,10 +27,9 @@ func QuickBinOp(left string, right string, op lexer.TokenType, ret string) Binar
 	}
 }
 
-func QuickUnOp(value string, op lexer.TokenType, ret string) UnaryOpSignature {
-	return UnaryOpSignature{
-		typing.Type(value),
-		op,
-		typing.Type(ret),
+func QuickTypeConv(from string, to string) TypeConvSignature {
+	return TypeConvSignature{
+		typing.Type(from),
+		typing.Type(to),
 	}
 }

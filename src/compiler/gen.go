@@ -3,12 +3,19 @@ package compiler
 import (
 	"sulfur/src/ast"
 	"sulfur/src/checker"
+	"sulfur/src/lexer"
 	"sulfur/src/typing"
 	"sulfur/src/utils"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/types"
 )
+
+type llvm_builtins struct {
+	funcs  map[string]*ir.Func
+	binops map[string]*ir.Func
+	convs  map[string]*ir.Func
+}
 
 type generator struct {
 	program  *ast.Program
@@ -19,7 +26,13 @@ type generator struct {
 	bl       *ir.Block
 	str      types.Type
 	strs     map[string]StringGlobal
-	builtins map[string]*ir.Func
+	builtins llvm_builtins
+}
+
+func (g *generator) complex(typ typing.Type) bool {
+	ll := g.lltyp(typ)
+	_, ok := ll.(*types.StructType)
+	return ok
 }
 
 func (g *generator) lltyp(typ typing.Type) types.Type {
@@ -53,6 +66,18 @@ func (g *generator) typ(x ast.Expr) types.Type {
 	return types.Void
 }
 
+func (g *generator) biFunc(name string) *ir.Func {
+	return g.builtins.funcs[name]
+}
+
+func (g *generator) biBinop(op lexer.TokenType, left, right string) *ir.Func {
+	return g.builtins.binops[op.OperatorName()+" "+left+" "+right]
+}
+
+func (g *generator) biConv(from, to string) *ir.Func {
+	return g.builtins.convs["conv "+from+" "+to]
+}
+
 func Generate(program *ast.Program, typ checker.TypeMap) string {
 	mod := ir.NewModule()
 	mod.SourceFilename = "script.sulfur"
@@ -75,11 +100,17 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 		bl,
 		str,
 		make(map[string]StringGlobal),
-		make(map[string]*ir.Func),
+		llvm_builtins{
+			make(map[string]*ir.Func),
+			make(map[string]*ir.Func),
+			make(map[string]*ir.Func),
+		},
 	}
 
 	g.genStrings()
 	g.genFuncs()
+	g.genBinOps()
+	g.genConvs()
 
 	for _, x := range program.Contents.Body {
 		g.genStmt(x)
