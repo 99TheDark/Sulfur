@@ -2,5 +2,6 @@ io/unfiltered.txt
 io/tokens.txt
 io/ast.json
 notes/*
+psuedo/*
 .DS_Store
 .DS_Store?
