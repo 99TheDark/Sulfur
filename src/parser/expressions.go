@@ -110,15 +110,7 @@ func (p *parser) parsePrimary() ast.Expr {
 	case lexer.OpenParen:
 		return p.parseGroup()
 	case lexer.Identifier:
-		// TODO: Make this work with expressions
-		/*oldIdx := p.idx
-		hyrbid := p.parseHybrid()
-		if ast.Valid(hyrbid) {
-			return hyrbid
-		}
-		p.idx = oldIdx*/
-
-		return p.parseIdentifier()
+		return p.parseHybrid()
 	}
 
 	Errors.Error("Unknown token '"+strings.ReplaceAll(p.at().Value, "\n", "\\n")+"'", p.at().Location)

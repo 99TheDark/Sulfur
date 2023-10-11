@@ -76,7 +76,7 @@
     pi := [3, 1, 4]
     otherPi := int[3, 1, 4, 1, 5]
     ```
-- Type Cast
+- Type Convertion
     ```
     // to_type{from_type}
     str_num := string{543} // str_num = "543"
@@ -111,7 +111,7 @@
             println("Hello, my name is $(my.name).")
         }
 
-        // Define typecast, now string{Person} is possible
+        // Define typeconv, now string{Person} is possible
         to string {
             return "$(my.name), $(my.age) years old"
         }
@@ -142,7 +142,7 @@
         }
 
         to string {
-            // my.self and super.self return an actual object that can be passed through type casting and functions
+            // my.self and super.self return an actual object that can be passed through type convertion and functions
             return "$(my.school) student, $(string{super.self}), grade $(my.grade)"
         }
 
@@ -152,7 +152,7 @@
     class Vec3 {
         int x, y, z
 
-        new(int ~x, int ~y, int ~z) {}
+        new(int ~x, int ~y, int ~z)
 
         // Must have either one or two parameters (unary/binary operator)
         operator + (Vec3 a, Vec3 b) (Vec3) {
@@ -231,7 +231,7 @@
     // Legal
     int{Season.Winter} == int{Mood.Happy} // true
 
-    // Casting available
+    // Conversion available
     Season{0} == Season.Winter // true
 
     // Compact Declaration

@@ -98,7 +98,7 @@ func (p *parser) parseMethod(lexer.Token) ast.Method {
 	)
 
 	ret := ast.Identifier{}
-	if p.at().Type == lexer.OpenParen {
+	if p.tt() == lexer.OpenParen {
 		p.expect(lexer.OpenParen)
 		ret = p.parseIdentifier()
 		p.expect(lexer.CloseParen)
@@ -207,7 +207,7 @@ func (p *parser) parseOperation() ast.Operation {
 	)
 
 	ret := ast.Identifier{}
-	if p.at().Type == lexer.OpenParen {
+	if p.tt() == lexer.OpenParen {
 		p.expect(lexer.OpenParen)
 		ret = p.parseIdentifier()
 		p.expect(lexer.CloseParen)

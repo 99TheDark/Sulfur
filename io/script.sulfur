@@ -1,26 +1,11 @@
-firstName := "John"
-lastName := "Smith"
-
-println(firstName + " " + lastName)
-println(lastName + ", " + firstName)
-
-x := 7
-if x < 8 {
-    println("x is less than 8")
-} else {
-    println("x is not less than 8")
+func formatName(string firstName, string lastName) (string) {
+    return lastName + ", " + firstName
 }
 
-y := 19
-if y > 12 {
-    println("No else")
-}
-
-z := 7
-if z + x > y {
-    println("1: abc")
-} else if z < x {
-    println("2: def")
-} else {
-    println("3: ghi")
+func fibonacci(int x) (int) {
+    if x <= 1 {
+        return 1
+    } else {
+        return fibonacci(x - 2) + fibonacci(x - 1)
+    }
 }

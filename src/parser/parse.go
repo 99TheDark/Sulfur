@@ -21,6 +21,11 @@ func (p *parser) at() lexer.Token {
 	return p.source[p.idx]
 }
 
+func (p *parser) tt() lexer.TokenType {
+	// Shorthand
+	return p.at().Type
+}
+
 func (p *parser) peek(ahead int) lexer.Token {
 	if p.idx+ahead >= p.size {
 		return p.source[p.size-1]
@@ -56,14 +61,14 @@ func (p *parser) expect(symbols ...lexer.TokenType) lexer.Token {
 }
 
 func (p *parser) prefix(symbols ...lexer.TokenType) lexer.Token {
-	if utils.Contains(symbols, p.at().Type) {
+	if utils.Contains(symbols, p.tt()) {
 		return p.eat()
 	}
 	return lexer.Token{}
 }
 
 func (p *parser) is(catagory []lexer.TokenType) bool {
-	return utils.Contains(catagory, p.at().Type)
+	return utils.Contains(catagory, p.tt())
 }
 
 func Parse(source string, tokens *[]lexer.Token) *ast.Program {

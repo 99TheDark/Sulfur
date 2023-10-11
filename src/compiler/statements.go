@@ -34,7 +34,7 @@ func (g *generator) genFuncCall(x ast.FuncCall) {
 	bl := g.bl
 
 	params := []value.Value{}
-	for _, param := range x.Params {
+	for _, param := range *x.Params {
 		params = append(params, g.genExpr(param))
 	}
 
@@ -53,16 +53,19 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 	main.NewBr(thenBl)
 
 	if ast.Empty(x.Else) {
-		/*endBl := g.topfunc.NewBlock("if.end" + id)
-		thenBl.NewBr(endBl)
-
+		// TODO: Make if statements without else statements work
 		g.bl = thenBl
 		g.genBlock(x.Body)
 
-		if g.bl == thenBl {
-			g.bl = endBl
+		endBl := g.topfunc.NewBlock("if.end" + id)
+		thenBl.NewBr(endBl)
+
+		main.NewCondBr(cond, thenBl, endBl)
+
+		if g.bl != endBl {
+			g.bl.NewBr(endBl)
 		}
-		main.NewCondBr(cond, thenBl, endBl)*/
+		g.bl = endBl
 	} else {
 		elseBl := g.topfunc.NewBlock("if.else" + id)
 
@@ -72,38 +75,15 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 		g.bl = elseBl
 		g.genBlock(x.Else)
 
-		main.NewCondBr(cond, thenBl, elseBl)
-
 		endBl := g.topfunc.NewBlock("if.end" + id)
 		thenBl.NewBr(endBl)
 		elseBl.NewBr(endBl)
+
+		main.NewCondBr(cond, thenBl, elseBl)
 
 		if g.bl != elseBl {
 			g.bl.NewBr(endBl)
 		}
 		g.bl = endBl
 	}
-
-	/*
-		entry
-		if cond {
-
-		} else {
-			if cond {
-
-			} else {
-
-			}
-			end
-		}
-		end
-
-		entry -> if.cond1
-		if.then1
-		if.else1 -> if.cond2
-		if.then2
-		if.else2
-		if.end1
-		if.end2
-	*/
 }

@@ -134,21 +134,24 @@ LBB2_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
-	mov	x29, sp
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16
 	sub	sp, sp, #160
 	.cfi_def_cfa w29, 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
 Lloh0:
 	adrp	x10, l_.str0@PAGE
-	sub	x8, x29, #16
+	sub	x8, x29, #32
 	mov	x9, #17179869188
 Lloh1:
 	add	x10, x10, l_.str0@PAGEOFF
-	sub	x0, x29, #80
-	sub	x1, x29, #16
-	sub	x2, x29, #64
+	sub	x0, x29, #96
+	sub	x1, x29, #32
+	sub	x2, x29, #80
 	stp	x9, x10, [x8]
 Lloh2:
 	adrp	x10, l_.str1@PAGE
@@ -156,41 +159,41 @@ Lloh3:
 	add	x10, x10, l_.str1@PAGEOFF
 	mov	x9, #5
 	movk	x9, #5, lsl #32
-	stp	x10, x8, [x29, #-32]
-	sub	x8, x29, #40
-	stp	x8, x9, [x29, #-48]
+	stp	x10, x8, [x29, #-48]
+	sub	x8, x29, #56
+	stp	x8, x9, [x29, #-64]
 Lloh4:
 	adrp	x8, l_.str2@PAGE
 	mov	x9, #4294967297
 Lloh5:
 	add	x8, x8, l_.str2@PAGEOFF
-	stp	x9, x8, [x29, #-64]
+	stp	x9, x8, [x29, #-80]
 	bl	_concat
-	ldur	x2, [x29, #-48]
-	sub	x0, x29, #96
-	sub	x1, x29, #80
+	ldur	x2, [x29, #-64]
+	sub	x0, x29, #112
+	sub	x1, x29, #96
 	bl	_concat
-	sub	x0, x29, #96
+	sub	x0, x29, #112
 	bl	_println
 Lloh6:
 	adrp	x9, l_.str3@PAGE
 	mov	x8, #8589934594
-	ldur	x1, [x29, #-48]
+	ldur	x1, [x29, #-64]
 Lloh7:
 	add	x9, x9, l_.str3@PAGEOFF
-	sub	x0, x29, #128
-	sub	x2, x29, #112
-	stp	x8, x9, [x29, #-112]
-	bl	_concat
-	ldur	x2, [x29, #-24]
 	sub	x0, x29, #144
-	sub	x1, x29, #128
+	sub	x2, x29, #128
+	stp	x8, x9, [x29, #-128]
 	bl	_concat
-	sub	x0, x29, #144
+	ldur	x2, [x29, #-40]
+	sub	x0, x29, #160
+	sub	x1, x29, #144
+	bl	_concat
+	sub	x0, x29, #160
 	bl	_println
 	mov	w8, #7
 	cmp	w8, #7
-	stur	w8, [x29, #-148]
+	stur	w8, [x29, #-164]
 	b.gt	LBB3_2
 ; %bb.1:                                ; %if.then0
 Lloh8:
@@ -217,8 +220,8 @@ LBB3_3:                                 ; %if.end0
 	str	x8, [x0, #8]
 	bl	_println
 	mov	x8, sp
-	sub	x9, x8, #16
-	mov	sp, x9
+	sub	x19, x8, #16
+	mov	sp, x19
 	mov	w9, #19
 	cmp	w9, #13
 	stur	w9, [x8, #-16]
@@ -235,8 +238,51 @@ Lloh13:
 	stp	x10, x8, [x9, #-16]
 	bl	_println
 LBB3_5:                                 ; %if.end1
-	mov	sp, x29
-	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	mov	x8, sp
+	sub	x9, x8, #16
+	mov	sp, x9
+	ldur	w9, [x29, #-164]
+	mov	w11, #7
+	ldr	w10, [x19]
+	add	w9, w9, #7
+	stur	w11, [x8, #-16]
+	cmp	w9, w10
+	b.le	LBB3_7
+; %bb.6:                                ; %if.then2
+	mov	x9, sp
+Lloh14:
+	adrp	x8, l_.str7@PAGE
+	sub	x0, x9, #16
+Lloh15:
+	add	x8, x8, l_.str7@PAGEOFF
+	mov	sp, x0
+	mov	x10, #25769803782
+	stp	x10, x8, [x9, #-16]
+	bl	_println
+LBB3_7:                                 ; %if.then4
+	mov	x9, sp
+Lloh16:
+	adrp	x8, l_.str10@PAGE
+	sub	x0, x9, #16
+Lloh17:
+	add	x8, x8, l_.str10@PAGEOFF
+	mov	sp, x0
+	mov	x10, #17179869188
+	stp	x10, x8, [x9, #-16]
+	bl	_println
+	mov	x9, sp
+Lloh18:
+	adrp	x8, l_.str11@PAGE
+	sub	x0, x9, #16
+Lloh19:
+	add	x8, x8, l_.str11@PAGEOFF
+	mov	sp, x0
+	mov	x10, #12884901891
+	stp	x10, x8, [x9, #-16]
+	bl	_println
+	sub	sp, x29, #16
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
 	ret
 	.loh AdrpAdd	Lloh6, Lloh7
 	.loh AdrpAdd	Lloh4, Lloh5
@@ -245,6 +291,9 @@ LBB3_5:                                 ; %if.end1
 	.loh AdrpAdd	Lloh8, Lloh9
 	.loh AdrpAdd	Lloh10, Lloh11
 	.loh AdrpAdd	Lloh12, Lloh13
+	.loh AdrpAdd	Lloh14, Lloh15
+	.loh AdrpAdd	Lloh18, Lloh19
+	.loh AdrpAdd	Lloh16, Lloh17
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -271,5 +320,22 @@ l_.str5:                                ; @.str5
 
 l_.str6:                                ; @.str6
 	.ascii	"No else"
+
+l_.str7:                                ; @.str7
+	.ascii	"1: abc"
+
+l_.str8:                                ; @.str8
+	.ascii	"2: def"
+
+l_.str9:                                ; @.str9
+	.ascii	"3: ghi"
+
+	.section	__TEXT,__literal4,4byte_literals
+l_.str10:                               ; @.str10
+	.ascii	"true"
+
+	.section	__TEXT,__const
+l_.str11:                               ; @.str11
+	.ascii	"end"
 
 .subsections_via_symbols

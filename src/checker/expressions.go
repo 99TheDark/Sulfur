@@ -27,8 +27,8 @@ func (c *checker) inferExpr(expr ast.Expr) typing.Type {
 		return c.inferUnaryOp(x)
 	case ast.Comparison:
 		return c.inferComparison(x)
-	case ast.TypeCast:
-		return c.inferTypeCast(x)
+	case ast.TypeConv:
+		return c.inferTypeConv(x)
 	case ast.FuncCall:
 		return c.inferFuncCall(x)
 	default:
@@ -48,7 +48,7 @@ func (c *checker) inferBinaryOp(x ast.BinaryOp) typing.Type {
 	if left != right {
 		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Right.Loc())
 	}
-	return c.typ(x, left)
+	return c.typ(x, left) // either left or right
 }
 
 func (c *checker) inferUnaryOp(x ast.UnaryOp) typing.Type {
@@ -66,23 +66,22 @@ func (c *checker) inferComparison(x ast.Comparison) typing.Type {
 	return c.typ(x, typing.Boolean)
 }
 
-func (c *checker) inferTypeCast(x ast.TypeCast) typing.Type {
-	// TODO: Check if type can be casted
-	// TODO: Error if type is casted to itself
+func (c *checker) inferTypeConv(x ast.TypeConv) typing.Type {
+	// TODO: Check if type can be converted
+	// TODO: Error if type is converted to itself
 	c.inferExpr(x.Value)
 	return c.typ(x, typing.Type(x.Type.Name))
 }
 
 func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
-	// TODO: Allow function overloading
 	for _, fun := range c.program.Functions {
 		if fun.Name.Name == x.Func.Name {
-			l1, l2 := len(fun.Params), len(x.Params)
+			l1, l2 := len(fun.Params), len(*x.Params)
 			if l1 != l2 {
 				Errors.Error("Only "+fmt.Sprint(l1)+" parameters given, but "+fmt.Sprint(l2)+" expected", x.Func.Pos)
 			}
 
-			for i, param := range x.Params {
+			for i, param := range *x.Params {
 				typ := c.inferExpr(param)
 				paramTyp := typing.Type(fun.Params[i].Type.Name)
 				if typ != paramTyp {
@@ -90,17 +89,17 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 				}
 			}
 
-			return typing.Type(fun.Return.Name)
+			return c.typ(x, typing.Type(fun.Return.Name))
 		}
 	}
 	for _, fun := range builtins.Funcs {
 		if fun.Name == x.Func.Name {
-			l1, l2 := len(fun.Params), len(x.Params)
+			l1, l2 := len(fun.Params), len(*x.Params)
 			if l1 != l2 {
 				Errors.Error("Only "+fmt.Sprint(l1)+" parameters given, but "+fmt.Sprint(l2)+" expected", x.Func.Pos)
 			}
 
-			for i, param := range x.Params {
+			for i, param := range *x.Params {
 				typ := c.inferExpr(param)
 				paramTyp := fun.Params[i].Type
 				if typ != paramTyp {
@@ -108,9 +107,10 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 				}
 			}
 
-			return fun.Return
+			return c.typ(x, fun.Return)
 		}
 	}
+
 	Errors.Error("The function "+x.Func.Name+" is undefined", x.Func.Pos)
 	return c.typ(x, typing.Void)
 }

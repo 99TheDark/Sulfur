@@ -53,7 +53,7 @@ type (
 
 	Array struct {
 		Type  Identifier
-		Items []Expr
+		Items *[]Expr
 	}
 
 	Function struct {
@@ -166,10 +166,10 @@ type (
 
 	FuncCall struct {
 		Func   Identifier
-		Params []Expr
+		Params *[]Expr
 	}
 
-	TypeCast struct {
+	TypeConv struct {
 		Type  Identifier
 		Value Expr
 	}
@@ -233,7 +233,7 @@ func (x ImplicitDecl) Loc() *lexer.Location { return x.Name.Pos }
 func (x Assignment) Loc() *lexer.Location   { return x.Name.Pos }
 func (x IncDec) Loc() *lexer.Location       { return x.Name.Pos }
 func (x FuncCall) Loc() *lexer.Location     { return x.Func.Pos }
-func (x TypeCast) Loc() *lexer.Location     { return x.Type.Pos }
+func (x TypeConv) Loc() *lexer.Location     { return x.Type.Pos }
 func (x IfStatement) Loc() *lexer.Location  { return x.Pos }
 func (x ForLoop) Loc() *lexer.Location      { return x.Pos }
 func (x WhileLoop) Loc() *lexer.Location    { return x.Pos }

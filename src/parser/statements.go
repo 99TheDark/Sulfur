@@ -4,14 +4,13 @@ import (
 	"sulfur/src/ast"
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
-	"sulfur/src/utils"
 )
 
 func (p *parser) parseStmt() ast.Expr {
 	tok := p.at()
 	switch tok.Type {
 	case lexer.Identifier:
-		return p.parseHybrid()
+		return p.parseHybridStmt()
 	case lexer.Func:
 		return p.parseFunction()
 	case lexer.Class:
@@ -36,85 +35,10 @@ func (p *parser) parseStmt() ast.Expr {
 	}
 }
 
-func (p *parser) parseHybrid() ast.Expr {
-	iden := p.parseIdentifier()
-	tok := p.at()
-	switch tok.Type {
-	case lexer.Identifier:
-		name := p.parseIdentifier()
-		p.expect(lexer.Assignment)
-		val := p.parseExpr()
-		return ast.Declaration{
-			Type:  iden,
-			Name:  name,
-			Value: val,
-		}
-	case lexer.ImplicitDeclaration:
-		p.eat()
-		val := p.parseExpr()
-		return ast.ImplicitDecl{
-			Name:  iden,
-			Value: val,
-		}
-	case lexer.Assignment:
-		p.eat()
-		val := p.parseExpr()
-		return ast.Assignment{
-			Name:  iden,
-			Value: val,
-			Op:    lexer.Token{},
-		}
-	case lexer.Increment, lexer.Decrement:
-		p.eat()
-		return ast.IncDec{
-			Name: iden,
-			Op:   tok,
-		}
-	case lexer.OpenBrace:
-		p.eat()
-		val := p.parseExpr()
-		p.expect(lexer.CloseBrace)
-		return ast.TypeCast{
-			Type:  iden,
-			Value: val,
-		}
-	case lexer.OpenParen:
-		p.eat()
-		params := []ast.Expr{}
-		p.parseStmts(
-			func() {
-				params = append(params, p.parseExpr())
-			},
-			[]lexer.TokenType{lexer.CloseParen},
-			[]lexer.TokenType{lexer.Delimiter},
-		)
-		return ast.FuncCall{
-			Func:   iden,
-			Params: params,
-		}
-	default:
-		op := p.eat()
-		if p.peek(0).Type == lexer.Assignment && utils.Contains(lexer.BinaryOperator, tok.Type) {
-			p.eat()
-			val := p.parseExpr()
-			return ast.Assignment{
-				Name:  iden,
-				Value: val,
-				Op:    op,
-			}
-		}
-	}
-
-	Errors.Error("Incomplete statement", tok.Location)
-	return &ast.BadExpr{
-		Pos: tok.Location,
-	}
-}
-
 func (p *parser) parseStmts(stmtgen func(), ending []lexer.TokenType, delim []lexer.TokenType) {
 	ending = append(ending, lexer.EOF)
 	for !p.is(ending) {
-		if p.at().Type == lexer.NewLine {
+		if p.tt() == lexer.NewLine {
 			p.eat()
 			continue
 		}
@@ -175,7 +99,7 @@ func (p *parser) parseFunction() ast.Function {
 	)
 
 	ret := ast.Identifier{}
-	if p.at().Type == lexer.OpenParen {
+	if p.tt() == lexer.OpenParen {
 		p.expect(lexer.OpenParen)
 		ret = p.parseIdentifier()
 		p.expect(lexer.CloseParen)
@@ -196,7 +120,7 @@ func (p *parser) parseEnum() ast.Enum {
 	tok := p.expect(lexer.Enum)
 	name := p.parseIdentifier()
 	from := ast.Identifier{}
-	if p.at().Type == lexer.From {
+	if p.tt() == lexer.From {
 		p.eat()
 		from = p.parseIdentifier()
 	}
@@ -224,9 +148,9 @@ func (p *parser) parseIfStmt() ast.IfStatement {
 	cond := p.parseExpr()
 	body := p.parseBlock()
 	elseBody := ast.Block{}
-	if p.at().Type == lexer.Else {
+	if p.tt() == lexer.Else {
 		elsePos := p.eat()
-		if p.at().Type == lexer.If {
+		if p.tt() == lexer.If {
 			scope := ast.NewScope()
 			scope.Parent = p.top
 			p.top = &scope
@@ -253,11 +177,11 @@ func (p *parser) parseIfStmt() ast.IfStatement {
 
 func (p *parser) parseForLoop() ast.ForLoop {
 	tok := p.expect(lexer.For)
-	init := p.parseHybrid()
+	init := p.parseHybridStmt()
 	p.expect(lexer.NewLine, lexer.Semicolon)
 	comp := p.parseComparison()
 	p.expect(lexer.NewLine, lexer.Semicolon)
-	inc := p.parseHybrid()
+	inc := p.parseHybridStmt()
 	body := p.parseBlock()
 	return ast.ForLoop{
 		Pos:  tok.Location,

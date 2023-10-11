@@ -10,6 +10,11 @@ source_filename = "llvm-link"
 @.str4 = private unnamed_addr constant [16 x i8] c"x is less than 8", align 1
 @.str5 = private unnamed_addr constant [20 x i8] c"x is not less than 8", align 1
 @.str6 = private unnamed_addr constant [7 x i8] c"No else", align 1
+@.str7 = private unnamed_addr constant [6 x i8] c"1: abc", align 1
+@.str8 = private unnamed_addr constant [6 x i8] c"2: def", align 1
+@.str9 = private unnamed_addr constant [6 x i8] c"3: ghi", align 1
+@.str10 = private unnamed_addr constant [4 x i8] c"true", align 1
+@.str11 = private unnamed_addr constant [3 x i8] c"end", align 1
 
 define void @print(%type.string* %str) {
 entry:
@@ -234,5 +239,84 @@ if.then1:                                         ; preds = %if.end0
   br label %if.end1
 
 if.end1:                                          ; preds = %if.then1, %if.end0
+  %z = alloca i32, align 4
+  store i32 7, i32* %z, align 4
+  %47 = load i32, i32* %z, align 4
+  %48 = load i32, i32* %x, align 4
+  %49 = add i32 %47, %48
+  %50 = load i32, i32* %y, align 4
+  %51 = icmp sgt i32 %49, %50
+  br i1 %51, label %if.then2, label %if.else2
+
+if.then2:                                         ; preds = %if.end1
+  %52 = getelementptr inbounds [6 x i8], [6 x i8]* @.str7, i32 0, i32 0
+  %53 = alloca %type.string, align 8
+  %54 = getelementptr inbounds %type.string, %type.string* %53, i32 0, i32 0
+  store i32 6, i32* %54, align 8
+  %55 = getelementptr inbounds %type.string, %type.string* %53, i32 0, i32 1
+  store i32 6, i32* %55, align 8
+  %56 = getelementptr inbounds %type.string, %type.string* %53, i32 0, i32 2
+  store i8* %52, i8** %56, align 8
+  call void @println(%type.string* %53)
+  br label %if.end2
+
+if.else2:                                         ; preds = %if.end1
+  %57 = load i32, i32* %z, align 4
+  %58 = load i32, i32* %x, align 4
+  %59 = icmp slt i32 %57, %58
+  br label %if.end2
+
+if.then3:                                         ; No predecessors!
+  %60 = getelementptr inbounds [6 x i8], [6 x i8]* @.str8, i32 0, i32 0
+  %61 = alloca %type.string, align 8
+  %62 = getelementptr inbounds %type.string, %type.string* %61, i32 0, i32 0
+  store i32 6, i32* %62, align 8
+  %63 = getelementptr inbounds %type.string, %type.string* %61, i32 0, i32 1
+  store i32 6, i32* %63, align 8
+  %64 = getelementptr inbounds %type.string, %type.string* %61, i32 0, i32 2
+  store i8* %60, i8** %64, align 8
+  call void @println(%type.string* %61)
+  br label %if.end3
+
+if.else3:                                         ; No predecessors!
+  %65 = getelementptr inbounds [6 x i8], [6 x i8]* @.str9, i32 0, i32 0
+  %66 = alloca %type.string, align 8
+  %67 = getelementptr inbounds %type.string, %type.string* %66, i32 0, i32 0
+  store i32 6, i32* %67, align 8
+  %68 = getelementptr inbounds %type.string, %type.string* %66, i32 0, i32 1
+  store i32 6, i32* %68, align 8
+  %69 = getelementptr inbounds %type.string, %type.string* %66, i32 0, i32 2
+  store i8* %65, i8** %69, align 8
+  call void @println(%type.string* %66)
+  br label %if.end3
+
+if.end3:                                          ; preds = %if.else3, %if.then3
+  br label %if.end2
+
+if.end2:                                          ; preds = %if.end3, %if.else2, %if.then2
+  br i1 true, label %if.then4, label %if.end4
+
+if.then4:                                         ; preds = %if.end2
+  %70 = getelementptr inbounds [4 x i8], [4 x i8]* @.str10, i32 0, i32 0
+  %71 = alloca %type.string, align 8
+  %72 = getelementptr inbounds %type.string, %type.string* %71, i32 0, i32 0
+  store i32 4, i32* %72, align 8
+  %73 = getelementptr inbounds %type.string, %type.string* %71, i32 0, i32 1
+  store i32 4, i32* %73, align 8
+  %74 = getelementptr inbounds %type.string, %type.string* %71, i32 0, i32 2
+  store i8* %70, i8** %74, align 8
+  call void @println(%type.string* %71)
+  br label %if.end4
+
+if.end4:                                          ; preds = %if.then4, %if.end2
+  %75 = getelementptr inbounds [3 x i8], [3 x i8]* @.str11, i32 0, i32 0
+  %76 = alloca %type.string, align 8
+  %77 = getelementptr inbounds %type.string, %type.string* %76, i32 0, i32 0
+  store i32 3, i32* %77, align 8
+  %78 = getelementptr inbounds %type.string, %type.string* %76, i32 0, i32 1
+  store i32 3, i32* %78, align 8
+  %79 = getelementptr inbounds %type.string, %type.string* %76, i32 0, i32 2
+  store i8* %75, i8** %79, align 8
+  call void @println(%type.string* %76)
   ret void
 }
