@@ -250,13 +250,13 @@ _main:                                  ; @main
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
 Lloh0:
-	adrp	x9, l_.str0@PAGE
-	mov	w1, #13640
+	adrp	x9, l_.str1@PAGE
+	mov	w1, #47302
 	mov	x8, #64424509455
 Lloh1:
-	add	x9, x9, l_.str0@PAGEOFF
+	add	x9, x9, l_.str1@PAGEOFF
 	add	x0, sp, #16
-	movk	w1, #113, lsl #16
+	movk	w1, #65177, lsl #16
 	stp	x8, x9, [sp, #32]
 	bl	_.conv.int_string
 	mov	x0, sp
@@ -272,7 +272,7 @@ Lloh1:
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__const
-l_.str0:                                ; @.str0
+l_.str1:                                ; @.str1
 	.ascii	"The number is: "
 
 .subsections_via_symbols

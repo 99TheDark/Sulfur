@@ -30,6 +30,8 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 		return g.genTypeConv(x)
 	case ast.BinaryOp:
 		return g.genBinaryOp(x)
+	case ast.UnaryOp:
+		return g.genUnaryOp(x)
 	case ast.Comparison:
 		return g.genComparison(x)
 	}
@@ -56,8 +58,8 @@ func (g *generator) genString(x ast.String) value.Value {
 	str := bl.NewGetElementPtr(
 		arr,
 		glob,
-		constant.NewInt(types.I32, int64(0)),
-		constant.NewInt(types.I32, int64(0)),
+		Zero,
+		Zero,
 	)
 	str.InBounds = true
 
@@ -67,8 +69,8 @@ func (g *generator) genString(x ast.String) value.Value {
 	lenPtr := bl.NewGetElementPtr(
 		g.str,
 		alloca,
-		constant.NewInt(types.I32, int64(0)),
-		constant.NewInt(types.I32, int64(0)),
+		Zero,
+		Zero,
 	)
 	lenPtr.InBounds = true
 
@@ -81,8 +83,8 @@ func (g *generator) genString(x ast.String) value.Value {
 	sizePtr := bl.NewGetElementPtr(
 		g.str,
 		alloca,
-		constant.NewInt(types.I32, int64(0)),
-		constant.NewInt(types.I32, int64(1)),
+		Zero,
+		One,
 	)
 	sizePtr.InBounds = true
 
@@ -95,8 +97,8 @@ func (g *generator) genString(x ast.String) value.Value {
 	adrPtr := bl.NewGetElementPtr(
 		g.str,
 		alloca,
-		constant.NewInt(types.I32, int64(0)),
-		constant.NewInt(types.I32, int64(2)),
+		Zero,
+		Two,
 	)
 	adrPtr.InBounds = true
 
@@ -170,7 +172,25 @@ func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
 	}
 
 	Errors.Error("Unexpected generating error during binary operation", x.Loc())
-	return constant.NewInt(types.I32, int64(0))
+	return Zero
+}
+
+func (g *generator) genUnaryOp(x ast.UnaryOp) value.Value {
+	bl := g.bl
+	val := g.genExpr(x.Value)
+	typ := g.types[x]
+	switch x.Op.Type {
+	case lexer.Subtraction:
+		switch typ {
+		case typing.Integer: // -int
+			return bl.NewSub(One, val)
+		case typing.Float: // -float
+			return bl.NewFSub(One, val)
+		}
+	}
+
+	Errors.Error("Unexpected generating error during unary operation", x.Loc())
+	return Zero
 }
 
 func (g *generator) genComparison(x ast.Comparison) value.Value {
@@ -198,5 +218,5 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 	}
 
 	Errors.Error("Unexpected generating error during comparison", x.Loc())
-	return constant.NewInt(types.I32, int64(0))
+	return Zero
 }
