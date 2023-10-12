@@ -297,18 +297,34 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #32
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
 	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
+	add	x29, sp, #16
+	sub	sp, sp, #16
+	.cfi_def_cfa w29, 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	x0, sp
-	mov	w1, #1
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	stur	wzr, [x29, #-20]
+LBB5_1:                                 ; %while.body0
+                                        ; =>This Inner Loop Header: Depth=1
+	sub	x19, sp, #16
+	ldur	w1, [x29, #-20]
+	mov	sp, x19
+	mov	x0, x19
 	bl	_.conv.int_string
-	mov	x0, sp
+	mov	x0, x19
 	bl	_.println
+	ldur	w8, [x29, #-20]
+	sub	w8, w8, #1
+	cmp	w8, #0
+	stur	w8, [x29, #-20]
+	b.gt	LBB5_1
+; %bb.2:                                ; %while.end0
+	sub	sp, x29, #16
 	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #32
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
 	ret
 	.cfi_endproc
                                         ; -- End function

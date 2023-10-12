@@ -26,6 +26,8 @@ func (g *generator) genStmt(expr ast.Expr) {
 		g.genForLoop(x)
 	case ast.WhileLoop:
 		g.genWhileLoop(x)
+	case ast.DoWhileLoop:
+		g.genDoWhileLoop(x)
 	default:
 		fmt.Println("Ignored generating statement")
 	}
@@ -179,6 +181,31 @@ func (g *generator) genWhileLoop(x ast.WhileLoop) {
 		condBl.NewCondBr(cond, bodyBl, endBl)
 
 		main.NewBr(condBl)
+		g.bl = endBl
+	})
+}
+
+func (g *generator) genDoWhileLoop(x ast.DoWhileLoop) {
+	main := g.bl
+	id := fmt.Sprint(g.blockcount)
+	g.blockcount++
+
+	g.scope(&x.Body.Scope, func() {
+		condBl := g.topfunc.NewBlock("while.cond" + id)
+		bodyBl := g.topfunc.NewBlock("while.body" + id)
+		endBl := g.topfunc.NewBlock("while.end" + id)
+
+		g.bl = condBl
+		cond := g.genExpr(x.Cond)
+
+		g.enter(condBl)
+		g.bl = bodyBl
+		g.genBlock(x.Body)
+		g.exit()
+
+		condBl.NewCondBr(cond, bodyBl, endBl)
+
+		main.NewBr(bodyBl)
 		g.bl = endBl
 	})
 }

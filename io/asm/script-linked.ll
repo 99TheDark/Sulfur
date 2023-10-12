@@ -280,13 +280,28 @@ while2.end:                                       ; preds = %while2.cond
 
 define void @main() {
 entry:
-  %0 = srem i32 5, 2
-  %1 = and i32 3, %0
-  %2 = alloca %type.string, align 8
-  call void @.conv.int_string(%type.string* %2, i32 %1)
-  call void @.println(%type.string* %2)
-  br label %exit
+  %i = alloca i32, align 4
+  store i32 0, i32* %i, align 4
+  br label %while.body0
 
-exit:                                             ; preds = %entry
+exit:                                             ; preds = %while.end0
   ret void
+
+while.cond0:                                      ; preds = %while.body0
+  %0 = load i32, i32* %i, align 4
+  %1 = icmp sgt i32 %0, 0
+  br i1 %1, label %while.body0, label %while.end0
+
+while.body0:                                      ; preds = %while.cond0, %entry
+  %2 = load i32, i32* %i, align 4
+  %3 = alloca %type.string, align 8
+  call void @.conv.int_string(%type.string* %3, i32 %2)
+  call void @.println(%type.string* %3)
+  %4 = load i32, i32* %i, align 4
+  %5 = sub i32 %4, 1
+  store i32 %5, i32* %i, align 4
+  br label %while.cond0
+
+while.end0:                                       ; preds = %while.cond0
+  br label %exit
 }

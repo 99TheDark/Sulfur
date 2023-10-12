@@ -1,0 +1,5 @@
+i := 0
+do {
+    println(string!(i))
+    i--
+} while i > 0
