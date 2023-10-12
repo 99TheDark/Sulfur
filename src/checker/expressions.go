@@ -41,18 +41,40 @@ func (c *checker) inferIdentifier(x ast.Identifier) typing.Type {
 }
 
 func (c *checker) inferBinaryOp(x ast.BinaryOp) typing.Type {
-	// TODO: Check if operator exists
 	left := c.inferExpr(x.Left)
 	right := c.inferExpr(x.Right)
 	if left != right {
 		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Right.Loc())
 	}
-	return c.typ(x, left) // either left or right
+
+	for _, binop := range c.program.BinaryOps {
+		if binop.Op != x.Op.Type {
+			continue
+		}
+
+		if binop.Left == left && binop.Right == right {
+			return c.typ(x, binop.Return)
+		}
+	}
+
+	Errors.Error("No operation "+x.Op.Value+" exists for "+left.String()+" and "+right.String(), x.Op.Location)
+	return c.typ(x, typing.Void)
 }
 
 func (c *checker) inferUnaryOp(x ast.UnaryOp) typing.Type {
-	// TODO: Check if operator exists
-	return c.typ(x, c.inferExpr(x.Value))
+	val := c.inferExpr(x.Value)
+	for _, unop := range c.program.UnaryOps {
+		if unop.Op != x.Op.Type {
+			continue
+		}
+
+		if unop.Value == val {
+			return c.typ(x, unop.Return)
+		}
+	}
+
+	Errors.Error("No operation "+x.Op.Value+" exists for "+val.String(), x.Op.Location)
+	return c.typ(x, typing.Void)
 }
 
 func (c *checker) inferComparison(x ast.Comparison) typing.Type {
