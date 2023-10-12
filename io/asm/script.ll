@@ -2,54 +2,53 @@ source_filename = "script.sulfur"
 
 %type.string = type { i32, i32, i8* }
 
-@.str0 = private unnamed_addr constant [2 x i8] c", ", align 1
-@.str1 = private unnamed_addr constant [17 x i8] c"The numbers are: ", align 1
-@.str3 = private unnamed_addr constant [6 x i8] c", and ", align 1
+@.str0 = private unnamed_addr constant [1 x i8] c" ", align 1
+@.str1 = private unnamed_addr constant [0 x i8] c"", align 1
 
 define void @main() {
 entry:
-	%0 = getelementptr inbounds [17 x i8], [17 x i8]* @.str1, i32 0, i32 0
-	%1 = alloca %type.string, align 8
-	%2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-	store i32 17, i32* %2, align 8
-	%3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-	store i32 17, i32* %3, align 8
-	%4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
-	store i8* %0, i8** %4, align 8
-	%5 = sub i32 0, 43201
-	%6 = alloca %type.string, align 8
-	call void @.conv.int_string(%type.string* %6, i32 %5)
-	%7 = alloca %type.string, align 8
-	call void @.add.string_string(%type.string* %7, %type.string* %1, %type.string* %6)
-	%8 = getelementptr inbounds [2 x i8], [2 x i8]* @.str0, i32 0, i32 0
+	%i = alloca i32
+	store i32 0, i32* %i
+	br label %for.cond0
+
+for.cond0:
+	%0 = load i32, i32* %i
+	%1 = icmp slt i32 %0, 10
+	br i1 %1, label %for.body0, label %for.end0
+
+for.body0:
+	%2 = load i32, i32* %i
+	%3 = alloca %type.string, align 8
+	call void @.conv.int_string(%type.string* %3, i32 %2)
+	%4 = getelementptr inbounds [1 x i8], [1 x i8]* @.str0, i32 0, i32 0
+	%5 = alloca %type.string, align 8
+	%6 = getelementptr inbounds %type.string, %type.string* %5, i32 0, i32 0
+	store i32 1, i32* %6, align 8
+	%7 = getelementptr inbounds %type.string, %type.string* %5, i32 0, i32 1
+	store i32 1, i32* %7, align 8
+	%8 = getelementptr inbounds %type.string, %type.string* %5, i32 0, i32 2
+	store i8* %4, i8** %8, align 8
 	%9 = alloca %type.string, align 8
-	%10 = getelementptr inbounds %type.string, %type.string* %9, i32 0, i32 0
-	store i32 2, i32* %10, align 8
-	%11 = getelementptr inbounds %type.string, %type.string* %9, i32 0, i32 1
-	store i32 2, i32* %11, align 8
-	%12 = getelementptr inbounds %type.string, %type.string* %9, i32 0, i32 2
-	store i8* %8, i8** %12, align 8
+	call void @.add.string_string(%type.string* %9, %type.string* %3, %type.string* %5)
+	call void @.print(%type.string* %9)
+	br label %for.inc0
+
+for.inc0:
+	%10 = load i32, i32* %i
+	%11 = add i32 %10, 1
+	store i32 %11, i32* %i
+	br label %for.cond0
+
+for.end0:
+	%12 = getelementptr inbounds [0 x i8], [0 x i8]* @.str1, i32 0, i32 0
 	%13 = alloca %type.string, align 8
-	call void @.add.string_string(%type.string* %13, %type.string* %7, %type.string* %9)
-	%14 = alloca %type.string, align 8
-	call void @.conv.int_string(%type.string* %14, i32 0)
-	%15 = alloca %type.string, align 8
-	call void @.add.string_string(%type.string* %15, %type.string* %13, %type.string* %14)
-	%16 = getelementptr inbounds [6 x i8], [6 x i8]* @.str3, i32 0, i32 0
-	%17 = alloca %type.string, align 8
-	%18 = getelementptr inbounds %type.string, %type.string* %17, i32 0, i32 0
-	store i32 6, i32* %18, align 8
-	%19 = getelementptr inbounds %type.string, %type.string* %17, i32 0, i32 1
-	store i32 6, i32* %19, align 8
-	%20 = getelementptr inbounds %type.string, %type.string* %17, i32 0, i32 2
-	store i8* %16, i8** %20, align 8
-	%21 = alloca %type.string, align 8
-	call void @.add.string_string(%type.string* %21, %type.string* %15, %type.string* %17)
-	%22 = alloca %type.string, align 8
-	call void @.conv.int_string(%type.string* %22, i32 762)
-	%23 = alloca %type.string, align 8
-	call void @.add.string_string(%type.string* %23, %type.string* %21, %type.string* %22)
-	call void @.println(%type.string* %23)
+	%14 = getelementptr inbounds %type.string, %type.string* %13, i32 0, i32 0
+	store i32 0, i32* %14, align 8
+	%15 = getelementptr inbounds %type.string, %type.string* %13, i32 0, i32 1
+	store i32 0, i32* %15, align 8
+	%16 = getelementptr inbounds %type.string, %type.string* %13, i32 0, i32 2
+	store i8* %12, i8** %16, align 8
+	call void @.println(%type.string* %13)
 	ret void
 }
 

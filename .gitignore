@@ -1,6 +1,7 @@
 io/unfiltered.txt
 io/tokens.txt
 io/ast.json
+io/future/*
 notes/*
 psuedo/*
 .DS_Store

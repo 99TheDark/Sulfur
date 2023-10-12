@@ -66,6 +66,12 @@ func (g *generator) typ(x ast.Expr) types.Type {
 	return types.Void
 }
 
+func (g *generator) scope(scope *ast.Scope, body func()) {
+	g.top = scope
+	body()
+	g.top = scope.Parent
+}
+
 func (g *generator) biFunc(name string) *ir.Func {
 	return g.builtins.funcs[name]
 }

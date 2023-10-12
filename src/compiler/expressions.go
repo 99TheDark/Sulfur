@@ -123,58 +123,15 @@ func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
 }
 
 func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
-	bl := g.bl
-	left := g.genExpr(x.Left)
-	right := g.genExpr(x.Right)
-	typ := g.types[x]
-	ll := g.lltyp(typ)
-	switch x.Op.Type {
-	case lexer.Addition:
-		switch typ {
-		case typing.String: // string + string
-			alloca := bl.NewAlloca(ll)
-			alloca.Align = 8
-			bl.NewCall(g.biBinop(lexer.Addition, typing.String, typing.String), alloca, left, right)
-			return alloca
-		case typing.Integer: // int + int
-			return bl.NewAdd(left, right)
-		case typing.Float: // float + float
-			return bl.NewFAdd(left, right)
-		}
-	case lexer.Subtraction:
-		switch typ {
-		case typing.Integer: // int - int
-			return bl.NewSub(left, right)
-		case typing.Float: // float - float
-			return bl.NewFSub(left, right)
-		}
-	case lexer.Multiplication:
-		switch typ {
-		case typing.Integer: // int * int
-			return bl.NewMul(left, right)
-		case typing.Float: // float * float
-			return bl.NewFMul(left, right)
-		}
-	case lexer.Division:
-		switch typ {
-		case typing.Integer: // int / int
-			return bl.NewSDiv(left, right)
-		case typing.Float: // float / float
-			return bl.NewFDiv(left, right)
-		}
-	case lexer.Modulus:
-		switch typ {
-		case typing.Integer: // int % int
-			return bl.NewSRem(left, right)
-		case typing.Float: // float % float
-			return bl.NewFRem(left, right)
-		}
+	val := g.genBasicBinaryOp(g.genExpr(x.Left), g.genExpr(x.Right), x.Op.Type, g.types[x])
+	if val == Zero {
+		Errors.Error("Unexpected generating error during binary operation", x.Loc())
 	}
 
-	Errors.Error("Unexpected generating error during binary operation", x.Loc())
-	return Zero
+	return val
 }
 
+// TODO: Move to basic
 func (g *generator) genUnaryOp(x ast.UnaryOp) value.Value {
 	bl := g.bl
 	val := g.genExpr(x.Value)
