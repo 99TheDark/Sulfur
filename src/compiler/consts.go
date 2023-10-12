@@ -11,3 +11,4 @@ var One = constant.NewInt(types.I32, int64(1))
 var Two = constant.NewInt(types.I32, int64(2))
 
 var FZero = constant.NewFloat(types.Float, float64(0))
+var FOne = constant.NewFloat(types.Float, float64(1))

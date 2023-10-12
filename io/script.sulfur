@@ -1,4 +1,2 @@
-println(string!(bool!(42)))
-println(string!(bool!(0)))
-println(string!(bool!(-1.6)))
-println(string!(bool!(3.4 - 3.4)))
+x := int!(float!(bool!(5))) * 3 + int!(float!(0)) * 2
+println(string!(x))

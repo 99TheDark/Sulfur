@@ -280,26 +280,27 @@ while2.end:                                       ; preds = %while2.cond
 
 define void @main() {
 entry:
-  %0 = icmp ne i32 42, 0
-  %1 = alloca %type.string, align 8
-  call void @.conv.bool_string(%type.string* %1, i1 %0)
-  call void @.println(%type.string* %1)
-  %2 = icmp ne i32 0, 0
-  %3 = alloca %type.string, align 8
-  call void @.conv.bool_string(%type.string* %3, i1 %2)
-  call void @.println(%type.string* %3)
-  %4 = fsub float 0.000000e+00, 0x3FF9999980000000
-  %5 = fsub float 0.000000e+00, 0x3FF9999980000000
-  %6 = fcmp one float %5, 0.000000e+00
-  %7 = alloca %type.string, align 8
-  call void @.conv.bool_string(%type.string* %7, i1 %6)
-  call void @.println(%type.string* %7)
-  %8 = fsub float 0x400B333320000000, 0x400B333320000000
-  %9 = fsub float 0x400B333320000000, 0x400B333320000000
-  %10 = fcmp one float %9, 0.000000e+00
-  %11 = alloca %type.string, align 8
-  call void @.conv.bool_string(%type.string* %11, i1 %10)
-  call void @.println(%type.string* %11)
+  %0 = icmp ne i32 5, 0
+  %1 = icmp ne i32 5, 0
+  %2 = zext i1 %1 to i32
+  %3 = sitofp i32 %2 to float
+  %4 = icmp ne i32 5, 0
+  %5 = icmp ne i32 5, 0
+  %6 = zext i1 %5 to i32
+  %7 = sitofp i32 %6 to float
+  %8 = fptosi float %7 to i32
+  %9 = mul i32 %8, 3
+  %10 = sitofp i32 0 to float
+  %11 = sitofp i32 0 to float
+  %12 = fptosi float %11 to i32
+  %13 = mul i32 %12, 2
+  %14 = add i32 %9, %13
+  %x = alloca i32, align 4
+  store i32 %14, i32* %x, align 4
+  %15 = load i32, i32* %x, align 4
+  %16 = alloca %type.string, align 8
+  call void @.conv.int_string(%type.string* %16, i32 %15)
+  call void @.println(%type.string* %16)
   br label %exit
 
 exit:                                             ; preds = %entry

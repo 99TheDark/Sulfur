@@ -142,6 +142,13 @@ func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
 			case typing.Boolean:
 				return bl.NewFCmp(enum.FPredONE, val, FZero)
 			}
+		case typing.Boolean:
+			switch to {
+			case typing.Integer:
+				return bl.NewZExt(val, typ)
+			case typing.Float:
+				return bl.NewSIToFP(bl.NewZExt(val, types.I32), typ)
+			}
 		}
 	}
 
