@@ -276,6 +276,10 @@ func (tt TokenType) String() string {
 		return "LessThanOrEqualTo"
 	case Delimiter:
 		return "Delimiter"
+	case Access:
+		return "Access"
+	case Module:
+		return "Module"
 	case Return:
 		return "Return"
 	case Pipe:
@@ -358,57 +362,16 @@ func (tt TokenType) String() string {
 		return "Catch"
 	case Okay:
 		return "Okay"
-	case EOF:
-		return "EOF"
 	case Arrow:
 		return "Arrow"
 	case Atsign:
 		return "Atsign"
 	case Autodef:
 		return "Autodef"
+	case EOF:
+		return "EOF"
 	default:
 		return "Unknown"
-	}
-}
-
-func (tt TokenType) OperatorName() string {
-	switch tt {
-	case Addition:
-		return "add"
-	case Subtraction:
-		return "sub"
-	case Multiplication:
-		return "mul"
-	case Division:
-		return "div"
-	case Exponentiation:
-		return "pow"
-	case Modulus:
-		return "rem"
-	case Or:
-		return "or"
-	case And:
-		return "and"
-	case Nor:
-		return "nor"
-	case Nand:
-		return "nand"
-	case EqualTo:
-		return "eq"
-	case NotEqualTo:
-		return "neq"
-	case GreaterThan:
-		return "gt"
-	case LessThan:
-		return "lt"
-	case GreaterThanOrEqualTo:
-		return "gte"
-	case LessThanOrEqualTo:
-		return "lte"
-	case Index:
-		return "idx"
-	default:
-		return "none"
 	}
 }
 

@@ -5,31 +5,47 @@ import (
 	"sulfur/src/typing"
 )
 
-func QuickFunc(name string, ret string, params ...string) FuncSignature {
+func QuickFunc(name string, ret typing.Type, params ...typing.Type) FuncSignature {
 	paramArr := []ParamSignature{}
 	for _, param := range params {
-		paramArr = append(paramArr, ParamSignature{typing.Type(param), false})
+		paramArr = append(paramArr, ParamSignature{param, false})
 	}
 
 	return FuncSignature{
 		name,
-		typing.Type(ret),
+		ret,
 		paramArr,
 	}
 }
 
-func QuickBinOp(left string, right string, op lexer.TokenType, ret string) BinaryOpSignature {
+func QuickBinOp(left, right typing.Type, op lexer.TokenType) BinaryOpSignature {
 	return BinaryOpSignature{
-		typing.Type(left),
-		typing.Type(right),
+		left,
+		right,
 		op,
-		typing.Type(ret),
+		left,
 	}
 }
 
-func QuickTypeConv(from string, to string) TypeConvSignature {
+func QuickUnOp(val typing.Type, op lexer.TokenType) UnaryOpSignature {
+	return UnaryOpSignature{
+		val,
+		op,
+		val,
+	}
+}
+
+func QuickComp(typ typing.Type, comp lexer.TokenType) ComparisonSignature {
+	return ComparisonSignature{
+		typ,
+		typ,
+		comp,
+	}
+}
+
+func QuickTypeConv(from, to typing.Type) TypeConvSignature {
 	return TypeConvSignature{
-		typing.Type(from),
-		typing.Type(to),
+		from,
+		to,
 	}
 }

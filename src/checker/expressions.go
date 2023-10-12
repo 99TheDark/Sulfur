@@ -68,8 +68,11 @@ func (c *checker) inferComparison(x ast.Comparison) typing.Type {
 
 func (c *checker) inferTypeConv(x ast.TypeConv) typing.Type {
 	// TODO: Check if type can be converted
-	// TODO: Error if type is converted to itself
-	c.inferExpr(x.Value)
+	typ := c.inferExpr(x.Value)
+	if typ == typing.Type(x.Type.Name) {
+		Errors.Error("Cannot convert type to itself", x.Loc())
+	}
+
 	return c.typ(x, typing.Type(x.Type.Name))
 }
 

@@ -122,13 +122,10 @@
         // Static variable
         stat MaxGrade = 12
 
-        int    grade
+        uint   grade
         string school
 
-        // TODO: Add th / rd / nd / st suffixes after private/public syntax is created
-
-        // Braces omitted since there is no body
-        new(string ~name, int ~age, int ~grade, string ~school)
+        new(string ~name, int ~age, uint ~grade, string ~school) {}
 
         del() {
             println("$(my.name) left $(my.school)")
@@ -139,6 +136,22 @@
             // Any parent calls must be explicit
             super.talk()
             println("I am a student at $(my.school), in grade $(my.grade).")
+        }
+
+        pri suffixedGrade() (string) {
+            end := my.grade % 10
+            suffix := "th"
+            if my.grade <= 10 | my.grade > 20 {
+                if end == 1 {
+                    suffix = "st"
+                } else if end == 2 {
+                    suffix = "nd"
+                } else if end == 3 {
+                    suffix = "rd"
+                }
+            }
+
+            return string!(my.grade) + suffix
         }
 
         to string {
@@ -379,7 +392,7 @@
         return safeRead(path)
     }
 
-    text := try read("/assets/text/secret.txt") {
+    text := try read("./assets/text/secret.txt") {
         catch FileError.FileNotFound {
             println("File Error: File not found")
             yield "404"

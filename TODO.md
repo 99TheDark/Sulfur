@@ -4,3 +4,6 @@
 - Add function generation
 - Add break & continue
 - Work on error & enum syntax
+- Unsigned integer & byte literals
+- Classes
+- String equals 

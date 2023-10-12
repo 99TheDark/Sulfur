@@ -85,7 +85,7 @@ func (p *parser) parseField(prefix lexer.Token) ast.Field {
 	}
 }
 
-func (p *parser) parseMethod(lexer.Token) ast.Method {
+func (p *parser) parseMethod(prefix lexer.Token) ast.Method {
 	name := p.parseIdentifier()
 	p.expect(lexer.OpenParen)
 	params := []ast.Param{}
@@ -106,16 +106,16 @@ func (p *parser) parseMethod(lexer.Token) ast.Method {
 
 	body := p.parseBlock()
 
-	// TODO: Parse status
+	vis, loc := ast.TokenVis(prefix, ast.Public, name.Pos)
 	return ast.Method{
 		Function: ast.Function{
-			Pos:    name.Pos,
+			Pos:    loc,
 			Name:   name,
 			Params: params,
 			Return: ret,
 			Body:   body,
 		},
-		Status: -1,
+		Status: vis,
 	}
 }
 
@@ -131,7 +131,6 @@ func (p *parser) parseNew(prefix lexer.Token) ast.Method {
 		[]lexer.TokenType{lexer.Delimiter},
 	)
 
-	// TODO: Don't require body on constructor
 	body := p.parseBlock()
 
 	vis, loc := ast.TokenVis(prefix, ast.Public, tok.Location)
@@ -162,7 +161,6 @@ func (p *parser) parseDel(prefix lexer.Token) ast.Method {
 		[]lexer.TokenType{lexer.Delimiter},
 	)
 
-	// TODO: Don't require body on constructor
 	body := p.parseBlock()
 
 	vis, loc := ast.TokenVis(prefix, ast.Public, tok.Location)
