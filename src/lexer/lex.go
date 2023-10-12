@@ -3,13 +3,10 @@ package lexer
 import (
 	"fmt"
 	"os"
+	"strings"
 	"sulfur/src/utils"
 	"unicode"
 )
-
-func decimal(ch rune) bool {
-	return unicode.IsDigit(ch) || ch == '.'
-}
 
 type lexer struct {
 	source []rune
@@ -189,7 +186,17 @@ func Lex(source string) *[]Token {
 			}
 		} else {
 			if l.mode == String {
-				l.end("\"")
+				if l.end("\"") {
+					tok := &l.tokens[len(l.tokens)-1]
+					val := tok.Value
+					val = strings.ReplaceAll(val, "\\f", "\f")
+					val = strings.ReplaceAll(val, "\\n", "\n")
+					val = strings.ReplaceAll(val, "\\r", "\r")
+					val = strings.ReplaceAll(val, "\\t", "\t")
+					val = strings.ReplaceAll(val, "\\v", "\v")
+
+					tok.Value = val
+				}
 			} else if l.mode == SingleLineComment {
 				if l.end("\n") {
 					l.add(NewLine, "\n")

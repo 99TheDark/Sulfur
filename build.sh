@@ -1,4 +1,3 @@
 #!/bin/bash
 go build
-./sulfur
-sh compile.sh
+sh sulfur.sh
