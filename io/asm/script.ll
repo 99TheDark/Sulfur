@@ -5,17 +5,15 @@ source_filename = "script.sulfur"
 
 define void @main() {
 entry:
-	%0 = icmp sgt i32 3, 2
-	br i1 %0, label %if.then0, label %if.end0
+	%x = alloca float
+	store float 3.5, float* %x
+	%0 = load float, float* %x
+	%1 = fadd float %0, 0x4000CCCCC0000000
+	store float %1, float* %x
+	br label %exit
 
 exit:
 	ret void
-
-if.then0:
-	br label %if.end0
-
-if.end0:
-	br label %exit
 }
 
 declare void @.print(%type.string* %0)

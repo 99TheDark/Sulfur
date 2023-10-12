@@ -61,12 +61,23 @@ func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
 }
 
 func (c *checker) inferAssignment(x ast.Assignment) {
-	// TODO: Check if operator is legal
 	vari := c.top.Lookup(x.Name.Name, x.Name.Pos)
 	val := c.inferExpr(x.Value)
 	if vari.Type != val {
 		Errors.Error("Expected "+vari.Type.String()+", but got "+val.String()+" instead", x.Loc())
 	}
+
+	for _, binop := range c.program.BinaryOps {
+		if binop.Op != x.Op.Type {
+			continue
+		}
+
+		if binop.Left == vari.Type && binop.Right == val {
+			return
+		}
+	}
+
+	Errors.Error("No operation "+x.Op.Value+" exists for "+vari.Type.String()+" and "+val.String(), x.Op.Location)
 }
 
 func (c *checker) inferIncDec(x ast.IncDec) {
