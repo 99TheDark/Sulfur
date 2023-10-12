@@ -78,13 +78,25 @@ func (c *checker) inferUnaryOp(x ast.UnaryOp) typing.Type {
 }
 
 func (c *checker) inferComparison(x ast.Comparison) typing.Type {
-	// TODO: Check if comparison exists
 	left := c.inferExpr(x.Left)
 	right := c.inferExpr(x.Right)
+
 	if left != right {
-		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Loc())
+		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Right.Loc())
 	}
-	return c.typ(x, typing.Boolean)
+
+	for _, comp := range c.program.Comparisons {
+		if comp.Comp != x.Comp.Type {
+			continue
+		}
+
+		if comp.Left == left && comp.Right == right {
+			return c.typ(x, typing.Boolean)
+		}
+	}
+
+	Errors.Error("No comparison "+x.Comp.Value+" exists for "+left.String()+" and "+right.String(), x.Comp.Location)
+	return c.typ(x, typing.Void)
 }
 
 func (c *checker) inferTypeConv(x ast.TypeConv) typing.Type {

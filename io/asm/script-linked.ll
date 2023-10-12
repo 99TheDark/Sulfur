@@ -280,14 +280,15 @@ while2.end:                                       ; preds = %while2.cond
 
 define void @main() {
 entry:
-  %0 = add i32 5, 3
-  %x = alloca i32, align 4
-  store i32 %0, i32* %x, align 4
-  %1 = fcmp one float 0x400B333320000000, 0.000000e+00
-  %y = alloca i1, align 1
-  store i1 %1, i1* %y, align 1
-  br label %exit
+  %0 = icmp sgt i32 3, 2
+  br i1 %0, label %if.then0, label %if.end0
 
-exit:                                             ; preds = %entry
+exit:                                             ; preds = %if.end0
   ret void
+
+if.then0:                                         ; preds = %entry
+  br label %if.end0
+
+if.end0:                                          ; preds = %if.then0, %entry
+  br label %exit
 }

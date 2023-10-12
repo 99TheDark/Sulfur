@@ -297,13 +297,6 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #16
-	.cfi_def_cfa_offset 16
-	mov	w8, #8
-	mov	w9, #1
-	str	w8, [sp, #12]
-	strb	w9, [sp, #11]
-	add	sp, sp, #16
 	ret
 	.cfi_endproc
                                         ; -- End function
