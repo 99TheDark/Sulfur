@@ -11,9 +11,9 @@ import (
 func (g *generator) genStmt(expr ast.Expr) {
 	switch x := expr.(type) {
 	case ast.Declaration:
-		g.genBasicDecl(x.Name.Name, g.genExpr(x.Value))
+		g.genBasicDecl(x.Name.Name, g.genExpr(x.Value), x.Name.Loc())
 	case ast.ImplicitDecl:
-		g.genBasicDecl(x.Name.Name, g.genExpr(x.Value))
+		g.genBasicDecl(x.Name.Name, g.genExpr(x.Value), x.Name.Loc())
 	case ast.Assignment:
 		g.genAssignment(x)
 	case ast.IncDec:
@@ -37,14 +37,14 @@ func (g *generator) genBlock(x ast.Block) {
 
 func (g *generator) genAssignment(x ast.Assignment) {
 	if lexer.Empty(x.Op) {
-		g.genBasicAssign(x.Name.Name, g.genExpr(x.Value))
+		g.genBasicAssign(x.Name.Name, g.genExpr(x.Value), x.Name.Loc())
 	} else {
 		bl := g.bl
 		iden := *g.top.Lookup(x.Name.Name, x.Loc()).Value
 		load := bl.NewLoad(g.typ(x.Value), iden)
 
 		val := g.genBasicBinaryOp(load, g.genExpr(x.Value), x.Op.Type, g.types[x.Value])
-		g.genBasicAssign(x.Name.Name, val)
+		g.genBasicAssign(x.Name.Name, val, x.Name.Loc())
 	}
 }
 
@@ -65,7 +65,7 @@ func (g *generator) genIncDec(x ast.IncDec) {
 	}
 
 	val := g.genBasicBinaryOp(load, One, op, vari.Type)
-	g.genBasicAssign(x.Name.Name, val)
+	g.genBasicAssign(x.Name.Name, val, x.Loc())
 }
 
 func (g *generator) genFuncCall(x ast.FuncCall) {

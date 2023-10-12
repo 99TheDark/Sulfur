@@ -1,0 +1,10 @@
+for i := 12; i <= 20; i++ {
+    age := string!(i)
+    if i >= 18 {
+        println("It is legal to drink at " + age + " years old")
+    } else {
+        println("It is illegal to drink at " + age + " years old")
+    }
+}
+
+println(". . . . . . . . . . . . . ")

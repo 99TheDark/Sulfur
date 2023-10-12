@@ -125,7 +125,7 @@ func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
 func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
 	val := g.genBasicBinaryOp(g.genExpr(x.Left), g.genExpr(x.Right), x.Op.Type, g.types[x])
 	if val == Zero {
-		Errors.Error("Unexpected generating error during binary operation", x.Loc())
+		Errors.Error("Unexpected generating error during binary operation", x.Op.Location)
 	}
 
 	return val
@@ -139,14 +139,21 @@ func (g *generator) genUnaryOp(x ast.UnaryOp) value.Value {
 	switch x.Op.Type {
 	case lexer.Subtraction:
 		switch typ {
-		case typing.Integer: // -int
+		case typing.Integer: // = -int
 			return bl.NewSub(Zero, val)
-		case typing.Float: // -float
+		case typing.Float: // = -float
 			return bl.NewFSub(FZero, val)
+		}
+	case lexer.Not:
+		switch typ {
+		case typing.Integer: // = !int
+			return bl.NewXor(val, NegOne)
+		case typing.Boolean: // = !bool
+			return bl.NewICmp(enum.IPredEQ, val, Zero)
 		}
 	}
 
-	Errors.Error("Unexpected generating error during unary operation", x.Loc())
+	Errors.Error("Unexpected generating error during unary operation", x.Op.Location)
 	return Zero
 }
 
@@ -202,6 +209,6 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 		}
 	}
 
-	Errors.Error("Unexpected generating error during comparison", x.Loc())
+	Errors.Error("Unexpected generating error during comparison", x.Comp.Location)
 	return Zero
 }

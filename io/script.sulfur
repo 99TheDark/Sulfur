@@ -1,10 +1,19 @@
-for i := 12; i <= 20; i++ {
-    age := string!(i)
-    if i >= 18 {
-        println("It is legal to drink at " + age + " years old")
-    } else {
-        println("It is illegal to drink at " + age + " years old")
+str := "1 1 "
+
+n1 := 1
+n2 := 1
+for i := 0; i < 40; i++ {
+    sum := n1 + n2
+    str += string!(sum) + " "
+
+    n1 = n2
+    n2 = sum
+
+    if i != 0 & i % 10 == 0 {
+        // TODO: Add escape characters
+        str += "
+"
     }
 }
 
-println(". . . . . . . . . . . . . ")
+println(str)
