@@ -186,6 +186,20 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 		case typing.Float:
 			return bl.NewFCmp(enum.FPredOGE, left, right)
 		}
+	case lexer.EqualTo:
+		switch typ {
+		case typing.Integer, typing.Boolean:
+			return bl.NewICmp(enum.IPredEQ, left, right)
+		case typing.Float:
+			return bl.NewFCmp(enum.FPredOEQ, left, right)
+		}
+	case lexer.NotEqualTo:
+		switch typ {
+		case typing.Integer, typing.Boolean:
+			return bl.NewICmp(enum.IPredNE, left, right)
+		case typing.Float:
+			return bl.NewFCmp(enum.FPredONE, left, right)
+		}
 	}
 
 	Errors.Error("Unexpected generating error during comparison", x.Loc())

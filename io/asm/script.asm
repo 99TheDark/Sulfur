@@ -311,11 +311,11 @@ Lloh7:
 	add	x26, x26, l_.str2@PAGEOFF
 	stur	w8, [x29, #-68]
 	b	LBB4_3
-LBB4_1:                                 ; %if.else0
+LBB4_1:                                 ; %if.else1
                                         ;   in Loop: Header=BB4_3 Depth=1
 	ldr	x2, [x8]
 	stp	x24, x26, [x9, #-16]
-LBB4_2:                                 ; %if.end0
+LBB4_2:                                 ; %if.end1
                                         ;   in Loop: Header=BB4_3 Depth=1
 	sub	x20, sp, #16
 	mov	sp, x20
@@ -354,10 +354,10 @@ LBB4_3:                                 ; %for.cond0
 	mov	x9, sp
 	ldur	w10, [x29, #-68]
 	sub	x1, x9, #16
-	cmp	w10, #18
+	cmp	w10, #17
 	mov	sp, x1
-	b.lt	LBB4_1
-; %bb.5:                                ; %if.then0
+	b.le	LBB4_1
+; %bb.5:                                ; %if.then1
                                         ;   in Loop: Header=BB4_3 Depth=1
 	ldr	x2, [x8]
 	stp	x22, x21, [x9, #-16]

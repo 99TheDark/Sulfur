@@ -24,9 +24,8 @@ type Variable struct {
 }
 
 type Scope struct {
-	Parent     *Scope
-	BlockCount int
-	Vars       map[string]Variable
+	Parent *Scope
+	Vars   map[string]Variable
 }
 
 type Func struct {
@@ -47,7 +46,6 @@ func (s *Scope) Lookup(name string, loc *lexer.Location) Variable {
 func NewScope() Scope {
 	return Scope{
 		nil,
-		0,
 		make(map[string]Variable),
 	}
 }

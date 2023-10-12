@@ -8,15 +8,3 @@ for i := 12; i <= 20; i++ {
 }
 
 println(". . . . . . . . . . . . . ")
-
-/*
-entry    -> for.cond
-for.cond -> for.body, for.end
-for.body -> if.body, if.else
-if.body  -> if.end
-if.else  -> if.end
-if.end   -> for.inc
-for.inc  -> for.cond
-for.end  -> exit
-exit
-*/

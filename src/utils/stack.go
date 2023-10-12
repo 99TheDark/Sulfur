@@ -9,9 +9,14 @@ func (s *Stack[T]) Push(item T) {
 }
 
 func (s *Stack[T]) Pop() T {
-	removed, items := s.items[0], s.items[1:]
+	max := len(s.items) - 1
+	removed, items := s.items[max], s.items[:max]
 	s.items = items
 	return removed
+}
+
+func (s *Stack[T]) Array() []T {
+	return s.items
 }
 
 func NewStack[T any]() Stack[T] {

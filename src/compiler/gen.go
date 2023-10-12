@@ -16,22 +16,34 @@ type llvm_builtins struct {
 }
 
 type generator struct {
-	program  *ast.Program
-	types    checker.TypeMap
-	mod      *ir.Module
-	top      *ast.Scope
-	topfunc  *ir.Func
-	bl       *ir.Block
-	exits    utils.Stack[*ir.Block]
-	str      types.Type
-	strs     map[string]StringGlobal
-	builtins llvm_builtins
+	program    *ast.Program
+	types      checker.TypeMap
+	mod        *ir.Module
+	top        *ast.Scope
+	topfunc    *ir.Func
+	bl         *ir.Block
+	blockcount int
+	exits      utils.Stack[*ir.Block]
+	str        types.Type
+	strs       map[string]StringGlobal
+	builtins   llvm_builtins
 }
 
 func (g *generator) scope(scope *ast.Scope, body func()) {
 	g.top = scope
 	body()
 	g.top = scope.Parent
+}
+
+func (g *generator) enter(bl *ir.Block) {
+	g.bl.NewBr(bl)
+	g.exits.Push(bl)
+}
+
+func (g *generator) exit() {
+	exit := g.exits.Pop()
+	g.bl.NewBr(exit)
+	g.bl = exit
 }
 
 func Generate(program *ast.Program, typ checker.TypeMap) string {
@@ -58,6 +70,7 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 		&program.Contents.Scope,
 		main,
 		bl,
+		0,
 		stack,
 		str,
 		make(map[string]StringGlobal),
@@ -77,11 +90,8 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 		g.genStmt(x)
 	}
 
-	popped := g.exits.Pop()
-	g.bl.NewBr(popped)
-	g.bl = popped
-
-	g.bl.NewRet(nil)
+	g.exit()
+	exit.NewRet(nil)
 
 	return mod.String()
 }

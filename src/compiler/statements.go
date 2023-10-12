@@ -82,86 +82,72 @@ func (g *generator) genFuncCall(x ast.FuncCall) {
 }
 
 func (g *generator) genIfStmt(x ast.IfStatement) {
-	id := fmt.Sprint(g.top.BlockCount)
-	g.top.BlockCount++
+	id := fmt.Sprint(g.blockcount)
+	g.blockcount++
 
 	main := g.bl
 
 	cond := g.genExpr(x.Cond)
 
 	thenBl := g.topfunc.NewBlock("if.then" + id)
-	main.NewBr(thenBl)
-
 	if ast.Empty(x.Else) {
-		// TODO: Make if statements without else statements work
+		endBl := g.topfunc.NewBlock("if.end" + id)
+
+		g.enter(endBl)
 		g.bl = thenBl
 		g.genBlock(x.Body)
-
-		endBl := g.topfunc.NewBlock("if.end" + id)
-		thenBl.NewBr(endBl)
+		g.exit()
 
 		main.NewCondBr(cond, thenBl, endBl)
-
-		if g.bl != endBl {
-			g.bl.NewBr(endBl)
-		}
 		g.bl = endBl
 	} else {
 		elseBl := g.topfunc.NewBlock("if.else" + id)
+		endBl := g.topfunc.NewBlock("if.end" + id)
 
+		g.enter(endBl)
 		g.bl = thenBl
 		g.genBlock(x.Body)
+		g.exit()
 
+		g.enter(endBl)
 		g.bl = elseBl
 		g.genBlock(x.Else)
-
-		endBl := g.topfunc.NewBlock("if.end" + id)
-		thenBl.NewBr(endBl)
-		elseBl.NewBr(endBl)
+		g.exit()
 
 		main.NewCondBr(cond, thenBl, elseBl)
-
-		if g.bl != elseBl {
-			g.bl.NewBr(endBl)
-		}
 		g.bl = endBl
 	}
 }
 
 func (g *generator) genForLoop(x ast.ForLoop) {
-	id := fmt.Sprint(g.top.BlockCount)
-	g.top.BlockCount++
+	id := fmt.Sprint(g.blockcount)
+	g.blockcount++
 
 	main := g.bl
 
 	g.scope(&x.Body.Scope, func() {
+		condBl := g.topfunc.NewBlock("for.cond" + id)
+		bodyBl := g.topfunc.NewBlock("for.body" + id)
+		incBl := g.topfunc.NewBlock("for.inc" + id)
+		endBl := g.topfunc.NewBlock("for.end" + id)
+
 		g.genStmt(x.Init)
 
-		condBl := g.topfunc.NewBlock("for.cond" + id)
 		g.bl = condBl
 		cond := g.genExpr(x.Cond)
 
-		bodyBl := g.topfunc.NewBlock("for.body" + id)
 		g.bl = bodyBl
 		g.genBlock(x.Body)
 
-		incBl := g.topfunc.NewBlock("for.inc" + id)
-		if g.bl != bodyBl {
-			g.bl.NewBr(incBl)
-		} else {
-			bodyBl.NewBr(incBl)
-		}
+		g.bl.NewBr(incBl)
 
 		g.bl = incBl
 		g.genStmt(x.Inc)
 		incBl.NewBr(condBl)
 
-		endBl := g.topfunc.NewBlock("for.end" + id)
 		condBl.NewCondBr(cond, bodyBl, endBl)
 
 		main.NewBr(condBl)
 		g.bl = endBl
-
-		g.exits.Push(endBl)
 	})
 }
