@@ -283,6 +283,9 @@ entry:
   %0 = add i32 5, 3
   %x = alloca i32, align 4
   store i32 %0, i32* %x, align 4
+  %1 = fcmp one float 0x400B333320000000, 0.000000e+00
+  %y = alloca i1, align 1
+  store i1 %1, i1* %y, align 1
   br label %exit
 
 exit:                                             ; preds = %entry

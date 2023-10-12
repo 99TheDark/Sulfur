@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"sulfur/src/builtins"
 	"sulfur/src/lexer"
 )
 
@@ -10,10 +11,15 @@ type Expr interface {
 
 type (
 	Program struct {
-		Functions []Function `json:"-"`
-		Classes   []Class    `json:"-"`
-		Strings   []String   `json:"-"`
-		Contents  Block
+		// TODO: Create & replace classes and strings with ClassSignatures and StringSignatures
+		Functions   []builtins.FuncSignature       `json:"-"`
+		BinaryOps   []builtins.BinaryOpSignature   `json:"-"`
+		UnaryOps    []builtins.UnaryOpSignature    `json:"-"`
+		Comparisons []builtins.ComparisonSignature `json:"-"`
+		TypeConvs   []builtins.TypeConvSignature   `json:"-"`
+		Classes     []Class                        `json:"-"`
+		Strings     []String
+		Contents    Block
 	}
 
 	BadExpr struct {

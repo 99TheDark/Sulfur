@@ -1,1 +1,5 @@
-x := 5 + 3
+int x = 5 + 3
+
+bool y = bool!(3.4)
+float abc = float!(7)
+int x = int!("hi")

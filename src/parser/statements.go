@@ -2,8 +2,10 @@ package parser
 
 import (
 	"sulfur/src/ast"
+	"sulfur/src/builtins"
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
+	"sulfur/src/typing"
 )
 
 func (p *parser) parseStmt() ast.Expr {
@@ -106,6 +108,19 @@ func (p *parser) parseFunction() ast.Function {
 	}
 
 	body := p.parseBlock()
+
+	// TODO: Check if function already exists
+	ptypes := []typing.Type{}
+	for _, param := range params {
+		ptypes = append(ptypes, typing.Type(param.Type.Name))
+	}
+
+	sig := builtins.QuickFunc(
+		name.Name,
+		typing.Type(ret.Name),
+		ptypes...,
+	)
+	p.program.Functions = append(p.program.Functions, sig)
 
 	return ast.Function{
 		Pos:    tok.Location,

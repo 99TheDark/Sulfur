@@ -18,6 +18,13 @@ func QuickFunc(name string, ret typing.Type, params ...typing.Type) FuncSignatur
 	}
 }
 
+func QuickParam(typ typing.Type, autodef bool) ParamSignature {
+	return ParamSignature{
+		typ,
+		autodef,
+	}
+}
+
 func QuickBinOp(left, right typing.Type, op lexer.TokenType) BinaryOpSignature {
 	return BinaryOpSignature{
 		left,

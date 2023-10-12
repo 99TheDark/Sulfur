@@ -5,5 +5,6 @@
 - Add break & continue
 - Work on error & enum syntax
 - Unsigned integer & byte literals
+- Infer type conversion
 - Classes
 - String equals 

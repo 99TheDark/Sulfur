@@ -300,7 +300,9 @@ _main:                                  ; @main
 	sub	sp, sp, #16
 	.cfi_def_cfa_offset 16
 	mov	w8, #8
+	mov	w9, #1
 	str	w8, [sp, #12]
+	strb	w9, [sp, #11]
 	add	sp, sp, #16
 	ret
 	.cfi_endproc

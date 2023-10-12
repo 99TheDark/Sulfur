@@ -5,16 +5,18 @@ import (
 	"encoding/json"
 	"strings"
 	"sulfur/src/ast"
+	"sulfur/src/builtins"
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
 	"sulfur/src/utils"
 )
 
 type parser struct {
-	source []lexer.Token
-	size   int
-	top    *ast.Scope
-	idx    int
+	source  []lexer.Token
+	program *ast.Program
+	size    int
+	top     *ast.Scope
+	idx     int
 }
 
 func (p *parser) at() lexer.Token {
@@ -72,9 +74,21 @@ func (p *parser) is(catagory []lexer.TokenType) bool {
 }
 
 func Parse(source string, tokens *[]lexer.Token) *ast.Program {
+	prog := ast.Program{
+		Functions:   []builtins.FuncSignature{},
+		BinaryOps:   []builtins.BinaryOpSignature{},
+		UnaryOps:    []builtins.UnaryOpSignature{},
+		Comparisons: []builtins.ComparisonSignature{},
+		TypeConvs:   []builtins.TypeConvSignature{},
+		Classes:     []ast.Class{},
+		Strings:     []ast.String{},
+		Contents:    ast.Block{},
+	}
+
 	scope := ast.NewScope()
 	p := parser{
 		*tokens,
+		&prog,
 		len(*tokens),
 		&scope,
 		0,
@@ -89,16 +103,12 @@ func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 		[]lexer.TokenType{lexer.NewLine, lexer.Semicolon},
 	)
 
-	prog := ast.Program{
-		Functions: []ast.Function{},
-		Classes:   []ast.Class{},
-		Strings:   []ast.String{},
-		Contents: ast.Block{
-			Pos:   lexer.NoLocation,
-			Body:  body,
-			Scope: scope,
-		},
+	prog.Contents = ast.Block{
+		Pos:   lexer.NoLocation,
+		Body:  body,
+		Scope: scope,
 	}
+
 	return &prog
 }
 
