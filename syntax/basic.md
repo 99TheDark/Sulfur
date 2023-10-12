@@ -251,7 +251,7 @@
     WarmMonth.June == Month.June
 
     // Give the values of an enum a type and raw value
-    enum Response!(uint) {
+    enum Response[uint] {
         Ok         = 200u
         Found      = 302u
         Bad        = 400u

@@ -1,16 +1,6 @@
 # TODO
-- Redo parsing
-    - One statement per line, otherwise seperated by semicolons, ex:
-        ```
-        // Legal
-        x, y := do(3, 1); a := 12 * x
-
-        // Legal
-        x, y := do(3, 1)
-        a := 12 * x
-
-        // Illegal
-        x, y := do(3, 1) a := 12 * x
-        ```
-- Add builtin functions
-- Structs in functions
+- Float to string generation
+- Clean up scattered TODO's in project
+- Add function generation
+- Add break & continue
+- Work on error & enum syntax
