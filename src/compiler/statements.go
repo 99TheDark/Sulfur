@@ -82,7 +82,7 @@ func (g *generator) genFuncCall(x ast.FuncCall) {
 		params = append(params, g.genExpr(param))
 	}
 
-	bl.NewCall(g.builtins.funcs[x.Func.Name], params...)
+	bl.NewCall(g.builtins.funcs[x.Func.Name].ir, params...)
 }
 
 func (g *generator) genIfStmt(x ast.IfStatement) {

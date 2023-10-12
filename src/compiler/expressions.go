@@ -113,13 +113,40 @@ func (g *generator) genString(x ast.String) value.Value {
 
 func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
 	bl := g.bl
+	conv := g.biConv(string(g.types[x.Value]), x.Type.Name)
 	val := g.genExpr(x.Value)
 
-	alloca := bl.NewAlloca(g.lltyp(typing.Type(x.Type.Name)))
-	alloca.Align = 8
+	if conv.complex {
+		alloca := bl.NewAlloca(g.lltyp(typing.Type(x.Type.Name)))
+		alloca.Align = 8
 
-	bl.NewCall(g.biConv(string(g.types[x.Value]), x.Type.Name), alloca, val)
-	return alloca
+		bl.NewCall(conv.ir, alloca, val)
+		return alloca
+	} else {
+		from, to := conv.sig.From, conv.sig.To
+		typ := g.llraw(conv.sig.To)
+		val := g.genExpr(x.Value)
+
+		switch from {
+		case typing.Integer:
+			switch to {
+			case typing.Float:
+				return bl.NewSIToFP(val, typ)
+			case typing.Boolean:
+				return bl.NewICmp(enum.IPredNE, val, Zero)
+			}
+		case typing.Float:
+			switch to {
+			case typing.Integer:
+				return bl.NewFPToSI(val, typ)
+			case typing.Boolean:
+				return bl.NewFCmp(enum.FPredONE, val, FZero)
+			}
+		}
+	}
+
+	Errors.Error("Unexpected generating error during type conversion", x.Loc())
+	return Zero
 }
 
 func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {

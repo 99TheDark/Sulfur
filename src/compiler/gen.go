@@ -9,12 +9,6 @@ import (
 	"github.com/llir/llvm/ir/types"
 )
 
-type llvm_builtins struct {
-	funcs  map[string]*ir.Func
-	binops map[string]*ir.Func
-	convs  map[string]*ir.Func
-}
-
 type generator struct {
 	program    *ast.Program
 	types      checker.TypeMap
@@ -75,9 +69,9 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 		str,
 		make(map[string]StringGlobal),
 		llvm_builtins{
-			make(map[string]*ir.Func),
-			make(map[string]*ir.Func),
-			make(map[string]*ir.Func),
+			make(map[string]bi_func),
+			make(map[string]bi_binop),
+			make(map[string]bi_conv),
 		},
 	}
 

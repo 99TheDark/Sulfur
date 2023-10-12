@@ -34,7 +34,7 @@ func (g *generator) genBasicBinaryOp(left, right value.Value, op lexer.TokenType
 		case typing.String: // = string + string
 			alloca := bl.NewAlloca(ll)
 			alloca.Align = 8
-			bl.NewCall(g.biBinop(lexer.Addition, typing.String, typing.String), alloca, left, right)
+			bl.NewCall(g.biBinop(lexer.Addition, typing.String, typing.String).ir, alloca, left, right)
 			return alloca
 		case typing.Integer: // = int + int
 			return bl.NewAdd(left, right)

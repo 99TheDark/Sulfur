@@ -1,5 +1,4 @@
-i := 0
-do {
-    println(string!(i))
-    i--
-} while i > 0
+println(string!(bool!(42)))
+println(string!(bool!(0)))
+println(string!(bool!(-1.6)))
+println(string!(bool!(3.4 - 3.4)))
