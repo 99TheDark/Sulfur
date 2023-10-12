@@ -17,7 +17,6 @@ var BinaryOps = []BinaryOpSignature{
 var TypeConvs = []TypeConvSignature{
 	QuickTypeConv("int", "string"),
 	QuickTypeConv("bool", "string"),
-
 	QuickTypeConv("int", "float"),
 	QuickTypeConv("int", "bool"),
 	QuickTypeConv("float", "int"),
