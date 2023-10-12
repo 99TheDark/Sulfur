@@ -39,7 +39,7 @@ func main() {
 	types := checker.TypeCheck(ast)
 
 	llcode := compiler.Generate(ast, types)
-	if err := compiler.Save(llcode, "io/asm/script.ll"); err != nil {
+	if err := compiler.Save("; ModuleID = 'script.sulfur'\n"+llcode, "io/asm/script.ll"); err != nil {
 		log.Fatalln(err)
 	}
 

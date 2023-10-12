@@ -297,21 +297,180 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #48
-	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 48
+	stp	x28, x27, [sp, #-96]!           ; 16-byte Folded Spill
+	stp	x26, x25, [sp, #16]             ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #32]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	add	x29, sp, #80
+	sub	sp, sp, #16
+	.cfi_def_cfa w29, 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	w8, #3
-	add	x0, sp, #8
-	mov	w1, #3
-	str	w8, [sp, #28]
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	.cfi_offset w21, -40
+	.cfi_offset w22, -48
+	.cfi_offset w23, -56
+	.cfi_offset w24, -64
+	.cfi_offset w25, -72
+	.cfi_offset w26, -80
+	.cfi_offset w27, -88
+	.cfi_offset w28, -96
+	mov	w21, #26215
+Lloh6:
+	adrp	x23, l_.str0.2@PAGE
+Lloh7:
+	adrp	x25, l_.str1.3@PAGE
+Lloh8:
+	adrp	x26, l_.str2@PAGE
+Lloh9:
+	adrp	x28, l_.str4@PAGE
+	mov	w8, #1
+	movk	w21, #26214, lsl #16
+	mov	w22, #10
+Lloh10:
+	add	x23, x23, l_.str0.2@PAGEOFF
+	mov	x24, #8589934594
+Lloh11:
+	add	x25, x25, l_.str1.3@PAGEOFF
+Lloh12:
+	add	x26, x26, l_.str2@PAGEOFF
+Lloh13:
+	add	x28, x28, l_.str4@PAGEOFF
+	stur	w8, [x29, #-84]
+	b	LBB5_6
+LBB5_1:                                 ; %if.then2
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	mov	x8, sp
+	sub	x9, x8, #16
+	mov	sp, x9
+	stp	x24, x25, [x8, #-16]
+LBB5_2:                                 ; %if.end1
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	str	x9, [x19]
+LBB5_3:                                 ; %if.end1
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	sub	x20, sp, #16
+	ldur	w1, [x29, #-84]
+	mov	sp, x20
+	mov	x0, x20
 	bl	_.conv.int_string
-	add	x0, sp, #8
+	ldr	x2, [x19]
+	sub	x19, sp, #16
+	mov	sp, x19
+	mov	x0, x19
+	mov	x1, x20
+	bl	_.add.string_string
+	mov	x8, sp
+	sub	x9, x8, #16
+	mov	sp, x9
+	ldr	w9, [x27]
+	stur	x19, [x8, #-16]
+	cbz	w9, LBB5_12
+; %bb.4:                                ; %if.else5
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	mov	x8, sp
+	sub	x2, x8, #16
+	mov	sp, x2
+	sub	x20, sp, #16
+	stp	x24, x28, [x8, #-16]
+	mov	sp, x20
+	mov	x0, x20
+	mov	x1, x19
+	bl	_.add.string_string
+	mov	x0, x20
+	bl	_.print
+LBB5_5:                                 ; %if.end5
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	ldur	w8, [x29, #-84]
+	add	w8, w8, #1
+	stur	w8, [x29, #-84]
+LBB5_6:                                 ; %for.cond0
+                                        ; =>This Inner Loop Header: Depth=1
+	ldur	w8, [x29, #-84]
+	cmp	w8, #100
+	b.gt	LBB5_15
+; %bb.7:                                ; %for.body0
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	ldursw	x8, [x29, #-84]
+	mul	x9, x8, x21
+	lsr	x10, x9, #63
+	asr	x9, x9, #34
+	add	w9, w9, w10
+	msub	w8, w9, w22, w8
+	mov	x9, sp
+	sub	x27, x9, #16
+	mov	sp, x27
+	stur	w8, [x9, #-16]
+	mov	x8, sp
+	sub	x9, x8, #16
+	mov	sp, x9
+	mov	x10, sp
+	stp	x24, x23, [x8, #-16]
+	sub	x19, x10, #16
+	mov	sp, x19
+	ldur	w8, [x29, #-84]
+	stur	x9, [x10, #-16]
+	cmp	w8, #11
+	b.lt	LBB5_9
+; %bb.8:                                ; %for.body0
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	cmp	w8, #20
+	b.le	LBB5_3
+LBB5_9:                                 ; %if.then1
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	ldr	w8, [x27]
+	cmp	w8, #1
+	b.eq	LBB5_1
+; %bb.10:                               ; %if.else2
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	ldr	w8, [x27]
+	cmp	w8, #2
+	b.ne	LBB5_13
+; %bb.11:                               ; %if.then3
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	mov	x8, sp
+	sub	x9, x8, #16
+	mov	sp, x9
+	stp	x24, x26, [x8, #-16]
+	b	LBB5_2
+LBB5_12:                                ; %if.then5
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	mov	x0, x19
 	bl	_.println
-	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
-	add	sp, sp, #48
+	b	LBB5_5
+LBB5_13:                                ; %if.else3
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	ldr	w8, [x27]
+	cmp	w8, #3
+	b.ne	LBB5_3
+; %bb.14:                               ; %if.then4
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	mov	x8, sp
+	sub	x9, x8, #16
+	mov	sp, x9
+Lloh14:
+	adrp	x10, l_.str3@PAGE
+Lloh15:
+	add	x10, x10, l_.str3@PAGEOFF
+	stp	x24, x10, [x8, #-16]
+	b	LBB5_2
+LBB5_15:                                ; %for.end0
+	sub	sp, x29, #80
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x28, x27, [sp], #96             ; 16-byte Folded Reload
 	ret
+	.loh AdrpAdd	Lloh9, Lloh13
+	.loh AdrpAdd	Lloh8, Lloh12
+	.loh AdrpAdd	Lloh7, Lloh11
+	.loh AdrpAdd	Lloh6, Lloh10
+	.loh AdrpAdd	Lloh14, Lloh15
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -324,5 +483,20 @@ l_.str1:                                ; @.str1
 
 l_.str0.1:                              ; @.str0.1
 	.byte	48
+
+l_.str0.2:                              ; @.str0.2
+	.ascii	"th"
+
+l_.str1.3:                              ; @.str1.3
+	.ascii	"st"
+
+l_.str2:                                ; @.str2
+	.ascii	"nd"
+
+l_.str3:                                ; @.str3
+	.ascii	"rd"
+
+l_.str4:                                ; @.str4
+	.ascii	", "
 
 .subsections_via_symbols

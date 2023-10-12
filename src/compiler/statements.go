@@ -133,13 +133,13 @@ func (g *generator) genForLoop(x ast.ForLoop) {
 	id := fmt.Sprint(g.blockcount)
 	g.blockcount++
 
-	g.genStmt(x.Init)
-
 	g.scope(&x.Body.Scope, func() {
 		condBl := g.topfunc.NewBlock("for.cond" + id)
 		bodyBl := g.topfunc.NewBlock("for.body" + id)
 		incBl := g.topfunc.NewBlock("for.inc" + id)
 		endBl := g.topfunc.NewBlock("for.end" + id)
+
+		g.genStmt(x.Init)
 
 		g.bl = condBl
 		cond := g.genExpr(x.Cond)
