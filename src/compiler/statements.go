@@ -134,27 +134,34 @@ func (g *generator) genForLoop(x ast.ForLoop) {
 
 	main := g.bl
 
-	condBl := g.topfunc.NewBlock("for.cond" + id)
-	bodyBl := g.topfunc.NewBlock("for.body" + id)
-	incBl := g.topfunc.NewBlock("for.inc" + id)
-	endBl := g.topfunc.NewBlock("for.end" + id)
-
 	g.scope(&x.Body.Scope, func() {
 		g.genStmt(x.Init)
 
+		condBl := g.topfunc.NewBlock("for.cond" + id)
 		g.bl = condBl
 		cond := g.genExpr(x.Cond)
-		condBl.NewCondBr(cond, bodyBl, endBl)
 
+		bodyBl := g.topfunc.NewBlock("for.body" + id)
 		g.bl = bodyBl
 		g.genBlock(x.Body)
-		bodyBl.NewBr(incBl)
+
+		incBl := g.topfunc.NewBlock("for.inc" + id)
+		if g.bl != bodyBl {
+			g.bl.NewBr(incBl)
+		} else {
+			bodyBl.NewBr(incBl)
+		}
 
 		g.bl = incBl
 		g.genStmt(x.Inc)
 		incBl.NewBr(condBl)
-	})
 
-	main.NewBr(condBl)
-	g.bl = endBl
+		endBl := g.topfunc.NewBlock("for.end" + id)
+		condBl.NewCondBr(cond, bodyBl, endBl)
+
+		main.NewBr(condBl)
+		g.bl = endBl
+
+		g.exits.Push(endBl)
+	})
 }

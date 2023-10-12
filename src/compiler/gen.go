@@ -3,8 +3,6 @@ package compiler
 import (
 	"sulfur/src/ast"
 	"sulfur/src/checker"
-	"sulfur/src/lexer"
-	"sulfur/src/typing"
 	"sulfur/src/utils"
 
 	"github.com/llir/llvm/ir"
@@ -24,64 +22,16 @@ type generator struct {
 	top      *ast.Scope
 	topfunc  *ir.Func
 	bl       *ir.Block
+	exits    utils.Stack[*ir.Block]
 	str      types.Type
 	strs     map[string]StringGlobal
 	builtins llvm_builtins
-}
-
-func (g *generator) complex(typ typing.Type) bool {
-	ll := g.lltyp(typ)
-	_, ok := ll.(*types.StructType)
-	return ok
-}
-
-func (g *generator) lltyp(typ typing.Type) types.Type {
-	switch typ {
-	case typing.Integer, typing.Unsigned:
-		return types.I32
-	case typing.Float:
-		return types.Float
-	case typing.Boolean:
-		return types.I1
-	case typing.Byte:
-		return types.I8
-	case typing.String:
-		return g.str
-	}
-	return types.Void
-}
-
-func (g *generator) llraw(typ typing.Type) types.Type {
-	ll := g.lltyp(typ)
-	if _, ok := ll.(*types.StructType); ok {
-		return types.NewPointer(ll)
-	}
-	return ll
-}
-
-func (g *generator) typ(x ast.Expr) types.Type {
-	if typ, ok := g.types[x]; ok {
-		return g.llraw(typ)
-	}
-	return types.Void
 }
 
 func (g *generator) scope(scope *ast.Scope, body func()) {
 	g.top = scope
 	body()
 	g.top = scope.Parent
-}
-
-func (g *generator) biFunc(name string) *ir.Func {
-	return g.builtins.funcs[name]
-}
-
-func (g *generator) biBinop(op lexer.TokenType, left, right string) *ir.Func {
-	return g.builtins.binops[op.OperatorName()+" "+left+" "+right]
-}
-
-func (g *generator) biConv(from, to string) *ir.Func {
-	return g.builtins.convs["conv "+from+" "+to]
 }
 
 func Generate(program *ast.Program, typ checker.TypeMap) string {
@@ -96,6 +46,10 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 
 	main := mod.NewFunc("main", types.Void)
 	bl := main.NewBlock("entry")
+	exit := main.NewBlock("exit")
+
+	stack := utils.NewStack[*ir.Block]()
+	stack.Push(exit)
 
 	g := generator{
 		program,
@@ -104,6 +58,7 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 		&program.Contents.Scope,
 		main,
 		bl,
+		stack,
 		str,
 		make(map[string]StringGlobal),
 		llvm_builtins{
@@ -121,6 +76,10 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 	for _, x := range program.Contents.Body {
 		g.genStmt(x)
 	}
+
+	popped := g.exits.Pop()
+	g.bl.NewBr(popped)
+	g.bl = popped
 
 	g.bl.NewRet(nil)
 
