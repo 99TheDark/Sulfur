@@ -48,7 +48,6 @@ func (g *generator) genIdentifier(x ast.Identifier) value.Value {
 	return load
 }
 
-// TODO: Simplify
 func (g *generator) genString(x ast.String) value.Value {
 	bl := g.bl
 

@@ -51,6 +51,16 @@ var UnaryOps = []UnaryOpSignature{
 	QuickUnOp("bool", lexer.Not),
 }
 
+var IncDecs = []IncDecSignature{
+	// int
+	QuickIncDec("int", lexer.Increment),
+	QuickIncDec("int", lexer.Decrement),
+
+	// float
+	QuickIncDec("float", lexer.Increment),
+	QuickIncDec("float", lexer.Decrement),
+}
+
 var Comps = []ComparisonSignature{
 	// int
 	QuickComp("int", lexer.EqualTo),

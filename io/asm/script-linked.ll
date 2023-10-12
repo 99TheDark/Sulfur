@@ -6,8 +6,6 @@ source_filename = "llvm-link"
 @.str0 = private unnamed_addr constant [4 x i8] c"true", align 1
 @.str1 = private unnamed_addr constant [5 x i8] c"false", align 1
 @.str0.1 = private unnamed_addr constant [1 x i8] c"0", align 1
-@.str0.2 = private unnamed_addr constant [7 x i8] c"Hello, ", align 1
-@.str1.3 = private unnamed_addr constant [5 x i8] c"world", align 1
 
 define void @.conv.bool_string(%type.string* %ret, i1 %bool) {
 entry:
@@ -282,31 +280,18 @@ while2.end:                                       ; preds = %while2.cond
 
 define void @main() {
 entry:
-  %0 = getelementptr inbounds [7 x i8], [7 x i8]* @.str0.2, i32 0, i32 0
-  %1 = alloca %type.string, align 8
-  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 7, i32* %2, align 8
-  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-  store i32 7, i32* %3, align 8
-  %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
-  store i8* %0, i8** %4, align 8
-  %x = alloca %type.string*, align 8
-  store %type.string* %1, %type.string** %x, align 8
-  %5 = getelementptr inbounds [5 x i8], [5 x i8]* @.str1.3, i32 0, i32 0
-  %6 = alloca %type.string, align 8
-  %7 = getelementptr inbounds %type.string, %type.string* %6, i32 0, i32 0
-  store i32 5, i32* %7, align 8
-  %8 = getelementptr inbounds %type.string, %type.string* %6, i32 0, i32 1
-  store i32 5, i32* %8, align 8
-  %9 = getelementptr inbounds %type.string, %type.string* %6, i32 0, i32 2
-  store i8* %5, i8** %9, align 8
-  %y = alloca %type.string*, align 8
-  store %type.string* %6, %type.string** %y, align 8
-  %10 = load %type.string*, %type.string** %x, align 8
-  %11 = load %type.string*, %type.string** %y, align 8
-  %12 = alloca %type.string, align 8
-  call void @.add.string_string(%type.string* %12, %type.string* %10, %type.string* %11)
-  call void @.println(%type.string* %12)
+  %x = alloca i1, align 1
+  store i1 true, i1* %x, align 1
+  %y = alloca float, align 4
+  store float 0x401D333320000000, float* %y, align 4
+  %z = alloca i32, align 4
+  store i32 6, i32* %z, align 4
+  %0 = load i32, i32* %z, align 4
+  %1 = add i32 %0, 1
+  store i32 %1, i32* %z, align 4
+  %2 = load float, float* %y, align 4
+  %3 = fadd float %2, 1.000000e+00
+  store float %3, float* %y, align 4
   br label %exit
 
 exit:                                             ; preds = %entry

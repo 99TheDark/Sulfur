@@ -2,8 +2,12 @@ package compiler
 
 import (
 	"fmt"
+	"strings"
 	"sulfur/src/ast"
 	"sulfur/src/lexer"
+	"sulfur/src/typing"
+
+	. "sulfur/src/errors"
 
 	"github.com/llir/llvm/ir/value"
 )
@@ -68,7 +72,15 @@ func (g *generator) genIncDec(x ast.IncDec) {
 		op = lexer.Subtraction
 	}
 
-	val := g.genBasicBinaryOp(load, One, op, vari.Type)
+	var val value.Value
+	switch vari.Type {
+	case typing.Integer:
+		val = g.genBasicBinaryOp(load, One, op, vari.Type)
+	case typing.Float:
+		val = g.genBasicBinaryOp(load, FOne, op, vari.Type)
+	default:
+		Errors.Error("Unexpected generating error during "+strings.ToLower(x.Op.Type.String()), x.Loc())
+	}
 	g.genBasicAssign(x.Name.Name, val, x.Loc())
 }
 

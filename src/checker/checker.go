@@ -26,6 +26,7 @@ func TypeCheck(program *ast.Program) TypeMap {
 	program.UnaryOps = append(program.UnaryOps, builtins.UnaryOps...)
 	program.Comparisons = append(program.Comparisons, builtins.Comps...)
 	program.TypeConvs = append(program.TypeConvs, builtins.TypeConvs...)
+	program.IncDecs = append(program.IncDecs, builtins.IncDecs...)
 
 	c := checker{
 		program,

@@ -17,6 +17,7 @@ type (
 		UnaryOps    []builtins.UnaryOpSignature    `json:"-"`
 		Comparisons []builtins.ComparisonSignature `json:"-"`
 		TypeConvs   []builtins.TypeConvSignature   `json:"-"`
+		IncDecs     []builtins.IncDecSignature     `json:"-"`
 		Classes     []Class                        `json:"-"`
 		Strings     []String
 		Contents    Block

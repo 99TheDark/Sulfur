@@ -1,4 +1,0 @@
-x := "Hello, "
-y := "world"
-
-println(x + y)

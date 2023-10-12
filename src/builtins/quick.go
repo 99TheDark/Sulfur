@@ -42,6 +42,13 @@ func QuickUnOp(val typing.Type, op lexer.TokenType) UnaryOpSignature {
 	}
 }
 
+func QuickIncDec(vari typing.Type, op lexer.TokenType) IncDecSignature {
+	return IncDecSignature{
+		vari,
+		op,
+	}
+}
+
 func QuickComp(typ typing.Type, comp lexer.TokenType) ComparisonSignature {
 	return ComparisonSignature{
 		typ,

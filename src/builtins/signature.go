@@ -30,6 +30,11 @@ type (
 		Return typing.Type
 	}
 
+	IncDecSignature struct {
+		Var typing.Type
+		Op  lexer.TokenType
+	}
+
 	ComparisonSignature struct {
 		Left  typing.Type
 		Right typing.Type

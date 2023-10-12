@@ -81,8 +81,18 @@ func (c *checker) inferAssignment(x ast.Assignment) {
 }
 
 func (c *checker) inferIncDec(x ast.IncDec) {
-	// TODO: Check if increment/decrement is legal
-	c.top.Lookup(x.Name.Name, x.Name.Pos)
+	vari := c.top.Lookup(x.Name.Name, x.Name.Pos).Type
+	for _, id := range c.program.IncDecs {
+		if id.Op != x.Op.Type {
+			continue
+		}
+
+		if id.Var == vari {
+			return
+		}
+	}
+
+	Errors.Error("No operation "+x.Op.Value+" exists for "+vari.String(), x.Op.Location)
 }
 
 func (c *checker) inferFunction(x ast.Function) {
