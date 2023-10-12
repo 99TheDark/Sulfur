@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"math"
 	"strconv"
 	"strings"
 	"sulfur/src/ast"
@@ -147,18 +146,16 @@ func (p *parser) parseBoolean() ast.Boolean {
 
 func (p *parser) parseNumber() ast.Expr {
 	tok := p.expect(lexer.Number)
-	// TODO: Make 2.0 a float, not an int
+	if i64, err := strconv.ParseInt(tok.Value, 10, 64); err == nil {
+		return ast.Integer{
+			Pos:   tok.Location,
+			Value: i64,
+		}
+	}
 	if f64, err := strconv.ParseFloat(tok.Value, 64); err == nil {
-		if math.Mod(f64, 1) == 0 {
-			return ast.Integer{
-				Pos:   tok.Location,
-				Value: int64(f64),
-			}
-		} else {
-			return ast.Float{
-				Pos:   tok.Location,
-				Value: f64,
-			}
+		return ast.Float{
+			Pos:   tok.Location,
+			Value: f64,
 		}
 	}
 

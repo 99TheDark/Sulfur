@@ -1,17 +1,8 @@
-str := "1 1 "
-
-n1 := 1
-n2 := 1
-for i := 0; i < 40; i++ {
-    sum := n1 + n2
-    str += string!(sum) + " "
-
-    n1 = n2
-    n2 = sum
-
-    if i != 0 & i % 10 == 0 {
-        str += "\n"
-    }
+num := 932.8
+i := 0
+while num % 1.0 != 0.0 {
+    num -= 0.1
+    i++
 }
 
-println(str)
+println("It took " + string!(i) + " iterations")

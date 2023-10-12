@@ -7,9 +7,9 @@ declare void @free(i8*)
 
 @.str0 = private unnamed_addr constant [1 x i8] c"0", align 1
 
-define void @.conv.int_string(%type.string* %ret, i32 %num) {
+define void @.conv.int_string(%type.string* %ret, i32 %int) {
 entry:
-    %0 = icmp eq i32 %num, 0
+    %0 = icmp eq i32 %int, 0
     br i1 %0, label %if.then, label %if.end
 
 if.then:
@@ -23,8 +23,8 @@ if.then:
     br label %exit
 
 if.end:
-    %num.adr = alloca i32, align 4
-    store i32 %num, i32* %num.adr, align 4
+    %int.adr = alloca i32, align 4
+    store i32 %int, i32* %int.adr, align 4
     %buf = alloca i8*, align 8
     %buf.adr = call i8* @malloc(i32 10)
     store i8* %buf.adr, i8** %buf, align 8
@@ -32,14 +32,14 @@ if.end:
     store i32 9, i32* %i, align 4
     %sign = alloca i32, align 4
     store i32 0, i32* %sign, align 4
-    %5 = load i32, i32* %num.adr, align 4
+    %5 = load i32, i32* %int.adr, align 4
     %6 = load i8*, i8** %buf, align 8
     %7 = icmp slt i32 %5, 0
     br i1 %7, label %if.then1, label %if.end1
 
 if.then1:
     %8 = sub i32 0, %5
-    store i32 %8, i32* %num.adr, align 4
+    store i32 %8, i32* %int.adr, align 4
     store i32 1, i32* %sign, align 4
     br label %if.end1
 
@@ -47,7 +47,7 @@ if.end1:
     br label %while.cond
 
 while.cond:
-    %9 = load i32, i32* %num.adr, align 4
+    %9 = load i32, i32* %int.adr, align 4
     %10 = icmp sgt i32 %9, 0
     br i1 %10, label %while.body, label %while.end
 
@@ -59,7 +59,7 @@ while.body:
     %15 = getelementptr inbounds i8, i8* %6, i32 %14
     store i8 %13, i8* %15, align 1
     %16 = sdiv i32 %9, 10
-    store i32 %16, i32* %num.adr, align 4
+    store i32 %16, i32* %int.adr, align 4
     %17 = add i32 %14, -1
     store i32 %17, i32* %i, align 4
     br label %while.cond

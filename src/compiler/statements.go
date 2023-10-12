@@ -24,6 +24,8 @@ func (g *generator) genStmt(expr ast.Expr) {
 		g.genIfStmt(x)
 	case ast.ForLoop:
 		g.genForLoop(x)
+	case ast.WhileLoop:
+		g.genWhileLoop(x)
 	default:
 		fmt.Println("Ignored generating statement")
 	}
@@ -82,10 +84,9 @@ func (g *generator) genFuncCall(x ast.FuncCall) {
 }
 
 func (g *generator) genIfStmt(x ast.IfStatement) {
+	main := g.bl
 	id := fmt.Sprint(g.blockcount)
 	g.blockcount++
-
-	main := g.bl
 
 	cond := g.genExpr(x.Cond)
 
@@ -93,10 +94,12 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 	if ast.Empty(x.Else) {
 		endBl := g.topfunc.NewBlock("if.end" + id)
 
-		g.enter(endBl)
-		g.bl = thenBl
-		g.genBlock(x.Body)
-		g.exit()
+		g.scope(&x.Body.Scope, func() {
+			g.enter(endBl)
+			g.bl = thenBl
+			g.genBlock(x.Body)
+			g.exit()
+		})
 
 		main.NewCondBr(cond, thenBl, endBl)
 		g.bl = endBl
@@ -104,15 +107,19 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 		elseBl := g.topfunc.NewBlock("if.else" + id)
 		endBl := g.topfunc.NewBlock("if.end" + id)
 
-		g.enter(endBl)
-		g.bl = thenBl
-		g.genBlock(x.Body)
-		g.exit()
+		g.scope(&x.Body.Scope, func() {
+			g.enter(endBl)
+			g.bl = thenBl
+			g.genBlock(x.Body)
+			g.exit()
+		})
 
-		g.enter(endBl)
-		g.bl = elseBl
-		g.genBlock(x.Else)
-		g.exit()
+		g.scope(&x.Else.Scope, func() {
+			g.enter(endBl)
+			g.bl = elseBl
+			g.genBlock(x.Else)
+			g.exit()
+		})
 
 		main.NewCondBr(cond, thenBl, elseBl)
 		g.bl = endBl
@@ -120,18 +127,17 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 }
 
 func (g *generator) genForLoop(x ast.ForLoop) {
+	main := g.bl
 	id := fmt.Sprint(g.blockcount)
 	g.blockcount++
 
-	main := g.bl
+	g.genStmt(x.Init)
 
 	g.scope(&x.Body.Scope, func() {
 		condBl := g.topfunc.NewBlock("for.cond" + id)
 		bodyBl := g.topfunc.NewBlock("for.body" + id)
 		incBl := g.topfunc.NewBlock("for.inc" + id)
 		endBl := g.topfunc.NewBlock("for.end" + id)
-
-		g.genStmt(x.Init)
 
 		g.bl = condBl
 		cond := g.genExpr(x.Cond)
@@ -144,6 +150,31 @@ func (g *generator) genForLoop(x ast.ForLoop) {
 		g.bl = incBl
 		g.genStmt(x.Inc)
 		incBl.NewBr(condBl)
+
+		condBl.NewCondBr(cond, bodyBl, endBl)
+
+		main.NewBr(condBl)
+		g.bl = endBl
+	})
+}
+
+func (g *generator) genWhileLoop(x ast.WhileLoop) {
+	main := g.bl
+	id := fmt.Sprint(g.blockcount)
+	g.blockcount++
+
+	g.scope(&x.Body.Scope, func() {
+		condBl := g.topfunc.NewBlock("while.cond" + id)
+		bodyBl := g.topfunc.NewBlock("while.body" + id)
+		endBl := g.topfunc.NewBlock("while.end" + id)
+
+		g.bl = condBl
+		cond := g.genExpr(x.Cond)
+
+		g.enter(condBl)
+		g.bl = bodyBl
+		g.genBlock(x.Body)
+		g.exit()
 
 		condBl.NewCondBr(cond, bodyBl, endBl)
 
