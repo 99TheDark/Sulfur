@@ -63,52 +63,12 @@ func (g *generator) genString(x ast.String) value.Value {
 	)
 	str.InBounds = true
 
-	alloca := bl.NewAlloca(g.str)
-	alloca.Align = 8
-
-	lenPtr := bl.NewGetElementPtr(
+	return g.genBasicStruct(
 		g.str,
-		alloca,
-		Zero,
-		Zero,
-	)
-	lenPtr.InBounds = true
-
-	lenStore := bl.NewStore(
 		constant.NewInt(types.I32, int64(utf8.RuneCountInString(x.Value))),
-		lenPtr,
-	)
-	lenStore.Align = 8
-
-	sizePtr := bl.NewGetElementPtr(
-		g.str,
-		alloca,
-		Zero,
-		One,
-	)
-	sizePtr.InBounds = true
-
-	sizeStore := bl.NewStore(
 		constant.NewInt(types.I32, int64(len(x.Value))),
-		sizePtr,
-	)
-	sizeStore.Align = 8
-
-	adrPtr := bl.NewGetElementPtr(
-		g.str,
-		alloca,
-		Zero,
-		Two,
-	)
-	adrPtr.InBounds = true
-
-	adrStore := bl.NewStore(
 		str,
-		adrPtr,
 	)
-	adrStore.Align = 8
-
-	return alloca
 }
 
 func (g *generator) genTypeConv(x ast.TypeConv) value.Value {

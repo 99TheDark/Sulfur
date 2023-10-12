@@ -4,6 +4,9 @@ import (
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
 
+	"github.com/llir/llvm/ir"
+	"github.com/llir/llvm/ir/constant"
+	"github.com/llir/llvm/ir/types"
 	"github.com/llir/llvm/ir/value"
 )
 
@@ -82,4 +85,28 @@ func (g *generator) genBasicBinaryOp(left, right value.Value, op lexer.TokenType
 	}
 
 	return Zero
+}
+
+func (g *generator) genBasicStruct(typ types.Type, fields ...value.Value) *ir.InstAlloca {
+	bl := g.bl
+
+	alloca := bl.NewAlloca(typ)
+	alloca.Align = 8
+	for i, field := range fields {
+		ptr := bl.NewGetElementPtr(
+			typ,
+			alloca,
+			Zero,
+			constant.NewInt(types.I32, int64(i)),
+		)
+		ptr.InBounds = true
+
+		store := bl.NewStore(
+			field,
+			ptr,
+		)
+		store.Align = 8
+	}
+
+	return alloca
 }

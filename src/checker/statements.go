@@ -81,7 +81,7 @@ func (c *checker) inferAssignment(x ast.Assignment) {
 }
 
 func (c *checker) inferIncDec(x ast.IncDec) {
-	// TODO: Check if operator is legal
+	// TODO: Check if increment/decrement is legal
 	c.top.Lookup(x.Name.Name, x.Name.Pos)
 }
 

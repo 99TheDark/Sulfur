@@ -297,13 +297,38 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #16
-	.cfi_def_cfa_offset 16
-	mov	w8, #13107
-	movk	w8, #16563, lsl #16
-	str	w8, [sp, #12]
-	add	sp, sp, #16
+	sub	sp, sp, #80
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 80
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+Lloh6:
+	adrp	x9, l_.str0.2@PAGE
+	mov	x8, #30064771079
+Lloh7:
+	add	x9, x9, l_.str0.2@PAGEOFF
+	add	x10, sp, #48
+	mov	x0, sp
+	add	x1, sp, #48
+	add	x2, sp, #24
+	stp	x8, x9, [sp, #48]
+Lloh8:
+	adrp	x9, l_.str1.3@PAGE
+Lloh9:
+	add	x9, x9, l_.str1.3@PAGEOFF
+	mov	x8, #5
+	movk	x8, #5, lsl #32
+	stp	x9, x10, [sp, #32]
+	add	x10, sp, #24
+	stp	x10, x8, [sp, #16]
+	bl	_.add.string_string
+	mov	x0, sp
+	bl	_.println
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	add	sp, sp, #80
 	ret
+	.loh AdrpAdd	Lloh8, Lloh9
+	.loh AdrpAdd	Lloh6, Lloh7
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -316,5 +341,11 @@ l_.str1:                                ; @.str1
 
 l_.str0.1:                              ; @.str0.1
 	.byte	48
+
+l_.str0.2:                              ; @.str0.2
+	.ascii	"Hello, "
+
+l_.str1.3:                              ; @.str1.3
+	.ascii	"world"
 
 .subsections_via_symbols
