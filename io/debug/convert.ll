@@ -1,4 +1,4 @@
-source_filename = "script.sulfur"
+source_filename = "script.su"
 
 %type.string = type { i32, i32, i8* }
 

@@ -14,7 +14,7 @@ import (
 func main() {
 	start := time.Now()
 
-	code, err := lexer.GetSourceCode("io/script.sulfur")
+	code, err := lexer.GetSourceCode("io/script.su")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -39,7 +39,7 @@ func main() {
 	types := checker.TypeCheck(ast)
 
 	llcode := compiler.Generate(ast, types)
-	if err := compiler.Save("; ModuleID = 'script.sulfur'\n"+llcode, "io/asm/script.ll"); err != nil {
+	if err := compiler.Save("; ModuleID = 'script.su'\n"+llcode, "io/asm/script.ll"); err != nil {
 		log.Fatalln(err)
 	}
 
