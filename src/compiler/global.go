@@ -64,7 +64,8 @@ func (g *generator) genBinOps() {
 		name := "." + binop.Op.OperatorName() + "." + binop.Left.String() + "_" + binop.Right.String()
 		if g.complex(binop.Return) {
 			bi = bi_binop{
-				binop, g.mod.NewFunc(
+				binop,
+				g.mod.NewFunc(
 					name,
 					types.Void,
 					ir.NewParam("ret", g.llraw(binop.Return)),
@@ -75,12 +76,8 @@ func (g *generator) genBinOps() {
 			}
 		} else {
 			bi = bi_binop{
-				binop, g.mod.NewFunc(
-					name,
-					g.llraw(binop.Return),
-					ir.NewParam("", g.llraw(binop.Left)),
-					ir.NewParam("", g.llraw(binop.Right)),
-				),
+				binop,
+				nil,
 				false,
 			}
 		}
@@ -90,7 +87,75 @@ func (g *generator) genBinOps() {
 	}
 }
 
-func (g *generator) genConvs() {
+func (g *generator) genUnOps() {
+	for _, unop := range builtins.UnaryOps {
+		var bi bi_unop
+		name := "." + unop.Op.OperatorName() + "." + unop.Value.String()
+		if g.complex(unop.Return) {
+			bi = bi_unop{
+				unop,
+				g.mod.NewFunc(
+					name,
+					types.Void,
+					ir.NewParam("ret", g.llraw(unop.Return)),
+					ir.NewParam("", g.llraw(unop.Value)),
+				),
+				true,
+			}
+		} else {
+			bi = bi_unop{
+				unop,
+				nil,
+				false,
+			}
+		}
+
+		hash := unop.Op.OperatorName() + " " + unop.Value.String()
+		g.builtins.unops[hash] = bi
+	}
+}
+
+func (g *generator) genIncDecs() {
+	for _, incdec := range builtins.IncDecs {
+		var bi bi_incdec
+		name := "." + incdec.Op.OperatorName() + "." + incdec.Var.String()
+		if g.complex(incdec.Var) {
+			bi = bi_incdec{
+				incdec,
+				g.mod.NewFunc(
+					name,
+					types.Void,
+					ir.NewParam("ret", g.llraw(incdec.Var)),
+				),
+				true,
+			}
+		} else {
+			bi = bi_incdec{
+				incdec,
+				nil,
+				false,
+			}
+		}
+
+		hash := incdec.Op.OperatorName() + " " + incdec.Var.String()
+		g.builtins.incdecs[hash] = bi
+	}
+}
+
+func (g *generator) genComps() {
+	for _, comp := range builtins.Comps {
+		bi := bi_comp{
+			comp,
+			nil,
+			false,
+		}
+
+		hash := comp.Comp.OperatorName() + " " + comp.Left.String() + " " + comp.Right.String()
+		g.builtins.comps[hash] = bi
+	}
+}
+
+func (g *generator) genTypeConvs() {
 	for _, conv := range builtins.TypeConvs {
 		var bi bi_conv
 		name := ".conv." + string(conv.From) + "_" + string(conv.To)

@@ -16,6 +16,10 @@ func (tt TokenType) OperatorName() string {
 		return "pow"
 	case Modulus:
 		return "rem"
+	case Increment:
+		return "inc"
+	case Decrement:
+		return "dec"
 	case Or:
 		return "or"
 	case And:
@@ -24,13 +28,8 @@ func (tt TokenType) OperatorName() string {
 		return "nor"
 	case Nand:
 		return "nand"
-	default:
-		return NoName
-	}
-}
-
-func (tt TokenType) ComparisonName() string {
-	switch tt {
+	case Not:
+		return "not"
 	case EqualTo:
 		return "eq"
 	case GreaterThan:
@@ -42,12 +41,4 @@ func (tt TokenType) ComparisonName() string {
 	default:
 		return NoName
 	}
-}
-
-func (tt TokenType) IsOperator() bool {
-	return tt.OperatorName() != NoName
-}
-
-func (tt TokenType) IsComparison() bool {
-	return tt.ComparisonName() != NoName
 }

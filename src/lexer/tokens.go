@@ -45,6 +45,8 @@ const (
 	Nor                            // '!|'
 	Nand                           // '!&'
 	Not                            // '!'
+	NaN                            // 'nan'
+	Infinity                       // 'inf'
 	Is                             // 'is'
 	EqualTo                        // '=='
 	NotEqualTo                     // '!='
@@ -106,6 +108,8 @@ const (
 var Keywords = map[string]TokenType{
 	"true":        Boolean,
 	"false":       Boolean,
+	"nan":         NaN,
+	"inf":         Infinity,
 	"is":          Is,
 	"mod":         Module,
 	"return":      Return,
@@ -260,6 +264,10 @@ func (tt TokenType) String() string {
 		return "Nand"
 	case Not:
 		return "Not"
+	case NaN:
+		return "NaN"
+	case Infinity:
+		return "Infinity"
 	case Is:
 		return "Is"
 	case EqualTo:

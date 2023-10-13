@@ -42,7 +42,7 @@ func (g *generator) exit() {
 
 func Generate(program *ast.Program, typ checker.TypeMap) string {
 	mod := ir.NewModule()
-	mod.SourceFilename = "script.sulfur"
+	mod.SourceFilename = "script.su"
 
 	str := mod.NewTypeDef("type.string", types.NewStruct(
 		types.I32,   // length
@@ -71,6 +71,9 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 		llvm_builtins{
 			make(map[string]bi_func),
 			make(map[string]bi_binop),
+			make(map[string]bi_unop),
+			make(map[string]bi_incdec),
+			make(map[string]bi_comp),
 			make(map[string]bi_conv),
 		},
 	}
@@ -78,7 +81,10 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 	g.genStrings()
 	g.genFuncs()
 	g.genBinOps()
-	g.genConvs()
+	g.genUnOps()
+	g.genIncDecs()
+	g.genComps()
+	g.genTypeConvs()
 
 	for _, x := range program.Contents.Body {
 		g.genStmt(x)

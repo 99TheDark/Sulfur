@@ -163,42 +163,42 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 		case typing.Integer:
 			return bl.NewICmp(enum.IPredSLT, left, right)
 		case typing.Float:
-			return bl.NewFCmp(enum.FPredOLT, left, right)
+			return bl.NewFCmp(enum.FPredULT, left, right)
 		}
 	case lexer.GreaterThan:
 		switch typ {
 		case typing.Integer:
 			return bl.NewICmp(enum.IPredSGT, left, right)
 		case typing.Float:
-			return bl.NewFCmp(enum.FPredOGT, left, right)
+			return bl.NewFCmp(enum.FPredUGT, left, right)
 		}
 	case lexer.LessThanOrEqualTo:
 		switch typ {
 		case typing.Integer:
 			return bl.NewICmp(enum.IPredSLE, left, right)
 		case typing.Float:
-			return bl.NewFCmp(enum.FPredOLE, left, right)
+			return bl.NewFCmp(enum.FPredULE, left, right)
 		}
 	case lexer.GreaterThanOrEqualTo:
 		switch typ {
 		case typing.Integer:
 			return bl.NewICmp(enum.IPredSGE, left, right)
 		case typing.Float:
-			return bl.NewFCmp(enum.FPredOGE, left, right)
+			return bl.NewFCmp(enum.FPredUGE, left, right)
 		}
 	case lexer.EqualTo:
 		switch typ {
 		case typing.Integer, typing.Boolean:
 			return bl.NewICmp(enum.IPredEQ, left, right)
 		case typing.Float:
-			return bl.NewFCmp(enum.FPredOEQ, left, right)
+			return bl.NewFCmp(enum.FPredUEQ, left, right)
 		}
 	case lexer.NotEqualTo:
 		switch typ {
 		case typing.Integer, typing.Boolean:
 			return bl.NewICmp(enum.IPredNE, left, right)
 		case typing.Float:
-			return bl.NewFCmp(enum.FPredONE, left, right)
+			return bl.NewFCmp(enum.FPredUNE, left, right)
 		}
 	}
 

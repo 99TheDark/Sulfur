@@ -280,18 +280,6 @@ while2.end:                                       ; preds = %while2.cond
 
 define void @main() {
 entry:
-  %x = alloca i1, align 1
-  store i1 true, i1* %x, align 1
-  %y = alloca float, align 4
-  store float 0x401D333320000000, float* %y, align 4
-  %z = alloca i32, align 4
-  store i32 6, i32* %z, align 4
-  %0 = load i32, i32* %z, align 4
-  %1 = add i32 %0, 1
-  store i32 %1, i32* %z, align 4
-  %2 = load float, float* %y, align 4
-  %3 = fadd float %2, 1.000000e+00
-  store float %3, float* %y, align 4
   br label %exit
 
 exit:                                             ; preds = %entry

@@ -18,6 +18,24 @@ type bi_binop struct {
 	complex bool
 }
 
+type bi_unop struct {
+	sig     builtins.UnaryOpSignature
+	ir      *ir.Func
+	complex bool
+}
+
+type bi_incdec struct {
+	sig     builtins.IncDecSignature
+	ir      *ir.Func
+	complex bool
+}
+
+type bi_comp struct {
+	sig     builtins.ComparisonSignature
+	ir      *ir.Func
+	complex bool
+}
+
 type bi_conv struct {
 	sig     builtins.TypeConvSignature
 	ir      *ir.Func
@@ -25,9 +43,12 @@ type bi_conv struct {
 }
 
 type llvm_builtins struct {
-	funcs  map[string]bi_func
-	binops map[string]bi_binop
-	convs  map[string]bi_conv
+	funcs   map[string]bi_func
+	binops  map[string]bi_binop
+	unops   map[string]bi_unop
+	incdecs map[string]bi_incdec
+	comps   map[string]bi_comp
+	convs   map[string]bi_conv
 }
 
 func (g *generator) biFunc(name string) bi_func {
