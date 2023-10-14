@@ -80,12 +80,12 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 		str,
 		make(map[string]StringGlobal),
 		llvm_builtins{
-			make(map[string]builtins.FuncSignature),
-			make(map[string]builtins.BinaryOpSignature),
-			make(map[string]builtins.UnaryOpSignature),
-			make(map[string]builtins.IncDecSignature),
-			make(map[string]builtins.ComparisonSignature),
-			make(map[string]builtins.TypeConvSignature),
+			make(map[string]*builtins.FuncSignature),
+			make(map[string]*builtins.BinaryOpSignature),
+			make(map[string]*builtins.UnaryOpSignature),
+			make(map[string]*builtins.IncDecSignature),
+			make(map[string]*builtins.ComparisonSignature),
+			make(map[string]*builtins.TypeConvSignature),
 		},
 	}
 

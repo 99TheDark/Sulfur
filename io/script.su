@@ -5,3 +5,5 @@ func add(int a, int b) (int) {
 func toString(int x) (string) {
     return string!(x)
 }
+
+println(toString(add(54, -17)))

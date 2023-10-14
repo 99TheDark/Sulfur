@@ -3,6 +3,8 @@
 - Complex return values in function
 - Add break & continue
 - Better escaped characters
+- Allow function calls to be a single statement
+- Compile ll types into a single map of structs
 - Float to string generation
 - Work on error & enum syntax
 - Unsigned integer & byte literals

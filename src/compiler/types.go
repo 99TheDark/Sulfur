@@ -29,17 +29,9 @@ func (g *generator) lltyp(typ typing.Type) types.Type {
 	return types.Void
 }
 
-func (g *generator) llraw(typ typing.Type) types.Type {
-	ll := g.lltyp(typ)
-	if _, ok := ll.(*types.StructType); ok {
-		return types.NewPointer(ll)
-	}
-	return ll
-}
-
 func (g *generator) typ(x ast.Expr) types.Type {
 	if typ, ok := g.types[x]; ok {
-		return g.llraw(typ)
+		return g.lltyp(typ)
 	}
 	return types.Void
 }

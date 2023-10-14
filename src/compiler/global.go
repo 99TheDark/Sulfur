@@ -38,118 +38,105 @@ func (g *generator) genStrings() {
 }
 
 func (g *generator) genFuncs() {
-	for _, fun := range g.program.Functions {
+	for i, fun := range g.program.Functions {
 		name := fun.Module + "." + fun.Name
 
 		params := []*ir.Param{}
-		if g.complex(fun.Return) {
-			ret := ir.NewParam(".ret", g.llraw(fun.Return))
-			fun.Ret = ret
-			params = append(params, ret)
-		}
 		for i, param := range fun.Params {
-			p := ir.NewParam("", g.llraw(param.Type))
+			p := ir.NewParam("", g.lltyp(param.Type))
 			fun.Params[i].Ir = p
 			params = append(params, p)
 		}
 
-		// TODO: Add complex functions
-		if g.complex(fun.Return) {
-			fun.Ir = g.mod.NewFunc(
-				name,
-				types.Void,
-				params...,
-			)
-			fun.Complex = true
-		} else {
-			fun.Ir = g.mod.NewFunc(
-				name,
-				g.llraw(fun.Return),
-				params...,
-			)
-		}
+		fun.Ir = g.mod.NewFunc(
+			name,
+			g.lltyp(fun.Return),
+			params...,
+		)
 
-		g.builtins.funcs[fun.Name] = fun
+		g.program.Functions[i] = fun
+		g.builtins.funcs[fun.Name] = &g.program.Functions[i]
 	}
 }
 
 func (g *generator) genBinOps() {
-	for _, binop := range g.program.BinaryOps {
+	for i, binop := range g.program.BinaryOps {
 		name := binop.Module + "." + binop.Op.OperatorName() + "." + binop.Left.String() + "_" + binop.Right.String()
 		if g.complex(binop.Return) {
 			binop.Ir = g.mod.NewFunc(
 				name,
-				types.Void,
-				ir.NewParam(".ret", g.llraw(binop.Return)),
-				ir.NewParam("", g.llraw(binop.Left)),
-				ir.NewParam("", g.llraw(binop.Right)),
+				g.lltyp(binop.Return),
+				ir.NewParam("", g.lltyp(binop.Left)),
+				ir.NewParam("", g.lltyp(binop.Right)),
 			)
 			binop.Complex = true
 		}
 
 		hash := binop.Op.OperatorName() + " " + binop.Left.String() + " " + binop.Right.String()
-		g.builtins.binops[hash] = binop
+		g.program.BinaryOps[i] = binop
+		g.builtins.binops[hash] = &g.program.BinaryOps[i]
 	}
 }
 
 func (g *generator) genUnOps() {
-	for _, unop := range g.program.UnaryOps {
+	for i, unop := range g.program.UnaryOps {
 		name := unop.Module + "." + unop.Op.OperatorName() + "." + unop.Value.String()
 		if g.complex(unop.Return) {
 			unop.Ir = g.mod.NewFunc(
 				name,
-				types.Void,
-				ir.NewParam(".ret", g.llraw(unop.Return)),
-				ir.NewParam("", g.llraw(unop.Value)),
+				g.lltyp(unop.Return),
+				ir.NewParam("", g.lltyp(unop.Value)),
 			)
 			unop.Complex = true
 		}
 
 		hash := unop.Op.OperatorName() + " " + unop.Value.String()
-		g.builtins.unops[hash] = unop
+		g.program.UnaryOps[i] = unop
+		g.builtins.unops[hash] = &g.program.UnaryOps[i]
 	}
 }
 
 func (g *generator) genIncDecs() {
-	for _, incdec := range g.program.IncDecs {
+	for i, incdec := range g.program.IncDecs {
 		name := incdec.Module + "." + incdec.Op.OperatorName() + "." + incdec.Var.String()
 		if g.complex(incdec.Var) {
 			incdec.Ir = g.mod.NewFunc(
 				name,
-				types.Void,
-				ir.NewParam(".ret", g.llraw(incdec.Var)),
+				g.lltyp(incdec.Var),
 			)
 			incdec.Complex = true
 		}
 
 		hash := incdec.Op.OperatorName() + " " + incdec.Var.String()
-		g.builtins.incdecs[hash] = incdec
+		g.program.IncDecs[i] = incdec
+		g.builtins.incdecs[hash] = &g.program.IncDecs[i]
 	}
 }
 
 func (g *generator) genComps() {
-	for _, comp := range g.program.Comparisons {
+	for i, comp := range g.program.Comparisons {
 		// TODO: Complex comparisons
 
 		hash := comp.Comp.OperatorName() + " " + comp.Left.String() + " " + comp.Right.String()
-		g.builtins.comps[hash] = comp
+		g.program.Comparisons[i] = comp
+		g.builtins.comps[hash] = &g.program.Comparisons[i]
 	}
 }
 
 func (g *generator) genTypeConvs() {
-	for _, conv := range g.program.TypeConvs {
+	for i, conv := range g.program.TypeConvs {
 		name := conv.Module + ".conv." + string(conv.From) + "_" + string(conv.To)
 		if g.complex(conv.To) {
 			conv.Ir = g.mod.NewFunc(
 				name,
-				types.Void,
-				ir.NewParam(".ret", g.llraw(conv.To)),
-				ir.NewParam("", g.llraw(conv.From)),
+				g.lltyp(conv.To),
+				ir.NewParam("", g.lltyp(conv.From)),
 			)
 			conv.Complex = true
 		}
 
 		hash := "conv " + string(conv.From) + " " + string(conv.To)
-		g.builtins.convs[hash] = conv
+		g.program.TypeConvs[i] = conv
+		g.builtins.convs[hash] = &g.program.TypeConvs[i]
 	}
 }

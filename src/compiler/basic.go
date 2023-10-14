@@ -4,16 +4,15 @@ import (
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
 
-	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
 	"github.com/llir/llvm/ir/value"
 )
 
-func (g *generator) genBasicDecl(name string, val value.Value, loc *lexer.Location) {
+func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, loc *lexer.Location) {
 	bl := g.bl
 
-	alloca := bl.NewAlloca(val.Type())
+	alloca := bl.NewAlloca(typ)
 	alloca.LocalName = name
 
 	bl.NewStore(val, alloca)
@@ -87,7 +86,7 @@ func (g *generator) genBasicBinaryOp(left, right value.Value, op lexer.TokenType
 	return Zero
 }
 
-func (g *generator) genBasicStruct(typ types.Type, fields ...value.Value) *ir.InstAlloca {
+func (g *generator) genBasicStruct(typ types.Type, fields ...value.Value) value.Value {
 	bl := g.bl
 
 	alloca := bl.NewAlloca(typ)
@@ -108,5 +107,8 @@ func (g *generator) genBasicStruct(typ types.Type, fields ...value.Value) *ir.In
 		store.Align = 8
 	}
 
-	return alloca
+	load := bl.NewLoad(typ, alloca)
+	load.Align = 8
+
+	return load
 }

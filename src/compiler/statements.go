@@ -17,9 +17,9 @@ import (
 func (g *generator) genStmt(expr ast.Expr) {
 	switch x := expr.(type) {
 	case ast.Declaration:
-		g.genBasicDecl(x.Name.Name, g.genExpr(x.Value), x.Name.Loc())
+		g.genBasicDecl(x.Name.Name, g.typ(x.Value), g.genExpr(x.Value), x.Name.Loc())
 	case ast.ImplicitDecl:
-		g.genBasicDecl(x.Name.Name, g.genExpr(x.Value), x.Name.Loc())
+		g.genBasicDecl(x.Name.Name, g.typ(x.Value), g.genExpr(x.Value), x.Name.Loc())
 	case ast.Assignment:
 		g.genAssignment(x)
 	case ast.IncDec:
@@ -66,7 +66,7 @@ func (g *generator) genIncDec(x ast.IncDec) {
 	bl := g.bl
 	vari := g.top.Lookup(x.Name.Name, x.Loc())
 	iden := *vari.Value
-	typ := g.llraw(vari.Type)
+	typ := g.lltyp(vari.Type)
 
 	load := bl.NewLoad(typ, iden)
 
@@ -96,8 +96,8 @@ func (g *generator) genReturn(x ast.Return) {
 
 	if g.ctx.ret != nil {
 		if g.ctx.complex {
-			load := bl.NewLoad(val.Type(), val)
-			bl.NewStore(load, g.ctx.ret)
+			store := bl.NewStore(val, g.ctx.ret)
+			store.Align = 8
 		} else {
 			bl.NewStore(val, g.ctx.ret)
 		}
@@ -107,35 +107,28 @@ func (g *generator) genReturn(x ast.Return) {
 
 func (g *generator) genFunction(x ast.Function) {
 	src := g.srcFunc(x.Name.Name)
-	complex := src.Complex
+	complex := g.complex(src.Return)
 
 	for i, param := range x.Params {
 		vari := x.Body.Scope.Vars[param.Name.Name]
 		*vari.Value = src.Params[i].Ir
 	}
 
-	fun := src.Ir
-
-	entry := fun.NewBlock("entry")
-	exit := fun.NewBlock("exit")
+	entry := src.Ir.NewBlock("entry")
+	exit := src.Ir.NewBlock("exit")
 
 	exits := utils.NewStack[*ir.Block]()
 	exits.Push(exit)
 
-	var retval value.Value
-	if complex {
-		retval = src.Ret
-	} else {
-		alloca := entry.NewAlloca(g.llraw(src.Return))
-		alloca.LocalName = ".ret"
-		retval = alloca
-	}
+	rettyp := g.lltyp(src.Return)
+	alloca := entry.NewAlloca(rettyp)
+	alloca.LocalName = ".ret"
 
 	g.ctx = &context{
 		g.ctx,
-		fun,
-		retval,
-		src.Complex,
+		src.Ir,
+		alloca,
+		complex,
 		exits,
 		0,
 	}
@@ -148,10 +141,10 @@ func (g *generator) genFunction(x ast.Function) {
 	}
 	g.exit()
 
-	if complex {
+	if src.Return == typing.Void {
 		exit.NewRet(nil)
 	} else {
-		load := exit.NewLoad(fun.Sig.RetType, retval)
+		load := exit.NewLoad(src.Ir.Sig.RetType, alloca) // TODO: Switch to rettyp
 		exit.NewRet(load)
 	}
 

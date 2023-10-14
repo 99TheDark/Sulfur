@@ -9,13 +9,11 @@ import (
 
 type (
 	FuncSignature struct {
-		Name    string
-		Return  typing.Type
-		Params  []ParamSignature
-		Module  string
-		Ir      *ir.Func
-		Ret     *ir.Param
-		Complex bool
+		Name   string
+		Return typing.Type
+		Params []ParamSignature
+		Module string
+		Ir     *ir.Func
 	}
 
 	ParamSignature struct {

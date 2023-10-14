@@ -26,14 +26,14 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 		return constant.NewBool(x.Value)
 	case ast.String:
 		return g.genString(x)
-	case ast.TypeConv:
-		return g.genTypeConv(x)
 	case ast.BinaryOp:
 		return g.genBinaryOp(x)
 	case ast.UnaryOp:
 		return g.genUnaryOp(x)
 	case ast.Comparison:
 		return g.genComparison(x)
+	case ast.TypeConv:
+		return g.genTypeConv(x)
 	case ast.FuncCall:
 		return g.genFuncCall(x)
 	}
@@ -75,51 +75,6 @@ func (g *generator) genString(x ast.String) value.Value {
 		constant.NewInt(types.I32, int64(len(x.Value))),
 		str,
 	)
-}
-
-func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
-	bl := g.bl
-	conv := g.srcConv(string(g.types[x.Value]), x.Type.Name)
-	val := g.genExpr(x.Value)
-
-	if conv.Complex {
-		alloca := bl.NewAlloca(g.lltyp(typing.Type(x.Type.Name)))
-		alloca.Align = 8
-
-		bl.NewCall(conv.Ir, alloca, val)
-		return alloca
-	} else {
-		from, to := conv.From, conv.To
-		typ := g.llraw(conv.To)
-		val := g.genExpr(x.Value)
-
-		switch from {
-		case typing.Integer:
-			switch to {
-			case typing.Float:
-				return bl.NewSIToFP(val, typ)
-			case typing.Boolean:
-				return bl.NewICmp(enum.IPredNE, val, Zero)
-			}
-		case typing.Float:
-			switch to {
-			case typing.Integer:
-				return bl.NewFPToSI(val, typ)
-			case typing.Boolean:
-				return bl.NewFCmp(enum.FPredONE, val, FZero)
-			}
-		case typing.Boolean:
-			switch to {
-			case typing.Integer:
-				return bl.NewZExt(val, typ)
-			case typing.Float:
-				return bl.NewSIToFP(bl.NewZExt(val, types.I32), typ)
-			}
-		}
-	}
-
-	Errors.Error("Unexpected generating error during type conversion", x.Loc())
-	return Zero
 }
 
 func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
@@ -213,6 +168,47 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 	return Zero
 }
 
+func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
+	bl := g.bl
+	conv := g.srcConv(string(g.types[x.Value]), x.Type.Name)
+	val := g.genExpr(x.Value)
+
+	if conv.Complex {
+		return bl.NewCall(conv.Ir, val)
+	} else {
+		from, to := conv.From, conv.To
+		typ := g.lltyp(conv.To)
+		val := g.genExpr(x.Value)
+
+		switch from {
+		case typing.Integer:
+			switch to {
+			case typing.Float:
+				return bl.NewSIToFP(val, typ)
+			case typing.Boolean:
+				return bl.NewICmp(enum.IPredNE, val, Zero)
+			}
+		case typing.Float:
+			switch to {
+			case typing.Integer:
+				return bl.NewFPToSI(val, typ)
+			case typing.Boolean:
+				return bl.NewFCmp(enum.FPredONE, val, FZero)
+			}
+		case typing.Boolean:
+			switch to {
+			case typing.Integer:
+				return bl.NewZExt(val, typ)
+			case typing.Float:
+				return bl.NewSIToFP(bl.NewZExt(val, types.I32), typ)
+			}
+		}
+	}
+
+	Errors.Error("Unexpected generating error during type conversion", x.Loc())
+	return Zero
+}
+
 func (g *generator) genFuncCall(x ast.FuncCall) value.Value {
 	// TODO: Include return value in parameter as pointer if a struct
 	// TODO: Make operator overloading work
@@ -226,8 +222,7 @@ func (g *generator) genFuncCall(x ast.FuncCall) value.Value {
 				params = append(params, g.genExpr(param))
 			}
 
-			// No ir
-			return bl.NewCall(g.builtins.funcs[x.Func.Name].Ir, params...)
+			return bl.NewCall(fun.Ir, params...)
 		}
 	}
 

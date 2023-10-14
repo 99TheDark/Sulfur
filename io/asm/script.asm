@@ -306,10 +306,42 @@ _main:                                  ; @main
 	.cfi_def_cfa_offset 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	w0, wzr
-	bl	_.conv.bool_string
+	mov	w0, #54
+	mov	w1, #-17
+	bl	_mod.add
+	bl	_mod.toString
 	bl	_.println
 	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.globl	_mod.add                        ; -- Begin function mod.add
+	.p2align	2
+_mod.add:                               ; @mod.add
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #16
+	.cfi_def_cfa_offset 16
+	add	w0, w0, w1
+	str	w0, [sp, #12]
+	add	sp, sp, #16
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.globl	_mod.toString                   ; -- Begin function mod.toString
+	.p2align	2
+_mod.toString:                          ; @mod.toString
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #32
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 32
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	bl	_.conv.int_string
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	str	x2, [sp, #8]
+	stp	w0, w1, [sp], #32
 	ret
 	.cfi_endproc
                                         ; -- End function
