@@ -109,11 +109,6 @@ func (g *generator) genFunction(x ast.Function) {
 	src := g.srcFunc(x.Name.Name)
 	complex := g.complex(src.Return)
 
-	for i, param := range x.Params {
-		vari := x.Body.Scope.Vars[param.Name.Name]
-		*vari.Value = src.Params[i].Ir
-	}
-
 	entry := src.Ir.NewBlock("entry")
 	exit := src.Ir.NewBlock("exit")
 
@@ -123,6 +118,11 @@ func (g *generator) genFunction(x ast.Function) {
 	rettyp := g.lltyp(src.Return)
 	alloca := entry.NewAlloca(rettyp)
 	alloca.LocalName = ".ret"
+
+	for i, param := range x.Params {
+		vari := x.Body.Scope.Vars[param.Name.Name]
+		*vari.Value = src.Params[i].Ir
+	}
 
 	g.ctx = &context{
 		g.ctx,

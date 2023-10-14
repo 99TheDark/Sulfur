@@ -4,22 +4,27 @@ source_filename = "lib/builtin/string_add"
 
 declare i8* @malloc(i32)
 
-; sret not working?
-define void @.add.string_string(%type.string* %.ret, %type.string* %a, %type.string* %b) {
+define %type.string @.add.string_string(%type.string %a, %type.string %b) {
 entry:
+    %.ret = alloca %type.string, align 8
+    %ptr.a = alloca %type.string, align 8
+    store %type.string %a, %type.string* %ptr.a, align 8
+    %ptr.b = alloca %type.string, align 8
+    store %type.string %b, %type.string* %ptr.b, align 8
+
     ; ret.len = a.len + b.len
-    %0 = getelementptr inbounds %type.string, %type.string* %a, i32 0, i32 0
+    %0 = getelementptr inbounds %type.string, %type.string* %ptr.a, i32 0, i32 0
     %1 = load i32, i32* %0, align 4
-    %2 = getelementptr inbounds %type.string, %type.string* %b, i32 0, i32 0
+    %2 = getelementptr inbounds %type.string, %type.string* %ptr.b, i32 0, i32 0
     %3 = load i32, i32* %2, align 4
     %4 = add i32 %1, %3
 	%5 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
 	store i32 %4, i32* %5, align 8
 
     ; ret.size = a.size + b.size
-    %6 = getelementptr inbounds %type.string, %type.string* %a, i32 0, i32 1
+    %6 = getelementptr inbounds %type.string, %type.string* %ptr.a, i32 0, i32 1
     %7 = load i32, i32* %6, align 4
-    %8 = getelementptr inbounds %type.string, %type.string* %b, i32 0, i32 1
+    %8 = getelementptr inbounds %type.string, %type.string* %ptr.b, i32 0, i32 1
     %9 = load i32, i32* %8, align 4
     %10 = add i32 %7, %9
 	%11 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
@@ -38,8 +43,8 @@ entry:
     %j = alloca i32, align 4
     store i32 0, i32* %j, align 4
 
-    %14 = getelementptr inbounds %type.string, %type.string* %a, i32 0, i32 2
-    %15 = getelementptr inbounds %type.string, %type.string* %b, i32 0, i32 2
+    %14 = getelementptr inbounds %type.string, %type.string* %ptr.a, i32 0, i32 2
+    %15 = getelementptr inbounds %type.string, %type.string* %ptr.b, i32 0, i32 2
 
     ; while i < a.size {
     ;     ret.adr[i] = a.adr[i]
@@ -105,5 +110,6 @@ while2.body:
     br label %while2.cond
 
 while2.end:
-    ret void
+    %39 = load %type.string, %type.string* %.ret, align 8
+    ret %type.string %39
 }

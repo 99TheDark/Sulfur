@@ -228,8 +228,110 @@ _.println:                              ; @.println
 _.add.string_string:                    ; @.add.string_string
 	.cfi_startproc
 ; %bb.0:                                ; %entry
+	sub	sp, sp, #96
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 96
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	add	w19, w1, w4
+	add	w8, w0, w3
+	stp	w0, w1, [sp, #32]
+	mov	w0, w19
+	mov	w20, w1
+	str	x2, [sp, #40]
+	stp	w3, w4, [sp, #16]
+	str	x5, [sp, #24]
+	stp	w8, w19, [sp, #48]
+	bl	_malloc
+	str	xzr, [sp, #8]
+	str	x0, [sp, #56]
+	lsr	x8, xzr, #32
+	cmp	w8, w20
+	b.ge	LBB4_3
+LBB4_1:                                 ; %while1.body
+                                        ; =>This Inner Loop Header: Depth=1
+	ldrsw	x8, [sp, #12]
+	ldr	x9, [sp, #40]
+	ldr	x10, [sp, #56]
+	ldrb	w9, [x9, x8]
+	add	w11, w8, #1
+	strb	w9, [x10, x8]
+	str	w11, [sp, #12]
+	mov	w8, w11
+	cmp	w8, w20
+	b.lt	LBB4_1
+	b	LBB4_3
+LBB4_2:                                 ; %while2.body
+                                        ;   in Loop: Header=BB4_3 Depth=1
+	ldpsw	x9, x8, [sp, #8]
+	ldr	x10, [sp, #24]
+	ldr	x11, [sp, #56]
+	ldrb	w10, [x10, x9]
+	add	w12, w8, #1
+	add	w9, w9, #1
+	strb	w10, [x11, x8]
+	stp	w9, w12, [sp, #8]
+LBB4_3:                                 ; %while2.cond
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	w8, [sp, #12]
+	cmp	w8, w19
+	b.lt	LBB4_2
+; %bb.4:                                ; %while2.end
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	w0, w1, [sp, #48]
+	ldr	x2, [sp, #56]
+	add	sp, sp, #96
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.globl	_main                           ; -- Begin function main
+	.p2align	2
+_main:                                  ; @main
+	.cfi_startproc
+; %bb.0:                                ; %entry
 	sub	sp, sp, #80
-	stp	x24, x23, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 80
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+Lloh6:
+	adrp	x2, l_.str1.1@PAGE
+	mov	x9, #5
+Lloh7:
+	adrp	x5, l_.str2@PAGE
+	mov	x8, #17179869188
+Lloh8:
+	add	x2, x2, l_.str1.1@PAGEOFF
+	movk	x9, #5, lsl #32
+Lloh9:
+	add	x5, x5, l_.str2@PAGEOFF
+	mov	w0, #4
+	mov	w1, #4
+	mov	w3, #5
+	mov	w4, #5
+	stp	x8, x2, [sp, #48]
+	stp	x8, x2, [sp, #32]
+	stp	x9, x5, [sp, #16]
+	stp	x9, x5, [sp]
+	bl	_mod.formatName
+	bl	_.println
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	add	sp, sp, #80
+	ret
+	.loh AdrpAdd	Lloh7, Lloh9
+	.loh AdrpAdd	Lloh6, Lloh8
+	.cfi_endproc
+                                        ; -- End function
+	.globl	_mod.formatName                 ; -- Begin function mod.formatName
+	.p2align	2
+_mod.formatName:                        ; @mod.formatName
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #80
 	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
 	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
 	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
@@ -240,109 +342,34 @@ _.add.string_string:                    ; @.add.string_string
 	.cfi_offset w20, -32
 	.cfi_offset w21, -40
 	.cfi_offset w22, -48
-	.cfi_offset w23, -56
-	.cfi_offset w24, -64
-	ldr	w8, [x1]
-	mov	x20, x0
-	ldr	w9, [x2]
+	mov	x8, x5
+Lloh10:
+	adrp	x5, l_.str0.2@PAGE
 	mov	x19, x2
-	mov	x22, x1
-	add	w8, w8, w9
-	str	w8, [x0]
-	ldr	w23, [x1, #4]
-	ldr	w8, [x2, #4]
-	add	w21, w23, w8
-	str	w21, [x0, #4]
-	mov	w0, w21
-	bl	_malloc
-	str	xzr, [sp, #8]
-	str	x0, [x20, #8]
-	lsr	x8, xzr, #32
-	cmp	w8, w23
-	b.ge	LBB4_3
-LBB4_1:                                 ; %while1.body
-                                        ; =>This Inner Loop Header: Depth=1
-	ldrsw	x8, [sp, #12]
-	ldr	x9, [x22, #8]
-	ldr	x10, [x20, #8]
-	ldrb	w9, [x9, x8]
-	add	w11, w8, #1
-	strb	w9, [x10, x8]
-	str	w11, [sp, #12]
-	mov	w8, w11
-	cmp	w8, w23
-	b.lt	LBB4_1
-	b	LBB4_3
-LBB4_2:                                 ; %while2.body
-                                        ;   in Loop: Header=BB4_3 Depth=1
-	ldpsw	x9, x8, [sp, #8]
-	ldr	x10, [x19, #8]
-	ldr	x11, [x20, #8]
-	ldrb	w10, [x10, x9]
-	add	w12, w8, #1
-	add	w9, w9, #1
-	strb	w10, [x11, x8]
-	stp	w9, w12, [sp, #8]
-LBB4_3:                                 ; %while2.cond
-                                        ; =>This Inner Loop Header: Depth=1
-	ldr	w8, [sp, #12]
-	cmp	w8, w21
-	b.lt	LBB4_2
-; %bb.4:                                ; %while2.end
+	mov	w20, w1
+	mov	w21, w0
+	mov	x9, #8589934594
+Lloh11:
+	add	x5, x5, l_.str0.2@PAGEOFF
+	mov	w0, w3
+	mov	w1, w4
+	mov	x2, x8
+	mov	w3, #2
+	mov	w4, #2
+	stp	x9, x5, [sp]
+	bl	_.add.string_string
+	mov	w3, w21
+	mov	w4, w20
+	mov	x5, x19
+	bl	_.add.string_string
 	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	str	x2, [sp, #24]
 	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	stp	w0, w1, [sp, #16]
 	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
-	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
 	add	sp, sp, #80
 	ret
-	.cfi_endproc
-                                        ; -- End function
-	.globl	_main                           ; -- Begin function main
-	.p2align	2
-_main:                                  ; @main
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 16
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	mov	w0, #54
-	mov	w1, #-17
-	bl	_mod.add
-	bl	_mod.toString
-	bl	_.println
-	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
-	ret
-	.cfi_endproc
-                                        ; -- End function
-	.globl	_mod.add                        ; -- Begin function mod.add
-	.p2align	2
-_mod.add:                               ; @mod.add
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #16
-	.cfi_def_cfa_offset 16
-	add	w0, w0, w1
-	str	w0, [sp, #12]
-	add	sp, sp, #16
-	ret
-	.cfi_endproc
-                                        ; -- End function
-	.globl	_mod.toString                   ; -- Begin function mod.toString
-	.p2align	2
-_mod.toString:                          ; @mod.toString
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #32
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	bl	_.conv.int_string
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	str	x2, [sp, #8]
-	stp	w0, w1, [sp], #32
-	ret
+	.loh AdrpAdd	Lloh10, Lloh11
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -355,5 +382,16 @@ l_.str1:                                ; @.str1
 
 l_.str0.1:                              ; @.str0.1
 	.byte	48
+
+l_.str0.2:                              ; @.str0.2
+	.ascii	", "
+
+	.section	__TEXT,__literal4,4byte_literals
+l_.str1.1:                              ; @.str1.1
+	.ascii	"John"
+
+	.section	__TEXT,__const
+l_.str2:                                ; @.str2
+	.ascii	"Smith"
 
 .subsections_via_symbols

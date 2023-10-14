@@ -29,15 +29,12 @@ func (g *generator) genBasicAssign(name string, src value.Value, loc *lexer.Loca
 
 func (g *generator) genBasicBinaryOp(left, right value.Value, op lexer.TokenType, typ typing.Type) value.Value {
 	bl := g.bl
-	ll := g.lltyp(typ)
 	switch op {
 	case lexer.Addition:
 		switch typ {
 		case typing.String: // = string + string
-			alloca := bl.NewAlloca(ll)
-			alloca.Align = 8
-			bl.NewCall(g.srcBinop(lexer.Addition, typing.String, typing.String).Ir, alloca, left, right)
-			return alloca
+			call := bl.NewCall(g.srcBinop(lexer.Addition, typing.String, typing.String).Ir, left, right)
+			return call
 		case typing.Integer: // = int + int
 			return bl.NewAdd(left, right)
 		case typing.Float: // = float + float

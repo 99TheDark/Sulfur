@@ -51,9 +51,9 @@ for.end:
 ;     print(str)
 ;     putchar('\n')
 ; }
-define void @.println(%type.string %ptr.str) {
+define void @.println(%type.string %str) {
 entry:
-	call void @.print(%type.string %ptr.str)
+	call void @.print(%type.string %str)
 	call void @putchar(i8 10)
 	ret void
 }
