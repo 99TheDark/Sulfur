@@ -1,0 +1,11 @@
+for i := 0; i < 20; i++ {
+    println(string!(fib(i)))
+}
+
+func fib(int num) (int) {
+    if num <= 1 {
+        return 1
+    } else {
+        return fib(num - 2) + fib(num - 1)
+    }
+}

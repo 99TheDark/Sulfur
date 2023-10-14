@@ -1,5 +1,5 @@
-for i := 0; i < 20; i++ {
-    println(string!(fib(i)))
+for j := 0; j < 20; j++ {
+    println(string!(fib(j)))
 }
 
 func fib(int num) (int) {
@@ -7,5 +7,28 @@ func fib(int num) (int) {
         return 1
     } else {
         return fib(num - 2) + fib(num - 1)
+    }
+}
+
+println("")
+
+for i := 1; i <= 100; i++ {
+    end := i % 10
+    suffix := "th"
+    if i <= 10 | i > 20 {
+        if end == 1 {
+            suffix = "st"
+        } else if end == 2 {
+            suffix = "nd"
+        } else if end == 3 {
+            suffix = "rd"
+        }
+    }
+
+    strNum := string!(i) + suffix
+    if end == 0 {
+        println(strNum)
+    } else {
+        print(strNum + ", ")
     }
 }

@@ -1,10 +1,12 @@
 # TODO
-- Float to string generation
-- Clean up scattered TODO's in project
+- Multiple instances of same-name variable (scoped varibles)
+- Complex return values in function
 - Add break & continue
-- Add function generation
+- Better escaped characters
+- Float to string generation
 - Work on error & enum syntax
 - Unsigned integer & byte literals
+- Official reference syntax (currently WIP in notes)
 - Complex numbers
 - Classes
 - String equals 

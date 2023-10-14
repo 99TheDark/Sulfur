@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sulfur/src/ast"
 	. "sulfur/src/errors"
+	"sulfur/src/lexer"
 	"sulfur/src/typing"
 )
 
@@ -65,6 +66,10 @@ func (c *checker) inferAssignment(x ast.Assignment) {
 	val := c.inferExpr(x.Value)
 	if vari.Type != val {
 		Errors.Error("Expected "+vari.Type.String()+", but got "+val.String()+" instead", x.Loc())
+	}
+
+	if lexer.Empty(x.Op) {
+		return
 	}
 
 	for _, binop := range c.program.BinaryOps {
