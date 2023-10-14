@@ -297,6 +297,78 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16
+	sub	sp, sp, #16
+	.cfi_def_cfa w29, 16
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	stur	wzr, [x29, #-20]
+	mov	w8, wzr
+	cmp	w8, #19
+	b.gt	LBB5_2
+LBB5_1:                                 ; %for.body0
+                                        ; =>This Inner Loop Header: Depth=1
+	ldur	w0, [x29, #-20]
+	bl	_mod.fib
+	sub	x19, sp, #16
+	mov	w1, w0
+	mov	sp, x19
+	mov	x0, x19
+	bl	_.conv.int_string
+	mov	x0, x19
+	bl	_.println
+	ldur	w8, [x29, #-20]
+	add	w8, w8, #1
+	stur	w8, [x29, #-20]
+	mov	w8, w8
+	cmp	w8, #19
+	b.le	LBB5_1
+LBB5_2:                                 ; %for.end0
+	sub	sp, x29, #16
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.globl	_mod.fib                        ; -- Begin function mod.fib
+	.p2align	2
+_mod.fib:                               ; @mod.fib
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #48
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 48
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	subs	w19, w0, #1
+	b.gt	LBB6_2
+; %bb.1:                                ; %if.then0
+	mov	w8, #1
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	str	w8, [sp, #12]
+	mov	w0, w8
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #48
+	ret
+LBB6_2:                                 ; %if.else0
+	sub	w0, w0, #2
+	bl	_mod.fib
+	mov	w20, w0
+	mov	w0, w19
+	bl	_mod.fib
+	add	w8, w20, w0
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	str	w8, [sp, #12]
+	mov	w0, w8
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #48
 	ret
 	.cfi_endproc
                                         ; -- End function

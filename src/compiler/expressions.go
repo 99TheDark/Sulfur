@@ -34,6 +34,8 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 		return g.genUnaryOp(x)
 	case ast.Comparison:
 		return g.genComparison(x)
+	case ast.FuncCall:
+		return g.genFuncCall(x)
 	}
 
 	Errors.Error("Expression cannot be generated", expr.Loc())
@@ -44,8 +46,13 @@ func (g *generator) genIdentifier(x ast.Identifier) value.Value {
 	bl := g.bl
 	vari := g.top.Lookup(x.Name, x.Pos)
 	val := *vari.Value
-	load := bl.NewLoad(g.typ(x), val)
-	return load
+
+	if vari.Status == ast.Parameter {
+		return val
+	} else {
+		load := bl.NewLoad(g.typ(x), val)
+		return load
+	}
 }
 
 func (g *generator) genString(x ast.String) value.Value {
@@ -72,18 +79,18 @@ func (g *generator) genString(x ast.String) value.Value {
 
 func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
 	bl := g.bl
-	conv := g.biConv(string(g.types[x.Value]), x.Type.Name)
+	conv := g.srcConv(string(g.types[x.Value]), x.Type.Name)
 	val := g.genExpr(x.Value)
 
-	if conv.complex {
+	if conv.Complex {
 		alloca := bl.NewAlloca(g.lltyp(typing.Type(x.Type.Name)))
 		alloca.Align = 8
 
-		bl.NewCall(conv.ir, alloca, val)
+		bl.NewCall(conv.Ir, alloca, val)
 		return alloca
 	} else {
-		from, to := conv.sig.From, conv.sig.To
-		typ := g.llraw(conv.sig.To)
+		from, to := conv.From, conv.To
+		typ := g.llraw(conv.To)
 		val := g.genExpr(x.Value)
 
 		switch from {
@@ -204,4 +211,26 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 
 	Errors.Error("Unexpected generating error during comparison", x.Comp.Location)
 	return Zero
+}
+
+func (g *generator) genFuncCall(x ast.FuncCall) value.Value {
+	// TODO: Include return value in parameter as pointer if a struct
+	// TODO: Make operator overloading work
+	// TODO: Make this actually work
+	bl := g.bl
+
+	for _, fun := range g.program.Functions {
+		if fun.Name == x.Func.Name {
+			params := []value.Value{}
+			for _, param := range *x.Params {
+				params = append(params, g.genExpr(param))
+			}
+
+			// No ir
+			return bl.NewCall(g.builtins.funcs[x.Func.Name].Ir, params...)
+		}
+	}
+
+	Errors.Error("The function "+x.Func.Name+" is undefined", x.Func.Pos)
+	return nil
 }

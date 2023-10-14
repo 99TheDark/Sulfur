@@ -5,7 +5,7 @@ source_filename = "lib/builtin/string_add"
 declare i8* @malloc(i32)
 
 ; sret not working?
-define void @.add.string_string(%type.string* %ret, %type.string* %a, %type.string* %b) {
+define void @.add.string_string(%type.string* %.ret, %type.string* %a, %type.string* %b) {
 entry:
     ; ret.len = a.len + b.len
     %0 = getelementptr inbounds %type.string, %type.string* %a, i32 0, i32 0
@@ -13,7 +13,7 @@ entry:
     %2 = getelementptr inbounds %type.string, %type.string* %b, i32 0, i32 0
     %3 = load i32, i32* %2, align 4
     %4 = add i32 %1, %3
-	%5 = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 0
+	%5 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
 	store i32 %4, i32* %5, align 8
 
     ; ret.size = a.size + b.size
@@ -22,12 +22,12 @@ entry:
     %8 = getelementptr inbounds %type.string, %type.string* %b, i32 0, i32 1
     %9 = load i32, i32* %8, align 4
     %10 = add i32 %7, %9
-	%11 = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 1
+	%11 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
 	store i32 %10, i32* %11, align 8
 
     ; ret.adr = malloc(ret.size)
     %12 = call i8* @malloc(i32 %10)
-    %13 = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 2
+    %13 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
     store i8* %12, i8** %13, align 8
 
     ; int i = 0

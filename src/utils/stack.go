@@ -15,6 +15,10 @@ func (s *Stack[T]) Pop() T {
 	return removed
 }
 
+func (s *Stack[T]) Final() T {
+	return s.items[0]
+}
+
 func (s *Stack[T]) Array() []T {
 	return s.items
 }

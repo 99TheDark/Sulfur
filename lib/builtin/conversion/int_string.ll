@@ -7,18 +7,18 @@ declare void @free(i8*)
 
 @.str0 = private unnamed_addr constant [1 x i8] c"0", align 1
 
-define void @.conv.int_string(%type.string* %ret, i32 %int) {
+define void @.conv.int_string(%type.string* %.ret, i32 %int) {
 entry:
     %0 = icmp eq i32 %int, 0
     br i1 %0, label %if.then, label %if.end
 
 if.then:
     %1 = getelementptr inbounds [1 x i8], [1 x i8]* @.str0, i32 0, i32 0
-	%2 = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 0
+	%2 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
 	store i32 1, i32* %2, align 8
-	%3 = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 1
+	%3 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
 	store i32 1, i32* %3, align 8
-	%4 = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 2
+	%4 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
 	store i8* %1, i8** %4, align 8
     br label %exit
 
@@ -72,18 +72,18 @@ while.end:
     %21 = add i32 %19, %20
     store i32 %21, i32* %size, align 4
     %22 = load i32, i32* %size, align 4
-    %ret.len = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 0
-    store i32 %22, i32* %ret.len, align 8
-    %ret.size = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 1
-    store i32 %22, i32* %ret.size, align 8
-    %ret.adr = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 2
+    %.ret.len = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
+    store i32 %22, i32* %.ret.len, align 8
+    %.ret.size = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
+    store i32 %22, i32* %.ret.size, align 8
+    %.ret.adr = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
     %23 = call i8* @malloc(i32 %22)
-    store i8* %23, i8** %ret.adr, align 8
+    store i8* %23, i8** %.ret.adr, align 8
     %24 = icmp ne i32 %20, 0
     br i1 %24, label %if.then2, label %if.else2
 
 if.then2:
-    %25 = load i8*, i8** %ret.adr, align 8
+    %25 = load i8*, i8** %.ret.adr, align 8
     %26 = getelementptr inbounds i8, i8* %25, i32 0
     store i8 45, i8* %26, align 1
     br label %if.end2
@@ -108,8 +108,8 @@ for.body:
     %31 = add i32 %28, %29
     %32 = getelementptr inbounds i8, i8* %6, i32 %31
     %33 = load i8, i8* %32, align 1
-    %ret.adr2 = getelementptr inbounds %type.string, %type.string* %ret, i32 0, i32 2
-    %34 = load i8*, i8** %ret.adr2, align 8
+    %.ret.adr2 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
+    %34 = load i8*, i8** %.ret.adr2, align 8
     %35 = getelementptr inbounds i8, i8* %34, i32 %29
     store i8 %33, i8* %35, align 1
     br label %for.inc

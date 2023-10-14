@@ -6,9 +6,11 @@ import (
 	"sulfur/src/ast"
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
+	"sulfur/src/utils"
 
 	. "sulfur/src/errors"
 
+	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/value"
 )
 
@@ -24,6 +26,10 @@ func (g *generator) genStmt(expr ast.Expr) {
 		g.genIncDec(x)
 	case ast.FuncCall:
 		g.genFuncCall(x)
+	case ast.Return:
+		g.genReturn(x)
+	case ast.Function:
+		g.genFunction(x)
 	case ast.IfStatement:
 		g.genIfStmt(x)
 	case ast.ForLoop:
@@ -84,29 +90,85 @@ func (g *generator) genIncDec(x ast.IncDec) {
 	g.genBasicAssign(x.Name.Name, val, x.Loc())
 }
 
-func (g *generator) genFuncCall(x ast.FuncCall) {
-	// TODO: Make work with non-builtins
-	// TODO: Include return value in parameter as pointer if a struct
+func (g *generator) genReturn(x ast.Return) {
 	bl := g.bl
+	val := g.genExpr(x.Value)
 
-	params := []value.Value{}
-	for _, param := range *x.Params {
-		params = append(params, g.genExpr(param))
+	if g.ctx.ret != nil {
+		bl.NewStore(val, g.ctx.ret)
+	}
+	bl.NewBr(g.ctx.exits.Final())
+}
+
+func (g *generator) genFunction(x ast.Function) {
+	ret := typing.Type(x.Return.Name)
+	rettyp := g.llraw(ret)
+	src := g.srcFunc(x.Name.Name)
+	complex := g.complex(ret)
+
+	var retval value.Value
+	if complex {
+		retparam := ir.NewParam(".ret", rettyp)
+		retval = retparam
 	}
 
-	bl.NewCall(g.builtins.funcs[x.Func.Name].ir, params...)
+	for i, param := range x.Params {
+		vari := x.Body.Scope.Vars[param.Name.Name]
+		*vari.Value = src.Params[i].Ir
+	}
+
+	fun := src.Ir
+
+	entry := fun.NewBlock("entry")
+	exit := fun.NewBlock("exit")
+
+	exits := utils.NewStack[*ir.Block]()
+	exits.Push(exit)
+
+	if !complex {
+		alloca := entry.NewAlloca(rettyp)
+		alloca.LocalName = ".ret"
+		retval = alloca
+	}
+
+	g.ctx = &context{
+		g.ctx,
+		fun,
+		retval,
+		exits,
+		0,
+	}
+
+	bl := g.bl
+	g.bl = entry
+	g.top = &x.Body.Scope
+	for _, expr := range x.Body.Body {
+		g.genStmt(expr)
+	}
+	g.exit()
+
+	if complex {
+		exit.NewRet(nil)
+	} else {
+		load := exit.NewLoad(fun.Sig.RetType, retval)
+		exit.NewRet(load)
+	}
+
+	g.ctx = g.ctx.parent
+	g.bl = bl
+	g.top = x.Body.Scope.Parent
 }
 
 func (g *generator) genIfStmt(x ast.IfStatement) {
 	main := g.bl
-	id := fmt.Sprint(g.blockcount)
-	g.blockcount++
+	top := g.ctx.fun
+	id := g.id()
 
 	cond := g.genExpr(x.Cond)
 
-	thenBl := g.topfunc.NewBlock("if.then" + id)
+	thenBl := top.NewBlock("if.then" + id)
 	if ast.Empty(x.Else) {
-		endBl := g.topfunc.NewBlock("if.end" + id)
+		endBl := top.NewBlock("if.end" + id)
 
 		g.scope(&x.Body.Scope, func() {
 			g.enter(endBl)
@@ -118,8 +180,8 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 		main.NewCondBr(cond, thenBl, endBl)
 		g.bl = endBl
 	} else {
-		elseBl := g.topfunc.NewBlock("if.else" + id)
-		endBl := g.topfunc.NewBlock("if.end" + id)
+		elseBl := top.NewBlock("if.else" + id)
+		endBl := top.NewBlock("if.end" + id)
 
 		g.scope(&x.Body.Scope, func() {
 			g.enter(endBl)
@@ -142,14 +204,14 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 
 func (g *generator) genForLoop(x ast.ForLoop) {
 	main := g.bl
-	id := fmt.Sprint(g.blockcount)
-	g.blockcount++
+	top := g.ctx.fun
+	id := g.id()
 
 	g.scope(&x.Body.Scope, func() {
-		condBl := g.topfunc.NewBlock("for.cond" + id)
-		bodyBl := g.topfunc.NewBlock("for.body" + id)
-		incBl := g.topfunc.NewBlock("for.inc" + id)
-		endBl := g.topfunc.NewBlock("for.end" + id)
+		condBl := top.NewBlock("for.cond" + id)
+		bodyBl := top.NewBlock("for.body" + id)
+		incBl := top.NewBlock("for.inc" + id)
+		endBl := top.NewBlock("for.end" + id)
 
 		g.genStmt(x.Init)
 
@@ -174,13 +236,13 @@ func (g *generator) genForLoop(x ast.ForLoop) {
 
 func (g *generator) genWhileLoop(x ast.WhileLoop) {
 	main := g.bl
-	id := fmt.Sprint(g.blockcount)
-	g.blockcount++
+	top := g.ctx.fun
+	id := g.id()
 
 	g.scope(&x.Body.Scope, func() {
-		condBl := g.topfunc.NewBlock("while.cond" + id)
-		bodyBl := g.topfunc.NewBlock("while.body" + id)
-		endBl := g.topfunc.NewBlock("while.end" + id)
+		condBl := top.NewBlock("while.cond" + id)
+		bodyBl := top.NewBlock("while.body" + id)
+		endBl := top.NewBlock("while.end" + id)
 
 		g.bl = condBl
 		cond := g.genExpr(x.Cond)
@@ -199,13 +261,13 @@ func (g *generator) genWhileLoop(x ast.WhileLoop) {
 
 func (g *generator) genDoWhileLoop(x ast.DoWhileLoop) {
 	main := g.bl
-	id := fmt.Sprint(g.blockcount)
-	g.blockcount++
+	top := g.ctx.fun
+	id := g.id()
 
 	g.scope(&x.Body.Scope, func() {
-		condBl := g.topfunc.NewBlock("while.cond" + id)
-		bodyBl := g.topfunc.NewBlock("while.body" + id)
-		endBl := g.topfunc.NewBlock("while.end" + id)
+		condBl := top.NewBlock("while.cond" + id)
+		bodyBl := top.NewBlock("while.body" + id)
+		endBl := top.NewBlock("while.end" + id)
 
 		g.bl = condBl
 		cond := g.genExpr(x.Cond)

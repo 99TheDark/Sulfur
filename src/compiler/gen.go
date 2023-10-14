@@ -1,7 +1,9 @@
 package compiler
 
 import (
+	"fmt"
 	"sulfur/src/ast"
+	"sulfur/src/builtins"
 	"sulfur/src/checker"
 	"sulfur/src/utils"
 
@@ -10,17 +12,15 @@ import (
 )
 
 type generator struct {
-	program    *ast.Program
-	types      checker.TypeMap
-	mod        *ir.Module
-	top        *ast.Scope
-	topfunc    *ir.Func
-	bl         *ir.Block
-	blockcount int
-	exits      utils.Stack[*ir.Block]
-	str        types.Type
-	strs       map[string]StringGlobal
-	builtins   llvm_builtins
+	program  *ast.Program
+	types    checker.TypeMap
+	mod      *ir.Module
+	ctx      *context
+	top      *ast.Scope
+	bl       *ir.Block // TODO: Move bl to context
+	str      types.Type
+	strs     map[string]StringGlobal
+	builtins llvm_builtins
 }
 
 func (g *generator) scope(scope *ast.Scope, body func()) {
@@ -29,13 +29,19 @@ func (g *generator) scope(scope *ast.Scope, body func()) {
 	g.top = scope.Parent
 }
 
+func (g *generator) id() string {
+	id := fmt.Sprint(g.ctx.blockcount)
+	g.ctx.blockcount++
+	return id
+}
+
 func (g *generator) enter(bl *ir.Block) {
 	g.bl.NewBr(bl)
-	g.exits.Push(bl)
+	g.ctx.exits.Push(bl)
 }
 
 func (g *generator) exit() {
-	exit := g.exits.Pop()
+	exit := g.ctx.exits.Pop()
 	g.bl.NewBr(exit)
 	g.bl = exit
 }
@@ -61,20 +67,24 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 		program,
 		typ,
 		mod,
+		&context{
+			nil,
+			main,
+			nil,
+			stack,
+			0,
+		},
 		&program.Contents.Scope,
-		main,
 		bl,
-		0,
-		stack,
 		str,
 		make(map[string]StringGlobal),
 		llvm_builtins{
-			make(map[string]bi_func),
-			make(map[string]bi_binop),
-			make(map[string]bi_unop),
-			make(map[string]bi_incdec),
-			make(map[string]bi_comp),
-			make(map[string]bi_conv),
+			make(map[string]builtins.FuncSignature),
+			make(map[string]builtins.BinaryOpSignature),
+			make(map[string]builtins.UnaryOpSignature),
+			make(map[string]builtins.IncDecSignature),
+			make(map[string]builtins.ComparisonSignature),
+			make(map[string]builtins.TypeConvSignature),
 		},
 	}
 

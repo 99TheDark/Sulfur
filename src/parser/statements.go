@@ -115,7 +115,8 @@ func (p *parser) parseFunction() ast.Function {
 		ptypes = append(ptypes, typing.Type(param.Type.Name))
 	}
 
-	sig := builtins.QuickFunc(
+	sig := builtins.QuickModFunc(
+		"mod",
 		name.Name,
 		typing.Type(ret.Name),
 		ptypes...,

@@ -6,60 +6,33 @@ import (
 )
 
 func QuickFunc(name string, ret typing.Type, params ...typing.Type) FuncSignature {
-	paramArr := []ParamSignature{}
-	for _, param := range params {
-		paramArr = append(paramArr, ParamSignature{param, false})
-	}
-
-	return FuncSignature{
-		name,
-		ret,
-		paramArr,
-	}
+	return QuickModFunc("", name, ret, params...)
 }
 
 func QuickParam(typ typing.Type, autodef bool) ParamSignature {
 	return ParamSignature{
 		typ,
 		autodef,
+		nil,
 	}
 }
 
 func QuickBinOp(left, right typing.Type, op lexer.TokenType) BinaryOpSignature {
-	return BinaryOpSignature{
-		left,
-		right,
-		op,
-		left,
-	}
+	return QuickModBinOp("", left, right, op)
 }
 
 func QuickUnOp(val typing.Type, op lexer.TokenType) UnaryOpSignature {
-	return UnaryOpSignature{
-		val,
-		op,
-		val,
-	}
+	return QuickModUnOp("", val, op)
 }
 
 func QuickIncDec(vari typing.Type, op lexer.TokenType) IncDecSignature {
-	return IncDecSignature{
-		vari,
-		op,
-	}
+	return QuickModIncDec("", vari, op)
 }
 
 func QuickComp(typ typing.Type, comp lexer.TokenType) ComparisonSignature {
-	return ComparisonSignature{
-		typ,
-		typ,
-		comp,
-	}
+	return QuickModComp("", typ, comp)
 }
 
 func QuickTypeConv(from, to typing.Type) TypeConvSignature {
-	return TypeConvSignature{
-		from,
-		to,
-	}
+	return QuickModTypeConv("", from, to)
 }
