@@ -11,6 +11,7 @@ type context struct {
 	parent     *context
 	fun        *ir.Func
 	ret        value.Value
+	complex    bool
 	exits      utils.Stack[*ir.Block]
 	blockcount int
 }

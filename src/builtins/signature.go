@@ -14,6 +14,7 @@ type (
 		Params  []ParamSignature
 		Module  string
 		Ir      *ir.Func
+		Ret     *ir.Param
 		Complex bool
 	}
 

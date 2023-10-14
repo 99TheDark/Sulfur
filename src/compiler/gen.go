@@ -71,6 +71,7 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 			nil,
 			main,
 			nil,
+			false,
 			stack,
 			0,
 		},

@@ -17,6 +17,7 @@ func QuickModFunc(mod string, name string, ret typing.Type, params ...typing.Typ
 		paramArr,
 		mod,
 		nil,
+		nil,
 		false,
 	}
 }

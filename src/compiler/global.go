@@ -42,6 +42,11 @@ func (g *generator) genFuncs() {
 		name := fun.Module + "." + fun.Name
 
 		params := []*ir.Param{}
+		if g.complex(fun.Return) {
+			ret := ir.NewParam(".ret", g.llraw(fun.Return))
+			fun.Ret = ret
+			params = append(params, ret)
+		}
 		for i, param := range fun.Params {
 			p := ir.NewParam("", g.llraw(param.Type))
 			fun.Params[i].Ir = p
@@ -49,11 +54,20 @@ func (g *generator) genFuncs() {
 		}
 
 		// TODO: Add complex functions
-		fun.Ir = g.mod.NewFunc(
-			name,
-			g.llraw(fun.Return),
-			params...,
-		)
+		if g.complex(fun.Return) {
+			fun.Ir = g.mod.NewFunc(
+				name,
+				types.Void,
+				params...,
+			)
+			fun.Complex = true
+		} else {
+			fun.Ir = g.mod.NewFunc(
+				name,
+				g.llraw(fun.Return),
+				params...,
+			)
+		}
 
 		g.builtins.funcs[fun.Name] = fun
 	}

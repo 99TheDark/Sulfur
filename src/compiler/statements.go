@@ -95,22 +95,19 @@ func (g *generator) genReturn(x ast.Return) {
 	val := g.genExpr(x.Value)
 
 	if g.ctx.ret != nil {
-		bl.NewStore(val, g.ctx.ret)
+		if g.ctx.complex {
+			load := bl.NewLoad(val.Type(), val)
+			bl.NewStore(load, g.ctx.ret)
+		} else {
+			bl.NewStore(val, g.ctx.ret)
+		}
 	}
 	bl.NewBr(g.ctx.exits.Final())
 }
 
 func (g *generator) genFunction(x ast.Function) {
-	ret := typing.Type(x.Return.Name)
-	rettyp := g.llraw(ret)
 	src := g.srcFunc(x.Name.Name)
-	complex := g.complex(ret)
-
-	var retval value.Value
-	if complex {
-		retparam := ir.NewParam(".ret", rettyp)
-		retval = retparam
-	}
+	complex := src.Complex
 
 	for i, param := range x.Params {
 		vari := x.Body.Scope.Vars[param.Name.Name]
@@ -125,8 +122,11 @@ func (g *generator) genFunction(x ast.Function) {
 	exits := utils.NewStack[*ir.Block]()
 	exits.Push(exit)
 
-	if !complex {
-		alloca := entry.NewAlloca(rettyp)
+	var retval value.Value
+	if complex {
+		retval = src.Ret
+	} else {
+		alloca := entry.NewAlloca(g.llraw(src.Return))
 		alloca.LocalName = ".ret"
 		retval = alloca
 	}
@@ -135,6 +135,7 @@ func (g *generator) genFunction(x ast.Function) {
 		g.ctx,
 		fun,
 		retval,
+		src.Complex,
 		exits,
 		0,
 	}
