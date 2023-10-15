@@ -1,5 +1,4 @@
 # TODO
-- Fix scoped naming to work from function scope rather than normal scope
 - Add break & continue
 - Better escaped characters
 - Allow function calls to be a single statement
