@@ -10,13 +10,3 @@ entry:
 exit:
 	ret void
 }
-
-declare void @.print(%type.string %0)
-
-declare void @.println(%type.string %0)
-
-declare %type.string @.add.string_string(%type.string %0, %type.string %1)
-
-declare %type.string @.conv.int_string(i32 %0)
-
-declare %type.string @.conv.bool_string(i1 %0)

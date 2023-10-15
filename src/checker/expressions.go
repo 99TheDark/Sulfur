@@ -47,12 +47,15 @@ func (c *checker) inferBinaryOp(x ast.BinaryOp) typing.Type {
 		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Right.Loc())
 	}
 
-	for _, binop := range c.program.BinaryOps {
+	for i, binop := range c.program.BinaryOps {
 		if binop.Op != x.Op.Type {
 			continue
 		}
 
 		if binop.Left == left && binop.Right == right {
+			binop.Uses++
+			c.program.BinaryOps[i] = binop
+
 			return c.typ(x, binop.Return)
 		}
 	}
@@ -63,12 +66,15 @@ func (c *checker) inferBinaryOp(x ast.BinaryOp) typing.Type {
 
 func (c *checker) inferUnaryOp(x ast.UnaryOp) typing.Type {
 	val := c.inferExpr(x.Value)
-	for _, unop := range c.program.UnaryOps {
+	for i, unop := range c.program.UnaryOps {
 		if unop.Op != x.Op.Type {
 			continue
 		}
 
 		if unop.Value == val {
+			unop.Uses++
+			c.program.UnaryOps[i] = unop
+
 			return c.typ(x, unop.Return)
 		}
 	}
@@ -85,12 +91,15 @@ func (c *checker) inferComparison(x ast.Comparison) typing.Type {
 		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Right.Loc())
 	}
 
-	for _, comp := range c.program.Comparisons {
+	for i, comp := range c.program.Comparisons {
 		if comp.Comp != x.Comp.Type {
 			continue
 		}
 
 		if comp.Left == left && comp.Right == right {
+			comp.Uses++
+			c.program.Comparisons[i] = comp
+
 			return c.typ(x, typing.Boolean)
 		}
 	}
@@ -106,8 +115,11 @@ func (c *checker) inferTypeConv(x ast.TypeConv) typing.Type {
 		return c.typ(x, typ)
 	}
 
-	for _, conv := range c.program.TypeConvs {
+	for i, conv := range c.program.TypeConvs {
 		if conv.From == typ && conv.To == typing.Type(x.Type.Name) {
+			conv.Uses++
+			c.program.TypeConvs[i] = conv
+
 			return c.typ(x, conv.To)
 		}
 	}
@@ -117,7 +129,7 @@ func (c *checker) inferTypeConv(x ast.TypeConv) typing.Type {
 }
 
 func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
-	for _, fun := range c.program.Functions {
+	for i, fun := range c.program.Functions {
 		if fun.Name == x.Func.Name {
 			l1, l2 := len(*x.Params), len(fun.Params)
 			if l1 != l2 {
@@ -142,6 +154,9 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 					Errors.Error("Expected "+paramTyp.String()+", but got "+typ.String()+" instead", param.Loc())
 				}
 			}
+
+			fun.Uses++
+			c.program.Functions[i] = fun
 
 			return c.typ(x, fun.Return)
 		}

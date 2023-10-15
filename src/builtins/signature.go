@@ -14,6 +14,7 @@ type (
 		Params []ParamSignature
 		Module string
 		Ir     *ir.Func
+		Uses   int
 	}
 
 	ParamSignature struct {
@@ -29,6 +30,7 @@ type (
 		Return  typing.Type
 		Module  string
 		Ir      *ir.Func
+		Uses    int
 		Complex bool
 	}
 
@@ -38,6 +40,7 @@ type (
 		Return  typing.Type
 		Module  string
 		Ir      *ir.Func
+		Uses    int
 		Complex bool
 	}
 
@@ -46,6 +49,7 @@ type (
 		Op      lexer.TokenType
 		Module  string
 		Ir      *ir.Func
+		Uses    int
 		Complex bool
 	}
 
@@ -55,6 +59,7 @@ type (
 		Comp    lexer.TokenType
 		Module  string
 		Ir      *ir.Func
+		Uses    int
 		Complex bool
 	}
 
@@ -63,6 +68,7 @@ type (
 		To      typing.Type
 		Module  string
 		Ir      *ir.Func
+		Uses    int
 		Complex bool
 	}
 )

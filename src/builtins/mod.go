@@ -17,6 +17,7 @@ func QuickModFunc(mod string, name string, ret typing.Type, params ...typing.Typ
 		paramArr,
 		mod,
 		nil,
+		0,
 	}
 }
 
@@ -28,6 +29,7 @@ func QuickModBinOp(mod string, left, right typing.Type, op lexer.TokenType) Bina
 		left,
 		mod,
 		nil,
+		0,
 		false,
 	}
 }
@@ -39,6 +41,7 @@ func QuickModUnOp(mod string, val typing.Type, op lexer.TokenType) UnaryOpSignat
 		val,
 		mod,
 		nil,
+		0,
 		false,
 	}
 }
@@ -49,6 +52,7 @@ func QuickModIncDec(mod string, vari typing.Type, op lexer.TokenType) IncDecSign
 		op,
 		mod,
 		nil,
+		0,
 		false,
 	}
 }
@@ -60,6 +64,7 @@ func QuickModComp(mod string, typ typing.Type, comp lexer.TokenType) ComparisonS
 		comp,
 		mod,
 		nil,
+		0,
 		false,
 	}
 }
@@ -70,6 +75,7 @@ func QuickModTypeConv(mod string, from, to typing.Type) TypeConvSignature {
 		to,
 		mod,
 		nil,
+		0,
 		false,
 	}
 }

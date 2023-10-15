@@ -39,6 +39,10 @@ func (g *generator) genStrings() {
 
 func (g *generator) genFuncs() {
 	for i, fun := range g.program.Functions {
+		if fun.Uses == 0 {
+			continue
+		}
+
 		name := fun.Module + "." + fun.Name
 
 		params := []*ir.Param{}
@@ -61,6 +65,10 @@ func (g *generator) genFuncs() {
 
 func (g *generator) genBinOps() {
 	for i, binop := range g.program.BinaryOps {
+		if binop.Uses == 0 {
+			continue
+		}
+
 		name := binop.Module + "." + binop.Op.OperatorName() + "." + binop.Left.String() + "_" + binop.Right.String()
 		if g.complex(binop.Return) {
 			binop.Ir = g.mod.NewFunc(
@@ -80,6 +88,10 @@ func (g *generator) genBinOps() {
 
 func (g *generator) genUnOps() {
 	for i, unop := range g.program.UnaryOps {
+		if unop.Uses == 0 {
+			continue
+		}
+
 		name := unop.Module + "." + unop.Op.OperatorName() + "." + unop.Value.String()
 		if g.complex(unop.Return) {
 			unop.Ir = g.mod.NewFunc(
@@ -98,6 +110,10 @@ func (g *generator) genUnOps() {
 
 func (g *generator) genIncDecs() {
 	for i, incdec := range g.program.IncDecs {
+		if incdec.Uses == 0 {
+			continue
+		}
+
 		name := incdec.Module + "." + incdec.Op.OperatorName() + "." + incdec.Var.String()
 		if g.complex(incdec.Var) {
 			incdec.Ir = g.mod.NewFunc(
@@ -115,6 +131,10 @@ func (g *generator) genIncDecs() {
 
 func (g *generator) genComps() {
 	for i, comp := range g.program.Comparisons {
+		if comp.Uses == 0 {
+			continue
+		}
+
 		// TODO: Complex comparisons
 
 		hash := comp.Comp.OperatorName() + " " + comp.Left.String() + " " + comp.Right.String()
@@ -125,6 +145,10 @@ func (g *generator) genComps() {
 
 func (g *generator) genTypeConvs() {
 	for i, conv := range g.program.TypeConvs {
+		if conv.Uses == 0 {
+			continue
+		}
+
 		name := conv.Module + ".conv." + string(conv.From) + "_" + string(conv.To)
 		if g.complex(conv.To) {
 			conv.Ir = g.mod.NewFunc(
