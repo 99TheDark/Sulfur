@@ -7,6 +7,7 @@ source_filename = "script.su"
 @.str1 = private unnamed_addr constant [16 x i8] c"I did something!", align 1
 @.str2 = private unnamed_addr constant [4 x i8] c"John", align 1
 @.str3 = private unnamed_addr constant [5 x i8] c"Smith", align 1
+@.str4 = private unnamed_addr constant [3 x i8] c"Hi!", align 1
 
 define void @main() {
 entry:
@@ -33,8 +34,16 @@ entry:
 	%13 = load %type.string, %type.string* %9, align 8
 	%14 = call %type.string @mod.formatName(%type.string %7, %type.string %13)
 	call void @.println(%type.string %14)
-	call void @mod.doSomething()
-	%15 = call i32 @mod.add(i32 3, i32 4)
+	%15 = getelementptr inbounds [3 x i8], [3 x i8]* @.str4, i32 0, i32 0
+	%16 = alloca %type.string, align 8
+	%17 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 0
+	store i32 3, i32* %17, align 8
+	%18 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 1
+	store i32 3, i32* %18, align 8
+	%19 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 2
+	store i8* %15, i8** %19, align 8
+	%20 = load %type.string, %type.string* %16, align 8
+	call void @.println(%type.string %20)
 	br label %exit
 
 exit:

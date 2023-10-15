@@ -31,13 +31,16 @@ func main() {
 
 	errors.Errors = errors.New(code)
 
+	errors.Step = errors.Parsing
 	ast := parser.Parse(code, tokens)
 	if err := parser.Save(ast, 1, "io/ast.json"); err != nil {
 		log.Fatalln(err)
 	}
 
+	errors.Step = errors.Inferring
 	types := checker.TypeCheck(ast)
 
+	errors.Step = errors.Generating
 	llcode := compiler.Generate(ast, types)
 	if err := compiler.Save("; ModuleID = 'script.su'\n"+llcode, "io/asm/script.ll"); err != nil {
 		log.Fatalln(err)

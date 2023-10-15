@@ -102,7 +102,8 @@ func (c *checker) inferComparison(x ast.Comparison) typing.Type {
 func (c *checker) inferTypeConv(x ast.TypeConv) typing.Type {
 	typ := c.inferExpr(x.Value)
 	if typ == typing.Type(x.Type.Name) {
-		Errors.Error("Cannot convert type to itself", x.Loc())
+		Errors.Warn("Unnecessary type conversion from "+string(typ)+" to "+string(typ), x.Loc())
+		return c.typ(x, typ)
 	}
 
 	for _, conv := range c.program.TypeConvs {

@@ -1,3 +1,3 @@
 #!/bin/bash
-go build
-sh sulfur.sh
+go build || exit 1
+sh sulfur.sh || exit 1

@@ -7,9 +7,9 @@ source_filename = "llvm-link"
 @.str1 = private unnamed_addr constant [5 x i8] c"false", align 1
 @.str0.1 = private unnamed_addr constant [1 x i8] c"0", align 1
 @.str0.2 = private unnamed_addr constant [2 x i8] c", ", align 1
-@.str1.1 = private unnamed_addr constant [16 x i8] c"I did something!", align 1
 @.str2 = private unnamed_addr constant [4 x i8] c"John", align 1
 @.str3 = private unnamed_addr constant [5 x i8] c"Smith", align 1
+@.str4 = private unnamed_addr constant [3 x i8] c"Hi!", align 1
 
 define %type.string @.conv.bool_string(i1 %bool) {
 entry:
@@ -319,8 +319,16 @@ entry:
   %13 = load %type.string, %type.string* %9, align 8
   %14 = call %type.string @mod.formatName(%type.string %7, %type.string %13)
   call void @.println(%type.string %14)
-  call void @mod.doSomething()
-  %15 = call i32 @mod.add(i32 3, i32 4)
+  %15 = getelementptr inbounds [3 x i8], [3 x i8]* @.str4, i32 0, i32 0
+  %16 = alloca %type.string, align 8
+  %17 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 0
+  store i32 3, i32* %17, align 8
+  %18 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 1
+  store i32 3, i32* %18, align 8
+  %19 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 2
+  store i8* %15, i8** %19, align 8
+  %20 = load %type.string, %type.string* %16, align 8
+  call void @.println(%type.string %20)
   br label %exit
 
 exit:                                             ; preds = %entry
@@ -374,34 +382,4 @@ entry:
 exit:                                             ; preds = %entry
   %10 = load %type.string, %type.string* %.ret, align 8
   ret %type.string %10
-}
-
-define private void @mod.doSomething() {
-entry:
-  %0 = getelementptr inbounds [16 x i8], [16 x i8]* @.str1.1, i32 0, i32 0
-  %1 = alloca %type.string, align 8
-  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 16, i32* %2, align 8
-  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-  store i32 16, i32* %3, align 8
-  %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
-  store i8* %0, i8** %4, align 8
-  %5 = load %type.string, %type.string* %1, align 8
-  call void @.println(%type.string %5)
-  br label %exit
-
-exit:                                             ; preds = %entry
-  ret void
-}
-
-define private i32 @mod.add(i32 %0, i32 %1) {
-entry:
-  %.ret = alloca i32, align 4
-  %2 = add i32 %0, %1
-  store i32 %2, i32* %.ret, align 4
-  br label %exit
-
-exit:                                             ; preds = %entry
-  %3 = load i32, i32* %.ret, align 4
-  ret i32 %3
 }

@@ -293,9 +293,9 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #48
-	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 48
+	sub	sp, sp, #64
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 64
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
 	mov	w0, #25
@@ -317,17 +317,23 @@ Lloh9:
 	mov	w1, #4
 	mov	w3, #5
 	mov	w4, #5
-	stp	x8, x2, [sp, #16]
-	stp	x9, x5, [sp]
+	stp	x8, x2, [sp, #32]
+	stp	x9, x5, [sp, #16]
 	bl	l_mod.formatName
 	bl	_.println
-	bl	l_mod.doSomething
+Lloh10:
+	adrp	x2, l_.str4@PAGE
+	mov	x8, #12884901891
+Lloh11:
+	add	x2, x2, l_.str4@PAGEOFF
 	mov	w0, #3
-	mov	w1, #4
-	bl	l_mod.add
-	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
-	add	sp, sp, #48
+	mov	w1, #3
+	stp	x8, x2, [sp]
+	bl	_.println
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	add	sp, sp, #64
 	ret
+	.loh AdrpAdd	Lloh10, Lloh11
 	.loh AdrpAdd	Lloh7, Lloh9
 	.loh AdrpAdd	Lloh6, Lloh8
 	.cfi_endproc
@@ -385,13 +391,13 @@ l_mod.formatName:                       ; @mod.formatName
 	.cfi_offset w21, -40
 	.cfi_offset w22, -48
 	mov	x8, x5
-Lloh10:
+Lloh12:
 	adrp	x5, l_.str0.2@PAGE
 	mov	x19, x2
 	mov	w20, w1
 	mov	w21, w0
 	mov	x9, #8589934594
-Lloh11:
+Lloh13:
 	add	x5, x5, l_.str0.2@PAGEOFF
 	mov	w0, w3
 	mov	w1, w4
@@ -411,43 +417,7 @@ Lloh11:
 	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
 	add	sp, sp, #80
 	ret
-	.loh AdrpAdd	Lloh10, Lloh11
-	.cfi_endproc
-                                        ; -- End function
-	.p2align	2                               ; -- Begin function mod.doSomething
-l_mod.doSomething:                      ; @mod.doSomething
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #32
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-Lloh12:
-	adrp	x2, l_.str1.1@PAGE
-	mov	x8, #68719476752
-Lloh13:
-	add	x2, x2, l_.str1.1@PAGEOFF
-	mov	w0, #16
-	mov	w1, #16
-	stp	x8, x2, [sp]
-	bl	_.println
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #32
-	ret
 	.loh AdrpAdd	Lloh12, Lloh13
-	.cfi_endproc
-                                        ; -- End function
-	.p2align	2                               ; -- Begin function mod.add
-l_mod.add:                              ; @mod.add
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #16
-	.cfi_def_cfa_offset 16
-	add	w0, w0, w1
-	str	w0, [sp, #12]
-	add	sp, sp, #16
-	ret
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -464,10 +434,6 @@ l_.str0.1:                              ; @.str0.1
 l_.str0.2:                              ; @.str0.2
 	.ascii	", "
 
-	.section	__TEXT,__literal16,16byte_literals
-l_.str1.1:                              ; @.str1.1
-	.ascii	"I did something!"
-
 	.section	__TEXT,__literal4,4byte_literals
 l_.str2:                                ; @.str2
 	.ascii	"John"
@@ -475,5 +441,8 @@ l_.str2:                                ; @.str2
 	.section	__TEXT,__const
 l_.str3:                                ; @.str3
 	.ascii	"Smith"
+
+l_.str4:                                ; @.str4
+	.ascii	"Hi!"
 
 .subsections_via_symbols

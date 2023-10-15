@@ -173,6 +173,10 @@ func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
 	conv := g.srcConv(string(g.types[x.Value]), x.Type.Name)
 	val := g.genExpr(x.Value)
 
+	if g.types[x] == g.types[x.Value] {
+		return val
+	}
+
 	if conv.Complex {
 		return bl.NewCall(conv.Ir, val)
 	} else {
