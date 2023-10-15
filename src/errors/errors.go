@@ -66,6 +66,6 @@ func (gen *ErrorGenerator) Warn(msg string, loc *lexer.Location) {
 	fmt.Println(err)
 }
 
-func New(source string) ErrorGenerator {
+func NewErrorGenerator(source string) ErrorGenerator {
 	return ErrorGenerator{strings.Split(source, "\n")}
 }

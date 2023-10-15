@@ -29,7 +29,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	errors.Errors = errors.New(code)
+	errors.Errors = errors.NewErrorGenerator(code)
 
 	errors.Step = errors.Parsing
 	ast := parser.Parse(code, tokens)

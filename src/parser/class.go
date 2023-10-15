@@ -46,10 +46,10 @@ func (p *parser) parseClass() ast.Class {
 				}
 				return
 			case lexer.New:
-				news = append(news, p.parseNew(prefix))
+				news = append(news, p.parseConstructor(prefix))
 				return
 			case lexer.Delete:
-				dels = append(dels, p.parseDel(prefix))
+				dels = append(dels, p.parseDestructor(prefix))
 				return
 			case lexer.To:
 				if !lexer.Empty(prefix) {
@@ -139,13 +139,13 @@ func (p *parser) parseMethod(prefix lexer.Token) ast.Method {
 	}
 }
 
-func (p *parser) parseNew(prefix lexer.Token) ast.Method {
+func (p *parser) parseConstructor(prefix lexer.Token) ast.Method {
 	tok := p.eat()
 	params := []ast.Param{}
 	p.expect(lexer.OpenParen)
 	p.parseStmts(
 		func() {
-			params = append(params, p.parseNewParam())
+			params = append(params, p.parseConstructorParam())
 		},
 		[]lexer.TokenType{lexer.CloseParen},
 		[]lexer.TokenType{lexer.Delimiter},
@@ -169,7 +169,7 @@ func (p *parser) parseNew(prefix lexer.Token) ast.Method {
 	}
 }
 
-func (p *parser) parseDel(prefix lexer.Token) ast.Method {
+func (p *parser) parseDestructor(prefix lexer.Token) ast.Method {
 	tok := p.eat()
 	params := []ast.Param{}
 	p.expect(lexer.OpenParen)
@@ -242,7 +242,7 @@ func (p *parser) parseOperation() ast.Operation {
 	}
 }
 
-func (p *parser) parseNewParam() ast.Param {
+func (p *parser) parseConstructorParam() ast.Param {
 	typ := p.parseIdentifier()
 	auto := p.prefix(lexer.Autodef)
 	name := p.parseIdentifier()

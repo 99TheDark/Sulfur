@@ -5,3 +5,5 @@ class Person {
 }
 
 println("Hello, world!")
+
+x := new Person()

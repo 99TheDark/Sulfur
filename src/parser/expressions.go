@@ -107,6 +107,28 @@ func (p *parser) parseTypeConv() ast.Expr {
 			Value: val,
 		}
 	}
+	return p.parseNew()
+}
+
+func (p *parser) parseNew() ast.Expr {
+	if p.tt() == lexer.New {
+		new := p.eat()
+		class := p.parseIdentifier()
+		p.expect(lexer.OpenParen)
+		params := []ast.Expr{}
+		p.parseStmts(
+			func() {
+				params = append(params, p.parseExpr())
+			},
+			[]lexer.TokenType{lexer.CloseParen},
+			[]lexer.TokenType{lexer.Delimiter},
+		)
+		return ast.New{
+			Pos:    new.Location,
+			Class:  class,
+			Params: &params,
+		}
+	}
 	return p.parseAccess()
 }
 

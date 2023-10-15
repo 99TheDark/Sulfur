@@ -118,7 +118,7 @@ type (
 	}
 
 	Operation struct {
-		Pos    *lexer.Location `josn:"-"`
+		Pos    *lexer.Location `json:"-"`
 		Op     *lexer.Token
 		Params []Param
 		Return []Identifier
@@ -129,6 +129,12 @@ type (
 		Parent Expr
 		Access lexer.Token
 		Child  Identifier
+	}
+
+	New struct {
+		Pos    *lexer.Location `json:"-"`
+		Class  Identifier
+		Params *[]Expr
 	}
 
 	BinaryOp struct {
@@ -249,6 +255,7 @@ func (x Field) Loc() *lexer.Location        { return x.Pos }
 func (x To) Loc() *lexer.Location           { return x.Pos }
 func (x Operation) Loc() *lexer.Location    { return x.Pos }
 func (x Access) Loc() *lexer.Location       { return x.Parent.Loc() }
+func (x New) Loc() *lexer.Location          { return x.Pos }
 func (x BinaryOp) Loc() *lexer.Location     { return x.Left.Loc() }
 func (x UnaryOp) Loc() *lexer.Location      { return x.Value.Loc() }
 func (x Pipe) Loc() *lexer.Location         { return x.Left.Func.Pos }
