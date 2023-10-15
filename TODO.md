@@ -8,6 +8,6 @@
 - Official reference syntax (currently WIP in notes)
 - Complex numbers
 - Classes
-- String equals 
+- String equals string 
 - Return out of a void function
 - Only link functions when needed

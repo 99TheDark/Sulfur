@@ -2,14 +2,14 @@ package errors
 
 import (
 	"fmt"
-	"log"
+	"os"
 	"strings"
 	"sulfur/src/lexer"
 	"sulfur/src/utils"
 )
 
-const DebugErrors = false
-const Color = true
+const Debug = false
+const Color = false
 const CodeBuffer = 4
 
 var Errors ErrorGenerator
@@ -32,7 +32,12 @@ func (gen *ErrorGenerator) message(msg, typ, colorStart, colorEnd string, loc *l
 		colorStart, colorEnd = "", ""
 	}
 
-	err := "\n" + colorStart + typ + " while " + string(Step) + ":" + colorEnd + "\n"
+	err := ""
+	if Debug {
+		err += "\n"
+	}
+
+	err += colorStart + typ + " while " + string(Step) + ":" + colorEnd + "\n"
 	for i := utils.Max(row-4, 0); i <= row; i++ {
 		err += fmt.Sprint(i+1) + ". " + strings.Repeat(" ", numSize-size(i+1))
 		err += gen.lines[i] + "\n"
@@ -48,10 +53,11 @@ func (gen *ErrorGenerator) message(msg, typ, colorStart, colorEnd string, loc *l
 func (gen *ErrorGenerator) Error(msg string, loc *lexer.Location) {
 	err := gen.message(msg, "Error", "\033[31m", "\033[0m", loc)
 
-	if DebugErrors {
+	if Debug {
 		panic(err)
 	} else {
-		log.Fatalln(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }
 
