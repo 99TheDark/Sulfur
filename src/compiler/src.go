@@ -7,6 +7,7 @@ import (
 
 type llvm_builtins struct {
 	funcs   map[string]*builtins.FuncSignature
+	classes map[string]*builtins.ClassSignature
 	binops  map[string]*builtins.BinaryOpSignature
 	unops   map[string]*builtins.UnaryOpSignature
 	incdecs map[string]*builtins.IncDecSignature

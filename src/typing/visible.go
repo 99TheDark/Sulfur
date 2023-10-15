@@ -1,4 +1,4 @@
-package ast
+package typing
 
 import (
 	"encoding/json"

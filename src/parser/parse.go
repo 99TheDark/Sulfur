@@ -81,7 +81,7 @@ func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 		Comparisons: []builtins.ComparisonSignature{},
 		TypeConvs:   []builtins.TypeConvSignature{},
 		IncDecs:     []builtins.IncDecSignature{},
-		Classes:     []ast.Class{},
+		Classes:     []builtins.ClassSignature{},
 		Strings:     []ast.String{},
 		Contents:    ast.Block{},
 	}

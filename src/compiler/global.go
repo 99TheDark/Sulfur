@@ -63,6 +63,21 @@ func (g *generator) genFuncs() {
 	}
 }
 
+func (g *generator) genClasses() {
+	mod := g.mod
+	for i, class := range g.program.Classes {
+		typs := []types.Type{}
+		for _, field := range class.Fields {
+			typs = append(typs, g.lltyp(field.Type))
+		}
+
+		class.Ir = mod.NewTypeDef("class."+class.Name, types.NewStruct(typs...))
+
+		g.program.Classes[i] = class
+		g.builtins.classes[class.Name] = &g.program.Classes[i]
+	}
+}
+
 func (g *generator) genBinOps() {
 	for i, binop := range g.program.BinaryOps {
 		if binop.Uses == 0 {

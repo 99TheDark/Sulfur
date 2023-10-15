@@ -85,6 +85,7 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 		make(map[string]StringGlobal),
 		llvm_builtins{
 			make(map[string]*builtins.FuncSignature),
+			make(map[string]*builtins.ClassSignature),
 			make(map[string]*builtins.BinaryOpSignature),
 			make(map[string]*builtins.UnaryOpSignature),
 			make(map[string]*builtins.IncDecSignature),
@@ -95,6 +96,7 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 
 	g.genStrings()
 	g.genFuncs()
+	g.genClasses()
 	g.genBinOps()
 	g.genUnOps()
 	g.genIncDecs()

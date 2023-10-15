@@ -293,7 +293,25 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
+	sub	sp, sp, #32
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 32
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	mov	x8, #13
+Lloh6:
+	adrp	x2, l_.str0.2@PAGE
+	movk	x8, #13, lsl #32
+Lloh7:
+	add	x2, x2, l_.str0.2@PAGEOFF
+	mov	w0, #13
+	mov	w1, #13
+	stp	x8, x2, [sp]
+	bl	_.println
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #32
 	ret
+	.loh AdrpAdd	Lloh6, Lloh7
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -306,5 +324,8 @@ l_.str1:                                ; @.str1
 
 l_.str0.1:                              ; @.str0.1
 	.byte	48
+
+l_.str0.2:                              ; @.str0.2
+	.ascii	"Hello, world!"
 
 .subsections_via_symbols

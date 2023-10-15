@@ -2,8 +2,10 @@ package parser
 
 import (
 	"sulfur/src/ast"
+	"sulfur/src/builtins"
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
+	"sulfur/src/typing"
 )
 
 func (p *parser) parseClass() ast.Class {
@@ -16,11 +18,14 @@ func (p *parser) parseClass() ast.Class {
 	dels := []ast.Method{}
 	convs := []ast.To{}
 	opers := []ast.Operation{}
+
+	fieldsigs := []builtins.FieldSignature{}
+
 	p.parseStmts(
 		func() {
 			prefix := lexer.Token{}
 			tok := p.at()
-			if ast.IsVisibility(tok) {
+			if typing.IsVisibility(tok) {
 				prefix = p.eat()
 				tok = p.at()
 			}
@@ -30,7 +35,14 @@ func (p *parser) parseClass() ast.Class {
 				if p.next().Type == lexer.OpenParen {
 					methods = append(methods, p.parseMethod(prefix))
 				} else {
-					fields = append(fields, p.parseField(prefix))
+					field := p.parseField(prefix)
+
+					fields = append(fields, field)
+					fieldsigs = append(fieldsigs, builtins.FieldSignature{
+						Visibility: field.Status,
+						Type:       typing.Type(field.Type.Name),
+						Name:       field.Name.Name,
+					})
 				}
 				return
 			case lexer.New:
@@ -59,6 +71,14 @@ func (p *parser) parseClass() ast.Class {
 		[]lexer.TokenType{lexer.NewLine, lexer.Semicolon},
 	)
 
+	sig := builtins.ClassSignature{
+		Name:   name.Name,
+		Fields: fieldsigs,
+		Ir:     nil,
+	}
+
+	p.program.Classes = append(p.program.Classes, sig)
+
 	return ast.Class{
 		Pos:         tok.Location,
 		Name:        name,
@@ -76,7 +96,7 @@ func (p *parser) parseField(prefix lexer.Token) ast.Field {
 	typ := p.parseIdentifier()
 	val := p.parseIdentifier()
 
-	vis, loc := ast.TokenVis(prefix, ast.Public, typ.Pos)
+	vis, loc := typing.TokenVis(prefix, typing.Public, typ.Pos)
 	return ast.Field{
 		Pos:    loc,
 		Status: vis,
@@ -106,7 +126,7 @@ func (p *parser) parseMethod(prefix lexer.Token) ast.Method {
 
 	body := p.parseBlock()
 
-	vis, loc := ast.TokenVis(prefix, ast.Public, name.Pos)
+	vis, loc := typing.TokenVis(prefix, typing.Public, name.Pos)
 	return ast.Method{
 		Function: ast.Function{
 			Pos:    loc,
@@ -133,7 +153,7 @@ func (p *parser) parseNew(prefix lexer.Token) ast.Method {
 
 	body := p.parseBlock()
 
-	vis, loc := ast.TokenVis(prefix, ast.Public, tok.Location)
+	vis, loc := typing.TokenVis(prefix, typing.Public, tok.Location)
 	return ast.Method{
 		Function: ast.Function{
 			Pos: loc,
@@ -163,7 +183,7 @@ func (p *parser) parseDel(prefix lexer.Token) ast.Method {
 
 	body := p.parseBlock()
 
-	vis, loc := ast.TokenVis(prefix, ast.Public, tok.Location)
+	vis, loc := typing.TokenVis(prefix, typing.Public, tok.Location)
 	return ast.Method{
 		Function: ast.Function{
 			Pos: loc,

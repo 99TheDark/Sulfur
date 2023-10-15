@@ -3,6 +3,7 @@ package ast
 import (
 	"sulfur/src/builtins"
 	"sulfur/src/lexer"
+	"sulfur/src/typing"
 )
 
 type Expr interface {
@@ -11,14 +12,14 @@ type Expr interface {
 
 type (
 	Program struct {
-		// TODO: Create & replace classes and strings with ClassSignatures and StringSignatures
+		// TODO: Create & replace strings with StringSignatures
 		Functions   []builtins.FuncSignature       `json:"-"`
 		BinaryOps   []builtins.BinaryOpSignature   `json:"-"`
 		UnaryOps    []builtins.UnaryOpSignature    `json:"-"`
 		Comparisons []builtins.ComparisonSignature `json:"-"`
 		TypeConvs   []builtins.TypeConvSignature   `json:"-"`
 		IncDecs     []builtins.IncDecSignature     `json:"-"`
-		Classes     []Class                        `json:"-"`
+		Classes     []builtins.ClassSignature      `json:"-"`
 		Strings     []String
 		FuncScope   FuncScope
 		Contents    Block
@@ -100,12 +101,12 @@ type (
 
 	Method struct {
 		Function
-		Status Visibility
+		Status typing.Visibility
 	}
 
 	Field struct {
 		Pos    *lexer.Location `json:"-"`
-		Status Visibility
+		Status typing.Visibility
 		Type   Identifier
 		Name   Identifier
 	}

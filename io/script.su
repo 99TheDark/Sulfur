@@ -1,0 +1,7 @@
+class Person {
+    pub int x
+    string y
+    pri bool z
+}
+
+println("Hello, world!")

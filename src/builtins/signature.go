@@ -5,6 +5,7 @@ import (
 	"sulfur/src/typing"
 
 	"github.com/llir/llvm/ir"
+	"github.com/llir/llvm/ir/types"
 )
 
 type (
@@ -21,6 +22,18 @@ type (
 		Type    typing.Type
 		Autodef bool
 		Ir      *ir.Param
+	}
+
+	ClassSignature struct {
+		Name   string
+		Fields []FieldSignature
+		Ir     types.Type
+	}
+
+	FieldSignature struct {
+		Visibility typing.Visibility
+		Type       typing.Type
+		Name       string
 	}
 
 	BinaryOpSignature struct {
