@@ -1,9 +1,14 @@
-for i := 0; i < 10; i++ {
-    
+func formatName(string firstName, string lastName) (string) {
+    return lastName + ", " + firstName
 }
 
-for i := 0; i < 10; i++ {
-
+func fibonacci(int x) (int) {
+    if x <= 1 {
+        return 1
+    } else {
+        return fibonacci(x - 2) + fibonacci(x - 1)
+    }
 }
 
-i := 0
+println(string!(fibonacci(12)))
+println(formatName("John", "Smith"))

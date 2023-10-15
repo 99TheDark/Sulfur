@@ -293,48 +293,123 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
-	mov	x29, sp
-	sub	sp, sp, #16
-	.cfi_def_cfa w29, 16
+	sub	sp, sp, #48
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 48
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	stur	wzr, [x29, #-4]
-	mov	w8, wzr
-	cmp	w8, #9
-	b.gt	LBB5_2
-LBB5_1:                                 ; %for.inc0
-                                        ; =>This Inner Loop Header: Depth=1
-	ldur	w8, [x29, #-4]
-	add	w8, w8, #1
-	stur	w8, [x29, #-4]
-	mov	w8, w8
-	cmp	w8, #9
-	b.le	LBB5_1
-LBB5_2:                                 ; %for.end0
-	mov	x9, sp
-	sub	x8, x9, #16
-	mov	sp, x8
-	stur	wzr, [x9, #-16]
-	ldr	w9, [x8]
-	cmp	w9, #9
-	b.gt	LBB5_4
-LBB5_3:                                 ; %for.inc1
-                                        ; =>This Inner Loop Header: Depth=1
-	ldr	w9, [x8]
-	add	w9, w9, #1
-	str	w9, [x8]
-	mov	w9, w9
-	cmp	w9, #9
-	b.le	LBB5_3
-LBB5_4:                                 ; %for.end1
-	mov	x8, sp
-	sub	x9, x8, #16
-	mov	sp, x9
-	stur	wzr, [x8, #-16]
-	mov	sp, x29
-	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	mov	w0, #12
+	bl	_mod.fibonacci
+	bl	_.conv.int_string
+	bl	_.println
+Lloh6:
+	adrp	x2, l_.str1.1@PAGE
+Lloh7:
+	adrp	x5, l_.str2@PAGE
+	mov	x9, #5
+Lloh8:
+	add	x2, x2, l_.str1.1@PAGEOFF
+	mov	x8, #17179869188
+Lloh9:
+	add	x5, x5, l_.str2@PAGEOFF
+	movk	x9, #5, lsl #32
+	mov	w0, #4
+	mov	w1, #4
+	mov	w3, #5
+	mov	w4, #5
+	stp	x8, x2, [sp, #16]
+	stp	x9, x5, [sp]
+	bl	_mod.formatName
+	bl	_.println
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #48
 	ret
+	.loh AdrpAdd	Lloh7, Lloh9
+	.loh AdrpAdd	Lloh6, Lloh8
+	.cfi_endproc
+                                        ; -- End function
+	.globl	_mod.fibonacci                  ; -- Begin function mod.fibonacci
+	.p2align	2
+_mod.fibonacci:                         ; @mod.fibonacci
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #48
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 48
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	subs	w19, w0, #1
+	b.gt	LBB6_2
+; %bb.1:                                ; %if.then0
+	mov	w8, #1
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	str	w8, [sp, #12]
+	mov	w0, w8
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #48
+	ret
+LBB6_2:                                 ; %if.else0
+	sub	w0, w0, #2
+	bl	_mod.fibonacci
+	mov	w20, w0
+	mov	w0, w19
+	bl	_mod.fibonacci
+	add	w8, w20, w0
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	str	w8, [sp, #12]
+	mov	w0, w8
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #48
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.globl	_mod.formatName                 ; -- Begin function mod.formatName
+	.p2align	2
+_mod.formatName:                        ; @mod.formatName
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #80
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 80
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	.cfi_offset w21, -40
+	.cfi_offset w22, -48
+	mov	x8, x5
+Lloh10:
+	adrp	x5, l_.str0.2@PAGE
+	mov	x19, x2
+	mov	w20, w1
+	mov	w21, w0
+	mov	x9, #8589934594
+Lloh11:
+	add	x5, x5, l_.str0.2@PAGEOFF
+	mov	w0, w3
+	mov	w1, w4
+	mov	x2, x8
+	mov	w3, #2
+	mov	w4, #2
+	stp	x9, x5, [sp]
+	bl	_.add.string_string
+	mov	w3, w21
+	mov	w4, w20
+	mov	x5, x19
+	bl	_.add.string_string
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	str	x2, [sp, #24]
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	stp	w0, w1, [sp, #16]
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #80
+	ret
+	.loh AdrpAdd	Lloh10, Lloh11
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -347,5 +422,16 @@ l_.str1:                                ; @.str1
 
 l_.str0.1:                              ; @.str0.1
 	.byte	48
+
+l_.str0.2:                              ; @.str0.2
+	.ascii	", "
+
+	.section	__TEXT,__literal4,4byte_literals
+l_.str1.1:                              ; @.str1.1
+	.ascii	"John"
+
+	.section	__TEXT,__const
+l_.str2:                                ; @.str2
+	.ascii	"Smith"
 
 .subsections_via_symbols
