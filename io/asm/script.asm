@@ -293,136 +293,32 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #128
-	stp	x22, x21, [sp, #80]             ; 16-byte Folded Spill
-	stp	x20, x19, [sp, #96]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #112]            ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 128
+	sub	sp, sp, #64
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 64
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	.cfi_offset w21, -40
-	.cfi_offset w22, -48
-Lloh6:
-	adrp	x2, l_.str1.1@PAGE
 	mov	x8, #5
+Lloh6:
+	adrp	x9, l_.str0.2@PAGE
 Lloh7:
-	adrp	x5, l_.str2@PAGE
-	mov	x19, #17179869188
-Lloh8:
-	add	x2, x2, l_.str1.1@PAGEOFF
+	adrp	x2, l_.str1.3@PAGE
 	movk	x8, #5, lsl #32
+Lloh8:
+	add	x9, x9, l_.str0.2@PAGEOFF
 Lloh9:
-	add	x5, x5, l_.str2@PAGEOFF
-	mov	w0, #4
-	mov	w1, #4
-	mov	w3, #5
-	mov	w4, #5
-	stp	x19, x2, [sp, #64]
-	stp	x19, x2, [sp, #48]
-	stp	x8, x5, [sp, #32]
-	stp	x8, x5, [sp, #16]
-	bl	_mod.formatName
-Lloh10:
-	adrp	x5, l_.str3@PAGE
-	mov	w3, #4
-Lloh11:
-	add	x5, x5, l_.str3@PAGEOFF
-	mov	w4, #4
-	stp	x19, x5, [sp]
-	bl	_.add.string_string
-	mov	w19, w0
-	mov	w20, w1
-	mov	w0, #6
-	mov	w1, #4
-	mov	x21, x2
-	bl	_mod.add
-	bl	_.conv.int_string
-	mov	w3, w0
-	mov	w4, w1
-	mov	x5, x2
-	mov	w0, w19
-	mov	w1, w20
-	mov	x2, x21
-	bl	_.add.string_string
+	add	x2, x2, l_.str1.3@PAGEOFF
+	mov	w0, #5
+	mov	w1, #5
+	stp	x8, x9, [sp, #32]
+	stp	x8, x2, [sp]
+	stp	x8, x2, [sp, #16]
 	bl	_.println
-	bl	_mod.noReturn
-	ldp	x29, x30, [sp, #112]            ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #96]             ; 16-byte Folded Reload
-	ldp	x22, x21, [sp, #80]             ; 16-byte Folded Reload
-	add	sp, sp, #128
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	add	sp, sp, #64
 	ret
-	.loh AdrpAdd	Lloh10, Lloh11
 	.loh AdrpAdd	Lloh7, Lloh9
 	.loh AdrpAdd	Lloh6, Lloh8
-	.cfi_endproc
-                                        ; -- End function
-	.globl	_mod.formatName                 ; -- Begin function mod.formatName
-	.p2align	2
-_mod.formatName:                        ; @mod.formatName
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #80
-	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
-	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 80
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	.cfi_offset w21, -40
-	.cfi_offset w22, -48
-	mov	x8, x5
-Lloh12:
-	adrp	x5, l_.str0.2@PAGE
-	mov	x19, x2
-	mov	w20, w1
-	mov	w21, w0
-	mov	x9, #8589934594
-Lloh13:
-	add	x5, x5, l_.str0.2@PAGEOFF
-	mov	w0, w3
-	mov	w1, w4
-	mov	x2, x8
-	mov	w3, #2
-	mov	w4, #2
-	stp	x9, x5, [sp]
-	bl	_.add.string_string
-	mov	w3, w21
-	mov	w4, w20
-	mov	x5, x19
-	bl	_.add.string_string
-	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
-	str	x2, [sp, #24]
-	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
-	stp	w0, w1, [sp, #16]
-	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
-	add	sp, sp, #80
-	ret
-	.loh AdrpAdd	Lloh12, Lloh13
-	.cfi_endproc
-                                        ; -- End function
-	.globl	_mod.add                        ; -- Begin function mod.add
-	.p2align	2
-_mod.add:                               ; @mod.add
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #16
-	.cfi_def_cfa_offset 16
-	add	w0, w0, w1
-	str	w0, [sp, #12]
-	add	sp, sp, #16
-	ret
-	.cfi_endproc
-                                        ; -- End function
-	.globl	_mod.noReturn                   ; -- Begin function mod.noReturn
-	.p2align	2
-_mod.noReturn:                          ; @mod.noReturn
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	ret
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -437,18 +333,9 @@ l_.str0.1:                              ; @.str0.1
 	.byte	48
 
 l_.str0.2:                              ; @.str0.2
-	.ascii	", "
+	.ascii	"Hello"
 
-	.section	__TEXT,__literal4,4byte_literals
-l_.str1.1:                              ; @.str1.1
-	.ascii	"John"
-
-	.section	__TEXT,__const
-l_.str2:                                ; @.str2
-	.ascii	"Smith"
-
-	.section	__TEXT,__literal4,4byte_literals
-l_.str3:                                ; @.str3
-	.ascii	" -> "
+l_.str1.3:                              ; @.str1.3
+	.ascii	"World"
 
 .subsections_via_symbols

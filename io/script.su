@@ -1,17 +1,10 @@
-func add(int a, int b) (int) {
-    return a + b
-}
+// Works
+x := "Hello"
+x = "World"
 
-func formatName(string first, string last) (string) {
-    return last + ", " + first
-}
-
-func noReturn() {
-    
-}
-
-firstName := "John"
-lastName := "Smith"
-println(formatName(firstName, lastName) + " -> " + string!(add(6, 4)))
-
-noReturn()
+// Doesn't work
+func change(string str) {
+    str = "World"
+} 
+y := "Hello"
+change(y)
