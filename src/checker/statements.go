@@ -63,6 +63,10 @@ func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
 
 func (c *checker) inferAssignment(x ast.Assignment) {
 	vari := c.top.Lookup(x.Name.Name, x.Name.Pos)
+	if vari.Status == ast.Parameter {
+		Errors.Error("Illegal modification of a parameter", x.Value.Loc())
+	}
+
 	val := c.inferExpr(x.Value)
 	if vari.Type != val {
 		Errors.Error("Expected "+vari.Type.String()+", but got "+val.String()+" instead", x.Loc())
@@ -86,18 +90,22 @@ func (c *checker) inferAssignment(x ast.Assignment) {
 }
 
 func (c *checker) inferIncDec(x ast.IncDec) {
-	vari := c.top.Lookup(x.Name.Name, x.Name.Pos).Type
+	vari := c.top.Lookup(x.Name.Name, x.Name.Pos)
+	if vari.Status == ast.Parameter {
+		Errors.Error("Illegal modification of a parameter", x.Name.Loc())
+	}
+
 	for _, id := range c.program.IncDecs {
 		if id.Op != x.Op.Type {
 			continue
 		}
 
-		if id.Var == vari {
+		if id.Var == vari.Type {
 			return
 		}
 	}
 
-	Errors.Error("No operation "+x.Op.Value+" exists for "+vari.String(), x.Op.Location)
+	Errors.Error("No operation "+x.Op.Value+" exists for "+vari.Type.String(), x.Op.Location)
 }
 
 func (c *checker) inferFunction(x ast.Function) {

@@ -1,10 +1,16 @@
-// Works
-x := "Hello"
-x = "World"
-
-// Doesn't work
 func change(string str) {
-    str = "World"
-} 
-y := "Hello"
-change(y)
+    str2 := str + "."
+    println(str2)
+}
+
+func change2(string str) {
+    str += "."
+    println(str)
+}
+
+func formatName(string first, string last) (string) {
+    return first + ", " + last
+}
+println(formatName("John", "Smith"))
+
+change("hi")
