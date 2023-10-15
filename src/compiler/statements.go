@@ -108,6 +108,7 @@ func (g *generator) genReturn(x ast.Return) {
 func (g *generator) genFunction(x ast.Function) {
 	src := g.srcFunc(x.Name.Name)
 	complex := g.complex(src.Return)
+	rettyp := g.lltyp(src.Return)
 
 	entry := src.Ir.NewBlock("entry")
 	exit := src.Ir.NewBlock("exit")
@@ -115,9 +116,14 @@ func (g *generator) genFunction(x ast.Function) {
 	exits := utils.NewStack[*ir.Block]()
 	exits.Push(exit)
 
-	rettyp := g.lltyp(src.Return)
-	alloca := entry.NewAlloca(rettyp)
-	alloca.LocalName = ".ret"
+	var ret value.Value
+	if src.Return != typing.Void {
+		alloca := entry.NewAlloca(rettyp)
+		alloca.LocalName = ".ret"
+		ret = alloca
+	} else {
+		ret = nil
+	}
 
 	for i, param := range x.Params {
 		vari := x.Body.Scope.Vars[param.Name.Name]
@@ -127,7 +133,7 @@ func (g *generator) genFunction(x ast.Function) {
 	g.ctx = &context{
 		g.ctx,
 		src.Ir,
-		alloca,
+		ret,
 		complex,
 		exits,
 		0,
@@ -144,7 +150,7 @@ func (g *generator) genFunction(x ast.Function) {
 	if src.Return == typing.Void {
 		exit.NewRet(nil)
 	} else {
-		load := exit.NewLoad(src.Ir.Sig.RetType, alloca) // TODO: Switch to rettyp
+		load := exit.NewLoad(rettyp, ret) // TODO: Switch to rettyp
 		exit.NewRet(load)
 	}
 

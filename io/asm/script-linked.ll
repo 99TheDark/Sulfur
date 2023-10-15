@@ -9,6 +9,7 @@ source_filename = "llvm-link"
 @.str0.2 = private unnamed_addr constant [2 x i8] c", ", align 1
 @.str1.1 = private unnamed_addr constant [4 x i8] c"John", align 1
 @.str2 = private unnamed_addr constant [5 x i8] c"Smith", align 1
+@.str3 = private unnamed_addr constant [4 x i8] c" -> ", align 1
 
 define %type.string @.conv.bool_string(i1 %bool) {
 entry:
@@ -320,7 +321,21 @@ entry:
   %12 = load %type.string, %type.string* %firstName, align 8
   %13 = load %type.string, %type.string* %lastName, align 8
   %14 = call %type.string @mod.formatName(%type.string %12, %type.string %13)
-  call void @.println(%type.string %14)
+  %15 = getelementptr inbounds [4 x i8], [4 x i8]* @.str3, i32 0, i32 0
+  %16 = alloca %type.string, align 8
+  %17 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 0
+  store i32 4, i32* %17, align 8
+  %18 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 1
+  store i32 4, i32* %18, align 8
+  %19 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 2
+  store i8* %15, i8** %19, align 8
+  %20 = load %type.string, %type.string* %16, align 8
+  %21 = call %type.string @.add.string_string(%type.string %14, %type.string %20)
+  %22 = call i32 @mod.add(i32 6, i32 4)
+  %23 = call %type.string @.conv.int_string(i32 %22)
+  %24 = call %type.string @.add.string_string(%type.string %21, %type.string %23)
+  call void @.println(%type.string %24)
+  call void @mod.noReturn()
   br label %exit
 
 exit:                                             ; preds = %entry
@@ -347,4 +362,24 @@ entry:
 exit:                                             ; preds = %entry
   %10 = load %type.string, %type.string* %.ret, align 8
   ret %type.string %10
+}
+
+define i32 @mod.add(i32 %0, i32 %1) {
+entry:
+  %.ret = alloca i32, align 4
+  %2 = add i32 %0, %1
+  store i32 %2, i32* %.ret, align 4
+  br label %exit
+
+exit:                                             ; preds = %entry
+  %3 = load i32, i32* %.ret, align 4
+  ret i32 %3
+}
+
+define void @mod.noReturn() {
+entry:
+  br label %exit
+
+exit:                                             ; preds = %entry
+  ret void
 }

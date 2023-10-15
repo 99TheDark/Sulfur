@@ -1,7 +1,17 @@
+func add(int a, int b) (int) {
+    return a + b
+}
+
 func formatName(string first, string last) (string) {
     return last + ", " + first
 }
 
+func noReturn() {
+    
+}
+
 firstName := "John"
 lastName := "Smith"
-println(formatName(firstName, lastName))
+println(formatName(firstName, lastName) + " -> " + string!(add(6, 4)))
+
+noReturn()
