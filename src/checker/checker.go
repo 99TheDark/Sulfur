@@ -11,7 +11,7 @@ type TypeMap map[ast.Expr]typing.Type
 type checker struct {
 	program *ast.Program
 	top     *ast.Scope
-	ret     *ast.Func
+	topfun  *ast.FuncScope
 	types   TypeMap
 }
 
@@ -31,7 +31,11 @@ func TypeCheck(program *ast.Program) TypeMap {
 	c := checker{
 		program,
 		&program.Contents.Scope,
-		nil,
+		&ast.FuncScope{
+			Parent: nil,
+			Return: typing.Void,
+			Counts: make(map[string]int),
+		},
 		make(TypeMap),
 	}
 

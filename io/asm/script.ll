@@ -27,12 +27,12 @@ for.inc0:
 	br label %for.cond0
 
 for.end0:
-	%i = alloca i32
-	store i32 0, i32* %i
+	%i.1 = alloca i32
+	store i32 0, i32* %i.1
 	br label %for.cond1
 
 for.cond1:
-	%4 = load i32, i32* %i
+	%4 = load i32, i32* %i.1
 	%5 = icmp slt i32 %4, 10
 	br i1 %5, label %for.body1, label %for.end1
 
@@ -40,12 +40,14 @@ for.body1:
 	br label %for.inc1
 
 for.inc1:
-	%6 = load i32, i32* %i
+	%6 = load i32, i32* %i.1
 	%7 = add i32 %6, 1
-	store i32 %7, i32* %i
+	store i32 %7, i32* %i.1
 	br label %for.cond1
 
 for.end1:
+	%i.2 = alloca i32
+	store i32 0, i32* %i.2
 	br label %exit
 }
 

@@ -292,11 +292,48 @@ while2.end:                                       ; preds = %while2.cond
 
 define void @main() {
 entry:
-  %0 = alloca i32, align 4
-  store i32 961, i32* %0, align 4
-  call void bitcast (void (i8)* @putchar to void (i32*)*)(i32* %0)
-  br label %exit
+  %i = alloca i32, align 4
+  store i32 0, i32* %i, align 4
+  br label %for.cond0
 
-exit:                                             ; preds = %entry
+exit:                                             ; preds = %for.end1
   ret void
+
+for.cond0:                                        ; preds = %for.inc0, %entry
+  %0 = load i32, i32* %i, align 4
+  %1 = icmp slt i32 %0, 10
+  br i1 %1, label %for.body0, label %for.end0
+
+for.body0:                                        ; preds = %for.cond0
+  br label %for.inc0
+
+for.inc0:                                         ; preds = %for.body0
+  %2 = load i32, i32* %i, align 4
+  %3 = add i32 %2, 1
+  store i32 %3, i32* %i, align 4
+  br label %for.cond0
+
+for.end0:                                         ; preds = %for.cond0
+  %i.1 = alloca i32, align 4
+  store i32 0, i32* %i.1, align 4
+  br label %for.cond1
+
+for.cond1:                                        ; preds = %for.inc1, %for.end0
+  %4 = load i32, i32* %i.1, align 4
+  %5 = icmp slt i32 %4, 10
+  br i1 %5, label %for.body1, label %for.end1
+
+for.body1:                                        ; preds = %for.cond1
+  br label %for.inc1
+
+for.inc1:                                         ; preds = %for.body1
+  %6 = load i32, i32* %i.1, align 4
+  %7 = add i32 %6, 1
+  store i32 %7, i32* %i.1, align 4
+  br label %for.cond1
+
+for.end1:                                         ; preds = %for.cond1
+  %i.2 = alloca i32, align 4
+  store i32 0, i32* %i.2, align 4
+  br label %exit
 }

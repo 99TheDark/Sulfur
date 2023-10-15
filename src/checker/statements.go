@@ -49,16 +49,24 @@ func (c *checker) inferBlock(x ast.Block, header func()) {
 }
 
 func (c *checker) inferDeclaration(x ast.Declaration) {
+	if c.top.Has(x.Name.Name) {
+		Errors.Error(x.Name.Name+" is already defined", x.Name.Loc())
+	}
+
 	val := c.inferExpr(x.Value)
 	if typing.Type(x.Type.Name) != val {
 		Errors.Error("Expected "+x.Type.Name+", but got "+val.String()+" instead", x.Loc())
 	}
-	c.top.Vars[x.Name.Name] = ast.NewVariable(c.top, x.Name.Name, val, ast.Local)
+	c.top.Vars[x.Name.Name] = ast.NewVariable(c.topfun, x.Name.Name, val, ast.Local)
 }
 
 func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
+	if c.top.Has(x.Name.Name) {
+		Errors.Error(x.Name.Name+" is already defined", x.Name.Loc())
+	}
+
 	val := c.inferExpr(x.Value)
-	c.top.Vars[x.Name.Name] = ast.NewVariable(c.top, x.Name.Name, val, ast.Local)
+	c.top.Vars[x.Name.Name] = ast.NewVariable(c.topfun, x.Name.Name, val, ast.Local)
 }
 
 func (c *checker) inferAssignment(x ast.Assignment) {
@@ -109,16 +117,17 @@ func (c *checker) inferIncDec(x ast.IncDec) {
 }
 
 func (c *checker) inferFunction(x ast.Function) {
-	c.ret = &ast.Func{
-		Parent: c.ret,
+	c.topfun = &ast.FuncScope{
+		Parent: c.topfun,
 		Return: typing.Type(x.Return.Name),
+		Counts: make(map[string]int),
 	}
 	c.inferBlock(x.Body, func() {
 		for _, param := range x.Params {
-			c.top.Vars[param.Name.Name] = ast.NewVariable(c.top, param.Name.Name, typing.Type(param.Type.Name), ast.Parameter)
+			c.top.Vars[param.Name.Name] = ast.NewVariable(c.topfun, param.Name.Name, typing.Type(param.Type.Name), ast.Parameter)
 		}
 	})
-	c.ret = c.ret.Parent
+	c.topfun = c.topfun.Parent
 }
 
 func (c *checker) inferIfStmt(x ast.IfStatement) {
@@ -163,11 +172,11 @@ func (c *checker) inferDoWhileLoop(x ast.DoWhileLoop) {
 }
 
 func (c *checker) inferReturn(x ast.Return) {
-	if c.ret == nil {
+	if c.topfun.Parent == nil {
 		Errors.Error("Cannot use a return statement outside of a function", x.Pos)
 	}
 	val := c.inferExpr(x.Value)
-	ret := c.ret.Return
+	ret := c.topfun.Return
 	if ret != val {
 		Errors.Error("Expected "+ret.String()+", but got "+val.String()+" instead", x.Loc())
 	}

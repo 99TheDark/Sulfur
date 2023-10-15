@@ -20,6 +20,7 @@ type (
 		IncDecs     []builtins.IncDecSignature     `json:"-"`
 		Classes     []Class                        `json:"-"`
 		Strings     []String
+		FuncScope   FuncScope
 		Contents    Block
 	}
 
@@ -64,11 +65,12 @@ type (
 	}
 
 	Function struct {
-		Pos    *lexer.Location `json:"-"`
-		Name   Identifier
-		Params []Param
-		Return Identifier
-		Body   Block
+		Pos       *lexer.Location `json:"-"`
+		Name      Identifier
+		Params    []Param
+		Return    Identifier
+		FuncScope FuncScope
+		Body      Block
 	}
 
 	Class struct {

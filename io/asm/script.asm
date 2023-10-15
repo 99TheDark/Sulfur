@@ -293,17 +293,47 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #32
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	mov	x29, sp
+	sub	sp, sp, #16
+	.cfi_def_cfa w29, 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	w8, #961
-	add	x0, sp, #12
-	str	w8, [sp, #12]
-	bl	_putchar
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #32
+	stur	wzr, [x29, #-4]
+	mov	w8, wzr
+	cmp	w8, #9
+	b.gt	LBB5_2
+LBB5_1:                                 ; %for.inc0
+                                        ; =>This Inner Loop Header: Depth=1
+	ldur	w8, [x29, #-4]
+	add	w8, w8, #1
+	stur	w8, [x29, #-4]
+	mov	w8, w8
+	cmp	w8, #9
+	b.le	LBB5_1
+LBB5_2:                                 ; %for.end0
+	mov	x9, sp
+	sub	x8, x9, #16
+	mov	sp, x8
+	stur	wzr, [x9, #-16]
+	ldr	w9, [x8]
+	cmp	w9, #9
+	b.gt	LBB5_4
+LBB5_3:                                 ; %for.inc1
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	w9, [x8]
+	add	w9, w9, #1
+	str	w9, [x8]
+	mov	w9, w9
+	cmp	w9, #9
+	b.le	LBB5_3
+LBB5_4:                                 ; %for.end1
+	mov	x8, sp
+	sub	x9, x8, #16
+	mov	sp, x9
+	stur	wzr, [x8, #-16]
+	mov	sp, x29
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret
 	.cfi_endproc
                                         ; -- End function

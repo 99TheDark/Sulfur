@@ -19,7 +19,7 @@ const (
 
 type Variable struct {
 	Name   string
-	Count  int
+	Id     int
 	Type   typing.Type
 	Status VariableType
 	Value  *value.Value
@@ -30,9 +30,10 @@ type Scope struct {
 	Vars   map[string]Variable
 }
 
-type Func struct {
-	Parent *Func
+type FuncScope struct {
+	Parent *FuncScope
 	Return typing.Type
+	Counts map[string]int
 }
 
 func (s *Scope) Lookup(name string, loc *lexer.Location) Variable {
@@ -45,22 +46,21 @@ func (s *Scope) Lookup(name string, loc *lexer.Location) Variable {
 	return s.Parent.Lookup(name, loc)
 }
 
-func (s *Scope) Count(name string) int {
-	if vari, ok := s.Vars[name]; ok {
-		vari.Count++
-		return vari.Count
+func (s *Scope) Has(name string) bool {
+	if _, ok := s.Vars[name]; ok {
+		return true
 	}
 	if s.Parent == nil {
-		return 0
+		return false
 	}
-	return s.Parent.Count(name)
+	return s.Parent.Has(name)
 }
 
 func (v *Variable) LLName() string {
-	if v.Count == 0 {
+	if v.Id == 0 {
 		return v.Name
 	} else {
-		return v.Name + "." + fmt.Sprint(v.Count)
+		return v.Name + "." + fmt.Sprint(v.Id)
 	}
 }
 
@@ -71,6 +71,8 @@ func NewScope() Scope {
 	}
 }
 
-func NewVariable(scope *Scope, name string, typ typing.Type, status VariableType) Variable {
-	return Variable{name, scope.Count(name), typ, status, new(value.Value)}
+func NewVariable(fscope *FuncScope, name string, typ typing.Type, status VariableType) Variable {
+	vari := Variable{name, fscope.Counts[name], typ, status, new(value.Value)}
+	fscope.Counts[name]++
+	return vari
 }
