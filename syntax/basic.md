@@ -100,20 +100,20 @@
 
         // Constructor, ~param means param is automatically initialized
         new(string ~name, int ~age) {
-            // my is this
-            my.days_old = age * 365
+            // Prefix with a dot to access from the current instance
+            .days_old = age * 365
         }
 
         // del() is a destructor
 
         // Automatically public
         talk() {
-            println("Hello, my name is $(my.name).")
+            println("Hello, my name is $(.name).")
         }
 
         // Define typeconv, now string!(Person) is possible
         to string {
-            return "$(my.name), $(my.age) years old"
+            return "$(.name), $(.age) years old"
         }
     }
 
@@ -128,20 +128,20 @@
         new(string ~name, int ~age, uint ~grade, string ~school) {}
 
         del() {
-            println("$(my.name) left $(my.school)")
+            println("$(.name) left $(.school)")
         }
 
         // Override
         talk() {
             // Any parent calls must be explicit
             super.talk()
-            println("I am a student at $(my.school), in grade $(my.grade).")
+            println("I am a student at $(.school), in grade $(.grade).")
         }
 
         pri suffixedGrade() (string) {
-            end := my.grade % 10
+            end := .grade % 10
             suffix := "th"
-            if my.grade <= 10 | my.grade > 20 {
+            if .grade <= 10 | .grade > 20 {
                 if end == 1 {
                     suffix = "st"
                 } else if end == 2 {
@@ -151,12 +151,13 @@
                 }
             }
 
-            return string!(my.grade) + suffix
+            return string!(.grade) + suffix
         }
 
         to string {
-            // my.self and super.self return an actual object that can be passed through type convertion and functions
-            return "$(my.school) student, $(string!(super.self)), grade $(my.grade)"
+            // TODO: Different syntax for super?
+            // .self and super.self return an actual object that can be passed through type convertion and functions
+            return "$(.school) student, $(string!(super.self)), grade $(.grade)"
         }
 
         // extends automatically creates to Person conversion
@@ -216,7 +217,8 @@
     // TODO: Change this syntax to prototyping / extending classes
     // Extend integers
     func printFloat() {
-        println(float!(my))
+        // Self is the object itself
+        println(float!(.self)) 
     } extends int
 
     x := 5

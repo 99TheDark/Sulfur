@@ -66,7 +66,6 @@ const (
 	Fallthrough                    // 'fallthrough'
 	Func                           // 'func'
 	Defer                          // 'defer'
-	My                             // 'my'
 	Class                          // 'class'
 	New                            // 'new'
 	Delete                         // 'del'
@@ -119,7 +118,6 @@ var Keywords = map[string]TokenType{
 	"fallthrough": Fallthrough,
 	"func":        Func,
 	"defer":       Defer,
-	"my":          My,
 	"class":       Class,
 	"new":         New,
 	"del":         Delete,
@@ -306,8 +304,6 @@ func (tt TokenType) String() string {
 		return "Func"
 	case Defer:
 		return "Defer"
-	case My:
-		return "My"
 	case Class:
 		return "Class"
 	case New:
