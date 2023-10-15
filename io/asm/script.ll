@@ -9,33 +9,44 @@ source_filename = "script.su"
 
 define void @main() {
 entry:
-	%0 = call i32 @mod.fibonacci(i32 12)
-	%1 = call %type.string @.conv.int_string(i32 %0)
-	call void @.println(%type.string %1)
-	%2 = getelementptr inbounds [4 x i8], [4 x i8]* @.str1, i32 0, i32 0
-	%3 = alloca %type.string, align 8
-	%4 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 0
-	store i32 4, i32* %4, align 8
-	%5 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 1
-	store i32 4, i32* %5, align 8
-	%6 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 2
-	store i8* %2, i8** %6, align 8
-	%7 = load %type.string, %type.string* %3, align 8
-	%8 = getelementptr inbounds [5 x i8], [5 x i8]* @.str2, i32 0, i32 0
-	%9 = alloca %type.string, align 8
-	%10 = getelementptr inbounds %type.string, %type.string* %9, i32 0, i32 0
-	store i32 5, i32* %10, align 8
-	%11 = getelementptr inbounds %type.string, %type.string* %9, i32 0, i32 1
-	store i32 5, i32* %11, align 8
-	%12 = getelementptr inbounds %type.string, %type.string* %9, i32 0, i32 2
-	store i8* %8, i8** %12, align 8
-	%13 = load %type.string, %type.string* %9, align 8
-	%14 = call %type.string @mod.formatName(%type.string %7, %type.string %13)
-	call void @.println(%type.string %14)
-	br label %exit
+	%i = alloca i32
+	store i32 0, i32* %i
+	br i1 true, label %if.then0, label %if.end0
 
 exit:
 	ret void
+
+if.then0:
+	%0 = load i32, i32* %i
+	%1 = call %type.string @.conv.int_string(i32 %0)
+	call void @.println(%type.string %1)
+	br label %if.end0
+
+if.end0:
+	%2 = call i32 @mod.fibonacci(i32 12)
+	%3 = call %type.string @.conv.int_string(i32 %2)
+	call void @.println(%type.string %3)
+	%4 = getelementptr inbounds [4 x i8], [4 x i8]* @.str1, i32 0, i32 0
+	%5 = alloca %type.string, align 8
+	%6 = getelementptr inbounds %type.string, %type.string* %5, i32 0, i32 0
+	store i32 4, i32* %6, align 8
+	%7 = getelementptr inbounds %type.string, %type.string* %5, i32 0, i32 1
+	store i32 4, i32* %7, align 8
+	%8 = getelementptr inbounds %type.string, %type.string* %5, i32 0, i32 2
+	store i8* %4, i8** %8, align 8
+	%9 = load %type.string, %type.string* %5, align 8
+	%10 = getelementptr inbounds [5 x i8], [5 x i8]* @.str2, i32 0, i32 0
+	%11 = alloca %type.string, align 8
+	%12 = getelementptr inbounds %type.string, %type.string* %11, i32 0, i32 0
+	store i32 5, i32* %12, align 8
+	%13 = getelementptr inbounds %type.string, %type.string* %11, i32 0, i32 1
+	store i32 5, i32* %13, align 8
+	%14 = getelementptr inbounds %type.string, %type.string* %11, i32 0, i32 2
+	store i8* %10, i8** %14, align 8
+	%15 = load %type.string, %type.string* %11, align 8
+	%16 = call %type.string @mod.formatName(%type.string %9, %type.string %15)
+	call void @.println(%type.string %16)
+	br label %exit
 }
 
 define %type.string @mod.formatName(%type.string %0, %type.string %1) {

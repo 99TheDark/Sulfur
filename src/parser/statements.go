@@ -108,6 +108,7 @@ func (p *parser) parseFunction() ast.Function {
 	}
 
 	body := p.parseBlock()
+	body.Scope.Seperate = true
 
 	// TODO: Check if function already exists
 	ptypes := []typing.Type{}

@@ -1,5 +1,7 @@
+import math
+
 int x = 5
-let y = x * 3 // type inference
+y := x * 3 // type inference
 
 if y > x {
     println("Hi there!")
@@ -13,3 +15,5 @@ println(add(x, y))
 
 z := "Hello, world"
 z += "!"
+
+println(math::sin(x ^ y)) // -0.97332247668

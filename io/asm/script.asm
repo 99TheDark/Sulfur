@@ -293,11 +293,15 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #48
-	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 48
+	sub	sp, sp, #64
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 64
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
+	mov	w0, wzr
+	str	wzr, [sp, #44]
+	bl	_.conv.int_string
+	bl	_.println
 	mov	w0, #12
 	bl	_mod.fibonacci
 	bl	_.conv.int_string
@@ -317,12 +321,12 @@ Lloh9:
 	mov	w1, #4
 	mov	w3, #5
 	mov	w4, #5
-	stp	x8, x2, [sp, #16]
-	stp	x9, x5, [sp]
+	stp	x8, x2, [sp, #24]
+	stp	x9, x5, [sp, #8]
 	bl	_mod.formatName
 	bl	_.println
-	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
-	add	sp, sp, #48
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	add	sp, sp, #64
 	ret
 	.loh AdrpAdd	Lloh7, Lloh9
 	.loh AdrpAdd	Lloh6, Lloh8
