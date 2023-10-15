@@ -11,3 +11,4 @@
 - Classes
 - String equals 
 - Return out of a void function
+- Only link functions when needed

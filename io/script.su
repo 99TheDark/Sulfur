@@ -10,5 +10,9 @@ func fibonacci(int x) (int) {
     }
 }
 
-println(string!(fibonacci(12)))
+func add(int a, int b) (int) {
+    return a + b
+}
+
+println(string!(fibonacci(25)))
 println(formatName("John", "Smith"))

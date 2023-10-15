@@ -293,17 +293,13 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #64
-	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 64
+	sub	sp, sp, #48
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 48
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	w0, wzr
-	str	wzr, [sp, #44]
-	bl	_.conv.int_string
-	bl	_.println
-	mov	w0, #12
-	bl	_mod.fibonacci
+	mov	w0, #25
+	bl	l_mod.fibonacci
 	bl	_.conv.int_string
 	bl	_.println
 Lloh6:
@@ -321,20 +317,19 @@ Lloh9:
 	mov	w1, #4
 	mov	w3, #5
 	mov	w4, #5
-	stp	x8, x2, [sp, #24]
-	stp	x9, x5, [sp, #8]
-	bl	_mod.formatName
+	stp	x8, x2, [sp, #16]
+	stp	x9, x5, [sp]
+	bl	l_mod.formatName
 	bl	_.println
-	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
-	add	sp, sp, #64
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #48
 	ret
 	.loh AdrpAdd	Lloh7, Lloh9
 	.loh AdrpAdd	Lloh6, Lloh8
 	.cfi_endproc
                                         ; -- End function
-	.globl	_mod.fibonacci                  ; -- Begin function mod.fibonacci
-	.p2align	2
-_mod.fibonacci:                         ; @mod.fibonacci
+	.p2align	2                               ; -- Begin function mod.fibonacci
+l_mod.fibonacci:                        ; @mod.fibonacci
 	.cfi_startproc
 ; %bb.0:                                ; %entry
 	sub	sp, sp, #48
@@ -357,10 +352,10 @@ _mod.fibonacci:                         ; @mod.fibonacci
 	ret
 LBB6_2:                                 ; %if.else0
 	sub	w0, w0, #2
-	bl	_mod.fibonacci
+	bl	l_mod.fibonacci
 	mov	w20, w0
 	mov	w0, w19
-	bl	_mod.fibonacci
+	bl	l_mod.fibonacci
 	add	w8, w20, w0
 	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
 	str	w8, [sp, #12]
@@ -370,9 +365,8 @@ LBB6_2:                                 ; %if.else0
 	ret
 	.cfi_endproc
                                         ; -- End function
-	.globl	_mod.formatName                 ; -- Begin function mod.formatName
-	.p2align	2
-_mod.formatName:                        ; @mod.formatName
+	.p2align	2                               ; -- Begin function mod.formatName
+l_mod.formatName:                       ; @mod.formatName
 	.cfi_startproc
 ; %bb.0:                                ; %entry
 	sub	sp, sp, #80

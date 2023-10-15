@@ -11,6 +11,7 @@ import (
 	. "sulfur/src/errors"
 
 	"github.com/llir/llvm/ir"
+	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/value"
 )
 
@@ -109,6 +110,8 @@ func (g *generator) genFunction(x ast.Function) {
 	src := g.srcFunc(x.Name.Name)
 	complex := g.complex(src.Return)
 	rettyp := g.lltyp(src.Return)
+
+	src.Ir.Linkage = enum.LinkagePrivate
 
 	entry := src.Ir.NewBlock("entry")
 	exit := src.Ir.NewBlock("exit")

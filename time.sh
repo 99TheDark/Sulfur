@@ -1,4 +1,5 @@
 #!/bin/bash
+go build
 ./sulfur
 sh compile.sh
-./io/asm/script
+time ./io/asm/script
