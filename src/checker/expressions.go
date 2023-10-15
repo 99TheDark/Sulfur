@@ -119,15 +119,20 @@ func (c *checker) inferTypeConv(x ast.TypeConv) typing.Type {
 func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 	for _, fun := range c.program.Functions {
 		if fun.Name == x.Func.Name {
-			l1, l2 := len(fun.Params), len(*x.Params)
+			l1, l2 := len(*x.Params), len(fun.Params)
 			if l1 != l2 {
-				var param ast.Expr
-				if l1 > l2 {
-					param = (*x.Params)[l2-1]
+				if l1 == 0 {
+					Errors.Error("No parameters given, but "+fmt.Sprint(l2)+" expected", x.Loc())
 				} else {
-					param = (*x.Params)[l1]
+					var param ast.Expr
+					if l1 < l2 {
+						param = (*x.Params)[l1-1]
+					} else {
+						fmt.Println(l1, l2)
+						param = (*x.Params)[l1-1]
+					}
+					Errors.Error(fmt.Sprint(l1)+" parameters given, but "+fmt.Sprint(l2)+" expected", param.Loc())
 				}
-				Errors.Error(fmt.Sprint(l2)+" parameters given, but "+fmt.Sprint(l1)+" expected", param.Loc())
 			}
 
 			for i, param := range *x.Params {

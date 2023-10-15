@@ -20,6 +20,8 @@ func (c *checker) inferStmt(expr ast.Expr) {
 		c.inferIncDec(x)
 	case ast.Function:
 		c.inferFunction(x)
+	case ast.FuncCall:
+		c.inferFuncCall(x)
 	case ast.IfStatement:
 		c.inferIfStmt(x)
 	case ast.ForLoop:
@@ -30,15 +32,15 @@ func (c *checker) inferStmt(expr ast.Expr) {
 		c.inferDoWhileLoop(x)
 	case ast.Return:
 		c.inferReturn(x)
-	case ast.FuncCall:
-		c.inferFuncCall(x)
+	case ast.Break, ast.Continue:
+		return
 	default:
 		fmt.Println("Ignored type inferring statement")
 	}
 }
 
 func (c *checker) inferBlock(x ast.Block, header func()) {
-	c.top = &x.Scope
+	c.top = x.Scope
 	if header != nil {
 		header()
 	}

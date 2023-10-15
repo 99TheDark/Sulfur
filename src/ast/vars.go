@@ -6,6 +6,7 @@ import (
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
 
+	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/value"
 )
 
@@ -28,6 +29,7 @@ type Variable struct {
 type Scope struct {
 	Parent   *Scope
 	Vars     map[string]Variable
+	Exit     *ir.Block // TODO: Add Entrance for continue statement
 	Seperate bool
 }
 
@@ -57,6 +59,16 @@ func (s *Scope) Has(name string) bool {
 	return s.Parent.Has(name)
 }
 
+func (s *Scope) FindExit(loc *lexer.Location) *ir.Block {
+	if s.Exit != nil {
+		return s.Exit
+	}
+	if s.Parent == nil {
+		Errors.Error("Something went wrong finding an exit to a block", loc)
+	}
+	return s.Parent.FindExit(loc)
+}
+
 func (v *Variable) LLName() string {
 	if v.Id == 0 {
 		return v.Name
@@ -65,10 +77,12 @@ func (v *Variable) LLName() string {
 	}
 }
 
+// TODO: Change to return a *Scope
 func NewScope() Scope {
 	return Scope{
 		nil,
 		make(map[string]Variable),
+		nil,
 		false,
 	}
 }

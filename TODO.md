@@ -1,7 +1,8 @@
 # TODO
 - Better escaped characters
-- Compile ll types into a single map of structs
-- Add break & continue
+- Add continue statement
+- Make break / continue only legal within loops
+- Labeled breaks / continues with #'s
 - Float to string generation
 - Work on error & enum syntax
 - Unsigned integer & byte literals
@@ -11,3 +12,5 @@
 - String equals string 
 - Return out of a void function
 - Only link functions when needed
+- Better token to string handling
+- Unsigned integer to string

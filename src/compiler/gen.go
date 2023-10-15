@@ -18,6 +18,7 @@ type generator struct {
 	ctx      *context
 	top      *ast.Scope
 	bl       *ir.Block // TODO: Move bl to context
+	breaks   map[*ir.Block]bool
 	str      types.Type
 	strs     map[string]StringGlobal
 	builtins llvm_builtins
@@ -42,7 +43,9 @@ func (g *generator) enter(bl *ir.Block) {
 
 func (g *generator) exit() {
 	exit := g.ctx.exits.Pop()
-	g.bl.NewBr(exit)
+	if !g.breaks[g.bl] {
+		g.bl.NewBr(exit)
+	}
 	g.bl = exit
 }
 
@@ -75,8 +78,9 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 			stack,
 			0,
 		},
-		&program.Contents.Scope,
+		program.Contents.Scope,
 		bl,
+		make(map[*ir.Block]bool),
 		str,
 		make(map[string]StringGlobal),
 		llvm_builtins{

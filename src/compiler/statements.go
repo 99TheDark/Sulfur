@@ -25,12 +25,10 @@ func (g *generator) genStmt(expr ast.Expr) {
 		g.genAssignment(x)
 	case ast.IncDec:
 		g.genIncDec(x)
-	case ast.FuncCall:
-		g.genFuncCall(x)
-	case ast.Return:
-		g.genReturn(x)
 	case ast.Function:
 		g.genFunction(x)
+	case ast.FuncCall:
+		g.genFuncCall(x)
 	case ast.IfStatement:
 		g.genIfStmt(x)
 	case ast.ForLoop:
@@ -39,6 +37,10 @@ func (g *generator) genStmt(expr ast.Expr) {
 		g.genWhileLoop(x)
 	case ast.DoWhileLoop:
 		g.genDoWhileLoop(x)
+	case ast.Return:
+		g.genReturn(x)
+	case ast.Break:
+		g.genBreak(x)
 	default:
 		fmt.Println("Ignored generating statement")
 	}
@@ -91,21 +93,6 @@ func (g *generator) genIncDec(x ast.IncDec) {
 	g.genBasicAssign(x.Name.Name, val, x.Loc())
 }
 
-func (g *generator) genReturn(x ast.Return) {
-	bl := g.bl
-	val := g.genExpr(x.Value)
-
-	if g.ctx.ret != nil {
-		if g.ctx.complex {
-			store := bl.NewStore(val, g.ctx.ret)
-			store.Align = 8
-		} else {
-			bl.NewStore(val, g.ctx.ret)
-		}
-	}
-	bl.NewBr(g.ctx.exits.Final())
-}
-
 func (g *generator) genFunction(x ast.Function) {
 	src := g.srcFunc(x.Name.Name)
 	complex := g.complex(src.Return)
@@ -144,7 +131,7 @@ func (g *generator) genFunction(x ast.Function) {
 
 	bl := g.bl
 	g.bl = entry
-	g.top = &x.Body.Scope
+	g.top = x.Body.Scope
 	for _, expr := range x.Body.Body {
 		g.genStmt(expr)
 	}
@@ -173,7 +160,7 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 	if ast.Empty(x.Else) {
 		endBl := top.NewBlock("if.end" + id)
 
-		g.scope(&x.Body.Scope, func() {
+		g.scope(x.Body.Scope, func() {
 			g.enter(endBl)
 			g.bl = thenBl
 			g.genBlock(x.Body)
@@ -186,14 +173,14 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 		elseBl := top.NewBlock("if.else" + id)
 		endBl := top.NewBlock("if.end" + id)
 
-		g.scope(&x.Body.Scope, func() {
+		g.scope(x.Body.Scope, func() {
 			g.enter(endBl)
 			g.bl = thenBl
 			g.genBlock(x.Body)
 			g.exit()
 		})
 
-		g.scope(&x.Else.Scope, func() {
+		g.scope(x.Else.Scope, func() {
 			g.enter(endBl)
 			g.bl = elseBl
 			g.genBlock(x.Else)
@@ -210,11 +197,13 @@ func (g *generator) genForLoop(x ast.ForLoop) {
 	top := g.ctx.fun
 	id := g.id()
 
-	g.scope(&x.Body.Scope, func() {
+	g.scope(x.Body.Scope, func() {
 		condBl := top.NewBlock("for.cond" + id)
 		bodyBl := top.NewBlock("for.body" + id)
 		incBl := top.NewBlock("for.inc" + id)
 		endBl := top.NewBlock("for.end" + id)
+
+		x.Body.Scope.Exit = endBl
 
 		g.genStmt(x.Init)
 
@@ -242,10 +231,12 @@ func (g *generator) genWhileLoop(x ast.WhileLoop) {
 	top := g.ctx.fun
 	id := g.id()
 
-	g.scope(&x.Body.Scope, func() {
+	g.scope(x.Body.Scope, func() {
 		condBl := top.NewBlock("while.cond" + id)
 		bodyBl := top.NewBlock("while.body" + id)
 		endBl := top.NewBlock("while.end" + id)
+
+		x.Body.Scope.Exit = endBl
 
 		g.bl = condBl
 		cond := g.genExpr(x.Cond)
@@ -267,10 +258,12 @@ func (g *generator) genDoWhileLoop(x ast.DoWhileLoop) {
 	top := g.ctx.fun
 	id := g.id()
 
-	g.scope(&x.Body.Scope, func() {
+	g.scope(x.Body.Scope, func() {
 		condBl := top.NewBlock("while.cond" + id)
 		bodyBl := top.NewBlock("while.body" + id)
 		endBl := top.NewBlock("while.end" + id)
+
+		x.Body.Scope.Exit = endBl
 
 		g.bl = condBl
 		cond := g.genExpr(x.Cond)
@@ -285,4 +278,27 @@ func (g *generator) genDoWhileLoop(x ast.DoWhileLoop) {
 		main.NewBr(bodyBl)
 		g.bl = endBl
 	})
+}
+
+func (g *generator) genReturn(x ast.Return) {
+	bl := g.bl
+	val := g.genExpr(x.Value)
+
+	if g.ctx.ret != nil {
+		if g.ctx.complex {
+			store := bl.NewStore(val, g.ctx.ret)
+			store.Align = 8
+		} else {
+			bl.NewStore(val, g.ctx.ret)
+		}
+	}
+	bl.NewBr(g.ctx.exits.Final())
+}
+
+func (g *generator) genBreak(x ast.Break) {
+	bl := g.bl
+	exit := g.top.FindExit(x.Loc())
+
+	g.breaks[g.bl] = true
+	bl.NewBr(exit)
 }

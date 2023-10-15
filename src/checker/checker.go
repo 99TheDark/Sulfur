@@ -30,7 +30,7 @@ func TypeCheck(program *ast.Program) TypeMap {
 
 	c := checker{
 		program,
-		&program.Contents.Scope,
+		program.Contents.Scope,
 		&ast.FuncScope{
 			Parent: nil,
 			Return: typing.Void,

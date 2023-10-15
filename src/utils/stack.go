@@ -15,6 +15,10 @@ func (s *Stack[T]) Pop() T {
 	return removed
 }
 
+func (s *Stack[T]) First() T {
+	return s.items[len(s.items)-1]
+}
+
 func (s *Stack[T]) Final() T {
 	return s.items[0]
 }

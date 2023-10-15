@@ -29,6 +29,10 @@ func (p *parser) parseStmt() ast.Expr {
 		return p.parseDoWhileLoop()
 	case lexer.Return:
 		return p.parseReturn()
+	case lexer.Break:
+		return p.parseBreak()
+	case lexer.Continue:
+		return p.parseContinue()
 	}
 
 	Errors.Error("Invalid statement", tok.Location)
@@ -61,7 +65,7 @@ func (p *parser) parseBlock() ast.Block {
 		return ast.Block{
 			Pos:   tok.Location,
 			Body:  []ast.Expr{p.parseStmt()},
-			Scope: scope,
+			Scope: &scope,
 		}
 	} else {
 		scope := ast.NewScope()
@@ -81,7 +85,7 @@ func (p *parser) parseBlock() ast.Block {
 		return ast.Block{
 			Pos:   tok.Location,
 			Body:  stmts,
-			Scope: scope,
+			Scope: &scope,
 		}
 	}
 }
@@ -177,7 +181,7 @@ func (p *parser) parseIfStmt() ast.IfStatement {
 			elseBody = ast.Block{
 				Pos:   elsePos.Location,
 				Body:  []ast.Expr{stmt},
-				Scope: scope,
+				Scope: &scope,
 			}
 		} else {
 			elseBody = p.parseBlock()
@@ -247,5 +251,19 @@ func (p *parser) parseReturn() ast.Return {
 	return ast.Return{
 		Pos:   tok.Location,
 		Value: val,
+	}
+}
+
+func (p *parser) parseBreak() ast.Break {
+	tok := p.expect(lexer.Break)
+	return ast.Break{
+		Pos: tok.Location,
+	}
+}
+
+func (p *parser) parseContinue() ast.Continue {
+	tok := p.expect(lexer.Continue)
+	return ast.Continue{
+		Pos: tok.Location,
 	}
 }

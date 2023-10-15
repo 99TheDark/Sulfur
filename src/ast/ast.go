@@ -31,7 +31,7 @@ type (
 	Block struct {
 		Pos   *lexer.Location `json:"-"`
 		Body  []Expr
-		Scope Scope // `json:"-"`
+		Scope *Scope // `json:"-"`
 	}
 
 	Identifier struct {
@@ -220,6 +220,14 @@ type (
 		Pos   *lexer.Location `json:"-"`
 		Value Expr
 	}
+
+	Break struct {
+		Pos *lexer.Location `json:"-"`
+	}
+
+	Continue struct {
+		Pos *lexer.Location `json:"-"`
+	}
 )
 
 func (x Program) Loc() *lexer.Location      { return lexer.NoLocation }
@@ -255,6 +263,8 @@ func (x ForLoop) Loc() *lexer.Location      { return x.Pos }
 func (x WhileLoop) Loc() *lexer.Location    { return x.Pos }
 func (x DoWhileLoop) Loc() *lexer.Location  { return x.Pos }
 func (x Return) Loc() *lexer.Location       { return x.Pos }
+func (x Break) Loc() *lexer.Location        { return x.Pos }
+func (x Continue) Loc() *lexer.Location     { return x.Pos }
 
 func Valid(expr Expr) bool {
 	if _, ok := expr.(*BadExpr); ok {
