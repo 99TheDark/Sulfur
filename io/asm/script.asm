@@ -293,11 +293,12 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
-	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
-	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
-	add	x29, sp, #48
+	stp	x26, x25, [sp, #-80]!           ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #16]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64
 	sub	sp, sp, #16
 	.cfi_def_cfa w29, 16
 	.cfi_offset w30, -8
@@ -308,38 +309,26 @@ _main:                                  ; @main
 	.cfi_offset w22, -48
 	.cfi_offset w23, -56
 	.cfi_offset w24, -64
-	mov	w20, #43691
-	mov	w21, #43690
-	mov	w22, #21844
+	.cfi_offset w25, -72
+	.cfi_offset w26, -80
+	mov	w20, #52429
+	mov	w21, #39321
+	mov	w22, #13106
 Lloh6:
 	adrp	x19, l_.str0.2@PAGE
-	movk	w20, #43690, lsl #16
-	movk	w21, #10922, lsl #16
-	movk	w22, #21845, lsl #16
+	movk	w20, #52428, lsl #16
+	movk	w21, #6553, lsl #16
+	movk	w22, #13107, lsl #16
 	mov	x23, #4294967297
 Lloh7:
 	add	x19, x19, l_.str0.2@PAGEOFF
-	stur	wzr, [x29, #-52]
-	b	LBB5_2
-LBB5_1:                                 ; %for.inc0
+	stur	wzr, [x29, #-68]
+	mov	w8, wzr
+	cmp	w8, #31
+	b.lt	LBB5_2
+	b	LBB5_4
+LBB5_1:                                 ; %if.end2
                                         ;   in Loop: Header=BB5_2 Depth=1
-	ldur	w8, [x29, #-52]
-	add	w8, w8, #1
-	stur	w8, [x29, #-52]
-LBB5_2:                                 ; %for.cond0
-                                        ; =>This Inner Loop Header: Depth=1
-	ldur	w8, [x29, #-52]
-	cmp	w8, #20
-	b.gt	LBB5_5
-; %bb.3:                                ; %for.body0
-                                        ;   in Loop: Header=BB5_2 Depth=1
-	ldur	w8, [x29, #-52]
-	madd	w8, w8, w20, w21
-	cmp	w8, w22
-	b.ls	LBB5_1
-; %bb.4:                                ; %if.end1
-                                        ;   in Loop: Header=BB5_2 Depth=1
-	ldur	w0, [x29, #-52]
 	bl	_.conv.int_string
 	mov	x8, sp
 	sub	x9, x8, #16
@@ -350,24 +339,99 @@ LBB5_2:                                 ; %for.cond0
 	stp	x23, x19, [x8, #-16]
 	bl	_.add.string_string
 	bl	_.print
-	b	LBB5_1
-LBB5_5:                                 ; %for.end0
-	mov	x8, sp
+	ldur	w8, [x29, #-68]
+	add	w8, w8, #1
+	stur	w8, [x29, #-68]
+	mov	w8, w8
+	cmp	w8, #31
+	b.ge	LBB5_4
+LBB5_2:                                 ; %if.end1
+                                        ; =>This Inner Loop Header: Depth=1
+	ldur	w0, [x29, #-68]
+	madd	w8, w0, w20, w21
+	cmp	w8, w22
+	b.hi	LBB5_1
+; %bb.3:                                ; %if.then2
+                                        ;   in Loop: Header=BB5_2 Depth=1
+	add	w8, w0, #1
+	stur	w8, [x29, #-68]
+	mov	w8, w8
+	cmp	w8, #31
+	b.lt	LBB5_2
+LBB5_4:                                 ; %if.then1
 Lloh8:
-	adrp	x2, l_.str1.1@PAGE
-	sub	x9, x8, #16
+	adrp	x20, l_.str1.1@PAGE
+	mov	x8, sp
 Lloh9:
-	add	x2, x2, l_.str1.1@PAGEOFF
+	add	x20, x20, l_.str1.1@PAGEOFF
+	sub	x9, x8, #16
 	mov	sp, x9
 	mov	w0, wzr
 	mov	w1, wzr
-	stp	xzr, x2, [x8, #-16]
+	mov	x2, x20
+	stp	xzr, x20, [x8, #-16]
 	bl	_.println
-	sub	sp, x29, #48
-	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
-	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
-	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
+	mov	x8, sp
+	sub	x21, x8, #16
+	mov	sp, x21
+	mov	w22, #52429
+	mov	w23, #39321
+	mov	w24, #13106
+	movk	w22, #52428, lsl #16
+	movk	w23, #6553, lsl #16
+	movk	w24, #13107, lsl #16
+	mov	x25, #4294967297
+	stur	wzr, [x8, #-16]
+	ldr	w8, [x21]
+	cmp	w8, #31
+	b.lt	LBB5_6
+	b	LBB5_8
+LBB5_5:                                 ; %if.end5
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	bl	_.conv.int_string
+	mov	x8, sp
+	sub	x9, x8, #16
+	mov	sp, x9
+	mov	w3, #1
+	mov	w4, #1
+	mov	x5, x19
+	stp	x25, x19, [x8, #-16]
+	bl	_.add.string_string
+	bl	_.print
+	ldr	w8, [x21]
+	add	w8, w8, #1
+	str	w8, [x21]
+	mov	w8, w8
+	cmp	w8, #31
+	b.ge	LBB5_8
+LBB5_6:                                 ; %if.end4
+                                        ; =>This Inner Loop Header: Depth=1
+	ldr	w0, [x21]
+	madd	w8, w0, w22, w23
+	cmp	w8, w24
+	b.hi	LBB5_5
+; %bb.7:                                ; %if.then5
+                                        ;   in Loop: Header=BB5_6 Depth=1
+	add	w8, w0, #1
+	str	w8, [x21]
+	mov	w8, w8
+	cmp	w8, #31
+	b.lt	LBB5_6
+LBB5_8:                                 ; %if.then4
+	mov	x8, sp
+	sub	x9, x8, #16
+	mov	sp, x9
+	mov	w0, wzr
+	mov	w1, wzr
+	mov	x2, x20
+	stp	xzr, x20, [x8, #-16]
+	bl	_.println
+	sub	sp, x29, #64
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
 	ret
 	.loh AdrpAdd	Lloh6, Lloh7
 	.loh AdrpAdd	Lloh8, Lloh9

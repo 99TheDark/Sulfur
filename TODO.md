@@ -13,3 +13,7 @@
 - Only link functions when needed
 - Better token to string handling
 - Unsigned integer to string
+- Automatic type inference 
+    - `println(5)` = `println(string!(5))`
+    - `6 + 3.4` = `float!(6) + 3.4`
+    - `8 + "th"` = `string!(8) + "th"`

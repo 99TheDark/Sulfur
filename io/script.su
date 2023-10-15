@@ -1,8 +1,27 @@
-for i := 0; i <= 20; i++ {
-    if i % 3 == 0 {
+i := 0
+while true {
+    if i > 30 {
+        break
+    }
+    if i % 5 == 0 {
+        i++
         continue
     }
-
     print(string!(i) + " ")
+    i++
 }
+println("")
+
+j := 0
+do {
+    if j > 30 {
+        break
+    }
+    if j % 5 == 0 {
+        j++
+        continue
+    }
+    print(string!(j) + " ")
+    j++
+} while true
 println("")
