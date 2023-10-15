@@ -31,6 +31,7 @@ type Scope struct {
 	Vars     map[string]Variable
 	Entrance *ir.Block
 	Exit     *ir.Block
+	Loop     bool
 	Seperate bool
 }
 
@@ -80,6 +81,16 @@ func (s *Scope) FindExit(loc *lexer.Location) *ir.Block {
 	return s.Parent.FindExit(loc)
 }
 
+func (s *Scope) InLoop() bool {
+	if s.Loop {
+		return true
+	}
+	if s.Parent == nil || s.Seperate {
+		return false
+	}
+	return s.Parent.InLoop()
+}
+
 func (v *Variable) LLName() string {
 	if v.Id == 0 {
 		return v.Name
@@ -89,12 +100,13 @@ func (v *Variable) LLName() string {
 }
 
 // TODO: Change to return a *Scope
-func NewScope() Scope {
-	return Scope{
+func NewScope() *Scope {
+	return &Scope{
 		nil,
 		make(map[string]Variable),
 		nil,
 		nil,
+		false,
 		false,
 	}
 }

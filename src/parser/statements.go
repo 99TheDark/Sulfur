@@ -65,12 +65,12 @@ func (p *parser) parseBlock() ast.Block {
 		return ast.Block{
 			Pos:   tok.Location,
 			Body:  []ast.Expr{p.parseStmt()},
-			Scope: &scope,
+			Scope: scope,
 		}
 	} else {
 		scope := ast.NewScope()
 		scope.Parent = p.top
-		p.top = &scope
+		p.top = scope
 
 		stmts := []ast.Expr{}
 		p.parseStmts(
@@ -85,7 +85,7 @@ func (p *parser) parseBlock() ast.Block {
 		return ast.Block{
 			Pos:   tok.Location,
 			Body:  stmts,
-			Scope: &scope,
+			Scope: scope,
 		}
 	}
 }
@@ -174,14 +174,14 @@ func (p *parser) parseIfStmt() ast.IfStatement {
 		if p.tt() == lexer.If {
 			scope := ast.NewScope()
 			scope.Parent = p.top
-			p.top = &scope
+			p.top = scope
 			stmt := p.parseIfStmt()
 			p.top = scope.Parent
 
 			elseBody = ast.Block{
 				Pos:   elsePos.Location,
 				Body:  []ast.Expr{stmt},
-				Scope: &scope,
+				Scope: scope,
 			}
 		} else {
 			elseBody = p.parseBlock()

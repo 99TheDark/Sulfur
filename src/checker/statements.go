@@ -32,8 +32,10 @@ func (c *checker) inferStmt(expr ast.Expr) {
 		c.inferDoWhileLoop(x)
 	case ast.Return:
 		c.inferReturn(x)
-	case ast.Break, ast.Continue:
-		return
+	case ast.Break:
+		c.inferBreak(x)
+	case ast.Continue:
+		c.inferContinue(x)
 	default:
 		fmt.Println("Ignored type inferring statement")
 	}
@@ -145,6 +147,8 @@ func (c *checker) inferIfStmt(x ast.IfStatement) {
 }
 
 func (c *checker) inferForLoop(x ast.ForLoop) {
+	x.Body.Scope.Loop = true
+
 	c.inferBlock(x.Body, func() {
 		c.inferStmt(x.Init)
 		cond := c.inferExpr(x.Cond)
@@ -156,6 +160,8 @@ func (c *checker) inferForLoop(x ast.ForLoop) {
 }
 
 func (c *checker) inferWhileLoop(x ast.WhileLoop) {
+	x.Body.Scope.Loop = true
+
 	cond := c.inferExpr(x.Cond)
 	if cond != typing.Boolean {
 		Errors.Error("Expected "+typing.Boolean+", but got "+cond.String()+" instead", x.Cond.Loc())
@@ -165,6 +171,8 @@ func (c *checker) inferWhileLoop(x ast.WhileLoop) {
 }
 
 func (c *checker) inferDoWhileLoop(x ast.DoWhileLoop) {
+	x.Body.Scope.Loop = true
+
 	cond := c.inferExpr(x.Cond)
 	if cond != typing.Boolean {
 		Errors.Error("Expected "+typing.Boolean+", but got "+cond.String()+" instead", x.Cond.Loc())
@@ -181,5 +189,17 @@ func (c *checker) inferReturn(x ast.Return) {
 	ret := c.topfun.Return
 	if ret != val {
 		Errors.Error("Expected "+ret.String()+", but got "+val.String()+" instead", x.Loc())
+	}
+}
+
+func (c *checker) inferBreak(x ast.Break) {
+	if !c.top.InLoop() {
+		Errors.Error("Can only use a break statement inside a loop", x.Loc())
+	}
+}
+
+func (c *checker) inferContinue(x ast.Continue) {
+	if !c.top.InLoop() {
+		Errors.Error("Can only use a continue statement inside a loop", x.Loc())
 	}
 }

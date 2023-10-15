@@ -91,7 +91,7 @@ func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 		*tokens,
 		&prog,
 		len(*tokens),
-		&scope,
+		scope,
 		0,
 	}
 
@@ -107,7 +107,7 @@ func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 	prog.Contents = ast.Block{
 		Pos:   lexer.NoLocation,
 		Body:  body,
-		Scope: &scope,
+		Scope: scope,
 	}
 
 	return &prog
