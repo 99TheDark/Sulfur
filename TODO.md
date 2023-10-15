@@ -1,6 +1,5 @@
 # TODO
 - Better escaped characters
-- Allow function calls to be a single statement
 - Compile ll types into a single map of structs
 - Add break & continue
 - Float to string generation

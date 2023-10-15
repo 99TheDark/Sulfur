@@ -14,5 +14,9 @@ func add(int a, int b) (int) {
     return a + b
 }
 
+func doSomething() {
+    println("I did something!")
+}
+
 println(string!(fibonacci(25)))
 println(formatName("John", "Smith"))
