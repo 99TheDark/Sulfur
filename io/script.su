@@ -1,9 +1,7 @@
-x := 0
-if true {
-    x := 3
-    if false {
-        x := 0
-    }
-    x = 6
+for i := 0; i < 10; i++ {
+
 }
-x++
+
+for i := 0; i < 10; i++ {
+
+}

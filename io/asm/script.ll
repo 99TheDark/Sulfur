@@ -5,32 +5,48 @@ source_filename = "script.su"
 
 define void @main() {
 entry:
-	%x = alloca i32
-	store i32 0, i32* %x
-	br i1 true, label %if.then0, label %if.end0
+	%i = alloca i32
+	store i32 0, i32* %i
+	br label %for.cond0
 
 exit:
 	ret void
 
-if.then0:
-	%x.1 = alloca i32
-	store i32 3, i32* %x.1
-	br i1 false, label %if.then1, label %if.end1
+for.cond0:
+	%0 = load i32, i32* %i
+	%1 = icmp slt i32 %0, 10
+	br i1 %1, label %for.body0, label %for.end0
 
-if.end0:
-	%0 = load i32, i32* %x
-	%1 = add i32 %0, 1
-	store i32 %1, i32* %x
+for.body0:
+	br label %for.inc0
+
+for.inc0:
+	%2 = load i32, i32* %i
+	%3 = add i32 %2, 1
+	store i32 %3, i32* %i
+	br label %for.cond0
+
+for.end0:
+	%i = alloca i32
+	store i32 0, i32* %i
+	br label %for.cond1
+
+for.cond1:
+	%4 = load i32, i32* %i
+	%5 = icmp slt i32 %4, 10
+	br i1 %5, label %for.body1, label %for.end1
+
+for.body1:
+	br label %for.inc1
+
+for.inc1:
+	%6 = load i32, i32* %i
+	%7 = add i32 %6, 1
+	store i32 %7, i32* %i
+	br label %for.cond1
+
+for.end1:
 	br label %exit
-
-if.then1:
-	%x.2 = alloca i32
-	store i32 0, i32* %x.2
-	br label %if.end1
-
-if.end1:
-	store i32 6, i32* %x.1
-	br label %if.end0
 }
 
 declare void @.print(%type.string %0)
