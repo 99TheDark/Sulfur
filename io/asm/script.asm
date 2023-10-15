@@ -293,32 +293,53 @@ LBB4_3:                                 ; %while2.cond
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	add	x29, sp, #16
+	stp	x24, x23, [sp, #-64]!           ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	add	x29, sp, #48
 	sub	sp, sp, #16
 	.cfi_def_cfa w29, 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
 	.cfi_offset w19, -24
 	.cfi_offset w20, -32
+	.cfi_offset w21, -40
+	.cfi_offset w22, -48
+	.cfi_offset w23, -56
+	.cfi_offset w24, -64
+	mov	w20, #43691
+	mov	w21, #43690
+	mov	w22, #21844
 Lloh6:
-	adrp	x19, l_.str1.3@PAGE
-	mov	x20, #4294967297
+	adrp	x19, l_.str0.2@PAGE
+	movk	w20, #43690, lsl #16
+	movk	w21, #10922, lsl #16
+	movk	w22, #21845, lsl #16
+	mov	x23, #4294967297
 Lloh7:
-	add	x19, x19, l_.str1.3@PAGEOFF
-	stur	wzr, [x29, #-20]
-	mov	w8, wzr
-	cmp	w8, #20
-	b.gt	LBB5_4
-LBB5_1:                                 ; %for.body1
+	add	x19, x19, l_.str0.2@PAGEOFF
+	stur	wzr, [x29, #-52]
+	b	LBB5_2
+LBB5_1:                                 ; %for.inc0
+                                        ;   in Loop: Header=BB5_2 Depth=1
+	ldur	w8, [x29, #-52]
+	add	w8, w8, #1
+	stur	w8, [x29, #-52]
+LBB5_2:                                 ; %for.cond0
                                         ; =>This Inner Loop Header: Depth=1
-	ldur	w8, [x29, #-20]
-	cmp	w8, #10
-	b.gt	LBB5_3
-; %bb.2:                                ; %if.end2
-                                        ;   in Loop: Header=BB5_1 Depth=1
-	ldur	w0, [x29, #-20]
+	ldur	w8, [x29, #-52]
+	cmp	w8, #20
+	b.gt	LBB5_5
+; %bb.3:                                ; %for.body0
+                                        ;   in Loop: Header=BB5_2 Depth=1
+	ldur	w8, [x29, #-52]
+	madd	w8, w8, w20, w21
+	cmp	w8, w22
+	b.ls	LBB5_1
+; %bb.4:                                ; %if.end1
+                                        ;   in Loop: Header=BB5_2 Depth=1
+	ldur	w0, [x29, #-52]
 	bl	_.conv.int_string
 	mov	x8, sp
 	sub	x9, x8, #16
@@ -326,55 +347,30 @@ LBB5_1:                                 ; %for.body1
 	mov	w3, #1
 	mov	w4, #1
 	mov	x5, x19
-	stp	x20, x19, [x8, #-16]
+	stp	x23, x19, [x8, #-16]
 	bl	_.add.string_string
 	bl	_.print
-	ldur	w8, [x29, #-20]
-	add	w8, w8, #1
-	stur	w8, [x29, #-20]
-	mov	w8, w8
-	cmp	w8, #20
-	b.le	LBB5_1
-	b	LBB5_4
-LBB5_3:                                 ; %if.then2
+	b	LBB5_1
+LBB5_5:                                 ; %for.end0
 	mov	x8, sp
 Lloh8:
-	adrp	x19, l_.str0.2@PAGE
+	adrp	x2, l_.str1.1@PAGE
 	sub	x9, x8, #16
 Lloh9:
-	add	x19, x19, l_.str0.2@PAGEOFF
-	mov	sp, x9
-	mov	x9, #51539607564
-	ldur	w0, [x29, #-20]
-	stp	x9, x19, [x8, #-16]
-	bl	_.conv.int_string
-	mov	w3, w0
-	mov	w4, w1
-	mov	x5, x2
-	mov	w0, #12
-	mov	w1, #12
-	mov	x2, x19
-	bl	_.add.string_string
-	bl	_.print
-LBB5_4:                                 ; %for.end1
-	mov	x8, sp
-Lloh10:
-	adrp	x2, l_.str2@PAGE
-	sub	x9, x8, #16
-Lloh11:
-	add	x2, x2, l_.str2@PAGEOFF
+	add	x2, x2, l_.str1.1@PAGEOFF
 	mov	sp, x9
 	mov	w0, wzr
 	mov	w1, wzr
 	stp	xzr, x2, [x8, #-16]
 	bl	_.println
-	sub	sp, x29, #16
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	sub	sp, x29, #48
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp], #64             ; 16-byte Folded Reload
 	ret
 	.loh AdrpAdd	Lloh6, Lloh7
 	.loh AdrpAdd	Lloh8, Lloh9
-	.loh AdrpAdd	Lloh10, Lloh11
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -389,12 +385,9 @@ l_.str0.1:                              ; @.str0.1
 	.byte	48
 
 l_.str0.2:                              ; @.str0.2
-	.ascii	"\nExiting at "
-
-l_.str1.3:                              ; @.str1.3
 	.byte	32
 
-l_.str2:                                ; @.str2
+l_.str1.1:                              ; @.str1.1
 	.byte	0
 
 .subsections_via_symbols

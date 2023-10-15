@@ -29,7 +29,8 @@ type Variable struct {
 type Scope struct {
 	Parent   *Scope
 	Vars     map[string]Variable
-	Exit     *ir.Block // TODO: Add Entrance for continue statement
+	Entrance *ir.Block
+	Exit     *ir.Block
 	Seperate bool
 }
 
@@ -59,6 +60,16 @@ func (s *Scope) Has(name string) bool {
 	return s.Parent.Has(name)
 }
 
+func (s *Scope) FindEntrance(loc *lexer.Location) *ir.Block {
+	if s.Entrance != nil {
+		return s.Entrance
+	}
+	if s.Parent == nil {
+		Errors.Error("Something went wrong finding an entrance to a block", loc)
+	}
+	return s.Parent.FindEntrance(loc)
+}
+
 func (s *Scope) FindExit(loc *lexer.Location) *ir.Block {
 	if s.Exit != nil {
 		return s.Exit
@@ -82,6 +93,7 @@ func NewScope() Scope {
 	return Scope{
 		nil,
 		make(map[string]Variable),
+		nil,
 		nil,
 		false,
 	}

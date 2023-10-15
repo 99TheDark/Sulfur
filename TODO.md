@@ -1,6 +1,5 @@
 # TODO
 - Better escaped characters
-- Add continue statement
 - Make break / continue only legal within loops
 - Labeled breaks / continues with #'s
 - Float to string generation

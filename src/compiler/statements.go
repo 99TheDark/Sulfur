@@ -41,6 +41,8 @@ func (g *generator) genStmt(expr ast.Expr) {
 		g.genReturn(x)
 	case ast.Break:
 		g.genBreak(x)
+	case ast.Continue:
+		g.genContinue(x)
 	default:
 		fmt.Println("Ignored generating statement")
 	}
@@ -203,6 +205,7 @@ func (g *generator) genForLoop(x ast.ForLoop) {
 		incBl := top.NewBlock("for.inc" + id)
 		endBl := top.NewBlock("for.end" + id)
 
+		x.Body.Scope.Entrance = incBl
 		x.Body.Scope.Exit = endBl
 
 		g.genStmt(x.Init)
@@ -236,6 +239,7 @@ func (g *generator) genWhileLoop(x ast.WhileLoop) {
 		bodyBl := top.NewBlock("while.body" + id)
 		endBl := top.NewBlock("while.end" + id)
 
+		x.Body.Scope.Entrance = condBl
 		x.Body.Scope.Exit = endBl
 
 		g.bl = condBl
@@ -263,6 +267,7 @@ func (g *generator) genDoWhileLoop(x ast.DoWhileLoop) {
 		bodyBl := top.NewBlock("while.body" + id)
 		endBl := top.NewBlock("while.end" + id)
 
+		x.Body.Scope.Entrance = condBl
 		x.Body.Scope.Exit = endBl
 
 		g.bl = condBl
@@ -301,4 +306,12 @@ func (g *generator) genBreak(x ast.Break) {
 
 	g.breaks[g.bl] = true
 	bl.NewBr(exit)
+}
+
+func (g *generator) genContinue(x ast.Continue) {
+	bl := g.bl
+	entrance := g.top.FindEntrance(x.Loc())
+
+	g.breaks[g.bl] = true
+	bl.NewBr(entrance)
 }

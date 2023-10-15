@@ -6,9 +6,8 @@ source_filename = "llvm-link"
 @.str0 = private unnamed_addr constant [4 x i8] c"true", align 1
 @.str1 = private unnamed_addr constant [5 x i8] c"false", align 1
 @.str0.1 = private unnamed_addr constant [1 x i8] c"0", align 1
-@.str0.2 = private unnamed_addr constant [12 x i8] c"\0AExiting at ", align 1
-@.str1.3 = private unnamed_addr constant [1 x i8] c" ", align 1
-@.str2 = private unnamed_addr constant [0 x i8] zeroinitializer, align 1
+@.str0.2 = private unnamed_addr constant [1 x i8] c" ", align 1
+@.str1.1 = private unnamed_addr constant [0 x i8] zeroinitializer, align 1
 
 define %type.string @.conv.bool_string(i1 %bool) {
 entry:
@@ -295,77 +294,59 @@ while2.end:                                       ; preds = %while2.cond
 
 define void @main() {
 entry:
-  br i1 true, label %if.then0, label %if.end0
-
-exit:                                             ; preds = %if.end0
-  ret void
-
-if.then0:                                         ; preds = %entry
   %i = alloca i32, align 4
   store i32 0, i32* %i, align 4
-  br label %for.cond1
+  br label %for.cond0
 
-if.end0:                                          ; preds = %for.end1, %entry
-  br label %exit
+exit:                                             ; preds = %for.end0
+  ret void
 
-for.cond1:                                        ; preds = %for.inc1, %if.then0
+for.cond0:                                        ; preds = %for.inc0, %entry
   %0 = load i32, i32* %i, align 4
   %1 = icmp sle i32 %0, 20
-  br i1 %1, label %for.body1, label %for.end1
+  br i1 %1, label %for.body0, label %for.end0
 
-for.body1:                                        ; preds = %for.cond1
+for.body0:                                        ; preds = %for.cond0
   %2 = load i32, i32* %i, align 4
-  %3 = icmp sgt i32 %2, 10
-  br i1 %3, label %if.then2, label %if.end2
+  %3 = srem i32 %2, 3
+  %4 = icmp eq i32 %3, 0
+  br i1 %4, label %if.then1, label %if.end1
 
-for.inc1:                                         ; preds = %if.end2
-  %4 = load i32, i32* %i, align 4
-  %5 = add i32 %4, 1
-  store i32 %5, i32* %i, align 4
-  br label %for.cond1
+for.inc0:                                         ; preds = %if.end1, %if.then1
+  %5 = load i32, i32* %i, align 4
+  %6 = add i32 %5, 1
+  store i32 %6, i32* %i, align 4
+  br label %for.cond0
 
-for.end1:                                         ; preds = %if.then2, %for.cond1
-  %6 = getelementptr inbounds [0 x i8], [0 x i8]* @.str2, i32 0, i32 0
-  %7 = alloca %type.string, align 8
-  %8 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 0
-  store i32 0, i32* %8, align 8
-  %9 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 1
+for.end0:                                         ; preds = %for.cond0
+  %7 = getelementptr inbounds [0 x i8], [0 x i8]* @.str1.1, i32 0, i32 0
+  %8 = alloca %type.string, align 8
+  %9 = getelementptr inbounds %type.string, %type.string* %8, i32 0, i32 0
   store i32 0, i32* %9, align 8
-  %10 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 2
-  store i8* %6, i8** %10, align 8
-  %11 = load %type.string, %type.string* %7, align 8
-  call void @.println(%type.string %11)
-  br label %if.end0
+  %10 = getelementptr inbounds %type.string, %type.string* %8, i32 0, i32 1
+  store i32 0, i32* %10, align 8
+  %11 = getelementptr inbounds %type.string, %type.string* %8, i32 0, i32 2
+  store i8* %7, i8** %11, align 8
+  %12 = load %type.string, %type.string* %8, align 8
+  call void @.println(%type.string %12)
+  br label %exit
 
-if.then2:                                         ; preds = %for.body1
-  %12 = getelementptr inbounds [12 x i8], [12 x i8]* @.str0.2, i32 0, i32 0
-  %13 = alloca %type.string, align 8
-  %14 = getelementptr inbounds %type.string, %type.string* %13, i32 0, i32 0
-  store i32 12, i32* %14, align 8
-  %15 = getelementptr inbounds %type.string, %type.string* %13, i32 0, i32 1
-  store i32 12, i32* %15, align 8
-  %16 = getelementptr inbounds %type.string, %type.string* %13, i32 0, i32 2
-  store i8* %12, i8** %16, align 8
-  %17 = load %type.string, %type.string* %13, align 8
-  %18 = load i32, i32* %i, align 4
-  %19 = call %type.string @.conv.int_string(i32 %18)
-  %20 = call %type.string @.add.string_string(%type.string %17, %type.string %19)
-  call void @.print(%type.string %20)
-  br label %for.end1
+if.then1:                                         ; preds = %for.body0
+  br label %for.inc0
 
-if.end2:                                          ; preds = %for.body1
-  %21 = load i32, i32* %i, align 4
-  %22 = call %type.string @.conv.int_string(i32 %21)
-  %23 = getelementptr inbounds [1 x i8], [1 x i8]* @.str1.3, i32 0, i32 0
-  %24 = alloca %type.string, align 8
-  %25 = getelementptr inbounds %type.string, %type.string* %24, i32 0, i32 0
-  store i32 1, i32* %25, align 8
-  %26 = getelementptr inbounds %type.string, %type.string* %24, i32 0, i32 1
-  store i32 1, i32* %26, align 8
-  %27 = getelementptr inbounds %type.string, %type.string* %24, i32 0, i32 2
-  store i8* %23, i8** %27, align 8
-  %28 = load %type.string, %type.string* %24, align 8
-  %29 = call %type.string @.add.string_string(%type.string %22, %type.string %28)
-  call void @.print(%type.string %29)
-  br label %for.inc1
+if.end1:                                          ; preds = %for.body0
+  %13 = load i32, i32* %i, align 4
+  %14 = call %type.string @.conv.int_string(i32 %13)
+  %15 = getelementptr inbounds [1 x i8], [1 x i8]* @.str0.2, i32 0, i32 0
+  %16 = alloca %type.string, align 8
+  %17 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 0
+  store i32 1, i32* %17, align 8
+  %18 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 1
+  store i32 1, i32* %18, align 8
+  %19 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 2
+  store i8* %15, i8** %19, align 8
+  %20 = load %type.string, %type.string* %16, align 8
+  %21 = call %type.string @.add.string_string(%type.string %14, %type.string %20)
+  call void @.print(%type.string %21)
+  br label %for.inc0
 }
