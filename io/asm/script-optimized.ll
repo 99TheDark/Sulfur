@@ -1,4 +1,4 @@
-; ModuleID = 'script-linked.bc'
+; ModuleID = 'script-optimized.bc'
 source_filename = "llvm-link"
 
 %type.string = type { i32, i32, i8* }
