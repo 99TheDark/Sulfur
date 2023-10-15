@@ -1,16 +1,9 @@
-func change(string str) {
-    str2 := str + "."
-    println(str2)
+x := 0
+if true {
+    x := 3
+    if false {
+        x := 0
+    }
+    x = 6
 }
-
-func change2(string str) {
-    str += "."
-    println(str)
-}
-
-func formatName(string first, string last) (string) {
-    return first + ", " + last
-}
-println(formatName("John", "Smith"))
-
-change("hi")
+x++

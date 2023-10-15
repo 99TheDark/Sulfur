@@ -12,12 +12,13 @@ import (
 func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, loc *lexer.Location) {
 	bl := g.bl
 
+	vari := g.top.Lookup(name, loc)
+
 	alloca := bl.NewAlloca(typ)
-	alloca.LocalName = name
+	alloca.LocalName = vari.LLName()
 
 	bl.NewStore(val, alloca)
 
-	vari := g.top.Lookup(name, loc)
 	*vari.Value = alloca
 }
 

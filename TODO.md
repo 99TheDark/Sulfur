@@ -1,5 +1,4 @@
 # TODO
-- Multiple instances of same-name variable (scoped varibles) & other duplicate naming
 - Add break & continue
 - Better escaped characters
 - Allow function calls to be a single statement

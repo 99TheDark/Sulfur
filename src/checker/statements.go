@@ -53,12 +53,12 @@ func (c *checker) inferDeclaration(x ast.Declaration) {
 	if typing.Type(x.Type.Name) != val {
 		Errors.Error("Expected "+x.Type.Name+", but got "+val.String()+" instead", x.Loc())
 	}
-	c.top.Vars[x.Name.Name] = ast.NewVariable(val, ast.Local)
+	c.top.Vars[x.Name.Name] = ast.NewVariable(c.top, x.Name.Name, val, ast.Local)
 }
 
 func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
 	val := c.inferExpr(x.Value)
-	c.top.Vars[x.Name.Name] = ast.NewVariable(val, ast.Local)
+	c.top.Vars[x.Name.Name] = ast.NewVariable(c.top, x.Name.Name, val, ast.Local)
 }
 
 func (c *checker) inferAssignment(x ast.Assignment) {
@@ -115,7 +115,7 @@ func (c *checker) inferFunction(x ast.Function) {
 	}
 	c.inferBlock(x.Body, func() {
 		for _, param := range x.Params {
-			c.top.Vars[param.Name.Name] = ast.NewVariable(typing.Type(param.Type.Name), ast.Parameter)
+			c.top.Vars[param.Name.Name] = ast.NewVariable(c.top, param.Name.Name, typing.Type(param.Type.Name), ast.Parameter)
 		}
 	})
 	c.ret = c.ret.Parent

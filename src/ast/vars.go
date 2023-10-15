@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"fmt"
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
@@ -17,7 +18,8 @@ const (
 )
 
 type Variable struct {
-	// TODO: ids in each block, example variable name: func_add.if_130956.name
+	Name   string
+	Count  int
 	Type   typing.Type
 	Status VariableType
 	Value  *value.Value
@@ -34,13 +36,32 @@ type Func struct {
 }
 
 func (s *Scope) Lookup(name string, loc *lexer.Location) Variable {
-	if val, ok := s.Vars[name]; ok {
-		return val
+	if vari, ok := s.Vars[name]; ok {
+		return vari
 	}
 	if s.Parent == nil {
 		Errors.Error("'"+name+"' is not defined", loc)
 	}
 	return s.Parent.Lookup(name, loc)
+}
+
+func (s *Scope) Count(name string) int {
+	if vari, ok := s.Vars[name]; ok {
+		vari.Count++
+		return vari.Count
+	}
+	if s.Parent == nil {
+		return 0
+	}
+	return s.Parent.Count(name)
+}
+
+func (v *Variable) LLName() string {
+	if v.Count == 0 {
+		return v.Name
+	} else {
+		return v.Name + "." + fmt.Sprint(v.Count)
+	}
 }
 
 func NewScope() Scope {
@@ -50,6 +71,6 @@ func NewScope() Scope {
 	}
 }
 
-func NewVariable(typ typing.Type, status VariableType) Variable {
-	return Variable{typ, status, new(value.Value)}
+func NewVariable(scope *Scope, name string, typ typing.Type, status VariableType) Variable {
+	return Variable{name, scope.Count(name), typ, status, new(value.Value)}
 }
