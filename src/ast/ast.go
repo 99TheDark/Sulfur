@@ -124,6 +124,12 @@ type (
 		Body   Block
 	}
 
+	Access struct {
+		Parent Expr
+		Access lexer.Token
+		Child  Identifier
+	}
+
 	BinaryOp struct {
 		Left  Expr
 		Right Expr
@@ -233,6 +239,7 @@ func (x Method) Loc() *lexer.Location       { return x.Pos }
 func (x Field) Loc() *lexer.Location        { return x.Pos }
 func (x To) Loc() *lexer.Location           { return x.Pos }
 func (x Operation) Loc() *lexer.Location    { return x.Pos }
+func (x Access) Loc() *lexer.Location       { return x.Parent.Loc() }
 func (x BinaryOp) Loc() *lexer.Location     { return x.Left.Loc() }
 func (x UnaryOp) Loc() *lexer.Location      { return x.Value.Loc() }
 func (x Pipe) Loc() *lexer.Location         { return x.Left.Func.Pos }

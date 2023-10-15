@@ -56,6 +56,7 @@ const (
 	LessThanOrEqualTo              // '<='
 	Delimiter                      // ','
 	Access                         // '.'
+	SafeAccess                     // '?.'
 	Index                          // '[]'
 	Module                         // 'mod'
 	Return                         // 'return'
@@ -180,6 +181,7 @@ var Symbols = map[string]TokenType{
 	"<=":  LessThanOrEqualTo,
 	",":   Delimiter,
 	".":   Access,
+	"?.":  SafeAccess,
 	"[]":  Index,
 	"|>":  Pipe,
 	"?":   QuestionMark,
@@ -286,6 +288,8 @@ func (tt TokenType) String() string {
 		return "Delimiter"
 	case Access:
 		return "Access"
+	case SafeAccess:
+		return "SafeAccess"
 	case Module:
 		return "Module"
 	case Return:

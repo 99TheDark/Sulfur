@@ -107,6 +107,26 @@ func (p *parser) parseTypeConv() ast.Expr {
 			Value: val,
 		}
 	}
+	return p.parseAccess()
+}
+
+func (p *parser) parseAccess() ast.Expr {
+	if p.tt() == lexer.Identifier && p.peek(1).Type == lexer.Access {
+		expr := ast.Access{
+			Parent: p.parseIdentifier(),
+			Access: p.eat(),
+			Child:  p.parseIdentifier(),
+		}
+
+		for p.tt() == lexer.Access {
+			expr = ast.Access{
+				Parent: expr,
+				Access: p.eat(),
+				Child:  p.parseIdentifier(),
+			}
+		}
+		return expr
+	}
 	return p.parsePrimary()
 }
 
