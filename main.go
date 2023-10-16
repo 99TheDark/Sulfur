@@ -20,6 +20,9 @@ func main() {
 			log.Fatalln(err)
 		}
 
+		errors.Errors = errors.NewErrorGenerator(code)
+
+		errors.Step = errors.Lexing
 		unfiltered := lexer.Lex(code)
 		if err := lexer.Save(unfiltered, "io/unfiltered.txt"); err != nil {
 			log.Fatalln(err)
@@ -29,8 +32,6 @@ func main() {
 		if err := lexer.Save(tokens, "io/tokens.txt"); err != nil {
 			log.Fatalln(err)
 		}
-
-		errors.Errors = errors.NewErrorGenerator(code)
 
 		errors.Step = errors.Parsing
 		ast := parser.Parse(code, tokens)
@@ -54,10 +55,11 @@ func main() {
 			log.Fatalln(err)
 		}
 
+		errors.Errors = errors.NewErrorGenerator(code)
+
+		errors.Step = errors.Lexing
 		unfiltered := lexer.Lex(code)
 		tokens := lexer.Filter(unfiltered)
-
-		errors.Errors = errors.NewErrorGenerator(code)
 
 		errors.Step = errors.Parsing
 		ast := parser.Parse(code, tokens)

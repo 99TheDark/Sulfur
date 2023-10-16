@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	. "sulfur/src/errors"
+	"sulfur/src/typing"
 	"sulfur/src/utils"
 	"unicode"
 )
@@ -11,10 +13,10 @@ import (
 type lexer struct {
 	source []rune
 	tokens []Token
-	iden   Location
-	begin  Location
+	iden   typing.Location
+	begin  typing.Location
 	mode   TokenType
-	loc    Location
+	loc    typing.Location
 }
 
 func (l *lexer) at() rune {
@@ -42,7 +44,7 @@ func (l *lexer) move(str string) {
 	}
 }
 
-func (l *lexer) get(loc Location, count int) string {
+func (l *lexer) get(loc typing.Location, count int) string {
 	return string(l.source[loc.Idx : loc.Idx+count])
 }
 
@@ -50,7 +52,7 @@ func (l *lexer) next(count int) string {
 	return l.get(l.loc, count)
 }
 
-func (l *lexer) addAt(tt TokenType, value string, loc Location) {
+func (l *lexer) addAt(tt TokenType, value string, loc typing.Location) {
 	token := NewToken(
 		tt,
 		value,
@@ -150,10 +152,10 @@ func Lex(source string) *[]Token {
 	l := lexer{
 		[]rune(source),
 		[]Token{},
-		*NoLocation,
-		*NoLocation,
+		*typing.NoLocation,
+		*typing.NoLocation,
 		None,
-		*NoLocation,
+		*typing.NoLocation,
 	}
 
 	for l.loc.Idx != len(l.source) {
@@ -219,6 +221,10 @@ func Lex(source string) *[]Token {
 	}
 	if l.mode == None {
 		l.identifier()
+	} else if l.mode == String {
+		Errors.Error("Missing \" at the end of string", &l.loc)
+	} else if l.mode == MultiLineComment {
+		Errors.Error("Missing */ at the end of multiline comment", &l.loc)
 	} else {
 		remaining := l.get(l.begin, l.loc.Idx-l.begin.Idx)
 		l.addAt(l.mode, remaining, l.begin)

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"sulfur/src/typing"
 )
 
 type TokenType int
@@ -11,7 +12,7 @@ type TokenType int
 type Token struct {
 	Type     TokenType
 	Value    string
-	Location *Location `json:"-"`
+	Location *typing.Location `json:"-"`
 }
 
 const (
@@ -200,7 +201,7 @@ func NewToken(tokentype TokenType, value string, row, col, idx int) *Token {
 	return &Token{
 		tokentype,
 		value,
-		NewLocation(row, col, idx),
+		typing.NewLocation(row, col, idx),
 	}
 }
 
@@ -395,7 +396,7 @@ func (t Token) String() string {
 }
 
 func Empty(tok Token) bool {
-	if tok.Location == (*Location)(nil) {
+	if tok.Location == (*typing.Location)(nil) {
 		return true
 	}
 	return false

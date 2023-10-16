@@ -4,10 +4,11 @@ import (
 	"sulfur/src/builtins"
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
+	"sulfur/src/visibility"
 )
 
 type Expr interface {
-	Loc() *lexer.Location
+	Loc() *typing.Location
 }
 
 type (
@@ -26,37 +27,37 @@ type (
 	}
 
 	BadExpr struct {
-		Pos *lexer.Location `json:"-"`
+		Pos *typing.Location `json:"-"`
 	}
 
 	Block struct {
-		Pos   *lexer.Location `json:"-"`
+		Pos   *typing.Location `json:"-"`
 		Body  []Expr
 		Scope *Scope // `json:"-"`
 	}
 
 	Identifier struct {
-		Pos  *lexer.Location `json:"-"`
+		Pos  *typing.Location `json:"-"`
 		Name string
 	}
 
 	Integer struct {
-		Pos   *lexer.Location `json:"-"`
+		Pos   *typing.Location `json:"-"`
 		Value int64
 	}
 
 	Float struct {
-		Pos   *lexer.Location `json:"-"`
+		Pos   *typing.Location `json:"-"`
 		Value float64
 	}
 
 	Boolean struct {
-		Pos   *lexer.Location `json:"-"`
+		Pos   *typing.Location `json:"-"`
 		Value bool
 	}
 
 	String struct {
-		Pos   *lexer.Location `json:"-"`
+		Pos   *typing.Location `json:"-"`
 		Value string
 	}
 
@@ -66,7 +67,7 @@ type (
 	}
 
 	Function struct {
-		Pos       *lexer.Location `json:"-"`
+		Pos       *typing.Location `json:"-"`
 		Name      Identifier
 		Params    []Param
 		Return    Identifier
@@ -75,7 +76,7 @@ type (
 	}
 
 	Class struct {
-		Pos         *lexer.Location `json:"-"`
+		Pos         *typing.Location `json:"-"`
 		Name        Identifier
 		Extends     []Identifier `json:",omitempty"`
 		Fields      []Field
@@ -87,7 +88,7 @@ type (
 	}
 
 	Enum struct {
-		Pos   *lexer.Location `json:"-"`
+		Pos   *typing.Location `json:"-"`
 		Name  Identifier
 		From  Identifier `json:",omitempty"`
 		Elems []Identifier
@@ -101,24 +102,24 @@ type (
 
 	Method struct {
 		Function
-		Status typing.Visibility
+		Status visibility.Visibility
 	}
 
 	Field struct {
-		Pos    *lexer.Location `json:"-"`
-		Status typing.Visibility
+		Pos    *typing.Location `json:"-"`
+		Status visibility.Visibility
 		Type   Identifier
 		Name   Identifier
 	}
 
 	To struct {
-		Pos  *lexer.Location `json:"-"`
+		Pos  *typing.Location `json:"-"`
 		Type Identifier
 		Body Block
 	}
 
 	Operation struct {
-		Pos    *lexer.Location `json:"-"`
+		Pos    *typing.Location `json:"-"`
 		Op     *lexer.Token
 		Params []Param
 		Return []Identifier
@@ -132,7 +133,7 @@ type (
 	}
 
 	New struct {
-		Pos    *lexer.Location `json:"-"`
+		Pos    *typing.Location `json:"-"`
 		Class  Identifier
 		Params *[]Expr
 	}
@@ -197,14 +198,14 @@ type (
 	}
 
 	IfStatement struct {
-		Pos  *lexer.Location `json:"-"`
+		Pos  *typing.Location `json:"-"`
 		Cond Expr
 		Body Block
 		Else Block
 	}
 
 	ForLoop struct {
-		Pos  *lexer.Location `json:"-"`
+		Pos  *typing.Location `json:"-"`
 		Init Expr
 		Cond Expr
 		Inc  Expr
@@ -212,67 +213,67 @@ type (
 	}
 
 	WhileLoop struct {
-		Pos  *lexer.Location `json:"-"`
+		Pos  *typing.Location `json:"-"`
 		Cond Expr
 		Body Block
 	}
 
 	DoWhileLoop struct {
-		Pos  *lexer.Location `json:"-"`
+		Pos  *typing.Location `json:"-"`
 		Body Block
 		Cond Expr
 	}
 
 	Return struct {
-		Pos   *lexer.Location `json:"-"`
+		Pos   *typing.Location `json:"-"`
 		Value Expr
 	}
 
 	Break struct {
-		Pos *lexer.Location `json:"-"`
+		Pos *typing.Location `json:"-"`
 	}
 
 	Continue struct {
-		Pos *lexer.Location `json:"-"`
+		Pos *typing.Location `json:"-"`
 	}
 )
 
-func (x Program) Loc() *lexer.Location      { return lexer.NoLocation }
-func (x BadExpr) Loc() *lexer.Location      { return x.Pos }
-func (x Block) Loc() *lexer.Location        { return x.Pos }
-func (x Identifier) Loc() *lexer.Location   { return x.Pos }
-func (x Integer) Loc() *lexer.Location      { return x.Pos }
-func (x Float) Loc() *lexer.Location        { return x.Pos }
-func (x Boolean) Loc() *lexer.Location      { return x.Pos }
-func (x String) Loc() *lexer.Location       { return x.Pos }
-func (x Array) Loc() *lexer.Location        { return x.Type.Pos }
-func (x Function) Loc() *lexer.Location     { return x.Pos }
-func (x Class) Loc() *lexer.Location        { return x.Pos }
-func (x Enum) Loc() *lexer.Location         { return x.Pos }
-func (x Param) Loc() *lexer.Location        { return x.Type.Pos }
-func (x Method) Loc() *lexer.Location       { return x.Pos }
-func (x Field) Loc() *lexer.Location        { return x.Pos }
-func (x To) Loc() *lexer.Location           { return x.Pos }
-func (x Operation) Loc() *lexer.Location    { return x.Pos }
-func (x Access) Loc() *lexer.Location       { return x.Parent.Loc() }
-func (x New) Loc() *lexer.Location          { return x.Pos }
-func (x BinaryOp) Loc() *lexer.Location     { return x.Left.Loc() }
-func (x UnaryOp) Loc() *lexer.Location      { return x.Value.Loc() }
-func (x Pipe) Loc() *lexer.Location         { return x.Left.Func.Pos }
-func (x Comparison) Loc() *lexer.Location   { return x.Left.Loc() }
-func (x Declaration) Loc() *lexer.Location  { return x.Type.Pos }
-func (x ImplicitDecl) Loc() *lexer.Location { return x.Name.Pos }
-func (x Assignment) Loc() *lexer.Location   { return x.Name.Pos }
-func (x IncDec) Loc() *lexer.Location       { return x.Name.Pos }
-func (x FuncCall) Loc() *lexer.Location     { return x.Func.Pos }
-func (x TypeConv) Loc() *lexer.Location     { return x.Type.Pos }
-func (x IfStatement) Loc() *lexer.Location  { return x.Pos }
-func (x ForLoop) Loc() *lexer.Location      { return x.Pos }
-func (x WhileLoop) Loc() *lexer.Location    { return x.Pos }
-func (x DoWhileLoop) Loc() *lexer.Location  { return x.Pos }
-func (x Return) Loc() *lexer.Location       { return x.Pos }
-func (x Break) Loc() *lexer.Location        { return x.Pos }
-func (x Continue) Loc() *lexer.Location     { return x.Pos }
+func (x Program) Loc() *typing.Location      { return typing.NoLocation }
+func (x BadExpr) Loc() *typing.Location      { return x.Pos }
+func (x Block) Loc() *typing.Location        { return x.Pos }
+func (x Identifier) Loc() *typing.Location   { return x.Pos }
+func (x Integer) Loc() *typing.Location      { return x.Pos }
+func (x Float) Loc() *typing.Location        { return x.Pos }
+func (x Boolean) Loc() *typing.Location      { return x.Pos }
+func (x String) Loc() *typing.Location       { return x.Pos }
+func (x Array) Loc() *typing.Location        { return x.Type.Pos }
+func (x Function) Loc() *typing.Location     { return x.Pos }
+func (x Class) Loc() *typing.Location        { return x.Pos }
+func (x Enum) Loc() *typing.Location         { return x.Pos }
+func (x Param) Loc() *typing.Location        { return x.Type.Pos }
+func (x Method) Loc() *typing.Location       { return x.Pos }
+func (x Field) Loc() *typing.Location        { return x.Pos }
+func (x To) Loc() *typing.Location           { return x.Pos }
+func (x Operation) Loc() *typing.Location    { return x.Pos }
+func (x Access) Loc() *typing.Location       { return x.Parent.Loc() }
+func (x New) Loc() *typing.Location          { return x.Pos }
+func (x BinaryOp) Loc() *typing.Location     { return x.Left.Loc() }
+func (x UnaryOp) Loc() *typing.Location      { return x.Value.Loc() }
+func (x Pipe) Loc() *typing.Location         { return x.Left.Func.Pos }
+func (x Comparison) Loc() *typing.Location   { return x.Left.Loc() }
+func (x Declaration) Loc() *typing.Location  { return x.Type.Pos }
+func (x ImplicitDecl) Loc() *typing.Location { return x.Name.Pos }
+func (x Assignment) Loc() *typing.Location   { return x.Name.Pos }
+func (x IncDec) Loc() *typing.Location       { return x.Name.Pos }
+func (x FuncCall) Loc() *typing.Location     { return x.Func.Pos }
+func (x TypeConv) Loc() *typing.Location     { return x.Type.Pos }
+func (x IfStatement) Loc() *typing.Location  { return x.Pos }
+func (x ForLoop) Loc() *typing.Location      { return x.Pos }
+func (x WhileLoop) Loc() *typing.Location    { return x.Pos }
+func (x DoWhileLoop) Loc() *typing.Location  { return x.Pos }
+func (x Return) Loc() *typing.Location       { return x.Pos }
+func (x Break) Loc() *typing.Location        { return x.Pos }
+func (x Continue) Loc() *typing.Location     { return x.Pos }
 
 func Valid(expr Expr) bool {
 	if _, ok := expr.(*BadExpr); ok {
@@ -282,7 +283,7 @@ func Valid(expr Expr) bool {
 }
 
 func Empty(expr Expr) bool {
-	if expr.Loc() == (*lexer.Location)(nil) {
+	if expr.Loc() == (*typing.Location)(nil) {
 		return true
 	}
 	return false

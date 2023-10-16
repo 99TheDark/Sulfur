@@ -3,7 +3,6 @@ package ast
 import (
 	"fmt"
 	. "sulfur/src/errors"
-	"sulfur/src/lexer"
 	"sulfur/src/typing"
 
 	"github.com/llir/llvm/ir"
@@ -41,7 +40,7 @@ type FuncScope struct {
 	Counts map[string]int
 }
 
-func (s *Scope) Lookup(name string, loc *lexer.Location) Variable {
+func (s *Scope) Lookup(name string, loc *typing.Location) Variable {
 	if vari, ok := s.Vars[name]; ok {
 		return vari
 	}
@@ -61,7 +60,7 @@ func (s *Scope) Has(name string) bool {
 	return s.Parent.Has(name)
 }
 
-func (s *Scope) FindEntrance(loc *lexer.Location) *ir.Block {
+func (s *Scope) FindEntrance(loc *typing.Location) *ir.Block {
 	if s.Entrance != nil {
 		return s.Entrance
 	}
@@ -71,7 +70,7 @@ func (s *Scope) FindEntrance(loc *lexer.Location) *ir.Block {
 	return s.Parent.FindEntrance(loc)
 }
 
-func (s *Scope) FindExit(loc *lexer.Location) *ir.Block {
+func (s *Scope) FindExit(loc *typing.Location) *ir.Block {
 	if s.Exit != nil {
 		return s.Exit
 	}

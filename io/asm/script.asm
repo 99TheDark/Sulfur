@@ -298,14 +298,13 @@ _main:                                  ; @main
 	.cfi_def_cfa_offset 32
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	x8, #13
 Lloh6:
 	adrp	x2, l_.str0.2@PAGE
-	movk	x8, #13, lsl #32
+	mov	x8, #60129542158
 Lloh7:
 	add	x2, x2, l_.str0.2@PAGEOFF
-	mov	w0, #13
-	mov	w1, #13
+	mov	w0, #14
+	mov	w1, #14
 	stp	x8, x2, [sp]
 	bl	_.println
 	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
@@ -326,6 +325,6 @@ l_.str0.1:                              ; @.str0.1
 	.byte	48
 
 l_.str0.2:                              ; @.str0.2
-	.ascii	"Hello, world!"
+	.ascii	"Hello, world!)"
 
 .subsections_via_symbols

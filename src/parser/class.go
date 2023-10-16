@@ -6,6 +6,7 @@ import (
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
+	"sulfur/src/visibility"
 )
 
 func (p *parser) parseClass() ast.Class {
@@ -25,7 +26,7 @@ func (p *parser) parseClass() ast.Class {
 		func() {
 			prefix := lexer.Token{}
 			tok := p.at()
-			if typing.IsVisibility(tok) {
+			if visibility.IsVisibility(tok) {
 				prefix = p.eat()
 				tok = p.at()
 			}
@@ -96,7 +97,7 @@ func (p *parser) parseField(prefix lexer.Token) ast.Field {
 	typ := p.parseIdentifier()
 	val := p.parseIdentifier()
 
-	vis, loc := typing.TokenVis(prefix, typing.Public, typ.Pos)
+	vis, loc := visibility.TokenVis(prefix, visibility.Public, typ.Pos)
 	return ast.Field{
 		Pos:    loc,
 		Status: vis,
@@ -126,7 +127,7 @@ func (p *parser) parseMethod(prefix lexer.Token) ast.Method {
 
 	body := p.parseBlock()
 
-	vis, loc := typing.TokenVis(prefix, typing.Public, name.Pos)
+	vis, loc := visibility.TokenVis(prefix, visibility.Public, name.Pos)
 	return ast.Method{
 		Function: ast.Function{
 			Pos:    loc,
@@ -153,7 +154,7 @@ func (p *parser) parseConstructor(prefix lexer.Token) ast.Method {
 
 	body := p.parseBlock()
 
-	vis, loc := typing.TokenVis(prefix, typing.Public, tok.Location)
+	vis, loc := visibility.TokenVis(prefix, visibility.Public, tok.Location)
 	return ast.Method{
 		Function: ast.Function{
 			Pos: loc,
@@ -183,7 +184,7 @@ func (p *parser) parseDestructor(prefix lexer.Token) ast.Method {
 
 	body := p.parseBlock()
 
-	vis, loc := typing.TokenVis(prefix, typing.Public, tok.Location)
+	vis, loc := visibility.TokenVis(prefix, visibility.Public, tok.Location)
 	return ast.Method{
 		Function: ast.Function{
 			Pos: loc,

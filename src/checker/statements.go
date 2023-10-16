@@ -58,6 +58,10 @@ func (c *checker) inferDeclaration(x ast.Declaration) {
 	}
 
 	val := c.inferExpr(x.Value)
+	if val == typing.Void {
+		Errors.Error("Cannot declare a variable to have no type", x.Value.Loc())
+	}
+
 	if typing.Type(x.Type.Name) != val {
 		Errors.Error("Expected "+x.Type.Name+", but got "+val.String()+" instead", x.Loc())
 	}
@@ -70,6 +74,10 @@ func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
 	}
 
 	val := c.inferExpr(x.Value)
+	if val == typing.Void {
+		Errors.Error("Cannot declare a variable to have no type", x.Value.Loc())
+	}
+
 	c.top.Vars[x.Name.Name] = ast.NewVariable(c.topfun, x.Name.Name, val, ast.Local)
 }
 

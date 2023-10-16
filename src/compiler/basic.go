@@ -9,7 +9,7 @@ import (
 	"github.com/llir/llvm/ir/value"
 )
 
-func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, loc *lexer.Location) {
+func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, loc *typing.Location) {
 	bl := g.bl
 
 	vari := g.top.Lookup(name, loc)
@@ -22,7 +22,7 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 	*vari.Value = alloca
 }
 
-func (g *generator) genBasicAssign(name string, src value.Value, loc *lexer.Location) {
+func (g *generator) genBasicAssign(name string, src value.Value, loc *typing.Location) {
 	bl := g.bl
 	vari := g.top.Lookup(name, loc)
 	bl.NewStore(src, *vari.Value)
