@@ -6,9 +6,6 @@ source_filename = "llvm-link"
 @.str0 = private unnamed_addr constant [4 x i8] c"true", align 1
 @.str1 = private unnamed_addr constant [5 x i8] c"false", align 1
 @.str0.1 = private unnamed_addr constant [1 x i8] c"0", align 1
-@.str0.2 = private unnamed_addr constant [4 x i8] c"1 1 ", align 1
-@.str1.3 = private unnamed_addr constant [1 x i8] c" ", align 1
-@.str2 = private unnamed_addr constant [1 x i8] c"\0A", align 1
 
 define %type.string @.conv.bool_string(i1 %bool) {
 entry:
@@ -295,21 +292,6 @@ while2.end:                                       ; preds = %while2.cond
 
 define void @main() {
 entry:
-  %0 = getelementptr inbounds [4 x i8], [4 x i8]* @.str0.2, i32 0, i32 0
-  %1 = alloca %type.string, align 8
-  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 4, i32* %2, align 8
-  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-  store i32 4, i32* %3, align 8
-  %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
-  store i8* %0, i8** %4, align 8
-  %5 = load %type.string, %type.string* %1, align 8
-  %str = alloca %type.string, align 8
-  store %type.string %5, %type.string* %str, align 8
-  %n1 = alloca i32, align 4
-  store i32 1, i32* %n1, align 4
-  %n2 = alloca i32, align 4
-  store i32 1, i32* %n2, align 4
   %i = alloca i32, align 4
   store i32 0, i32* %i, align 4
   br label %for.cond0
@@ -318,69 +300,50 @@ exit:                                             ; preds = %for.end0
   ret void
 
 for.cond0:                                        ; preds = %for.inc0, %entry
-  %6 = load i32, i32* %i, align 4
-  %7 = icmp slt i32 %6, 40
-  br i1 %7, label %for.body0, label %for.end0
+  %0 = load i32, i32* %i, align 4
+  %1 = icmp slt i32 %0, 20
+  br i1 %1, label %for.body0, label %for.end0
 
 for.body0:                                        ; preds = %for.cond0
-  %8 = load i32, i32* %n1, align 4
-  %9 = load i32, i32* %n2, align 4
-  %10 = add i32 %8, %9
-  %sum = alloca i32, align 4
-  store i32 %10, i32* %sum, align 4
-  %11 = load %type.string, %type.string* %str, align 8
-  %12 = load i32, i32* %sum, align 4
-  %13 = call %type.string @.conv.int_string(i32 %12)
-  %14 = getelementptr inbounds [1 x i8], [1 x i8]* @.str1.3, i32 0, i32 0
-  %15 = alloca %type.string, align 8
-  %16 = getelementptr inbounds %type.string, %type.string* %15, i32 0, i32 0
-  store i32 1, i32* %16, align 8
-  %17 = getelementptr inbounds %type.string, %type.string* %15, i32 0, i32 1
-  store i32 1, i32* %17, align 8
-  %18 = getelementptr inbounds %type.string, %type.string* %15, i32 0, i32 2
-  store i8* %14, i8** %18, align 8
-  %19 = load %type.string, %type.string* %15, align 8
-  %20 = call %type.string @.add.string_string(%type.string %13, %type.string %19)
-  %21 = call %type.string @.add.string_string(%type.string %11, %type.string %20)
-  store %type.string %21, %type.string* %str, align 8
-  %22 = load i32, i32* %n2, align 4
-  store i32 %22, i32* %n1, align 4
-  %23 = load i32, i32* %sum, align 4
-  store i32 %23, i32* %n2, align 4
-  %24 = load i32, i32* %i, align 4
-  %25 = icmp ne i32 %24, 0
-  %26 = load i32, i32* %i, align 4
-  %27 = srem i32 %26, 10
-  %28 = icmp eq i32 %27, 0
-  %29 = and i1 %25, %28
-  br i1 %29, label %if.then1, label %if.end1
+  %2 = load i32, i32* %i, align 4
+  %3 = call i32 @mod.fib(i32 %2)
+  %4 = call %type.string @.conv.int_string(i32 %3)
+  call void @.println(%type.string %4)
+  br label %for.inc0
 
-for.inc0:                                         ; preds = %if.end1
-  %30 = load i32, i32* %i, align 4
-  %31 = add i32 %30, 1
-  store i32 %31, i32* %i, align 4
+for.inc0:                                         ; preds = %for.body0
+  %5 = load i32, i32* %i, align 4
+  %6 = add i32 %5, 1
+  store i32 %6, i32* %i, align 4
   br label %for.cond0
 
 for.end0:                                         ; preds = %for.cond0
-  %32 = load %type.string, %type.string* %str, align 8
-  call void @.println(%type.string %32)
   br label %exit
+}
 
-if.then1:                                         ; preds = %for.body0
-  %33 = load %type.string, %type.string* %str, align 8
-  %34 = getelementptr inbounds [1 x i8], [1 x i8]* @.str2, i32 0, i32 0
-  %35 = alloca %type.string, align 8
-  %36 = getelementptr inbounds %type.string, %type.string* %35, i32 0, i32 0
-  store i32 1, i32* %36, align 8
-  %37 = getelementptr inbounds %type.string, %type.string* %35, i32 0, i32 1
-  store i32 1, i32* %37, align 8
-  %38 = getelementptr inbounds %type.string, %type.string* %35, i32 0, i32 2
-  store i8* %34, i8** %38, align 8
-  %39 = load %type.string, %type.string* %35, align 8
-  %40 = call %type.string @.add.string_string(%type.string %33, %type.string %39)
-  store %type.string %40, %type.string* %str, align 8
-  br label %if.end1
+define private i32 @mod.fib(i32 %0) {
+entry:
+  %.ret = alloca i32, align 4
+  %1 = icmp sle i32 %0, 1
+  br i1 %1, label %if.then0, label %if.else0
 
-if.end1:                                          ; preds = %if.then1, %for.body0
-  br label %for.inc0
+exit:                                             ; preds = %if.end0
+  %2 = load i32, i32* %.ret, align 4
+  ret i32 %2
+
+if.then0:                                         ; preds = %entry
+  store i32 1, i32* %.ret, align 4
+  br label %if.end0
+
+if.else0:                                         ; preds = %entry
+  %3 = sub i32 %0, 2
+  %4 = call i32 @mod.fib(i32 %3)
+  %5 = sub i32 %0, 1
+  %6 = call i32 @mod.fib(i32 %5)
+  %7 = add i32 %4, %6
+  store i32 %7, i32* %.ret, align 4
+  br label %if.end0
+
+if.end0:                                          ; preds = %if.else0, %if.then0
+  br label %exit
 }

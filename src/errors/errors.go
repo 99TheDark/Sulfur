@@ -9,7 +9,7 @@ import (
 )
 
 const Debug = false
-const Color = false
+const Color = true
 const CodeBuffer = 4
 
 var Errors ErrorGenerator
