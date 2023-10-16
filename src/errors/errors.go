@@ -8,8 +8,8 @@ import (
 	"sulfur/src/utils"
 )
 
-const Debug = false
-const Color = true
+const Debug = true
+const Color = false
 const CodeBuffer = 4
 
 var Errors ErrorGenerator

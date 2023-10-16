@@ -42,7 +42,6 @@ func (p *parser) parseStmt() ast.Expr {
 }
 
 func (p *parser) parseStmts(stmtgen func(), ending []lexer.TokenType, delim []lexer.TokenType) {
-	ending = append(ending, lexer.EOF)
 	for !p.is(ending) {
 		if p.tt() == lexer.NewLine {
 			p.eat()
@@ -50,6 +49,9 @@ func (p *parser) parseStmts(stmtgen func(), ending []lexer.TokenType, delim []le
 		}
 		stmtgen()
 
+		if p.tt() == lexer.EOF {
+			return
+		}
 		if !p.is(ending) {
 			p.expect(delim...)
 		}

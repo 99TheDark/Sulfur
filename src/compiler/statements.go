@@ -97,6 +97,10 @@ func (g *generator) genIncDec(x ast.IncDec) {
 
 func (g *generator) genFunction(x ast.Function) {
 	src := g.srcFunc(x.Name.Name)
+	if src == nil {
+		return
+	}
+
 	complex := g.complex(src.Return)
 	rettyp := g.lltyp(src.Return)
 

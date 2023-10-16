@@ -25,7 +25,7 @@ func (p *parser) at() lexer.Token {
 
 func (p *parser) tt() lexer.TokenType {
 	// Shorthand
-	return p.at().Type
+	return p.peek(0).Type
 }
 
 func (p *parser) peek(ahead int) lexer.Token {
@@ -49,6 +49,16 @@ func (p *parser) expect(symbols ...lexer.TokenType) lexer.Token {
 	tok := p.eat()
 	if !utils.Contains(symbols, tok.Type) {
 		length := len(symbols)
+		if length == 1 {
+			if symbols[0] == lexer.CloseParen {
+				Errors.Error("Missing a parenthesis", tok.Location)
+			} else if symbols[0] == lexer.CloseBrace {
+				Errors.Error("Missing a brace", tok.Location)
+			} else if symbols[0] == lexer.CloseBracket {
+				Errors.Error("Missing a bracket", tok.Location)
+			}
+		}
+
 		expected := symbols[0].String()
 		for i := 1; i < length-1; i++ {
 			expected += ", " + symbols[i].String()
