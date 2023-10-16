@@ -1,4 +1,4 @@
 #!/bin/bash
 ./sulfur
-sh compile.sh
+bash compile.sh
 time ./io/asm/script

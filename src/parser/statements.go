@@ -47,6 +47,10 @@ func (p *parser) parseStmts(stmtgen func(), ending []lexer.TokenType, delim []le
 			p.eat()
 			continue
 		}
+		if p.tt() == lexer.EOF {
+			return
+		}
+
 		stmtgen()
 
 		if p.tt() == lexer.EOF {

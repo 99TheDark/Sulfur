@@ -9,6 +9,7 @@ import (
 )
 
 const Debug = true
+const Build = false
 const Color = false
 const CodeBuffer = 4
 

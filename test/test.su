@@ -1,0 +1,5 @@
+println("Hello, world! x" + string!(add(6, 7)))
+
+func add(int a, int b) (int) {
+    return a + b
+}
