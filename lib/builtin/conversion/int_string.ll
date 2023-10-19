@@ -7,7 +7,7 @@ declare void @free(i8*)
 
 @.str0 = private unnamed_addr constant [1 x i8] c"0", align 1
 
-define %type.string @.conv.int_string(i32 %int) {
+define %type.string @".conv:int_string"(i32 %int) {
 entry:
     %.ret = alloca %type.string, align 8
     %0 = icmp eq i32 %int, 0

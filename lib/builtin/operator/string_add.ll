@@ -4,7 +4,7 @@ source_filename = "lib/builtin/string_add"
 
 declare i8* @malloc(i32)
 
-define %type.string @.add.string_string(%type.string %a, %type.string %b) {
+define %type.string @".add:string_string"(%type.string %a, %type.string %b) {
 entry:
     %.ret = alloca %type.string, align 8
     %ptr.a = alloca %type.string, align 8

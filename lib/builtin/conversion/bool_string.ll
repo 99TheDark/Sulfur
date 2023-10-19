@@ -5,7 +5,7 @@ source_filename = "lib/builtin/bool_string"
 @.str0 = private unnamed_addr constant [4 x i8] c"true", align 1
 @.str1 = private unnamed_addr constant [5 x i8] c"false", align 1
 
-define %type.string @.conv.bool_string(i1 %bool) {
+define %type.string @".conv:bool_string"(i1 %bool) {
 entry:
 	%.ret = alloca %type.string, align 8
     br i1 %bool, label %if.then, label %if.else

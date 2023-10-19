@@ -71,7 +71,7 @@ func (g *generator) genClasses() {
 			typs = append(typs, g.lltyp(field.Type))
 		}
 
-		class.Ir = mod.NewTypeDef("class."+class.Name, types.NewStruct(typs...))
+		class.Ir = mod.NewTypeDef("class:"+class.Name, types.NewStruct(typs...))
 
 		g.program.Classes[i] = class
 		g.builtins.classes[class.Name] = &g.program.Classes[i]
@@ -84,7 +84,7 @@ func (g *generator) genBinOps() {
 			continue
 		}
 
-		name := binop.Module + "." + binop.Op.OperatorName() + "." + binop.Left.String() + "_" + binop.Right.String()
+		name := binop.Module + "." + binop.Op.OperatorName() + ":" + binop.Left.String() + "_" + binop.Right.String()
 		if g.complex(binop.Return) {
 			binop.Ir = g.mod.NewFunc(
 				name,
@@ -107,7 +107,7 @@ func (g *generator) genUnOps() {
 			continue
 		}
 
-		name := unop.Module + "." + unop.Op.OperatorName() + "." + unop.Value.String()
+		name := unop.Module + "." + unop.Op.OperatorName() + ":" + unop.Value.String()
 		if g.complex(unop.Return) {
 			unop.Ir = g.mod.NewFunc(
 				name,
@@ -129,7 +129,7 @@ func (g *generator) genIncDecs() {
 			continue
 		}
 
-		name := incdec.Module + "." + incdec.Op.OperatorName() + "." + incdec.Var.String()
+		name := incdec.Module + "." + incdec.Op.OperatorName() + ":" + incdec.Var.String()
 		if g.complex(incdec.Var) {
 			incdec.Ir = g.mod.NewFunc(
 				name,
@@ -164,7 +164,7 @@ func (g *generator) genTypeConvs() {
 			continue
 		}
 
-		name := conv.Module + ".conv." + string(conv.From) + "_" + string(conv.To)
+		name := conv.Module + ".conv:" + string(conv.From) + "_" + string(conv.To)
 		if g.complex(conv.To) {
 			conv.Ir = g.mod.NewFunc(
 				name,

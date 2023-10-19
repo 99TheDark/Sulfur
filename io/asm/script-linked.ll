@@ -6,9 +6,10 @@ source_filename = "llvm-link"
 @.str0 = private unnamed_addr constant [4 x i8] c"true", align 1
 @.str1 = private unnamed_addr constant [5 x i8] c"false", align 1
 @.str0.1 = private unnamed_addr constant [1 x i8] c"0", align 1
-@.str0.2 = private unnamed_addr constant [14 x i8] c"Hello, world!)", align 1
+@.str0.2 = private unnamed_addr constant [7 x i8] c"Hello, ", align 1
+@.str1.3 = private unnamed_addr constant [6 x i8] c"world!", align 1
 
-define %type.string @.conv.bool_string(i1 %bool) {
+define %type.string @".conv:bool_string"(i1 %bool) {
 entry:
   %.ret = alloca %type.string, align 8
   br i1 %bool, label %if.then, label %if.else
@@ -38,7 +39,7 @@ exit:                                             ; preds = %if.else, %if.then
   ret %type.string %8
 }
 
-define %type.string @.conv.int_string(i32 %int) {
+define %type.string @".conv:int_string"(i32 %int) {
 entry:
   %.ret = alloca %type.string, align 8
   %0 = icmp eq i32 %int, 0
@@ -211,7 +212,7 @@ entry:
   ret void
 }
 
-define %type.string @.add.string_string(%type.string %a, %type.string %b) {
+define %type.string @".add:string_string"(%type.string %a, %type.string %b) {
 entry:
   %.ret = alloca %type.string, align 8
   %ptr.a = alloca %type.string, align 8
@@ -293,16 +294,26 @@ while2.end:                                       ; preds = %while2.cond
 
 define void @main() {
 entry:
-  %0 = getelementptr inbounds [14 x i8], [14 x i8]* @.str0.2, i32 0, i32 0
+  %0 = getelementptr inbounds [7 x i8], [7 x i8]* @.str0.2, i32 0, i32 0
   %1 = alloca %type.string, align 8
   %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 14, i32* %2, align 8
+  store i32 7, i32* %2, align 8
   %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-  store i32 14, i32* %3, align 8
+  store i32 7, i32* %3, align 8
   %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
   store i8* %0, i8** %4, align 8
   %5 = load %type.string, %type.string* %1, align 8
-  call void @.println(%type.string %5)
+  %6 = getelementptr inbounds [6 x i8], [6 x i8]* @.str1.3, i32 0, i32 0
+  %7 = alloca %type.string, align 8
+  %8 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 0
+  store i32 6, i32* %8, align 8
+  %9 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 1
+  store i32 6, i32* %9, align 8
+  %10 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 2
+  store i8* %6, i8** %10, align 8
+  %11 = load %type.string, %type.string* %7, align 8
+  %12 = call %type.string @".add:string_string"(%type.string %5, %type.string %11)
+  call void @.println(%type.string %12)
   br label %exit
 
 exit:                                             ; preds = %entry
