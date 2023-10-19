@@ -102,7 +102,6 @@ const (
 	Okay                           // 'okay'
 	Arrow                          // '=>'
 	Atsign                         // '@'
-	Autodef                        // '~'
 	EOF
 )
 
@@ -190,7 +189,6 @@ var Symbols = map[string]TokenType{
 	";":   Semicolon,
 	"=>":  Arrow,
 	"@":   Atsign,
-	"~":   Autodef,
 }
 
 func formatValue(value string) string {
@@ -375,8 +373,6 @@ func (tt TokenType) String() string {
 		return "Arrow"
 	case Atsign:
 		return "Atsign"
-	case Autodef:
-		return "Autodef"
 	case EOF:
 		return "EOF"
 	default:

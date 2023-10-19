@@ -47,10 +47,10 @@ func (p *parser) parseClass() ast.Class {
 				}
 				return
 			case lexer.New:
-				news = append(news, p.parseConstructor(prefix))
+				news = append(news, p.parseNewDel(prefix))
 				return
 			case lexer.Delete:
-				dels = append(dels, p.parseDestructor(prefix))
+				dels = append(dels, p.parseNewDel(prefix))
 				return
 			case lexer.To:
 				if !lexer.Empty(prefix) {
@@ -140,37 +140,7 @@ func (p *parser) parseMethod(prefix lexer.Token) ast.Method {
 	}
 }
 
-func (p *parser) parseConstructor(prefix lexer.Token) ast.Method {
-	tok := p.eat()
-	params := []ast.Param{}
-	p.expect(lexer.OpenParen)
-	p.parseStmts(
-		func() {
-			params = append(params, p.parseConstructorParam())
-		},
-		[]lexer.TokenType{lexer.CloseParen},
-		[]lexer.TokenType{lexer.Delimiter},
-	)
-
-	body := p.parseBlock()
-
-	vis, loc := visibility.TokenVis(prefix, visibility.Public, tok.Location)
-	return ast.Method{
-		Function: ast.Function{
-			Pos: loc,
-			Name: ast.Identifier{
-				Pos:  tok.Location,
-				Name: tok.Value,
-			},
-			Params: params,
-			Return: ast.Identifier{},
-			Body:   body,
-		},
-		Status: vis,
-	}
-}
-
-func (p *parser) parseDestructor(prefix lexer.Token) ast.Method {
+func (p *parser) parseNewDel(prefix lexer.Token) ast.Method {
 	tok := p.eat()
 	params := []ast.Param{}
 	p.expect(lexer.OpenParen)
@@ -240,24 +210,5 @@ func (p *parser) parseOperation() ast.Operation {
 		Params: params,
 		Return: []ast.Identifier{ret},
 		Body:   body,
-	}
-}
-
-func (p *parser) parseConstructorParam() ast.Param {
-	typ := p.parseIdentifier()
-	auto := p.prefix(lexer.Autodef)
-	name := p.parseIdentifier()
-	if lexer.Empty(auto) {
-		return ast.Param{
-			Type:    typ,
-			Name:    name,
-			Autodef: false,
-		}
-	} else {
-		return ast.Param{
-			Type:    typ,
-			Name:    name,
-			Autodef: true,
-		}
 	}
 }

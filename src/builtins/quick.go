@@ -9,10 +9,10 @@ func QuickFunc(name string, ret typing.Type, params ...typing.Type) FuncSignatur
 	return QuickModFunc("", name, ret, params...)
 }
 
-func QuickParam(typ typing.Type, autodef bool) ParamSignature {
+func QuickParam(typ typing.Type) ParamSignature {
 	return ParamSignature{
 		typ,
-		autodef,
+		false,
 		nil,
 	}
 }

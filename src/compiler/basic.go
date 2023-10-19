@@ -25,7 +25,11 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 func (g *generator) genBasicAssign(name string, src value.Value, loc *typing.Location) {
 	bl := g.bl
 	vari := g.top.Lookup(name, loc)
-	bl.NewStore(src, *vari.Value)
+	if vari.Reference {
+		// size := g.size(vari.Type)
+	} else {
+		bl.NewStore(src, *vari.Value)
+	}
 }
 
 func (g *generator) genBasicBinaryOp(left, right value.Value, op lexer.TokenType, typ typing.Type) value.Value {

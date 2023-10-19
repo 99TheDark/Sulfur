@@ -8,7 +8,7 @@ import (
 func QuickModFunc(mod string, name string, ret typing.Type, params ...typing.Type) FuncSignature {
 	paramArr := []ParamSignature{}
 	for _, param := range params {
-		paramArr = append(paramArr, QuickParam(param, false))
+		paramArr = append(paramArr, QuickParam(param))
 	}
 
 	return FuncSignature{

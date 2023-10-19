@@ -252,7 +252,6 @@ func (p *parser) parseParam() ast.Param {
 			Type:      typ,
 			Name:      name,
 			Reference: true,
-			Autodef:   false,
 		}
 	} else {
 		typ := p.parseIdentifier()
@@ -262,7 +261,6 @@ func (p *parser) parseParam() ast.Param {
 			Type:      typ,
 			Name:      name,
 			Reference: false,
-			Autodef:   false,
 		}
 	}
 }

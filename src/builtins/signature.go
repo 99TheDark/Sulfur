@@ -20,9 +20,9 @@ type (
 	}
 
 	ParamSignature struct {
-		Type    typing.Type
-		Autodef bool
-		Ir      *ir.Param
+		Type      typing.Type
+		Reference bool
+		Ir        *ir.Param
 	}
 
 	ClassSignature struct {

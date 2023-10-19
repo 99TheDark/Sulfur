@@ -8,6 +8,7 @@ import (
 
 	. "sulfur/src/errors"
 
+	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/types"
@@ -36,6 +37,8 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 		return g.genTypeConv(x)
 	case ast.FuncCall:
 		return g.genFuncCall(x)
+	case ast.Reference:
+		return g.genReference(x)
 	}
 
 	Errors.Error("Expression cannot be generated", expr.Loc())
@@ -232,4 +235,32 @@ func (g *generator) genFuncCall(x ast.FuncCall) value.Value {
 
 	Errors.Error("The function "+x.Func.Name+" is undefined", x.Func.Pos)
 	return nil
+}
+
+func (g *generator) genReference(x ast.Reference) value.Value {
+	mod := g.mod
+	bl := g.bl
+	vari := g.top.Lookup(x.Variable.Name, x.Variable.Loc())
+
+	typ := g.lltyp(vari.Type)
+
+	// TODO: Pregenerate
+	reftyp := mod.NewTypeDef("ref."+string(vari.Type), types.NewStruct(
+		typ,
+		types.I32, // count
+	))
+	ref := g.mod.NewFunc(
+		"ref:"+string(vari.Type),
+		types.NewPointer(reftyp),
+		ir.NewParam("", typ),
+	)
+	// TODO: Insert deref at end of scope
+	/*deref := g.mod.NewFunc(
+		"deref:"+string(vari.Type),
+		types.Void,
+		ir.NewParam("", types.NewPointer(reftyp)),
+	)*/
+
+	load := bl.NewLoad(g.typ(x), *vari.Value)
+	return bl.NewCall(ref, load)
 }
