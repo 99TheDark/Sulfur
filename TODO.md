@@ -15,8 +15,6 @@
 - Better token to string handling
 - Unsigned integer to string
 - Switch from 1-byte strings to 4-byte strings
-- Use addr instead of adr
-- Convert all non-generic malloc & free's to use i8* and bitcast
 - Use sizeof() for mallocs
 - Automatic type inference 
     - `println(5)` = `println(string!(5))`

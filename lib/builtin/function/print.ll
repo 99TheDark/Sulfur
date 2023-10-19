@@ -6,7 +6,7 @@ declare void @putchar(i8)
 
 ; print(string str) {
 ; 	  for int i = 0; i < str.size; i++ {
-; 		  putchar(str.adr[i])
+; 		  putchar(str.addr[i])
 ; 	  }
 ; }
 define void @.print(%type.string %str) {
@@ -29,8 +29,8 @@ for.cond:
 	br i1 %cmp, label %for.body, label %for.end
 
 for.body:
-	%ptr.str.adr = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 2
-	%6 = load i8*, i8** %ptr.str.adr, align 8
+	%ptr.str.addr = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 2
+	%6 = load i8*, i8** %ptr.str.addr, align 8
 	%7 = load i32, i32* %i, align 8
 	%ptr.str.idx = getelementptr inbounds i8, i8* %6, i32 %7
 	%8 = load i8, i8* %ptr.str.idx, align 1

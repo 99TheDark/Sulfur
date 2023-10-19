@@ -30,7 +30,7 @@ entry:
 	%11 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
 	store i32 %10, i32* %11, align 8
 
-    ; ret.adr = malloc(ret.size)
+    ; ret.addr = malloc(ret.size)
     %12 = call i8* @malloc(i32 %10)
     %13 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
     store i8* %12, i8** %13, align 8
@@ -47,7 +47,7 @@ entry:
     %15 = getelementptr inbounds %type.string, %type.string* %ptr.b, i32 0, i32 2
 
     ; while i < a.size {
-    ;     ret.adr[i] = a.adr[i]
+    ;     ret.addr[i] = a.addr[i]
     ;     i++
     ; }
     br label %while1.cond
@@ -59,7 +59,7 @@ while1.cond:
     br i1 %17, label %while1.body, label %while1.end
 
 while1.body: 
-    ; ret.adr[i] = a.adr[i]
+    ; ret.addr[i] = a.addr[i]
     %18 = load i32, i32* %i, align 4
     %19 = load i8*, i8** %13, align 8
     %20 = getelementptr inbounds i8, i8* %19, i32 %18
@@ -76,7 +76,7 @@ while1.body:
 
 while1.end:
     ; while i < ret.size {
-    ;     ret.adr[i] = b.adr[i]
+    ;     ret.addr[i] = b.addr[i]
     ;     i++
     ; }
     br label %while2.cond
@@ -88,7 +88,7 @@ while2.cond:
     br i1 %27, label %while2.body, label %while2.end
 
 while2.body: 
-    ; ret.adr[i] = b.adr[j]
+    ; ret.addr[i] = b.addr[j]
     %28 = load i32, i32* %i, align 4
     %29 = load i32, i32* %j, align 4
     %30 = load i8*, i8** %13, align 8 

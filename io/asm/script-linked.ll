@@ -44,17 +44,18 @@ define %ref.int* @"ref:int"(i32 %value) {
 entry:
   %ref = alloca %ref.int, align 8
   %ref.value = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 0
-  %0 = call i32* @malloc(i32 4)
-  store i32* %0, i32** %ref.value, align 8
+  %0 = call i8* @malloc(i32 4)
+  %1 = bitcast i8* %0 to i32*
+  store i32* %1, i32** %ref.value, align 8
   %ref.value2 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 0
-  %1 = load i32*, i32** %ref.value2, align 8
-  store i32 %value, i32* %1, align 8
+  %2 = load i32*, i32** %ref.value2, align 8
+  store i32 %value, i32* %2, align 8
   %ref.count = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
   store i32 1, i32* %ref.count, align 8
   ret %ref.int* %ref
 }
 
-declare i32* @malloc(i32)
+declare i8* @malloc(i32)
 
 define void @"deref:int"(%ref.int* %ref) {
 entry:
@@ -68,20 +69,21 @@ entry:
 if.then:                                          ; preds = %entry
   %4 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 0
   %5 = load i32*, i32** %4, align 8
-  call void @free(i32* %5)
+  %6 = bitcast i32* %5 to i8*
+  call void @free(i8* %6)
   br label %exit
 
 exit:                                             ; preds = %if.then, %entry
-  %value.adr = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 0
-  %value = load i32*, i32** %value.adr, align 8
+  %value.addr = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 0
+  %value = load i32*, i32** %value.addr, align 8
   %val = load i32, i32* %value, align 4
-  %count.adr = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
-  %count = load i32, i32* %count.adr, align 8
+  %count.addr = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
+  %count = load i32, i32* %count.addr, align 8
   call void @.refMsg(i32 %val, i32 %count)
   ret void
 }
 
-declare void @free(i32*)
+declare void @free(i8*)
 
 define void @.refMsg(i32 %0, i32 %1) {
 entry:
@@ -132,23 +134,23 @@ if.then:                                          ; preds = %entry
   br label %exit
 
 if.end:                                           ; preds = %entry
-  %int.adr = alloca i32, align 4
-  store i32 %int, i32* %int.adr, align 4
+  %int.addr = alloca i32, align 4
+  store i32 %int, i32* %int.addr, align 4
   %buf = alloca i8*, align 8
-  %buf.adr = call i8* bitcast (i32* (i32)* @malloc to i8* (i32)*)(i32 10)
-  store i8* %buf.adr, i8** %buf, align 8
+  %buf.addr = call i8* @malloc(i32 10)
+  store i8* %buf.addr, i8** %buf, align 8
   %i = alloca i32, align 4
   store i32 9, i32* %i, align 4
   %sign = alloca i32, align 4
   store i32 0, i32* %sign, align 4
-  %5 = load i32, i32* %int.adr, align 4
+  %5 = load i32, i32* %int.addr, align 4
   %6 = load i8*, i8** %buf, align 8
   %7 = icmp slt i32 %5, 0
   br i1 %7, label %if.then1, label %if.end1
 
 if.then1:                                         ; preds = %if.end
   %8 = sub i32 0, %5
-  store i32 %8, i32* %int.adr, align 4
+  store i32 %8, i32* %int.addr, align 4
   store i32 1, i32* %sign, align 4
   br label %if.end1
 
@@ -156,7 +158,7 @@ if.end1:                                          ; preds = %if.then1, %if.end
   br label %while.cond
 
 while.cond:                                       ; preds = %while.body, %if.end1
-  %9 = load i32, i32* %int.adr, align 4
+  %9 = load i32, i32* %int.addr, align 4
   %10 = icmp sgt i32 %9, 0
   br i1 %10, label %while.body, label %while.end
 
@@ -168,7 +170,7 @@ while.body:                                       ; preds = %while.cond
   %15 = getelementptr inbounds i8, i8* %6, i32 %14
   store i8 %13, i8* %15, align 1
   %16 = sdiv i32 %9, 10
-  store i32 %16, i32* %int.adr, align 4
+  store i32 %16, i32* %int.addr, align 4
   %17 = add i32 %14, -1
   store i32 %17, i32* %i, align 4
   br label %while.cond
@@ -185,14 +187,14 @@ while.end:                                        ; preds = %while.cond
   store i32 %22, i32* %.ret.len, align 8
   %.ret.size = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
   store i32 %22, i32* %.ret.size, align 8
-  %.ret.adr = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
-  %23 = call i8* bitcast (i32* (i32)* @malloc to i8* (i32)*)(i32 %22)
-  store i8* %23, i8** %.ret.adr, align 8
+  %.ret.addr = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
+  %23 = call i8* @malloc(i32 %22)
+  store i8* %23, i8** %.ret.addr, align 8
   %24 = icmp ne i32 %20, 0
   br i1 %24, label %if.then2, label %if.else2
 
 if.then2:                                         ; preds = %while.end
-  %25 = load i8*, i8** %.ret.adr, align 8
+  %25 = load i8*, i8** %.ret.addr, align 8
   %26 = getelementptr inbounds i8, i8* %25, i32 0
   store i8 45, i8* %26, align 1
   br label %if.end2
@@ -217,8 +219,8 @@ for.body:                                         ; preds = %for.cond
   %31 = add i32 %28, %29
   %32 = getelementptr inbounds i8, i8* %6, i32 %31
   %33 = load i8, i8* %32, align 1
-  %.ret.adr2 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
-  %34 = load i8*, i8** %.ret.adr2, align 8
+  %.ret.addr2 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
+  %34 = load i8*, i8** %.ret.addr2, align 8
   %35 = getelementptr inbounds i8, i8* %34, i32 %29
   store i8 %33, i8* %35, align 1
   br label %for.inc
@@ -229,7 +231,7 @@ for.inc:                                          ; preds = %for.body
   br label %for.cond
 
 for.end:                                          ; preds = %for.cond
-  call void bitcast (void (i32*)* @free to void (i8*)*)(i8* %6)
+  call void @free(i8* %6)
   br label %exit
 
 exit:                                             ; preds = %for.end, %if.then
@@ -258,7 +260,7 @@ entry:
   %10 = add i32 %7, %9
   %11 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
   store i32 %10, i32* %11, align 8
-  %12 = call i8* bitcast (i32* (i32)* @malloc to i8* (i32)*)(i32 %10)
+  %12 = call i8* @malloc(i32 %10)
   %13 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
   store i8* %12, i8** %13, align 8
   %i = alloca i32, align 4
@@ -344,8 +346,8 @@ for.cond:                                         ; preds = %for.inc, %entry
   br i1 %cmp, label %for.body, label %for.end
 
 for.body:                                         ; preds = %for.cond
-  %ptr.str.adr = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 2
-  %6 = load i8*, i8** %ptr.str.adr, align 8
+  %ptr.str.addr = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 2
+  %6 = load i8*, i8** %ptr.str.addr, align 8
   %7 = load i32, i32* %i, align 8
   %ptr.str.idx = getelementptr inbounds i8, i8* %6, i32 %7
   %8 = load i8, i8* %ptr.str.idx, align 1

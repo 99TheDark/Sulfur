@@ -6,7 +6,6 @@ source_filename = "script.su"
 
 declare %ref.int* @"ref:int"(i32)
 declare void @"deref:int"(%ref.int*)
-declare i32* @malloc(i32)
 
 define void @main() {
 entry:
