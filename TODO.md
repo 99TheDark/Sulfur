@@ -3,6 +3,8 @@
 - Labeled breaks / continues with #'s
 - Float to string generation
 - Work on error & enum syntax
+- Official event syntax
+- Official ask/reply syntax
 - Unsigned integer & byte literals
 - Official reference syntax (currently WIP in notes)
 - Complex numbers

@@ -10,8 +10,8 @@ Compilation Steps
 - Lexer
 - Parser 
 - Type Inferrer 
-- Precalculator (TODO)
-- Control Flow Analyzer (TODO)
+- Flow Analyzer (TODO)
+- Optimizer 
 - LLVM Code Generator 
 - Assembly Compiler
 - Code Runner
