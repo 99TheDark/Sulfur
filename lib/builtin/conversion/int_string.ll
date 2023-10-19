@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/int_string"
+source_filename = "lib/builtin/conversion/int_string"
 
 %type.string = type { i32, i32, i8* }
 

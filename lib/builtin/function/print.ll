@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/print"
+source_filename = "lib/builtin/function/print"
 
 %type.string = type { i32, i32, i8* }
 

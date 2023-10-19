@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/string_add"
+source_filename = "lib/builtin/operator/string_add"
 
 %type.string = type { i32, i32, i8* }
 

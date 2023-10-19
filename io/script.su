@@ -1,1 +1,11 @@
-println("Hello, " + "world!")
+x := "Hello"
+byValue(string val) {
+    println(val)
+}
+byRef(&string ref) {
+    ref = "World"
+}
+
+byValue(x)
+byRef(&x)
+println(x)
