@@ -29,6 +29,7 @@ type Variable struct {
 type Scope struct {
 	Parent   *Scope
 	Vars     map[string]Variable
+	Refs     map[string]value.Value
 	Entrance *ir.Block
 	Exit     *ir.Block
 	Loop     bool
@@ -49,6 +50,16 @@ func (s *Scope) Lookup(name string, loc *typing.Location) Variable {
 		Errors.Error("'"+name+"' is not defined", loc)
 	}
 	return s.Parent.Lookup(name, loc)
+}
+
+func (s *Scope) RefLookup(name string, loc *typing.Location) value.Value {
+	if ref, ok := s.Refs[name]; ok {
+		return ref
+	}
+	if s.Parent == nil || s.Seperate {
+		Errors.Error("'"+name+"' is not defined", loc)
+	}
+	return s.Parent.RefLookup(name, loc)
 }
 
 func (s *Scope) Has(name string) bool {
@@ -104,6 +115,7 @@ func NewScope() *Scope {
 	return &Scope{
 		nil,
 		make(map[string]Variable),
+		make(map[string]value.Value),
 		nil,
 		nil,
 		false,

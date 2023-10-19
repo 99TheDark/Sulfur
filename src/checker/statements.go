@@ -136,7 +136,17 @@ func (c *checker) inferFunction(x ast.Function) {
 	}
 	c.inferBlock(x.Body, func() {
 		for _, param := range x.Params {
-			c.top.Vars[param.Name.Name] = ast.NewVariable(c.topfun, param.Name.Name, param.Reference, typing.Type(param.Type.Name), ast.Parameter)
+			if param.Reference {
+				c.program.References.Add(typing.Type(param.Type.Name))
+			}
+
+			c.top.Vars[param.Name.Name] = ast.NewVariable(
+				c.topfun,
+				param.Name.Name,
+				param.Reference,
+				typing.Type(param.Type.Name),
+				ast.Parameter,
+			)
 		}
 	})
 	c.topfun = c.topfun.Parent

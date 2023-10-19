@@ -97,7 +97,7 @@ func (p *parser) parseFuncCall(iden ast.Identifier) ast.Expr {
 	if p.tt() == lexer.OpenParen {
 		p.eat()
 		params := []ast.Expr{}
-		p.parseStmts(
+		p.parseList(
 			func() {
 				params = append(params, p.parseExpr())
 			},

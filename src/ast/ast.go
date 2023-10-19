@@ -4,6 +4,7 @@ import (
 	"sulfur/src/builtins"
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
+	"sulfur/src/utils"
 	"sulfur/src/visibility"
 )
 
@@ -14,6 +15,7 @@ type Expr interface {
 type (
 	Program struct {
 		// TODO: Create & replace strings with StringSignatures
+		References  utils.Set[typing.Type]         `json:"-"`
 		Functions   []builtins.FuncSignature       `json:"-"`
 		BinaryOps   []builtins.BinaryOpSignature   `json:"-"`
 		UnaryOps    []builtins.UnaryOpSignature    `json:"-"`
@@ -99,7 +101,6 @@ type (
 		Type      Identifier
 		Name      Identifier
 		Reference bool
-		Autodef   bool
 	}
 
 	Method struct {

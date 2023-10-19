@@ -1,6 +1,7 @@
 package compiler
 
 import (
+	"sulfur/src/ast"
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
 
@@ -8,6 +9,36 @@ import (
 	"github.com/llir/llvm/ir/types"
 	"github.com/llir/llvm/ir/value"
 )
+
+func (g *generator) genBasicRawIden(vari ast.Variable) value.Value {
+	bl := g.bl
+	if vari.Reference {
+		bundle := g.refs[vari.Type]
+		ref := *vari.Value
+
+		ptr := bl.NewGetElementPtr(bundle.typ, ref, Zero, Zero)
+		ptr.InBounds = true
+
+		load := bl.NewLoad(g.llptr(vari.Type), ptr)
+		load.Align = 8
+		return load
+	} else {
+		return *vari.Value
+	}
+}
+
+func (g *generator) genBasicIden(vari ast.Variable) value.Value {
+	bl := g.bl
+
+	val := g.genBasicRawIden(vari)
+
+	if !vari.Reference && vari.Status == ast.Parameter {
+		return val
+	}
+
+	load := bl.NewLoad(g.lltyp(vari.Type), val)
+	return load
+}
 
 func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, loc *typing.Location) {
 	bl := g.bl
@@ -22,13 +53,16 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 	*vari.Value = alloca
 }
 
-func (g *generator) genBasicAssign(name string, src value.Value, loc *typing.Location) {
+func (g *generator) genBasicAssign(name string, val value.Value, loc *typing.Location) {
 	bl := g.bl
 	vari := g.top.Lookup(name, loc)
 	if vari.Reference {
-		// size := g.size(vari.Type)
+		iden := g.genBasicRawIden(vari)
+
+		store := bl.NewStore(val, iden)
+		store.Align = 8
 	} else {
-		bl.NewStore(src, *vari.Value)
+		bl.NewStore(val, *vari.Value)
 	}
 }
 

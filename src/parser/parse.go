@@ -86,6 +86,7 @@ func (p *parser) is(catagory []lexer.TokenType) bool {
 
 func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 	prog := ast.Program{
+		References:  utils.NewSet[typing.Type](),
 		Functions:   []builtins.FuncSignature{},
 		BinaryOps:   []builtins.BinaryOpSignature{},
 		UnaryOps:    []builtins.UnaryOpSignature{},
@@ -107,7 +108,7 @@ func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 	}
 
 	body := []ast.Expr{}
-	p.parseStmts(
+	p.parseList(
 		func() {
 			body = append(body, p.parseStmt())
 		},

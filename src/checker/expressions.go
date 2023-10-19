@@ -142,7 +142,6 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 					if l1 < l2 {
 						param = (*x.Params)[l1-1]
 					} else {
-						fmt.Println(l1, l2)
 						param = (*x.Params)[l1-1]
 					}
 					Errors.Error(fmt.Sprint(l1)+" parameters given, but "+fmt.Sprint(l2)+" expected", param.Loc())
@@ -170,5 +169,6 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 
 func (c *checker) inferReference(x ast.Reference) typing.Type {
 	vari := c.top.Lookup(x.Variable.Name, x.Variable.Loc())
+	c.program.References.Add(vari.Type)
 	return c.typ(x, vari.Type)
 }

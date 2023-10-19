@@ -1,21 +1,21 @@
 # TODO
-- Better escaped characters
+- Official reference syntax (currently WIP in notes)
 - Labeled breaks / continues with #'s
 - Float to string generation
+- Automatic type inference 
+    - `println(5)` = `println(string!(5))`
+    - `6 + 3.4` = `float!(6) + 3.4`
+    - `8 + "th"` = `string!(8) + "th"`
 - Work on error & enum syntax
-- Official event syntax
-- Official ask/reply syntax
+- Better escaped characters
 - Unsigned integer & byte literals
-- Official reference syntax (currently WIP in notes)
-- Complex numbers
+- Official ask/reply syntax
+- Official event syntax
 - Classes
 - String equals string 
+- Complex numbers
 - Return out of a void function
 - Only link functions when needed
 - Better token to string handling
 - Unsigned integer to string
 - Switch from 1-byte strings to 4-byte strings
-- Automatic type inference 
-    - `println(5)` = `println(string!(5))`
-    - `6 + 3.4` = `float!(6) + 3.4`
-    - `8 + "th"` = `string!(8) + "th"`

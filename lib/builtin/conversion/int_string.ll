@@ -5,7 +5,7 @@ source_filename = "lib/builtin/conversion/int_string"
 declare i8* @malloc(i32)
 declare void @free(i8*)
 
-@.str0 = private unnamed_addr constant [1 x i8] c"0", align 1
+@.strZero = private unnamed_addr constant [1 x i8] c"0", align 1
 
 define %type.string @".conv:int_string"(i32 %int) {
 entry:
@@ -14,7 +14,7 @@ entry:
     br i1 %0, label %if.then, label %if.end
 
 if.then:
-    %1 = getelementptr inbounds [1 x i8], [1 x i8]* @.str0, i32 0, i32 0
+    %1 = getelementptr inbounds [1 x i8], [1 x i8]* @.strZero, i32 0, i32 0
 	%2 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
 	store i32 1, i32* %2, align 8
 	%3 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1

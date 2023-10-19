@@ -5,6 +5,7 @@ import (
 	"sulfur/src/ast"
 	"sulfur/src/builtins"
 	"sulfur/src/checker"
+	"sulfur/src/typing"
 	"sulfur/src/utils"
 
 	"github.com/llir/llvm/ir"
@@ -20,6 +21,7 @@ type generator struct {
 	bl       *ir.Block // TODO: Move bl to context
 	breaks   map[*ir.Block]bool
 	str      types.Type
+	refs     map[typing.Type]ref_bundle
 	strs     map[string]StringGlobal
 	builtins llvm_builtins
 }
@@ -82,6 +84,7 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 		bl,
 		make(map[*ir.Block]bool),
 		str,
+		make(map[typing.Type]ref_bundle),
 		make(map[string]StringGlobal),
 		llvm_builtins{
 			make(map[string]*builtins.FuncSignature),
@@ -95,6 +98,7 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 	}
 
 	g.genStrings()
+	g.genReferences()
 	g.genFuncs()
 	g.genClasses()
 	g.genBinOps()

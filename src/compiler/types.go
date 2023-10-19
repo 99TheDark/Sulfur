@@ -29,6 +29,10 @@ func (g *generator) lltyp(typ typing.Type) types.Type {
 	return types.Void
 }
 
+func (g *generator) llptr(typ typing.Type) types.Type {
+	return types.NewPointer(g.lltyp(typ))
+}
+
 func (g *generator) typ(x ast.Expr) types.Type {
 	if typ, ok := g.types[x]; ok {
 		return g.lltyp(typ)

@@ -116,7 +116,7 @@ func (p *parser) parseNew() ast.Expr {
 		class := p.parseIdentifier()
 		p.expect(lexer.OpenParen)
 		params := []ast.Expr{}
-		p.parseStmts(
+		p.parseList(
 			func() {
 				params = append(params, p.parseExpr())
 			},

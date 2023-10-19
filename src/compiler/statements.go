@@ -58,22 +58,17 @@ func (g *generator) genAssignment(x ast.Assignment) {
 	if lexer.Empty(x.Op) {
 		g.genBasicAssign(x.Name.Name, g.genExpr(x.Value), x.Name.Loc())
 	} else {
-		bl := g.bl
-		iden := *g.top.Lookup(x.Name.Name, x.Loc()).Value
-		load := bl.NewLoad(g.typ(x.Value), iden)
+		vari := g.top.Lookup(x.Name.Name, x.Loc())
+		iden := g.genBasicIden(vari)
 
-		val := g.genBasicBinaryOp(load, g.genExpr(x.Value), x.Op.Type, g.types[x.Value])
+		val := g.genBasicBinaryOp(iden, g.genExpr(x.Value), x.Op.Type, g.types[x.Value])
 		g.genBasicAssign(x.Name.Name, val, x.Name.Loc())
 	}
 }
 
 func (g *generator) genIncDec(x ast.IncDec) {
-	bl := g.bl
 	vari := g.top.Lookup(x.Name.Name, x.Loc())
-	iden := *vari.Value
-	typ := g.lltyp(vari.Type)
-
-	load := bl.NewLoad(typ, iden)
+	iden := g.genBasicIden(vari)
 
 	var op lexer.TokenType
 	switch x.Op.Type {
@@ -86,9 +81,9 @@ func (g *generator) genIncDec(x ast.IncDec) {
 	var val value.Value
 	switch vari.Type {
 	case typing.Integer:
-		val = g.genBasicBinaryOp(load, One, op, vari.Type)
+		val = g.genBasicBinaryOp(iden, One, op, vari.Type)
 	case typing.Float:
-		val = g.genBasicBinaryOp(load, FOne, op, vari.Type)
+		val = g.genBasicBinaryOp(iden, FOne, op, vari.Type)
 	default:
 		Errors.Error("Unexpected generating error during "+strings.ToLower(x.Op.Type.String()), x.Loc())
 	}
@@ -146,7 +141,7 @@ func (g *generator) genFunction(x ast.Function) {
 	if src.Return == typing.Void {
 		exit.NewRet(nil)
 	} else {
-		load := exit.NewLoad(rettyp, ret) // TODO: Switch to rettyp
+		load := exit.NewLoad(rettyp, ret)
 		exit.NewRet(load)
 	}
 

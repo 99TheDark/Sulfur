@@ -5,19 +5,22 @@ import (
 	"sulfur/src/typing"
 )
 
-func QuickModFunc(mod string, name string, ret typing.Type, params ...typing.Type) FuncSignature {
-	paramArr := []ParamSignature{}
-	for _, param := range params {
-		paramArr = append(paramArr, QuickParam(param))
-	}
-
+func QuickModFunc(mod string, name string, ret typing.Type, params ...ParamSignature) FuncSignature {
 	return FuncSignature{
 		name,
 		ret,
-		paramArr,
+		params,
 		mod,
 		nil,
 		0,
+	}
+}
+
+func QuickModParam(typ typing.Type, ref bool) ParamSignature {
+	return ParamSignature{
+		typ,
+		ref,
+		nil,
 	}
 }
 

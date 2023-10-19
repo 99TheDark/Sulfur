@@ -1,11 +1,15 @@
-x := "Hello"
-func byValue(string value) {
-    println(value)
-}
-func byRef(&string ref) {
-    ref = "World"
-}
+x := 100
+x -= 2
+x++
 
 byValue(x)
 byRef(&x)
-println(x)
+println(string!(x))
+
+func byValue(int value) {
+    println(string!(value))
+}
+func byRef(&int ref) {
+    ref *= 2
+    println(string!(ref))
+}

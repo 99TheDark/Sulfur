@@ -6,15 +6,16 @@ import (
 )
 
 func QuickFunc(name string, ret typing.Type, params ...typing.Type) FuncSignature {
-	return QuickModFunc("", name, ret, params...)
+	paramList := []ParamSignature{}
+	for _, param := range params {
+		paramList = append(paramList, QuickParam(param))
+	}
+
+	return QuickModFunc("", name, ret, paramList...)
 }
 
 func QuickParam(typ typing.Type) ParamSignature {
-	return ParamSignature{
-		typ,
-		false,
-		nil,
-	}
+	return QuickModParam(typ, false)
 }
 
 func QuickBinOp(left, right typing.Type, op lexer.TokenType) BinaryOpSignature {

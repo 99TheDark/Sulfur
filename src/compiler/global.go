@@ -37,6 +37,37 @@ func (g *generator) genStrings() {
 	}
 }
 
+func (g *generator) genReferences() {
+	mod := g.mod
+	for _, typ := range g.program.References.Array() {
+		lltyp := g.lltyp(typ)
+
+		reftyp := mod.NewTypeDef("ref."+string(typ), types.NewStruct(
+			types.NewPointer(lltyp), // type
+			types.I32,               // count
+		))
+		refptr := types.NewPointer(reftyp)
+
+		ref := mod.NewFunc(
+			"ref:"+string(typ),
+			refptr,
+			ir.NewParam("", lltyp),
+		)
+		deref := mod.NewFunc(
+			"deref:"+string(typ),
+			types.Void,
+			ir.NewParam("", refptr),
+		)
+
+		g.refs[typ] = ref_bundle{
+			reftyp,
+			refptr,
+			ref,
+			deref,
+		}
+	}
+}
+
 func (g *generator) genFuncs() {
 	for i, fun := range g.program.Functions {
 		if fun.Uses == 0 {
@@ -47,9 +78,15 @@ func (g *generator) genFuncs() {
 
 		params := []*ir.Param{}
 		for i, param := range fun.Params {
-			p := ir.NewParam("", g.lltyp(param.Type))
-			fun.Params[i].Ir = p
-			params = append(params, p)
+			if param.Reference {
+				p := ir.NewParam("", g.refs[param.Type].ptr)
+				fun.Params[i].Ir = p
+				params = append(params, p)
+			} else {
+				p := ir.NewParam("", g.lltyp(param.Type))
+				fun.Params[i].Ir = p
+				params = append(params, p)
+			}
 		}
 
 		fun.Ir = g.mod.NewFunc(

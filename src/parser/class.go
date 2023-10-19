@@ -22,7 +22,7 @@ func (p *parser) parseClass() ast.Class {
 
 	fieldsigs := []builtins.FieldSignature{}
 
-	p.parseStmts(
+	p.parseList(
 		func() {
 			prefix := lexer.Token{}
 			tok := p.at()
@@ -110,7 +110,7 @@ func (p *parser) parseMethod(prefix lexer.Token) ast.Method {
 	name := p.parseIdentifier()
 	p.expect(lexer.OpenParen)
 	params := []ast.Param{}
-	p.parseStmts(
+	p.parseList(
 		func() {
 			params = append(params, p.parseParam())
 		},
@@ -144,7 +144,7 @@ func (p *parser) parseNewDel(prefix lexer.Token) ast.Method {
 	tok := p.eat()
 	params := []ast.Param{}
 	p.expect(lexer.OpenParen)
-	p.parseStmts(
+	p.parseList(
 		func() {
 			params = append(params, p.parseParam())
 		},
@@ -187,7 +187,7 @@ func (p *parser) parseOperation() ast.Operation {
 	op := p.eat()
 	params := []ast.Param{}
 	p.expect(lexer.OpenParen)
-	p.parseStmts(
+	p.parseList(
 		func() {
 			params = append(params, p.parseParam())
 		},

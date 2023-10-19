@@ -2,57 +2,60 @@
 source_filename = "script.su"
 
 %type.string = type { i32, i32, i8* }
-%ref.string = type { %type.string, i32 }
-
-@.str0 = private unnamed_addr constant [5 x i8] c"Hello", align 1
-@.str1 = private unnamed_addr constant [5 x i8] c"World", align 1
+%ref.int = type { i32*, i32 }
 
 define void @main() {
 entry:
-	%0 = getelementptr inbounds [5 x i8], [5 x i8]* @.str0, i32 0, i32 0
-	%1 = alloca %type.string, align 8
-	%2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-	store i32 5, i32* %2, align 8
-	%3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-	store i32 5, i32* %3, align 8
-	%4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
-	store i8* %0, i8** %4, align 8
-	%5 = load %type.string, %type.string* %1, align 8
-	%x = alloca %type.string
-	store %type.string %5, %type.string* %x
-	%6 = load %type.string, %type.string* %x
-	call void @mod.byValue(%type.string %6)
-	%7 = load %type.string, %type.string* %x
-	%8 = call %ref.string* @"ref:string"(%type.string %7)
-	call void @mod.byRef(%ref.string* %8)
-	%9 = load %type.string, %type.string* %x
-	call void @.println(%type.string %9)
+	%x = alloca i32
+	store i32 100, i32* %x
+	%0 = load i32, i32* %x
+	%1 = sub i32 %0, 2
+	store i32 %1, i32* %x
+	%2 = load i32, i32* %x
+	%3 = add i32 %2, 1
+	store i32 %3, i32* %x
+	%4 = load i32, i32* %x
+	call void @mod.byValue(i32 %4)
+	%5 = load i32, i32* %x
+	%6 = call %ref.int* @"ref:int"(i32 %5)
+	call void @mod.byRef(%ref.int* %6)
+	%7 = load i32, i32* %x
+	%8 = call %type.string @".conv:int_string"(i32 %7)
+	call void @.println(%type.string %8)
 	br label %exit
 
 exit:
 	ret void
 }
 
-define private void @mod.byValue(%type.string %0) {
+declare %ref.int* @"ref:int"(i32 %0)
+
+declare void @"deref:int"(%ref.int* %0)
+
+define private void @mod.byValue(i32 %0) {
 entry:
-	call void @.println(%type.string %0)
+	%1 = call %type.string @".conv:int_string"(i32 %0)
+	call void @.println(%type.string %1)
 	br label %exit
 
 exit:
 	ret void
 }
 
-define private void @mod.byRef(%type.string %0) {
+define private void @mod.byRef(%ref.int* %0) {
 entry:
-	%1 = getelementptr inbounds [5 x i8], [5 x i8]* @.str1, i32 0, i32 0
-	%2 = alloca %type.string, align 8
-	%3 = getelementptr inbounds %type.string, %type.string* %2, i32 0, i32 0
-	store i32 5, i32* %3, align 8
-	%4 = getelementptr inbounds %type.string, %type.string* %2, i32 0, i32 1
-	store i32 5, i32* %4, align 8
-	%5 = getelementptr inbounds %type.string, %type.string* %2, i32 0, i32 2
-	store i8* %1, i8** %5, align 8
-	%6 = load %type.string, %type.string* %2, align 8
+	%1 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+	%2 = load i32*, i32** %1, align 8
+	%3 = load i32, i32* %2
+	%4 = mul i32 %3, 2
+	%5 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+	%6 = load i32*, i32** %5, align 8
+	store i32 %4, i32* %6, align 8
+	%7 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+	%8 = load i32*, i32** %7, align 8
+	%9 = load i32, i32* %8
+	%10 = call %type.string @".conv:int_string"(i32 %9)
+	call void @.println(%type.string %10)
 	br label %exit
 
 exit:
@@ -61,4 +64,4 @@ exit:
 
 declare void @.println(%type.string %0)
 
-declare %ref.string* @"ref:string"(%type.string %0)
+declare %type.string @".conv:int_string"(i32 %0)

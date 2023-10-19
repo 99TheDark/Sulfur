@@ -41,7 +41,7 @@ func (p *parser) parseStmt() ast.Expr {
 	}
 }
 
-func (p *parser) parseStmts(stmtgen func(), ending []lexer.TokenType, delim []lexer.TokenType) {
+func (p *parser) parseList(stmtgen func(), ending []lexer.TokenType, delim []lexer.TokenType) {
 	for !p.is(ending) {
 		if p.tt() == lexer.NewLine {
 			p.eat()
@@ -79,7 +79,7 @@ func (p *parser) parseBlock() ast.Block {
 		p.top = scope
 
 		stmts := []ast.Expr{}
-		p.parseStmts(
+		p.parseList(
 			func() {
 				stmts = append(stmts, p.parseStmt())
 			},
@@ -102,9 +102,10 @@ func (p *parser) parseFunction() ast.Function {
 
 	p.expect(lexer.OpenParen)
 	params := []ast.Param{}
-	p.parseStmts(
+	p.parseList(
 		func() {
-			params = append(params, p.parseParam())
+			p := p.parseParam()
+			params = append(params, p)
 		},
 		[]lexer.TokenType{lexer.CloseParen},
 		[]lexer.TokenType{lexer.Delimiter},
@@ -121,16 +122,16 @@ func (p *parser) parseFunction() ast.Function {
 	body.Scope.Seperate = true
 
 	// TODO: Check if function already exists
-	ptypes := []typing.Type{}
+	psigs := []builtins.ParamSignature{}
 	for _, param := range params {
-		ptypes = append(ptypes, typing.Type(param.Type.Name))
+		psigs = append(psigs, builtins.QuickModParam(typing.Type(param.Type.Name), param.Reference))
 	}
 
 	sig := builtins.QuickModFunc(
 		"mod",
 		name.Name,
 		typing.Type(ret.Name),
-		ptypes...,
+		psigs...,
 	)
 	p.program.Functions = append(p.program.Functions, sig)
 
@@ -154,7 +155,7 @@ func (p *parser) parseEnum() ast.Enum {
 
 	p.expect(lexer.OpenBrace)
 	elems := []ast.Identifier{}
-	p.parseStmts(
+	p.parseList(
 		func() {
 			elems = append(elems, p.parseIdentifier())
 		},

@@ -8,7 +8,6 @@ import (
 
 	. "sulfur/src/errors"
 
-	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/types"
@@ -46,16 +45,8 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 }
 
 func (g *generator) genIdentifier(x ast.Identifier) value.Value {
-	bl := g.bl
 	vari := g.top.Lookup(x.Name, x.Pos)
-	val := *vari.Value
-
-	if vari.Status == ast.Parameter {
-		return val
-	} else {
-		load := bl.NewLoad(g.typ(x), val)
-		return load
-	}
+	return g.genBasicIden(vari)
 }
 
 func (g *generator) genString(x ast.String) value.Value {
@@ -217,9 +208,7 @@ func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
 }
 
 func (g *generator) genFuncCall(x ast.FuncCall) value.Value {
-	// TODO: Include return value in parameter as pointer if a struct
 	// TODO: Make operator overloading work
-	// TODO: Make this actually work
 	bl := g.bl
 
 	for _, fun := range g.program.Functions {
@@ -238,29 +227,10 @@ func (g *generator) genFuncCall(x ast.FuncCall) value.Value {
 }
 
 func (g *generator) genReference(x ast.Reference) value.Value {
-	mod := g.mod
 	bl := g.bl
 	vari := g.top.Lookup(x.Variable.Name, x.Variable.Loc())
+	bundle := g.refs[vari.Type]
 
-	typ := g.lltyp(vari.Type)
-
-	// TODO: Pregenerate
-	reftyp := mod.NewTypeDef("ref."+string(vari.Type), types.NewStruct(
-		typ,
-		types.I32, // count
-	))
-	ref := g.mod.NewFunc(
-		"ref:"+string(vari.Type),
-		types.NewPointer(reftyp),
-		ir.NewParam("", typ),
-	)
-	// TODO: Insert deref at end of scope
-	/*deref := g.mod.NewFunc(
-		"deref:"+string(vari.Type),
-		types.Void,
-		ir.NewParam("", types.NewPointer(reftyp)),
-	)*/
-
-	load := bl.NewLoad(g.typ(x), *vari.Value)
-	return bl.NewCall(ref, load)
+	iden := g.genBasicIden(vari)
+	return bl.NewCall(bundle.ref, iden)
 }
