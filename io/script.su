@@ -1,8 +1,8 @@
 x := "Hello"
-byValue(string val) {
-    println(val)
+func byValue(string value) {
+    println(value)
 }
-byRef(&string ref) {
+func byRef(&string ref) {
     ref = "World"
 }
 

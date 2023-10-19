@@ -4,7 +4,6 @@ source_filename = "lib/builtin/reference/int_ref"
 
 declare i8* @malloc(i32)
 declare void @free(i8*)
-declare void @.refMsg(i32, i32)
 
 define %ref.int* @"ref:int"(i32 %value) {
 entry:
@@ -38,11 +37,5 @@ if.then:
     br label %exit
 
 exit:
-    %value.addr = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 0
-    %value = load i32*, i32** %value.addr, align 8
-    %val = load i32, i32* %value, align 4
-    %count.addr = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
-    %count = load i32, i32* %count.addr, align 8
-    call void @.refMsg(i32 %val, i32 %count) ; 0 now has ??? references, meaning it was freed (memory used for something else)
     ret void
 }

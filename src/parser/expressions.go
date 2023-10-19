@@ -149,6 +149,18 @@ func (p *parser) parseAccess() ast.Expr {
 		}
 		return expr
 	}
+	return p.parseReference()
+}
+
+func (p *parser) parseReference() ast.Expr {
+	if p.tt() == lexer.And {
+		tok := p.eat()
+		iden := p.parseIdentifier()
+		return ast.Reference{
+			Pos:      tok.Location,
+			Variable: iden,
+		}
+	}
 	return p.parsePrimary()
 }
 

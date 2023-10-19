@@ -18,11 +18,12 @@ const (
 )
 
 type Variable struct {
-	Name   string
-	Id     int
-	Type   typing.Type
-	Status VariableType
-	Value  *value.Value
+	Name      string
+	Id        int
+	Reference bool
+	Type      typing.Type
+	Status    VariableType
+	Value     *value.Value
 }
 
 type Scope struct {
@@ -110,8 +111,8 @@ func NewScope() *Scope {
 	}
 }
 
-func NewVariable(fscope *FuncScope, name string, typ typing.Type, status VariableType) Variable {
-	vari := Variable{name, fscope.Counts[name], typ, status, new(value.Value)}
+func NewVariable(fscope *FuncScope, name string, ref bool, typ typing.Type, status VariableType) Variable {
+	vari := Variable{name, fscope.Counts[name], ref, typ, status, new(value.Value)}
 	fscope.Counts[name]++
 	return vari
 }

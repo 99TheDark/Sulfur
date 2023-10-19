@@ -30,6 +30,8 @@ func (c *checker) inferExpr(expr ast.Expr) typing.Type {
 		return c.inferTypeConv(x)
 	case ast.FuncCall:
 		return c.inferFuncCall(x)
+	case ast.Reference:
+		return c.inferReference(x)
 	default:
 		fmt.Println("Ignored type inferring expression")
 		return c.typ(x, typing.Void)
@@ -164,4 +166,9 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 
 	Errors.Error("The function "+x.Func.Name+" is undefined", x.Func.Pos)
 	return c.typ(x, typing.Void)
+}
+
+func (c *checker) inferReference(x ast.Reference) typing.Type {
+	vari := c.top.Lookup(x.Variable.Name, x.Variable.Loc())
+	return c.typ(x, vari.Type)
 }

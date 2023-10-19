@@ -16,6 +16,7 @@
 - Unsigned integer to string
 - Switch from 1-byte strings to 4-byte strings
 - Use sizeof() for mallocs
+- Temporarily remove autodef
 - Automatic type inference 
     - `println(5)` = `println(string!(5))`
     - `6 + 3.4` = `float!(6) + 3.4`

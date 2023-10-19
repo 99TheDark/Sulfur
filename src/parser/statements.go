@@ -243,11 +243,27 @@ func (p *parser) parseDoWhileLoop() ast.DoWhileLoop {
 }
 
 func (p *parser) parseParam() ast.Param {
-	typ := p.parseIdentifier()
-	name := p.parseIdentifier()
-	return ast.Param{
-		Type: typ,
-		Name: name,
+	if p.tt() == lexer.And {
+		ref := p.eat()
+		typ := p.parseIdentifier()
+		name := p.parseIdentifier()
+		return ast.Param{
+			Pos:       ref.Location,
+			Type:      typ,
+			Name:      name,
+			Reference: true,
+			Autodef:   false,
+		}
+	} else {
+		typ := p.parseIdentifier()
+		name := p.parseIdentifier()
+		return ast.Param{
+			Pos:       typ.Loc(),
+			Type:      typ,
+			Name:      name,
+			Reference: false,
+			Autodef:   false,
+		}
 	}
 }
 
