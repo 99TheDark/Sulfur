@@ -9,18 +9,13 @@ entry:
 	%x = call %ref.int* @"ref:int"(i32 100)
 	%0 = getelementptr inbounds %ref.int, %ref.int* %x, i32 0, i32 0
 	%1 = load i32*, i32** %0, align 8
-	%2 = load i32, i32* %1, align 4
+  	%2 = load i32, i32* %1, align 4
 	call void @mod.byValue(i32 %2)
-	%3 = getelementptr inbounds %ref.int, %ref.int* %x, i32 0, i32 0
-	%4 = load i32*, i32** %3, align 8
-	%5 = load i32, i32* %4, align 4
-	%6 = call %ref.int* @"ref:int"(i32 %5)
-	call void @mod.byRef(%ref.int* %6)
-	%7 = getelementptr inbounds %ref.int, %ref.int* %x, i32 0, i32 0
-	%8 = load i32*, i32** %7, align 8
-	%9 = load i32, i32* %8, align 4
-	%10 = call %type.string @".conv:int_string"(i32 %9)
-	call void @.println(%type.string %10)
+	call void @mod.byRef(%ref.int* %x)
+  	%3 = load i32, i32* %1, align 4
+	%4 = call %type.string @".conv:int_string"(i32 %3)
+	call void @.println(%type.string %4)
+	call void @"deref:int"(%ref.int* %x)
 	br label %exit
 
 exit:
@@ -47,9 +42,7 @@ entry:
 	%2 = load i32*, i32** %1, align 8
 	%3 = load i32, i32* %2, align 4
 	%4 = mul i32 %3, 2
-	%5 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
-	%6 = load i32*, i32** %5, align 8
-	store i32 %4, i32* %6, align 8
+	store i32 %4, i32* %2, align 4
 	br label %exit
 
 exit:

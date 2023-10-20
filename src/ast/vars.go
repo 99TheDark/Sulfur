@@ -18,17 +18,18 @@ const (
 )
 
 type Variable struct {
-	Name      string
-	Id        int
-	Reference bool
-	Type      typing.Type
-	Status    VariableType
-	Value     *value.Value
+	Name       string
+	Id         int
+	IsRef      bool
+	Referenced bool
+	Type       typing.Type
+	Status     VariableType
+	Value      *value.Value
 }
 
 type Scope struct {
 	Parent   *Scope
-	Vars     map[string]Variable
+	Vars     map[string]*Variable
 	Refs     map[string]value.Value
 	Entrance *ir.Block
 	Exit     *ir.Block
@@ -42,7 +43,7 @@ type FuncScope struct {
 	Counts map[string]int
 }
 
-func (s *Scope) Lookup(name string, loc *typing.Location) Variable {
+func (s *Scope) Lookup(name string, loc *typing.Location) *Variable {
 	if vari, ok := s.Vars[name]; ok {
 		return vari
 	}
@@ -114,7 +115,7 @@ func (v *Variable) LLName() string {
 func NewScope() *Scope {
 	return &Scope{
 		nil,
-		make(map[string]Variable),
+		make(map[string]*Variable),
 		make(map[string]value.Value),
 		nil,
 		nil,
@@ -123,8 +124,16 @@ func NewScope() *Scope {
 	}
 }
 
-func NewVariable(fscope *FuncScope, name string, ref bool, typ typing.Type, status VariableType) Variable {
-	vari := Variable{name, fscope.Counts[name], ref, typ, status, new(value.Value)}
+func NewVariable(fscope *FuncScope, name string, ref bool, typ typing.Type, status VariableType) *Variable {
+	vari := &Variable{
+		name,
+		fscope.Counts[name],
+		ref,
+		false,
+		typ,
+		status,
+		new(value.Value),
+	}
 	fscope.Counts[name]++
 	return vari
 }

@@ -169,6 +169,7 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 
 func (c *checker) inferReference(x ast.Reference) typing.Type {
 	vari := c.top.Lookup(x.Variable.Name, x.Variable.Loc())
+	vari.Referenced = true
 	c.program.References.Add(vari.Type)
 	return c.typ(x, vari.Type)
 }

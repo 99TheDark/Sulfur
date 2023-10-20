@@ -7,17 +7,27 @@ declare void @free(i8*)
 
 define %ref.int* @"ref:int"(i32 %value) {
 entry:
-    %ref = alloca %ref.int, align 8
-	%ref.value = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 0
-	%0 = call i8* @malloc(i32 4)
-    %1 = bitcast i8* %0 to i32*
-	store i32* %1, i32** %ref.value, align 8
-	%ref.value2 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 0
-  	%2 = load i32*, i32** %ref.value2, align 8
-	store i32 %value, i32* %2, align 8
-	%ref.count = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
-	store i32 1, i32* %ref.count, align 8
-    ret %ref.int* %ref
+    %value.addr = alloca i32, align 4
+    %ref = alloca %ref.int*, align 8
+    store i32 %value, i32* %value.addr, align 4
+    %call = call i8* @malloc(i32 16) ; sizeof(&int) = 16
+    %0 = bitcast i8* %call to %ref.int*
+    store %ref.int* %0, %ref.int** %ref, align 8
+    %call1 = call i8* @malloc(i32 4) ; sizeof(int) = 16
+    %1 = bitcast i8* %call1 to i32*
+    %2 = load %ref.int*, %ref.int** %ref, align 8
+    %value2 = getelementptr inbounds %ref.int, %ref.int* %2, i32 0, i32 0
+    store i32* %1, i32** %value2, align 8
+    %3 = load i32, i32* %value.addr, align 4
+    %4 = load %ref.int*, %ref.int** %ref, align 8
+    %value3 = getelementptr inbounds %ref.int, %ref.int* %4, i32 0, i32 0
+    %5 = load i32*, i32** %value3, align 8
+    store i32 %3, i32* %5, align 4
+    %6 = load %ref.int*, %ref.int** %ref, align 8
+    %count = getelementptr inbounds %ref.int, %ref.int* %6, i32 0, i32 1
+    store i32 0, i32* %count, align 8
+    %7 = load %ref.int*, %ref.int** %ref, align 8
+    ret %ref.int* %7
 }
 
 define void @"deref:int"(%ref.int* %ref) {
@@ -34,6 +44,8 @@ if.then:
     %5 = load i32*, i32** %4, align 8
     %6 = bitcast i32* %5 to i8*
     call void @free(i8* %6)
+    %7 = bitcast %ref.int* %ref to i8*
+    call void @free(i8* %7)
     br label %exit
 
 exit:

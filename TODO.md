@@ -1,4 +1,5 @@
 # TODO
+- Instead of creating new references & using alloca, use ref:type for all referenced variables
 - Official reference syntax (currently WIP in notes)
 - Labeled breaks / continues with #'s
 - Float to string generation

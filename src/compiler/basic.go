@@ -5,14 +5,15 @@ import (
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
 
+	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
 	"github.com/llir/llvm/ir/types"
 	"github.com/llir/llvm/ir/value"
 )
 
-func (g *generator) genBasicRawIden(vari ast.Variable) value.Value {
+func (g *generator) genBasicRawIden(vari *ast.Variable) value.Value {
 	bl := g.bl
-	if vari.Reference {
+	if vari.IsRef {
 		bundle := g.refs[vari.Type]
 		ref := *vari.Value
 
@@ -22,21 +23,32 @@ func (g *generator) genBasicRawIden(vari ast.Variable) value.Value {
 		load := bl.NewLoad(g.llptr(vari.Type), ptr)
 		load.Align = 8
 		return load
+	} else if vari.Referenced {
+		bundle := g.refs[vari.Type]
+		ref := *vari.Value
+
+		ptr := bl.NewGetElementPtr(bundle.typ, ref, Zero, Zero)
+		ptr.InBounds = true
+
+		valptr := bl.NewLoad(g.llptr(vari.Type), ptr)
+		valptr.Align = 8
+		return valptr
 	} else {
 		return *vari.Value
 	}
 }
 
-func (g *generator) genBasicIden(vari ast.Variable) value.Value {
+func (g *generator) genBasicIden(vari *ast.Variable) value.Value {
 	bl := g.bl
 
 	val := g.genBasicRawIden(vari)
 
-	if !vari.Reference && vari.Status == ast.Parameter {
+	if !vari.IsRef && vari.Status == ast.Parameter {
 		return val
 	}
 
 	load := bl.NewLoad(g.lltyp(vari.Type), val)
+	load.Align = ir.Align(g.size(vari.Type))
 	return load
 }
 
@@ -45,18 +57,25 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 
 	vari := g.top.Lookup(name, loc)
 
-	alloca := bl.NewAlloca(typ)
-	alloca.LocalName = vari.LLName()
+	if vari.Referenced {
+		bundle := g.refs[vari.Type]
 
-	bl.NewStore(val, alloca)
+		call := bl.NewCall(bundle.ref, val)
+		call.LocalName = vari.LLName()
+		*vari.Value = call
+	} else {
+		alloca := bl.NewAlloca(typ)
+		alloca.LocalName = vari.LLName()
 
-	*vari.Value = alloca
+		bl.NewStore(val, alloca)
+		*vari.Value = alloca
+	}
 }
 
 func (g *generator) genBasicAssign(name string, val value.Value, loc *typing.Location) {
 	bl := g.bl
 	vari := g.top.Lookup(name, loc)
-	if vari.Reference {
+	if vari.IsRef {
 		iden := g.genBasicRawIden(vari)
 
 		store := bl.NewStore(val, iden)

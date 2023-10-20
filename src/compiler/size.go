@@ -14,3 +14,14 @@ func (g *generator) size(typ typing.Type) int {
 		return 0
 	}
 }
+
+func (g *generator) align(typ typing.Type) int {
+	switch typ {
+	case typing.Integer, typing.Unsigned, typing.Float:
+		return 4
+	case typing.Boolean:
+		return 1
+	default:
+		return 8
+	}
+}

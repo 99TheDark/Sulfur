@@ -83,7 +83,7 @@ func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
 
 func (c *checker) inferAssignment(x ast.Assignment) {
 	vari := c.top.Lookup(x.Name.Name, x.Name.Pos)
-	if vari.Status == ast.Parameter && !vari.Reference {
+	if vari.Status == ast.Parameter && !vari.IsRef {
 		Errors.Error("Illegal modification of a parameter", x.Value.Loc())
 	}
 

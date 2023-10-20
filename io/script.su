@@ -1,7 +1,4 @@
 x := 100
-x -= 2
-x++
-
 byValue(x)
 byRef(&x)
 println(string!(x))
@@ -11,5 +8,4 @@ func byValue(int value) {
 }
 func byRef(&int ref) {
     ref *= 2
-    println(string!(ref))
 }
