@@ -416,10 +416,11 @@ entry:
   %2 = load i32, i32* %1, align 4
   call void @mod.byValue(i32 %2)
   call void @mod.byRef(%ref.int* %x)
-  %3 = load i32, i32* %1, align 4
-  %4 = call %type.string @".conv:int_string"(i32 %3)
-  call void @.println(%type.string %4)
-  call void @"deref:int"(%ref.int* %x)
+  %3 = getelementptr inbounds %ref.int, %ref.int* %x, i32 0, i32 0
+  %4 = load i32*, i32** %3, align 8
+  %5 = load i32, i32* %4, align 4
+  %6 = call %type.string @".conv:int_string"(i32 %5)
+  call void @.println(%type.string %6)
   br label %exit
 
 exit:                                             ; preds = %entry

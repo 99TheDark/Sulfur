@@ -11,16 +11,12 @@ entry:
 	%1 = load i32*, i32** %0, align 8
 	%2 = load i32, i32* %1, align 4
 	call void @mod.byValue(i32 %2)
+	call void @mod.byRef(%ref.int* %x)
 	%3 = getelementptr inbounds %ref.int, %ref.int* %x, i32 0, i32 0
 	%4 = load i32*, i32** %3, align 8
 	%5 = load i32, i32* %4, align 4
-	%6 = call %ref.int* @"ref:int"(i32 %5)
-	call void @mod.byRef(%ref.int* %6)
-	%7 = getelementptr inbounds %ref.int, %ref.int* %x, i32 0, i32 0
-	%8 = load i32*, i32** %7, align 8
-	%9 = load i32, i32* %8, align 4
-	%10 = call %type.string @".conv:int_string"(i32 %9)
-	call void @.println(%type.string %10)
+	%6 = call %type.string @".conv:int_string"(i32 %5)
+	call void @.println(%type.string %6)
 	br label %exit
 
 exit:

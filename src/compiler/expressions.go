@@ -227,10 +227,10 @@ func (g *generator) genFuncCall(x ast.FuncCall) value.Value {
 }
 
 func (g *generator) genReference(x ast.Reference) value.Value {
-	bl := g.bl
 	vari := g.top.Lookup(x.Variable.Name, x.Variable.Loc())
-	bundle := g.refs[vari.Type]
+	if !vari.Referenced {
+		Errors.Error(vari.Name+" is never referenced", x.Variable.Loc())
+	}
 
-	iden := g.genBasicIden(vari)
-	return bl.NewCall(bundle.ref, iden)
+	return *vari.Value
 }
