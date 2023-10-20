@@ -3,8 +3,6 @@ println(string!(x))
 applyRec(&x)
 println(string!(x))
 
-y := &x
-
 func applyRec(&int num) {
     if num % 3 == 0 {
         num++

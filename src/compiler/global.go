@@ -48,10 +48,15 @@ func (g *generator) genReferences() {
 		))
 		refptr := types.NewPointer(reftyp)
 
-		ref := mod.NewFunc(
-			"ref:"+string(typ),
+		newref := mod.NewFunc(
+			"newref:"+string(typ),
 			refptr,
 			ir.NewParam("", lltyp),
+		)
+		ref := mod.NewFunc(
+			"ref:"+string(typ),
+			types.Void,
+			ir.NewParam("", refptr),
 		)
 		deref := mod.NewFunc(
 			"deref:"+string(typ),
@@ -62,6 +67,7 @@ func (g *generator) genReferences() {
 		g.refs[typ] = ref_bundle{
 			reftyp,
 			refptr,
+			newref,
 			ref,
 			deref,
 		}

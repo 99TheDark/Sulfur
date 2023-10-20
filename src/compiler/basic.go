@@ -50,7 +50,7 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 	if vari.Referenced {
 		bundle := g.refs[vari.Type]
 
-		call := bl.NewCall(bundle.ref, val)
+		call := bl.NewCall(bundle.newref, val)
 		call.LocalName = vari.LLName()
 		*vari.Value = call
 	} else {

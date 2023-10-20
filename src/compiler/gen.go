@@ -29,7 +29,7 @@ type generator struct {
 func (g *generator) scope(scope *ast.Scope, body func()) {
 	g.top = scope
 	body()
-	g.deref()
+	g.leaveRefs()
 	g.top = scope.Parent
 }
 
@@ -111,7 +111,7 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 	for _, x := range program.Contents.Body {
 		g.genStmt(x)
 	}
-	g.deref()
+	g.leaveRefs()
 
 	g.exit()
 	exit.NewRet(nil)

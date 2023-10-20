@@ -133,6 +133,7 @@ func (g *generator) genFunction(x ast.Function) {
 	bl := g.bl
 	g.bl = entry
 	g.top = x.Body.Scope
+
 	for _, expr := range x.Body.Body {
 		g.genStmt(expr)
 	}
@@ -165,8 +166,8 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 			g.enter(endBl)
 			g.bl = thenBl
 			g.genBlock(x.Body)
-			g.exit()
 		})
+		g.exit()
 
 		main.NewCondBr(cond, thenBl, endBl)
 		g.bl = endBl
@@ -178,15 +179,15 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 			g.enter(endBl)
 			g.bl = thenBl
 			g.genBlock(x.Body)
-			g.exit()
 		})
+		g.exit()
 
 		g.scope(x.Else.Scope, func() {
 			g.enter(endBl)
 			g.bl = elseBl
 			g.genBlock(x.Else)
-			g.exit()
 		})
+		g.exit()
 
 		main.NewCondBr(cond, thenBl, elseBl)
 		g.bl = endBl

@@ -27,13 +27,14 @@ type Variable struct {
 }
 
 type Scope struct {
-	Parent   *Scope
-	Vars     map[string]*Variable
-	Refs     map[string]value.Value
-	Entrance *ir.Block
-	Exit     *ir.Block
-	Loop     bool
-	Seperate bool
+	Parent     *Scope
+	Vars       map[string]*Variable
+	Refs       map[string]value.Value
+	ActiveRefs []*Variable
+	Entrance   *ir.Block
+	Exit       *ir.Block
+	Loop       bool
+	Seperate   bool
 }
 
 type FuncScope struct {
@@ -116,6 +117,7 @@ func NewScope() *Scope {
 		nil,
 		make(map[string]*Variable),
 		make(map[string]value.Value),
+		[]*Variable{},
 		nil,
 		nil,
 		false,

@@ -6,12 +6,13 @@ source_filename = "script.su"
 
 define void @main() {
 entry:
-	%x = call %ref.int* @"ref:int"(i32 499)
+	%x = call %ref.int* @"newref:int"(i32 499)
 	%0 = getelementptr inbounds %ref.int, %ref.int* %x, i32 0, i32 0
 	%1 = load i32*, i32** %0, align 8
 	%2 = load i32, i32* %1, align 4
 	%3 = call %type.string @".conv:int_string"(i32 %2)
 	call void @.println(%type.string %3)
+	call void @"ref:int"(%ref.int* %x)
 	call void @mod.applyRec(%ref.int* %x)
 	%4 = getelementptr inbounds %ref.int, %ref.int* %x, i32 0, i32 0
 	%5 = load i32*, i32** %4, align 8
@@ -25,7 +26,9 @@ exit:
 	ret void
 }
 
-declare %ref.int* @"ref:int"(i32 %0)
+declare %ref.int* @"newref:int"(i32 %0)
+
+declare void @"ref:int"(%ref.int* %0)
 
 declare void @"deref:int"(%ref.int* %0)
 
@@ -59,7 +62,9 @@ if.else0:
 	%16 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
 	%17 = load i32*, i32** %16, align 8
 	store i32 %15, i32* %17, align 8
+	call void @"ref:int"(%ref.int* %0)
 	call void @mod.applyRec(%ref.int* %0)
+	call void @"deref:int"(%ref.int* %0)
 	br label %if.end0
 
 if.end0:

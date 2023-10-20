@@ -178,5 +178,6 @@ func (c *checker) inferReference(x ast.Reference) typing.Type {
 	vari := c.top.Lookup(x.Variable.Name, x.Variable.Loc())
 	vari.Referenced = true
 	c.program.References.Add(vari.Type)
+	c.top.ActiveRefs = append(c.top.ActiveRefs, vari)
 	return c.typ(x, vari.Type)
 }
