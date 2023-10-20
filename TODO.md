@@ -1,5 +1,6 @@
 # TODO
 - Allow variables to be referenced directly (not just through function calls)
+- Implement autofree
 - Official reference syntax (currently WIP in notes)
 - Labeled breaks / continues with #'s
 - Float to string generation

@@ -1,13 +1,10 @@
-x := 499
-println(string!(x))
-applyRec(&x)
-println(string!(x))
+x := 7.6
+floatThing(&x)
+println(string!(int!(x)))
 
-func applyRec(&int num) {
-    if num % 3 == 0 {
-        num++
-    } else {
-        num -= 71
-        applyRec(&num)
+func floatThing(&float num) {
+    num += 9.8
+    if num <= 100.0 {
+        floatThing(&num)
     }
 }

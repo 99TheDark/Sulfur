@@ -1,79 +1,15 @@
 # Basic Structures
-- Comments
-    ```
-    // Comment
-    
-    /*
-    Multi-line comment
-    */
-    ```
-- Groups
-    ```
-    // Anything inside of braces is a group, and has scope 
-    {
-        // code omitted
-    }
-
-    // Examples
-    if true {
-
-    }
-
-    func someFunc() {
-
-    }
-    ```
 - Arrays
     ```
     // Arrays literals are made from the type, and filled with brackets
     float[] myArray = float[3.7, -6.4, 12.9, 5.0]
-    ```
-- Operation Assignment
-    ```
-    int x = 5
-
-    // x = x + 2 
-    x += 2
-    ```
-- Functions
-    ```
-    // func name(params) (return) {}
-    func add(int a, int b) (int) { // parameter: type name
-        return a + b // return a value
-    }
-    
-    func varargs(int x, int y, string ...names, float z) {
-        println((x + y) * z, ...names)
-    }
-    
-    // Prints -33.6 John Jeff
-    varargs(3, 5, "John", "Jeff", "Tim", -4.2)
-    
-    // Multiple return values
-    func combos(int a, int b, int c) (int, int, int, string) {
-        return a + b, a + c, b + c, "Combos of $(a), $(b), $(c)"
-    }
-    
-    // Underscores imply unused result
-    // All ignored values must be explicit, so the last '_' is necessary
-    firstCombo, _, thirdCombo, _ := combos(-6, 12, 5)
-    
-    // Prints 102
-    println(firstCombo * thirdCombo)
-    
-    // Chaining using the pipe operator
-    // Equivalent to: result := addExclamationMarks(substr(lower("John Cena"), 0, 4))
-    result := "John Cena" |> lower() |> substr(0, 4) |> addExclamationMarks(3)
-    
-    // result = "john!!!"
     ```
 - Inference
     ```
     // x is a float
     x := 8.9
 
-    // pi and otherPi are both int[]'s
-    pi := [3, 1, 4]
+    // otherPi is inferred as an int[]
     otherPi := int[3, 1, 4, 1, 5]
     ```
 - Type Convertion

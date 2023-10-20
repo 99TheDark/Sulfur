@@ -5,7 +5,8 @@ source_filename = "lib/builtin/reference/int_ref"
 declare i8* @malloc(i32)
 declare void @free(i8*)
 
-declare void @freeMsg(i8*)
+declare void @freeMsg()
+declare void @countMsg(i32)
 
 define %ref.int* @"newref:int"(i32 %value) {
 entry:
@@ -37,6 +38,7 @@ entry:
     %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
     %1 = load i32, i32* %0, align 8
     %2 = add i32 %1, 1
+    call void @countMsg(i32 %2)
     store i32 %2, i32* %0, align 8
     ret void
 }
@@ -46,6 +48,7 @@ entry:
     %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
     %1 = load i32, i32* %0, align 8
     %2 = add i32 %1, -1
+    call void @countMsg(i32 %2)
     store i32 %2, i32* %0, align 8
     %3 = icmp eq i32 %2, 0
     br i1 %3, label %if.then, label %exit
@@ -54,10 +57,10 @@ if.then:
     %4 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 0
     %5 = load i32*, i32** %4, align 8
     %6 = bitcast i32* %5 to i8*
-    call void @freeMsg(i8* %6)
     call void @free(i8* %6)
     %7 = bitcast %ref.int* %ref to i8*
     call void @free(i8* %7)
+    call void @freeMsg()
     br label %exit
 
 exit:

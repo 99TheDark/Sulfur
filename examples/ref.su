@@ -1,0 +1,13 @@
+x := 499
+println(string!(x))
+applyRec(&x)
+println(string!(x))
+
+func applyRec(&int num) {
+    if num % 3 == 0 {
+        num++
+    } else {
+        num -= 71
+        applyRec(&num)
+    }
+}

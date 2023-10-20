@@ -111,7 +111,6 @@ func (v *Variable) LLName() string {
 	}
 }
 
-// TODO: Change to return a *Scope
 func NewScope() *Scope {
 	return &Scope{
 		nil,
