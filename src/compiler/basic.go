@@ -13,17 +13,7 @@ import (
 
 func (g *generator) genBasicRawIden(vari *ast.Variable) value.Value {
 	bl := g.bl
-	if vari.IsRef {
-		bundle := g.refs[vari.Type]
-		ref := *vari.Value
-
-		ptr := bl.NewGetElementPtr(bundle.typ, ref, Zero, Zero)
-		ptr.InBounds = true
-
-		load := bl.NewLoad(g.llptr(vari.Type), ptr)
-		load.Align = 8
-		return load
-	} else if vari.Referenced {
+	if vari.Referenced {
 		bundle := g.refs[vari.Type]
 		ref := *vari.Value
 
@@ -43,7 +33,7 @@ func (g *generator) genBasicIden(vari *ast.Variable) value.Value {
 
 	val := g.genBasicRawIden(vari)
 
-	if !vari.IsRef && vari.Status == ast.Parameter {
+	if !vari.Referenced && vari.Status == ast.Parameter {
 		return val
 	}
 
@@ -75,7 +65,7 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 func (g *generator) genBasicAssign(name string, val value.Value, loc *typing.Location) {
 	bl := g.bl
 	vari := g.top.Lookup(name, loc)
-	if vari.IsRef {
+	if vari.Referenced {
 		iden := g.genBasicRawIden(vari)
 
 		store := bl.NewStore(val, iden)

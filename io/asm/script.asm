@@ -477,45 +477,57 @@ _main:                                  ; @main
 	.cfi_offset w29, -16
 	.cfi_offset w19, -24
 	.cfi_offset w20, -32
-	mov	w0, #100
+	mov	w0, #499
 	bl	"_ref:int"
 	ldr	x8, [x0]
 	mov	x19, x0
 	ldr	w0, [x8]
-	bl	l_mod.byValue
+	bl	"_.conv:int_string"
+	bl	_.println
 	mov	x0, x19
-	bl	l_mod.byRef
+	bl	l_mod.applyRec
 	ldr	x8, [x19]
 	ldr	w0, [x8]
 	bl	"_.conv:int_string"
 	bl	_.println
+	mov	x0, x19
+	bl	"_deref:int"
 	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
 	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
 	ret
 	.cfi_endproc
                                         ; -- End function
-	.p2align	2                               ; -- Begin function mod.byValue
-l_mod.byValue:                          ; @mod.byValue
+	.p2align	2                               ; -- Begin function mod.applyRec
+l_mod.applyRec:                         ; @mod.applyRec
 	.cfi_startproc
 ; %bb.0:                                ; %entry
 	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
 	.cfi_def_cfa_offset 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	bl	"_.conv:int_string"
-	bl	_.println
+	ldr	x8, [x0]
+	mov	w9, #43691
+	movk	w9, #43690, lsl #16
+	mov	w10, #43690
+	movk	w10, #10922, lsl #16
+	ldr	w8, [x8]
+	madd	w9, w8, w9, w10
+	mov	w10, #21844
+	movk	w10, #21845, lsl #16
+	cmp	w9, w10
+	b.ls	LBB11_2
+; %bb.1:                                ; %if.else0
+	sub	w8, w8, #71
+	ldr	x9, [x0]
+	str	w8, [x9]
+	bl	l_mod.applyRec
 	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret
-	.cfi_endproc
-                                        ; -- End function
-	.p2align	2                               ; -- Begin function mod.byRef
-l_mod.byRef:                            ; @mod.byRef
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	ldr	x8, [x0]
-	ldr	w9, [x8]
-	lsl	w9, w9, #1
-	str	w9, [x8]
+LBB11_2:                                ; %if.then0
+	add	w8, w8, #1
+	ldr	x9, [x0]
+	str	w8, [x9]
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret
 	.cfi_endproc
                                         ; -- End function

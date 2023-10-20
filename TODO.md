@@ -1,5 +1,5 @@
 # TODO
-- Instead of creating new references & using alloca, use ref:type for all referenced variables
+- Allow variables to be referenced directly (not just through function calls)
 - Official reference syntax (currently WIP in notes)
 - Labeled breaks / continues with #'s
 - Float to string generation

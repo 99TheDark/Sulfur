@@ -1,11 +1,15 @@
-x := 100
-byValue(x)
-byRef(&x)
+x := 499
+println(string!(x))
+applyRec(&x)
 println(string!(x))
 
-func byValue(int value) {
-    println(string!(value))
-}
-func byRef(&int ref) {
-    ref *= 2
+y := &x
+
+func applyRec(&int num) {
+    if num % 3 == 0 {
+        num++
+    } else {
+        num -= 71
+        applyRec(&num)
+    }
 }

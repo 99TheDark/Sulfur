@@ -65,6 +65,7 @@ func (c *checker) inferDeclaration(x ast.Declaration) {
 	if typing.Type(x.Type.Name) != val {
 		Errors.Error("Expected "+x.Type.Name+", but got "+val.String()+" instead", x.Loc())
 	}
+
 	c.top.Vars[x.Name.Name] = ast.NewVariable(c.topfun, x.Name.Name, false, val, ast.Local)
 }
 
@@ -83,7 +84,7 @@ func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
 
 func (c *checker) inferAssignment(x ast.Assignment) {
 	vari := c.top.Lookup(x.Name.Name, x.Name.Pos)
-	if vari.Status == ast.Parameter && !vari.IsRef {
+	if vari.Status == ast.Parameter && !vari.Referenced {
 		Errors.Error("Illegal modification of a parameter", x.Value.Loc())
 	}
 
@@ -111,7 +112,7 @@ func (c *checker) inferAssignment(x ast.Assignment) {
 
 func (c *checker) inferIncDec(x ast.IncDec) {
 	vari := c.top.Lookup(x.Name.Name, x.Name.Pos)
-	if vari.Status == ast.Parameter {
+	if vari.Status == ast.Parameter && !vari.Referenced {
 		Errors.Error("Illegal modification of a parameter", x.Name.Loc())
 	}
 

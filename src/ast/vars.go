@@ -20,7 +20,6 @@ const (
 type Variable struct {
 	Name       string
 	Id         int
-	IsRef      bool
 	Referenced bool
 	Type       typing.Type
 	Status     VariableType
@@ -129,7 +128,6 @@ func NewVariable(fscope *FuncScope, name string, ref bool, typ typing.Type, stat
 		name,
 		fscope.Counts[name],
 		ref,
-		false,
 		typ,
 		status,
 		new(value.Value),

@@ -11,3 +11,13 @@ type ref_bundle struct {
 	ref   *ir.Func
 	deref *ir.Func
 }
+
+func (g *generator) deref() {
+	bl := g.bl
+	for _, vari := range g.top.Vars {
+		if vari.Referenced {
+			bundle := g.refs[vari.Type]
+			bl.NewCall(bundle.deref, *vari.Value)
+		}
+	}
+}

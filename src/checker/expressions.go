@@ -151,6 +151,13 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 			for i, param := range *x.Params {
 				typ := c.inferExpr(param)
 				paramTyp := fun.Params[i].Type
+
+				if fun.Params[i].Reference {
+					if _, ok := param.(ast.Reference); !ok {
+						Errors.Error("Expected &"+string(paramTyp)+", but got "+string(typ)+" instead", param.Loc())
+					}
+				}
+
 				if typ != paramTyp {
 					Errors.Error("Expected "+paramTyp.String()+", but got "+typ.String()+" instead", param.Loc())
 				}
