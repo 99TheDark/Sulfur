@@ -8,6 +8,9 @@ source_filename = "llvm-link"
 
 @.strTrue = private unnamed_addr constant [4 x i8] c"true", align 1
 @.strFalse = private unnamed_addr constant [5 x i8] c"false", align 1
+@.strNaN = private unnamed_addr constant [3 x i8] c"nan", align 1
+@.strPosInf = private unnamed_addr constant [3 x i8] c"inf", align 1
+@.strNegInf = private unnamed_addr constant [4 x i8] c"-inf", align 1
 @.strFree = private unnamed_addr constant [17 x i8] c"Freed from memory", align 1
 @.strCount = private unnamed_addr constant [11 x i8] c" references", align 1
 @.str0 = private unnamed_addr constant [9 x i8] c" now has ", align 1
@@ -388,6 +391,59 @@ entry:
   ret void
 }
 
+define %type.string @".conv:float_string"(float %float) {
+entry:
+  %.ret = alloca %type.string, align 8
+  %0 = fcmp une float %float, %float
+  br i1 %0, label %nan.then, label %nan.exit
+
+nan.then:                                         ; preds = %entry
+  %1 = getelementptr inbounds [3 x i8], [3 x i8]* @.strNaN, i32 0, i32 0
+  %2 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
+  store i32 3, i32* %2, align 8
+  %3 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
+  store i32 3, i32* %3, align 8
+  %4 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
+  store i8* %1, i8** %4, align 8
+  br label %exit
+
+nan.exit:                                         ; preds = %entry
+  %5 = fcmp ueq float %float, 0x7FF0000000000000
+  br i1 %5, label %pos_inf.then, label %pos_inf.exit
+
+pos_inf.then:                                     ; preds = %nan.exit
+  %6 = getelementptr inbounds [3 x i8], [3 x i8]* @.strPosInf, i32 0, i32 0
+  %7 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
+  store i32 3, i32* %7, align 8
+  %8 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
+  store i32 3, i32* %8, align 8
+  %9 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
+  store i8* %6, i8** %9, align 8
+  br label %exit
+
+pos_inf.exit:                                     ; preds = %nan.exit
+  %10 = fcmp ueq float %float, 0xFFF0000000000000
+  br i1 %10, label %neg_inf.then, label %neg_inf.exit
+
+neg_inf.then:                                     ; preds = %pos_inf.exit
+  %11 = getelementptr inbounds [4 x i8], [4 x i8]* @.strNegInf, i32 0, i32 0
+  %12 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
+  store i32 4, i32* %12, align 8
+  %13 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
+  store i32 4, i32* %13, align 8
+  %14 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
+  store i8* %11, i8** %14, align 8
+  br label %exit
+
+neg_inf.exit:                                     ; preds = %pos_inf.exit
+  %15 = fptosi float %float to i32
+  br label %exit
+
+exit:                                             ; preds = %neg_inf.exit, %neg_inf.then, %pos_inf.then, %nan.then
+  %final = load %type.string, %type.string* %.ret, align 8
+  ret %type.string %final
+}
+
 define %ref.int* @"newref:int"(i32 %value) {
 entry:
   %value.addr = alloca i32, align 4
@@ -516,49 +572,11 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %x = call %ref.float* @"newref:float"(float 0x401E666660000000)
-  call void @"ref:float"(%ref.float* %x)
-  call void @mod.floatThing(%ref.float* %x)
-  %0 = getelementptr inbounds %ref.float, %ref.float* %x, i32 0, i32 0
-  %1 = load float*, float** %0, align 8
-  %2 = load float, float* %1, align 4
-  %3 = getelementptr inbounds %ref.float, %ref.float* %x, i32 0, i32 0
-  %4 = load float*, float** %3, align 8
-  %5 = load float, float* %4, align 4
-  %6 = fptosi float %5 to i32
-  %7 = call %type.string @".conv:int_string"(i32 %6)
-  call void @.println(%type.string %7)
-  call void @"deref:float"(%ref.float* %x)
+  %0 = fdiv float 0.000000e+00, 0.000000e+00
+  %1 = call %type.string @".conv:float_string"(float %0)
+  call void @.println(%type.string %1)
   br label %exit
 
 exit:                                             ; preds = %entry
   ret void
-}
-
-define private void @mod.floatThing(%ref.float* %0) {
-entry:
-  %1 = getelementptr inbounds %ref.float, %ref.float* %0, i32 0, i32 0
-  %2 = load float*, float** %1, align 8
-  %3 = load float, float* %2, align 4
-  %4 = fadd float %3, 0x4023999980000000
-  %5 = getelementptr inbounds %ref.float, %ref.float* %0, i32 0, i32 0
-  %6 = load float*, float** %5, align 8
-  store float %4, float* %6, align 8
-  %7 = getelementptr inbounds %ref.float, %ref.float* %0, i32 0, i32 0
-  %8 = load float*, float** %7, align 8
-  %9 = load float, float* %8, align 4
-  %10 = fcmp ule float %9, 3.000000e+01
-  br i1 %10, label %if.then0, label %if.end0
-
-exit:                                             ; preds = %if.end0
-  ret void
-
-if.then0:                                         ; preds = %entry
-  call void @"ref:float"(%ref.float* %0)
-  call void @mod.floatThing(%ref.float* %0)
-  call void @"deref:float"(%ref.float* %0)
-  br label %if.end0
-
-if.end0:                                          ; preds = %if.then0, %entry
-  br label %exit
 }

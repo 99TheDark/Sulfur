@@ -1,10 +1,1 @@
-x := 7.6
-floatThing(&x)
-println(string!(int!(x)))
-
-func floatThing(&float num) {
-    num += 9.8
-    if num <= 30.0 {
-        floatThing(&num)
-    }
-}
+println(string!(0.0 / 0.0))

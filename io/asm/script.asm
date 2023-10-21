@@ -427,6 +427,59 @@ Lloh9:
 	.loh AdrpAdd	Lloh8, Lloh9
 	.cfi_endproc
                                         ; -- End function
+	.globl	"_.conv:float_string"           ; -- Begin function .conv:float_string
+	.p2align	2
+"_.conv:float_string":                  ; @".conv:float_string"
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #16
+	.cfi_def_cfa_offset 16
+	fcmp	s0, s0
+	b.vc	LBB10_4
+; %bb.1:                                ; %nan.then
+Lloh10:
+	adrp	x9, l_.strNaN@PAGE
+	mov	x8, #12884901891
+Lloh11:
+	add	x9, x9, l_.strNaN@PAGEOFF
+LBB10_2:                                ; %exit
+	stp	x8, x9, [sp]
+LBB10_3:                                ; %exit
+	ldp	w0, w1, [sp]
+	ldr	x2, [sp, #8]
+	add	sp, sp, #16
+	ret
+LBB10_4:                                ; %nan.exit
+	mov	w8, #2139095040
+	fmov	s1, w8
+	fcmp	s0, s1
+	b.mi	LBB10_6
+	b.gt	LBB10_6
+; %bb.5:                                ; %pos_inf.then
+Lloh12:
+	adrp	x9, l_.strPosInf@PAGE
+	mov	x8, #12884901891
+Lloh13:
+	add	x9, x9, l_.strPosInf@PAGEOFF
+	b	LBB10_2
+LBB10_6:                                ; %pos_inf.exit
+	mov	w8, #-8388608
+	fmov	s1, w8
+	fcmp	s0, s1
+	b.mi	LBB10_3
+	b.gt	LBB10_3
+; %bb.7:                                ; %neg_inf.then
+Lloh14:
+	adrp	x9, l_.strNegInf@PAGE
+	mov	x8, #17179869188
+Lloh15:
+	add	x9, x9, l_.strNegInf@PAGEOFF
+	b	LBB10_2
+	.loh AdrpAdd	Lloh10, Lloh11
+	.loh AdrpAdd	Lloh12, Lloh13
+	.loh AdrpAdd	Lloh14, Lloh15
+	.cfi_endproc
+                                        ; -- End function
 	.globl	"_newref:int"                   ; -- Begin function newref:int
 	.p2align	2
 "_newref:int":                          ; @"newref:int"
@@ -496,12 +549,12 @@ Lloh9:
 	mov	w0, w20
 	bl	_countMsg
 	str	w20, [x19, #8]
-	cbz	w20, LBB12_2
+	cbz	w20, LBB13_2
 ; %bb.1:                                ; %exit
 	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
 	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
 	ret
-LBB12_2:                                ; %if.then
+LBB13_2:                                ; %if.then
 	ldr	x0, [x19]
 	bl	_free
 	mov	x0, x19
@@ -531,10 +584,10 @@ _.refMsg:                               ; @.refMsg
 	mov	w19, w1
 	bl	"_.conv:int_string"
 	mov	x8, #9
-Lloh10:
+Lloh16:
 	adrp	x5, l_.str0@PAGE
 	movk	x8, #9, lsl #32
-Lloh11:
+Lloh17:
 	add	x5, x5, l_.str0@PAGEOFF
 	mov	w3, #9
 	mov	w4, #9
@@ -553,10 +606,10 @@ Lloh11:
 	mov	x2, x22
 	bl	"_.add:string_string"
 	mov	x8, #11
-Lloh12:
+Lloh18:
 	adrp	x5, l_.str1@PAGE
 	movk	x8, #11, lsl #32
-Lloh13:
+Lloh19:
 	add	x5, x5, l_.str1@PAGEOFF
 	mov	w3, #11
 	mov	w4, #11
@@ -568,8 +621,8 @@ Lloh13:
 	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
 	add	sp, sp, #80
 	ret
-	.loh AdrpAdd	Lloh12, Lloh13
-	.loh AdrpAdd	Lloh10, Lloh11
+	.loh AdrpAdd	Lloh18, Lloh19
+	.loh AdrpAdd	Lloh16, Lloh17
 	.cfi_endproc
                                         ; -- End function
 	.globl	"_ref:string"                   ; -- Begin function ref:string
@@ -619,11 +672,11 @@ Lloh13:
 	ldr	w8, [x0, #8]
 	subs	w8, w8, #1
 	str	w8, [x0, #8]
-	b.eq	LBB15_2
+	b.eq	LBB16_2
 ; %bb.1:                                ; %exit
 	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret
-LBB15_2:                                ; %if.then
+LBB16_2:                                ; %if.then
 	ldr	x0, [x0]
 	bl	_free
 	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
@@ -635,66 +688,15 @@ LBB15_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	mov	w8, #13107
-	movk	w8, #16627, lsl #16
+	mov	w8, #2143289344
 	fmov	s0, w8
-	bl	"_newref:float"
-	mov	x19, x0
-	bl	"_ref:float"
-	mov	x0, x19
-	bl	l_mod.floatThing
-	ldr	x8, [x19]
-	ldr	s0, [x8]
-	fcvtzs	w0, s0
-	bl	"_.conv:int_string"
+	bl	"_.conv:float_string"
 	bl	_.println
-	mov	x0, x19
-	bl	"_deref:float"
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
-	ret
-	.cfi_endproc
-                                        ; -- End function
-	.p2align	2                               ; -- Begin function mod.floatThing
-l_mod.floatThing:                       ; @mod.floatThing
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	mov	w8, #52428
-	ldr	x9, [x0]
-	movk	w8, #16668, lsl #16
-	ldr	s0, [x9]
-	fmov	s1, w8
-	fadd	s0, s0, s1
-	fmov	s1, #30.00000000
-	str	s0, [x9]
-	ldr	x8, [x0]
-	ldr	s0, [x8]
-	fcmp	s0, s1
-	b.gt	LBB17_2
-; %bb.1:                                ; %if.then0
-	mov	x19, x0
-	bl	"_ref:float"
-	mov	x0, x19
-	bl	l_mod.floatThing
-	mov	x0, x19
-	bl	"_deref:float"
-LBB17_2:                                ; %if.end0
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret
 	.cfi_endproc
                                         ; -- End function
@@ -706,6 +708,17 @@ l_.strTrue:                             ; @.strTrue
 l_.strFalse:                            ; @.strFalse
 	.ascii	"false"
 
+l_.strNaN:                              ; @.strNaN
+	.ascii	"nan"
+
+l_.strPosInf:                           ; @.strPosInf
+	.ascii	"inf"
+
+	.section	__TEXT,__literal4,4byte_literals
+l_.strNegInf:                           ; @.strNegInf
+	.ascii	"-inf"
+
+	.section	__TEXT,__const
 l_.strFree:                             ; @.strFree
 	.ascii	"Freed from memory"
 

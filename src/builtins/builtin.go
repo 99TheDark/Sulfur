@@ -85,13 +85,14 @@ var Comps = []ComparisonSignature{
 
 var TypeConvs = []TypeConvSignature{
 	// int
-	QuickTypeConv("int", "string"),
 	QuickTypeConv("int", "float"),
 	QuickTypeConv("int", "bool"),
+	QuickTypeConv("int", "string"),
 
 	// float
 	QuickTypeConv("float", "int"),
 	QuickTypeConv("float", "bool"),
+	QuickTypeConv("float", "string"),
 
 	// bool
 	QuickTypeConv("bool", "int"),
