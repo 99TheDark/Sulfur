@@ -4,7 +4,7 @@ println(string!(int!(x)))
 
 func floatThing(&float num) {
     num += 9.8
-    if num <= 100.0 {
+    if num <= 30.0 {
         floatThing(&num)
     }
 }

@@ -679,10 +679,9 @@ l_mod.floatThing:                       ; @mod.floatThing
 	ldr	s0, [x9]
 	fmov	s1, w8
 	fadd	s0, s0, s1
+	fmov	s1, #30.00000000
 	str	s0, [x9]
-	mov	w9, #1120403456
 	ldr	x8, [x0]
-	fmov	s1, w9
 	ldr	s0, [x8]
 	fcmp	s0, s1
 	b.gt	LBB17_2

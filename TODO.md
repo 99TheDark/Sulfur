@@ -1,5 +1,6 @@
 # TODO
 - Allow variables to be referenced directly (not just through function calls)
+- Add %.copy:string_string(%type.string str) and use when copying
 - Implement autofree
 - Official reference syntax (currently WIP in notes)
 - Labeled breaks / continues with #'s

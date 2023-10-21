@@ -43,7 +43,7 @@ entry:
 	%7 = getelementptr inbounds %ref.float, %ref.float* %0, i32 0, i32 0
 	%8 = load float*, float** %7, align 8
 	%9 = load float, float* %8, align 4
-	%10 = fcmp ule float %9, 100.0
+	%10 = fcmp ule float %9, 30.0
 	br i1 %10, label %if.then0, label %if.end0
 
 exit:
