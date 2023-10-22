@@ -1,4 +1,4 @@
 *.ll linguist-language=LLVM
-io/asm/* linguist-vendored=true
-lib/builtin/* linguist-vendored=true
-lib/source/* linguist-vendored=true
+io/asm/** linguist-vendored=true
+lib/builtin/** linguist-vendored=true
+lib/source/** linguist-vendored
