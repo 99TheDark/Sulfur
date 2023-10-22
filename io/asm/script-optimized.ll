@@ -22,11 +22,6 @@ source_filename = "llvm-link"
 @.str0 = private unnamed_addr constant [9 x i8] c" now has ", align 1
 @.str1 = private unnamed_addr constant [11 x i8] c" references", align 1
 @.strZero = private unnamed_addr constant [1 x i8] c"0", align 1
-@.str0.1 = private unnamed_addr constant [15 x i8] c"Hi, my name is ", align 1
-@.str1.2 = private unnamed_addr constant [13 x i8] c", and I'm in ", align 1
-@.str2 = private unnamed_addr constant [15 x i8] c"th grade. It's ", align 1
-@.str3 = private unnamed_addr constant [1 x i8] c"!", align 1
-@.str4 = private unnamed_addr constant [7 x i8] c"TheDark", align 1
 
 define %ref.bool* @"newref:bool"(i1 %value) {
 entry:
@@ -1835,76 +1830,63 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %0 = getelementptr inbounds [7 x i8], [7 x i8]* @.str4, i32 0, i32 0
-  %1 = alloca %type.string, align 8
-  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 7, i32* %2, align 8
-  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-  store i32 7, i32* %3, align 8
-  %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
-  store i8* %0, i8** %4, align 8
-  %5 = load %type.string, %type.string* %1, align 8
-  %6 = call %type.string @mod.combine(%type.string %5, i1 true)
-  call void @.println(%type.string %6)
+  %x = call %ref.int* @"newref:int"(i32 499)
+  %0 = getelementptr inbounds %ref.int, %ref.int* %x, i32 0, i32 0
+  %1 = load i32*, i32** %0, align 8
+  %2 = load i32, i32* %1, align 4
+  %3 = call %type.string @".conv:int_string"(i32 %2)
+  call void @.println(%type.string %3)
+  call void @"ref:int"(%ref.int* %x)
+  call void @mod.applyRec(%ref.int* %x)
+  %4 = getelementptr inbounds %ref.int, %ref.int* %x, i32 0, i32 0
+  %5 = load i32*, i32** %4, align 8
+  %6 = load i32, i32* %5, align 4
+  %7 = call %type.string @".conv:int_string"(i32 %6)
+  call void @.println(%type.string %7)
+  call void @"deref:int"(%ref.int* %x)
   br label %exit
 
 exit:                                             ; preds = %entry
   ret void
 }
 
-define private %type.string @mod.combine(%type.string %0, i1 %1) {
+define private void @mod.applyRec(%ref.int* %0) {
 entry:
-  %.ret = alloca %type.string, align 8
-  %2 = getelementptr inbounds [15 x i8], [15 x i8]* @.str0.1, i32 0, i32 0
-  %3 = alloca %type.string, align 8
-  %4 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 0
-  store i32 15, i32* %4, align 8
-  %5 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 1
-  store i32 15, i32* %5, align 8
-  %6 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 2
-  store i8* %2, i8** %6, align 8
-  %7 = load %type.string, %type.string* %3, align 8
-  %8 = call %type.string @".add:string_string"(%type.string %7, %type.string %0)
-  %9 = getelementptr inbounds [13 x i8], [13 x i8]* @.str1.2, i32 0, i32 0
-  %10 = alloca %type.string, align 8
-  %11 = getelementptr inbounds %type.string, %type.string* %10, i32 0, i32 0
-  store i32 13, i32* %11, align 8
-  %12 = getelementptr inbounds %type.string, %type.string* %10, i32 0, i32 1
-  store i32 13, i32* %12, align 8
-  %13 = getelementptr inbounds %type.string, %type.string* %10, i32 0, i32 2
-  store i8* %9, i8** %13, align 8
-  %14 = load %type.string, %type.string* %10, align 8
-  %15 = call %type.string @".add:string_string"(%type.string %8, %type.string %14)
-  %16 = call %type.string @".conv:int_string"(i32 10)
-  %17 = call %type.string @".add:string_string"(%type.string %15, %type.string %16)
-  %18 = getelementptr inbounds [15 x i8], [15 x i8]* @.str2, i32 0, i32 0
-  %19 = alloca %type.string, align 8
-  %20 = getelementptr inbounds %type.string, %type.string* %19, i32 0, i32 0
-  store i32 15, i32* %20, align 8
-  %21 = getelementptr inbounds %type.string, %type.string* %19, i32 0, i32 1
-  store i32 15, i32* %21, align 8
-  %22 = getelementptr inbounds %type.string, %type.string* %19, i32 0, i32 2
-  store i8* %18, i8** %22, align 8
-  %23 = load %type.string, %type.string* %19, align 8
-  %24 = call %type.string @".add:string_string"(%type.string %17, %type.string %23)
-  %25 = call %type.string @".conv:bool_string"(i1 %1)
-  %26 = call %type.string @".add:string_string"(%type.string %24, %type.string %25)
-  %27 = getelementptr inbounds [1 x i8], [1 x i8]* @.str3, i32 0, i32 0
-  %28 = alloca %type.string, align 8
-  %29 = getelementptr inbounds %type.string, %type.string* %28, i32 0, i32 0
-  store i32 1, i32* %29, align 8
-  %30 = getelementptr inbounds %type.string, %type.string* %28, i32 0, i32 1
-  store i32 1, i32* %30, align 8
-  %31 = getelementptr inbounds %type.string, %type.string* %28, i32 0, i32 2
-  store i8* %27, i8** %31, align 8
-  %32 = load %type.string, %type.string* %28, align 8
-  %33 = call %type.string @".add:string_string"(%type.string %26, %type.string %32)
-  store %type.string %33, %type.string* %.ret, align 8
-  br label %exit
+  %1 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+  %2 = load i32*, i32** %1, align 8
+  %3 = load i32, i32* %2, align 4
+  %4 = srem i32 %3, 3
+  %5 = icmp eq i32 %4, 0
+  br i1 %5, label %if.then0, label %if.else0
 
-exit:                                             ; preds = %entry
-  %34 = load %type.string, %type.string* %.ret, align 8
-  ret %type.string %34
+exit:                                             ; preds = %if.end0
+  ret void
+
+if.then0:                                         ; preds = %entry
+  %6 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+  %7 = load i32*, i32** %6, align 8
+  %8 = load i32, i32* %7, align 4
+  %9 = add i32 %8, 1
+  %10 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+  %11 = load i32*, i32** %10, align 8
+  store i32 %9, i32* %11, align 8
+  br label %if.end0
+
+if.else0:                                         ; preds = %entry
+  %12 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+  %13 = load i32*, i32** %12, align 8
+  %14 = load i32, i32* %13, align 4
+  %15 = sub i32 %14, 71
+  %16 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+  %17 = load i32*, i32** %16, align 8
+  store i32 %15, i32* %17, align 8
+  call void @"ref:int"(%ref.int* %0)
+  call void @mod.applyRec(%ref.int* %0)
+  call void @"deref:int"(%ref.int* %0)
+  br label %if.end0
+
+if.end0:                                          ; preds = %if.else0, %if.then0
+  br label %exit
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }

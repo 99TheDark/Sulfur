@@ -1,5 +1,5 @@
 for i := 0; i < 20; i++ {
-    println(string!(fib(i)))
+    println(fib(i))
 }
 
 func fib(int num) (int) {

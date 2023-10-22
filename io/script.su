@@ -1,5 +1,13 @@
-func combine(string name, bool correct) (string) {
-    return "Hi, my name is " + name + ", and I'm in " + 10 + "th grade. It's " + correct + "!"
-}
+x := 499
+println(x)
+applyRec(&x)
+println(x)
 
-println(combine("TheDark", true))
+func applyRec(&int num) {
+    if num % 3 == 0 {
+        num++
+    } else {
+        num -= 71
+        applyRec(&num)
+    }
+}

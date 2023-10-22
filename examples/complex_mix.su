@@ -18,5 +18,5 @@ func doSomething() {
     println("I did something!")
 }
 
-println(string!(fibonacci(25)))
+println(fibonacci(25))
 println(formatName("John", "Smith"))

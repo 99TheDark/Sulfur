@@ -1,7 +1,7 @@
 x := 499
-println(string!(x))
+println(x)
 applyRec(&x)
-println(string!(x))
+println(x)
 
 func applyRec(&int num) {
     if num % 3 == 0 {
