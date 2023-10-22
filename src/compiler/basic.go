@@ -7,6 +7,7 @@ import (
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/constant"
+	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/types"
 	"github.com/llir/llvm/ir/value"
 )
@@ -125,6 +126,47 @@ func (g *generator) genBasicBinaryOp(left, right value.Value, op lexer.TokenType
 		switch typ {
 		case typing.Integer, typing.Boolean:
 			return bl.NewAnd(left, right)
+		}
+	}
+
+	return Zero
+}
+
+func (g *generator) genBasicTypeConv(val value.Value, from, to typing.Type) value.Value {
+	bl := g.bl
+	conv := g.srcConv(string(from), string(to))
+
+	if from == to {
+		return val
+	}
+
+	if conv.Complex {
+		return bl.NewCall(conv.Ir, val)
+	} else {
+		typ := g.lltyp(conv.To)
+
+		switch from {
+		case typing.Integer:
+			switch to {
+			case typing.Float:
+				return bl.NewSIToFP(val, typ)
+			case typing.Boolean:
+				return bl.NewICmp(enum.IPredNE, val, Zero)
+			}
+		case typing.Float:
+			switch to {
+			case typing.Integer:
+				return bl.NewFPToSI(val, typ)
+			case typing.Boolean:
+				return bl.NewFCmp(enum.FPredONE, val, FZero)
+			}
+		case typing.Boolean:
+			switch to {
+			case typing.Integer:
+				return bl.NewZExt(val, typ)
+			case typing.Float:
+				return bl.NewSIToFP(bl.NewZExt(val, types.I32), typ)
+			}
 		}
 	}
 

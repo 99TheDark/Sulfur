@@ -13,17 +13,18 @@ import (
 )
 
 type generator struct {
-	program  *ast.Program
-	types    checker.TypeMap
-	mod      *ir.Module
-	ctx      *context
-	top      *ast.Scope
-	bl       *ir.Block // TODO: Move bl to context
-	breaks   map[*ir.Block]bool
-	str      types.Type
-	refs     map[typing.Type]ref_bundle
-	strs     map[string]StringGlobal
-	builtins llvm_builtins
+	program   *ast.Program
+	types     checker.TypeMap
+	autoconvs checker.AutoTypeConvMap
+	mod       *ir.Module
+	ctx       *context
+	top       *ast.Scope
+	bl        *ir.Block // TODO: Move bl to context
+	breaks    map[*ir.Block]bool
+	str       types.Type
+	refs      map[typing.Type]ref_bundle
+	strs      map[string]StringGlobal
+	builtins  llvm_builtins
 }
 
 func (g *generator) scope(scope *ast.Scope, body func()) {
@@ -52,7 +53,7 @@ func (g *generator) exit() {
 	g.bl = exit
 }
 
-func Generate(program *ast.Program, typ checker.TypeMap) string {
+func Generate(program *ast.Program, typ checker.TypeMap, autoconvs checker.AutoTypeConvMap) string {
 	mod := ir.NewModule()
 	mod.SourceFilename = "script.su"
 
@@ -72,6 +73,7 @@ func Generate(program *ast.Program, typ checker.TypeMap) string {
 	g := generator{
 		program,
 		typ,
+		autoconvs,
 		mod,
 		&context{
 			nil,

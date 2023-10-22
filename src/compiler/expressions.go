@@ -19,11 +19,11 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 	case ast.Identifier:
 		return g.genIdentifier(x)
 	case ast.Integer:
-		return constant.NewInt(types.I32, x.Value)
+		return g.genInteger(x)
 	case ast.Float:
-		return constant.NewFloat(types.Float, x.Value)
+		return g.genFloat(x)
 	case ast.Boolean:
-		return constant.NewBool(x.Value)
+		return g.genBoolean(x)
 	case ast.String:
 		return g.genString(x)
 	case ast.BinaryOp:
@@ -69,6 +69,45 @@ func (g *generator) genString(x ast.String) value.Value {
 		constant.NewInt(types.I32, int64(len(x.Value))),
 		str,
 	)
+}
+
+func (g *generator) genInteger(x ast.Integer) value.Value {
+	val := constant.NewInt(types.I32, x.Value)
+	if conv, ok := g.autoconvs[x]; ok {
+		new := g.genBasicTypeConv(val, conv.From, conv.To)
+		if new == Zero {
+			Errors.Error("Unexpected generating error during integer generator", x.Loc())
+		}
+
+		return new
+	}
+	return val
+}
+
+func (g *generator) genFloat(x ast.Float) value.Value {
+	val := constant.NewFloat(types.Float, x.Value)
+	if conv, ok := g.autoconvs[x]; ok {
+		new := g.genBasicTypeConv(val, conv.From, conv.To)
+		if new == Zero {
+			Errors.Error("Unexpected generating error during float generator", x.Loc())
+		}
+
+		return new
+	}
+	return val
+}
+
+func (g *generator) genBoolean(x ast.Boolean) value.Value {
+	val := constant.NewBool(x.Value)
+	if conv, ok := g.autoconvs[x]; ok {
+		new := g.genBasicTypeConv(val, conv.From, conv.To)
+		if new == Zero {
+			Errors.Error("Unexpected generating error during boolean generator", x.Loc())
+		}
+
+		return new
+	}
+	return val
 }
 
 func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
@@ -163,45 +202,9 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 }
 
 func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
-	bl := g.bl
-	conv := g.srcConv(string(g.types[x.Value]), x.Type.Name)
 	val := g.genExpr(x.Value)
 
-	if g.types[x] == g.types[x.Value] {
-		return val
-	}
-
-	if conv.Complex {
-		return bl.NewCall(conv.Ir, val)
-	} else {
-		from, to := conv.From, conv.To
-		typ := g.lltyp(conv.To)
-		val := g.genExpr(x.Value)
-
-		switch from {
-		case typing.Integer:
-			switch to {
-			case typing.Float:
-				return bl.NewSIToFP(val, typ)
-			case typing.Boolean:
-				return bl.NewICmp(enum.IPredNE, val, Zero)
-			}
-		case typing.Float:
-			switch to {
-			case typing.Integer:
-				return bl.NewFPToSI(val, typ)
-			case typing.Boolean:
-				return bl.NewFCmp(enum.FPredONE, val, FZero)
-			}
-		case typing.Boolean:
-			switch to {
-			case typing.Integer:
-				return bl.NewZExt(val, typ)
-			case typing.Float:
-				return bl.NewSIToFP(bl.NewZExt(val, types.I32), typ)
-			}
-		}
-	}
+	g.genBasicTypeConv(val, g.types[x.Value], g.types[x])
 
 	Errors.Error("Unexpected generating error during type conversion", x.Loc())
 	return Zero

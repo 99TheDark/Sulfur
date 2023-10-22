@@ -46,7 +46,12 @@ func (c *checker) inferBinaryOp(x ast.BinaryOp) typing.Type {
 	left := c.inferExpr(x.Left)
 	right := c.inferExpr(x.Right)
 	if left != right {
-		Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Right.Loc())
+		conv, ok := c.AutoInfer(left, right, x.Left, x.Right)
+		if ok {
+			left, right = AutoSwitch(left, right, conv)
+		} else {
+			Errors.Error("Expected "+left.String()+", but got "+right.String()+" instead", x.Right.Loc())
+		}
 	}
 
 	for i, binop := range c.program.BinaryOps {
@@ -159,7 +164,12 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 				}
 
 				if typ != paramTyp {
-					Errors.Error("Expected "+paramTyp.String()+", but got "+typ.String()+" instead", param.Loc())
+					conv, ok := c.AutoSingleInfer(typ, paramTyp, param)
+					if ok {
+						typ, paramTyp = AutoSwitch(typ, paramTyp, conv)
+					} else {
+						Errors.Error("Expected "+paramTyp.String()+", but got "+typ.String()+" instead", param.Loc())
+					}
 				}
 			}
 
