@@ -1,4 +1,4 @@
 *.ll linguist-language=JavaScript
-io/asm/* linguist-vendored
-lib/builtin/* linguist-vendored
-lib/source/* linguist-vendored
+io/asm/* linguist-vendored=true
+lib/builtin/* linguist-vendored=true
+lib/source/* linguist-vendored=true
