@@ -22,3 +22,4 @@
 - Better token to string handling
 - Unsigned integer to string
 - Switch from 1-byte strings to 4-byte strings
+- Remove allocas from single-use variables

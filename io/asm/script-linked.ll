@@ -8,6 +8,7 @@ source_filename = "llvm-link"
 
 @.strTrue = private unnamed_addr constant [4 x i8] c"true", align 1
 @.strFalse = private unnamed_addr constant [5 x i8] c"false", align 1
+@float_pow5_inv_split = private constant [31 x i64] [i64 576460752303423489, i64 461168601842738791, i64 368934881474191033, i64 295147905179352826, i64 472236648286964522, i64 377789318629571618, i64 302231454903657294, i64 483570327845851670, i64 386856262276681336, i64 309485009821345069, i64 495176015714152110, i64 396140812571321688, i64 316912650057057351, i64 507060240091291761, i64 405648192073033409, i64 324518553658426727, i64 519229685853482763, i64 415383748682786211, i64 332306998946228969, i64 531691198313966350, i64 425352958651173080, i64 340282366920938464, i64 544451787073501542, i64 435561429658801234, i64 348449143727040987, i64 557518629963265579, i64 446014903970612463, i64 356811923176489971, i64 570899077082383953, i64 456719261665907162, i64 365375409332725730], align 4
 @.strNaN = private unnamed_addr constant [3 x i8] c"nan", align 1
 @.strPosInf = private unnamed_addr constant [3 x i8] c"inf", align 1
 @.strNegInf = private unnamed_addr constant [4 x i8] c"-inf", align 1
@@ -551,15 +552,105 @@ if.then:                                          ; preds = %exp_zero.exit
   store i32 %58, i32* %k.large, align 4
   %59 = add i32 %56, %58
   %60 = sub i32 %59, %53
-  br label %exit
+  store i32 %60, i32* %i.large, align 4
+  %61 = load i32, i32* %mv, align 4
+  %62 = call i32 @mulPow5InvDivPow2(i32 %61, i32 %56, i32 %60)
+  store i32 %62, i32* %dv, align 4
+  %63 = load i32, i32* %mp, align 4
+  %64 = call i32 @mulPow5InvDivPow2(i32 %63, i32 %56, i32 %60)
+  store i32 %64, i32* %dp, align 4
+  %65 = load i32, i32* %mm, align 4
+  %66 = call i32 @mulPow5InvDivPow2(i32 %65, i32 %56, i32 %60)
+  store i32 %66, i32* %dm, align 4
+  %67 = icmp ne i32 %56, 0
+  %68 = sub i32 %64, 1
+  %69 = sdiv i32 %68, 10
+  %70 = sdiv i32 %66, 10
+  %71 = icmp sle i32 %69, %70
+  %72 = and i1 %67, %71
+  br i1 %72, label %if.then2, label %if.exit2
+
+if.then2:                                         ; preds = %if.then
+  %73 = load i32, i32* %q.large, align 4
+  %74 = sub i32 %73, 1
+  %75 = call i32 @pow5bits(i32 %74)
+  %76 = add i32 %75, 58
+  %77 = load i32, i32* %mv, align 4
+  %78 = load i32, i32* %e2, align 4
+  %79 = sub i32 %74, %78
+  %80 = add i32 %79, %76
+  %81 = call i32 @mulPow5InvDivPow2(i32 %77, i32 %74, i32 %80)
+  %82 = srem i32 %81, 10
+  store i32 %82, i32* %lastRem, align 4
+  br label %if.exit2
+
+if.exit2:                                         ; preds = %if.then2, %if.then
+  %83 = load i32, i32* %q.large, align 4
+  store i32 %83, i32* %e10, align 4
+  %84 = load i32, i32* %mv, align 4
+  %85 = call i1 @multipleOfPow5(i32 %84, i32 %83)
+  store i1 %85, i1* %dv_itz, align 1
+  %86 = load i32, i32* %mp, align 4
+  %87 = call i1 @multipleOfPow5(i32 %86, i32 %83)
+  store i1 %87, i1* %dp_itz, align 1
+  %88 = load i32, i32* %mm, align 4
+  %89 = call i1 @multipleOfPow5(i32 %88, i32 %83)
+  store i1 %89, i1* %dm_itz, align 1
+  br label %if.exit
 
 if.else:                                          ; preds = %exp_zero.exit
+  %q.small = alloca i32, align 4
+  %i.small = alloca i32, align 4
+  %k.small = alloca i32, align 4
+  %j = alloca i32, align 4
+  %90 = load i32, i32* %e2, align 4
+  %91 = sitofp i32 %90 to float
+  %92 = fmul float %91, 0xBF32EFB300000000
+  %93 = fptosi float %92 to i32
+  store i32 %93, i32* %q.small, align 4
+  %94 = sub i32 0, %90
+  %95 = sub i32 %94, %93
+  store i32 %95, i32* %i.small, align 4
+  %96 = call i32 @pow5bits(i32 %95)
+  %97 = sub i32 %96, 61
+  store i32 %97, i32* %k.small, align 4
+  %98 = sub i32 %93, %97
+  store i32 %98, i32* %j, align 4
+  %99 = load i32, i32* %mv, align 4
+  %100 = call i32 @mulPow5InvDivPow2(i32 %99, i32 %95, i32 %98)
+  store i32 %100, i32* %dv, align 4
+  %101 = load i32, i32* %mp, align 4
+  %102 = call i32 @mulPow5InvDivPow2(i32 %101, i32 %95, i32 %98)
+  store i32 %102, i32* %dp, align 4
+  %103 = load i32, i32* %mm, align 4
+  %104 = call i32 @mulPow5InvDivPow2(i32 %103, i32 %95, i32 %98)
+  store i32 %104, i32* %dm, align 4
+  %105 = icmp ne i32 %93, 0
+  %106 = sub i32 %102, 1
+  %107 = sdiv i32 %106, 10
+  %108 = sdiv i32 %104, 10
+  %109 = icmp sle i32 %107, %108
+  %110 = and i1 %105, %109
+  br i1 %110, label %if.then3, label %if.exit3
+
+if.then3:                                         ; preds = %if.else
+  %111 = load i32, i32* %i.small, align 4
+  %112 = add i32 %111, 1
+  %113 = call i32 @pow5bits(i32 %112)
+  %114 = load i32, i32* %q.small, align 4
+  %115 = sub i32 %114, %113
+  %116 = add i32 %115, 60
+  store i32 %116, i32* %j, align 4
+  %117 = load i32, i32* %mv, align 4
+  br label %if.exit3
+
+if.exit3:                                         ; preds = %if.then3, %if.else
+  br label %if.exit
+
+if.exit:                                          ; preds = %if.exit3, %if.exit2
   br label %exit
 
-if.exit:                                          ; No predecessors!
-  br label %exit
-
-exit:                                             ; preds = %if.exit, %if.else, %if.then, %neg_zero.then, %pos_zero.then, %neg_inf.then, %pos_inf.then, %nan.then
+exit:                                             ; preds = %if.exit, %neg_zero.then, %pos_zero.then, %neg_inf.then, %pos_inf.then, %nan.then
   %final = load %type.string, %type.string* %.ret, align 8
   ret %type.string %final
 }
@@ -584,6 +675,74 @@ if.else:                                          ; preds = %entry
 exit:                                             ; preds = %if.else, %if.then
   %4 = load i32, i32* %.ret, align 4
   ret i32 %4
+}
+
+define private i32 @mulPow5InvDivPow2(i32 %m, i32 %q, i32 %j) {
+entry:
+  %0 = getelementptr inbounds [31 x i64], [31 x i64]* @float_pow5_inv_split, i32 0, i32 %q
+  %1 = load i64, i64* %0, align 8
+  %2 = call i32 @mulShift(i32 %m, i64 %1, i32 %j)
+  ret i32 %2
+}
+
+define private i1 @multipleOfPow5(i32 %val, i32 %comp) {
+entry:
+  %0 = call i32 @pow5Factor(i32 %val)
+  %1 = icmp sge i32 %0, %comp
+  ret i1 %1
+}
+
+define private i32 @pow5Factor(i32 %val) {
+entry:
+  %val.addr = alloca i32, align 4
+  store i32 %val, i32* %val.addr, align 4
+  %i = alloca i32, align 4
+  store i32 0, i32* %i, align 4
+  br label %while.cond
+
+while.cond:                                       ; preds = %if.exit, %entry
+  %0 = load i32, i32* %val.addr, align 4
+  %1 = icmp sgt i32 %0, 0
+  br i1 %1, label %while.body, label %exit
+
+while.body:                                       ; preds = %while.cond
+  %2 = load i32, i32* %val.addr, align 4
+  %3 = srem i32 %2, 5
+  %4 = icmp ne i32 %3, 0
+  br i1 %4, label %exit, label %if.exit
+
+if.exit:                                          ; preds = %while.body
+  %5 = load i32, i32* %val.addr, align 4
+  %6 = sdiv i32 %5, 5
+  store i32 %6, i32* %val.addr, align 4
+  %7 = load i32, i32* %i, align 4
+  %8 = add i32 %7, 1
+  store i32 %8, i32* %i, align 4
+  br label %while.cond
+
+exit:                                             ; preds = %while.body, %while.cond
+  %9 = load i32, i32* %i, align 4
+  ret i32 %9
+}
+
+define private i32 @mulShift(i32 %m, i64 %factor, i32 %shift) {
+entry:
+  %factor_low = trunc i64 %factor to i32
+  %0 = lshr i64 %factor, 32
+  %factor_high = trunc i64 %0 to i32
+  %1 = zext i32 %m to i64
+  %2 = zext i32 %factor_low to i64
+  %bits0 = mul i64 %1, %2
+  %3 = zext i32 %factor_high to i64
+  %bits1 = mul i64 %1, %3
+  %4 = lshr i64 %bits0, 32
+  %sum = add i64 %4, %bits1
+  %5 = sub i32 %shift, 32
+  %6 = trunc i32 %5 to i6
+  %7 = zext i6 %6 to i64
+  %8 = lshr i64 %sum, %7
+  %9 = trunc i64 %8 to i32
+  ret i32 %9
 }
 
 define %ref.int* @"newref:int"(i32 %value) {
@@ -714,7 +873,7 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %0 = call %type.string @".conv:float_string"(float 0xC1ADE9E9C0000000)
+  %0 = call %type.string @".conv:float_string"(float 0xC1E2B23220000000)
   %x = alloca %type.string, align 8
   store %type.string %0, %type.string* %x, align 8
   br label %exit
