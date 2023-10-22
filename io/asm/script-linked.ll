@@ -11,6 +11,8 @@ source_filename = "llvm-link"
 @.strNaN = private unnamed_addr constant [3 x i8] c"nan", align 1
 @.strPosInf = private unnamed_addr constant [3 x i8] c"inf", align 1
 @.strNegInf = private unnamed_addr constant [4 x i8] c"-inf", align 1
+@.strPosZero = private unnamed_addr constant [3 x i8] c"0.0", align 1
+@.strNegZero = private unnamed_addr constant [4 x i8] c"-0.0", align 1
 @.strFree = private unnamed_addr constant [17 x i8] c"Freed from memory", align 1
 @.strCount = private unnamed_addr constant [11 x i8] c" references", align 1
 @.str0 = private unnamed_addr constant [9 x i8] c" now has ", align 1
@@ -436,12 +438,152 @@ neg_inf.then:                                     ; preds = %pos_inf.exit
   br label %exit
 
 neg_inf.exit:                                     ; preds = %pos_inf.exit
-  %15 = fptosi float %float to i32
+  %15 = fcmp ueq float %float, 0.000000e+00
+  br i1 %15, label %zero.then, label %zero.exit
+
+zero.then:                                        ; preds = %neg_inf.exit
+  %16 = bitcast float %float to i32
+  %17 = lshr i32 %16, 31
+  %18 = icmp eq i32 %17, 0
+  br i1 %18, label %pos_zero.then, label %neg_zero.then
+
+pos_zero.then:                                    ; preds = %zero.then
+  %19 = getelementptr inbounds [3 x i8], [3 x i8]* @.strPosZero, i32 0, i32 0
+  %20 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
+  store i32 3, i32* %20, align 8
+  %21 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
+  store i32 3, i32* %21, align 8
+  %22 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
+  store i8* %19, i8** %22, align 8
   br label %exit
 
-exit:                                             ; preds = %neg_inf.exit, %neg_inf.then, %pos_inf.then, %nan.then
+neg_zero.then:                                    ; preds = %zero.then
+  %23 = getelementptr inbounds [4 x i8], [4 x i8]* @.strNegZero, i32 0, i32 0
+  %24 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
+  store i32 4, i32* %24, align 8
+  %25 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
+  store i32 4, i32* %25, align 8
+  %26 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
+  store i8* %23, i8** %26, align 8
+  br label %exit
+
+zero.exit:                                        ; preds = %neg_inf.exit
+  %bits = alloca i32, align 4
+  %sign = alloca i1, align 1
+  %exp = alloca i32, align 4
+  %man = alloca i32, align 4
+  %27 = bitcast float %float to i32
+  store i32 %27, i32* %bits, align 4
+  %28 = lshr i32 %27, 31
+  %29 = icmp eq i32 %28, 0
+  store i1 %29, i1* %sign, align 1
+  %30 = and i32 %27, 2139095040
+  %31 = lshr i32 %30, 23
+  store i32 %31, i32* %exp, align 4
+  %32 = and i32 %27, 8388607
+  store i32 %32, i32* %man, align 4
+  %m2 = alloca i32, align 4
+  %e2 = alloca i32, align 4
+  %33 = icmp eq i32 %31, 0
+  br i1 %33, label %exp_zero.then, label %exp_zero.else
+
+exp_zero.then:                                    ; preds = %zero.exit
+  %34 = load i32, i32* %man, align 4
+  store i32 -149, i32* %e2, align 4
+  store i32 %34, i32* %m2, align 4
+  br label %exp_zero.exit
+
+exp_zero.else:                                    ; preds = %zero.exit
+  %35 = load i32, i32* %exp, align 4
+  %36 = add i32 %35, -150
+  store i32 %36, i32* %e2, align 4
+  %37 = load i32, i32* %man, align 4
+  %38 = or i32 %37, 8388608
+  store i32 %38, i32* %m2, align 4
+  br label %exp_zero.exit
+
+exp_zero.exit:                                    ; preds = %exp_zero.else, %exp_zero.then
+  %even = alloca i1, align 1
+  %mv = alloca i32, align 4
+  %mp = alloca i32, align 4
+  %mm = alloca i32, align 4
+  %39 = load i32, i32* %m2, align 4
+  %40 = and i32 %39, 1
+  %41 = icmp eq i32 %40, 0
+  store i1 %41, i1* %even, align 1
+  %42 = mul i32 4, %39
+  store i32 %42, i32* %mv, align 4
+  %43 = add i32 %42, 2
+  store i32 %43, i32* %mp, align 4
+  %44 = load i32, i32* %exp, align 4
+  %45 = icmp ne i32 %39, 8388608
+  %46 = icmp sle i32 %44, 1
+  %47 = or i1 %45, %46
+  %48 = select i1 %47, i32 2, i32 1
+  %49 = sub i32 %42, %48
+  store i32 %49, i32* %mm, align 4
+  %50 = load i32, i32* %e2, align 4
+  %51 = sub i32 %50, 2
+  store i32 %51, i32* %e2, align 4
+  %dp = alloca i32, align 4
+  %dv = alloca i32, align 4
+  %dm = alloca i32, align 4
+  %e10 = alloca i32, align 4
+  %dp_itz = alloca i1, align 1
+  %dv_itz = alloca i1, align 1
+  %dm_itz = alloca i1, align 1
+  %lastRem = alloca i32, align 4
+  store i32 0, i32* %lastRem, align 4
+  %52 = icmp sge i32 %51, 0
+  br i1 %52, label %if.then, label %if.else
+
+if.then:                                          ; preds = %exp_zero.exit
+  %q.large = alloca i32, align 4
+  %k.large = alloca i32, align 4
+  %i.large = alloca i32, align 4
+  %53 = load i32, i32* %e2, align 4
+  %54 = sitofp i32 %53 to float
+  %55 = fmul float %54, 0x3E9A209700000000
+  %56 = fptosi float %55 to i32
+  store i32 %56, i32* %q.large, align 4
+  %57 = call i32 @pow5bits(i32 %56)
+  %58 = add i32 58, %57
+  store i32 %58, i32* %k.large, align 4
+  %59 = add i32 %56, %58
+  %60 = sub i32 %59, %53
+  br label %exit
+
+if.else:                                          ; preds = %exp_zero.exit
+  br label %exit
+
+if.exit:                                          ; No predecessors!
+  br label %exit
+
+exit:                                             ; preds = %if.exit, %if.else, %if.then, %neg_zero.then, %pos_zero.then, %neg_inf.then, %pos_inf.then, %nan.then
   %final = load %type.string, %type.string* %.ret, align 8
   ret %type.string %final
+}
+
+define private i32 @pow5bits(i32 %e) {
+entry:
+  %.ret = alloca i32, align 4
+  %0 = icmp eq i32 %e, 0
+  br i1 %0, label %if.then, label %if.else
+
+if.then:                                          ; preds = %entry
+  store i32 1, i32* %.ret, align 4
+  br label %exit
+
+if.else:                                          ; preds = %entry
+  %1 = mul i32 %e, 23219280
+  %2 = add i32 %1, 9999999
+  %3 = sdiv i32 %2, 10000000
+  store i32 %3, i32* %.ret, align 4
+  br label %exit
+
+exit:                                             ; preds = %if.else, %if.then
+  %4 = load i32, i32* %.ret, align 4
+  ret i32 %4
 }
 
 define %ref.int* @"newref:int"(i32 %value) {
@@ -572,9 +714,9 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %0 = fdiv float 0.000000e+00, 0.000000e+00
-  %1 = call %type.string @".conv:float_string"(float %0)
-  call void @.println(%type.string %1)
+  %0 = call %type.string @".conv:float_string"(float 0xC1ADE9E9C0000000)
+  %x = alloca %type.string, align 8
+  store %type.string %0, %type.string* %x, align 8
   br label %exit
 
 exit:                                             ; preds = %entry

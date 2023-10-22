@@ -5,15 +5,13 @@ source_filename = "script.su"
 
 define void @main() {
 entry:
-	%0 = fdiv float 0.0, 0.0
-	%1 = call %type.string @".conv:float_string"(float %0)
-	call void @.println(%type.string %1)
+	%0 = call %type.string @".conv:float_string"(float 0xC1ADE9E9C0000000)
+	%x = alloca %type.string
+	store %type.string %0, %type.string* %x
 	br label %exit
 
 exit:
 	ret void
 }
-
-declare void @.println(%type.string %0)
 
 declare %type.string @".conv:float_string"(float %0)

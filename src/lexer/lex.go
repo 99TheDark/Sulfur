@@ -208,7 +208,15 @@ func Lex(source string) *[]Token {
 			} else if l.mode == Number {
 				if !decimal(l.at()) {
 					num := l.get(l.begin, l.loc.Idx-l.begin.Idx)
-					l.addAt(Number, num, l.begin)
+					prev := l.source[l.begin.Idx-1]
+
+					// TODO: Allow +number
+					if prev == '-' {
+						l.tokens = l.tokens[:len(l.tokens)-1]
+						l.addAt(Number, "-"+num, l.begin)
+					} else {
+						l.addAt(Number, num, l.begin)
+					}
 
 					l.mode = None
 				} else {
