@@ -11,7 +11,7 @@ Compilation Steps
 - Parser 
 - Type Inferrer 
 - Flow Analyzer (TODO)
-- Optimizer 
+- Optimizer (TODO)
 - LLVM Code Generator 
 - Assembly Compiler
 - Code Runner
