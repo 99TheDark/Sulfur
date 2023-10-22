@@ -1,6 +1,7 @@
 ; ModuleID = 'script-linked.bc'
 source_filename = "llvm-link"
 
+%ref.bool = type { i1*, i32 }
 %type.string = type { i32, i32, i8* }
 %ref.float = type { float*, i32 }
 %union.anon = type { float }
@@ -17,71 +18,41 @@ source_filename = "llvm-link"
 @.strPosZero = private unnamed_addr constant [3 x i8] c"0.0", align 1
 @.strNegZero = private unnamed_addr constant [4 x i8] c"-0.0", align 1
 @.strFree = private unnamed_addr constant [17 x i8] c"Freed from memory", align 1
-@.strCount = private unnamed_addr constant [11 x i8] c" references", align 1
+@.strCount = private unnamed_addr constant [13 x i8] c" reference(s)", align 1
 @.str0 = private unnamed_addr constant [9 x i8] c" now has ", align 1
 @.str1 = private unnamed_addr constant [11 x i8] c" references", align 1
 @.strZero = private unnamed_addr constant [1 x i8] c"0", align 1
 
-define %type.string @".conv:bool_string"(i1 %bool) {
+define %ref.bool* @"newref:bool"(i1 %value) {
 entry:
-  %.ret = alloca %type.string, align 8
-  br i1 %bool, label %if.then, label %if.else
-
-if.then:                                          ; preds = %entry
-  %0 = getelementptr inbounds [4 x i8], [4 x i8]* @.strTrue, i32 0, i32 0
-  %1 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
-  store i32 4, i32* %1, align 8
-  %2 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
-  store i32 4, i32* %2, align 8
-  %3 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
-  store i8* %0, i8** %3, align 8
-  br label %exit
-
-if.else:                                          ; preds = %entry
-  %4 = getelementptr inbounds [5 x i8], [5 x i8]* @.strFalse, i32 0, i32 0
-  %5 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
-  store i32 5, i32* %5, align 8
-  %6 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
-  store i32 5, i32* %6, align 8
-  %7 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
-  store i8* %4, i8** %7, align 8
-  br label %exit
-
-exit:                                             ; preds = %if.else, %if.then
-  %8 = load %type.string, %type.string* %.ret, align 8
-  ret %type.string %8
-}
-
-define %ref.float* @"newref:float"(float %value) {
-entry:
-  %value.addr = alloca float, align 4
-  %ref = alloca %ref.float*, align 8
-  store float %value, float* %value.addr, align 4
+  %value.addr = alloca i1, align 4
+  %ref = alloca %ref.bool*, align 8
+  store i1 %value, i1* %value.addr, align 4
   %call = call i8* @malloc(i32 16)
-  %0 = bitcast i8* %call to %ref.float*
-  store %ref.float* %0, %ref.float** %ref, align 8
-  %call1 = call i8* @malloc(i32 4)
-  %1 = bitcast i8* %call1 to float*
-  %2 = load %ref.float*, %ref.float** %ref, align 8
-  %value2 = getelementptr inbounds %ref.float, %ref.float* %2, i32 0, i32 0
-  store float* %1, float** %value2, align 8
-  %3 = load float, float* %value.addr, align 4
-  %4 = load %ref.float*, %ref.float** %ref, align 8
-  %value3 = getelementptr inbounds %ref.float, %ref.float* %4, i32 0, i32 0
-  %5 = load float*, float** %value3, align 8
-  store float %3, float* %5, align 4
-  %6 = load %ref.float*, %ref.float** %ref, align 8
-  %count = getelementptr inbounds %ref.float, %ref.float* %6, i32 0, i32 1
+  %0 = bitcast i8* %call to %ref.bool*
+  store %ref.bool* %0, %ref.bool** %ref, align 8
+  %call1 = call i8* @malloc(i32 1)
+  %1 = bitcast i8* %call1 to i1*
+  %2 = load %ref.bool*, %ref.bool** %ref, align 8
+  %value2 = getelementptr inbounds %ref.bool, %ref.bool* %2, i32 0, i32 0
+  store i1* %1, i1** %value2, align 8
+  %3 = load i1, i1* %value.addr, align 4
+  %4 = load %ref.bool*, %ref.bool** %ref, align 8
+  %value3 = getelementptr inbounds %ref.bool, %ref.bool* %4, i32 0, i32 0
+  %5 = load i1*, i1** %value3, align 8
+  store i1 %3, i1* %5, align 4
+  %6 = load %ref.bool*, %ref.bool** %ref, align 8
+  %count = getelementptr inbounds %ref.bool, %ref.bool* %6, i32 0, i32 1
   store i32 0, i32* %count, align 8
-  %7 = load %ref.float*, %ref.float** %ref, align 8
-  ret %ref.float* %7
+  %7 = load %ref.bool*, %ref.bool** %ref, align 8
+  ret %ref.bool* %7
 }
 
 declare i8* @malloc(i32)
 
-define void @"ref:float"(%ref.float* %ref) {
+define void @"ref:bool"(%ref.bool* %ref) {
 entry:
-  %0 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 1
+  %0 = getelementptr inbounds %ref.bool, %ref.bool* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 8
   %2 = add i32 %1, 1
   call void @countMsg(i32 %2)
@@ -92,12 +63,12 @@ entry:
 define void @countMsg(i32 %0) {
 entry:
   %1 = call %type.string @".conv:int_string"(i32 %0)
-  %2 = getelementptr inbounds [11 x i8], [11 x i8]* @.strCount, i32 0, i32 0
+  %2 = getelementptr inbounds [13 x i8], [13 x i8]* @.strCount, i32 0, i32 0
   %3 = alloca %type.string, align 8
   %4 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 0
-  store i32 11, i32* %4, align 8
+  store i32 13, i32* %4, align 8
   %5 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 1
-  store i32 11, i32* %5, align 8
+  store i32 13, i32* %5, align 8
   %6 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 2
   store i8* %2, i8** %6, align 8
   %7 = load %type.string, %type.string* %3, align 8
@@ -357,6 +328,110 @@ declare void @putchar(i8)
 
 declare void @free(i8*)
 
+define void @"deref:bool"(%ref.bool* %ref) {
+entry:
+  %0 = getelementptr inbounds %ref.bool, %ref.bool* %ref, i32 0, i32 1
+  %1 = load i32, i32* %0, align 8
+  %2 = add i32 %1, -1
+  call void @countMsg(i32 %2)
+  store i32 %2, i32* %0, align 8
+  %3 = icmp eq i32 %2, 0
+  br i1 %3, label %if.then, label %exit
+
+if.then:                                          ; preds = %entry
+  %4 = getelementptr inbounds %ref.bool, %ref.bool* %ref, i32 0, i32 0
+  %5 = load i1*, i1** %4, align 8
+  %6 = bitcast i1* %5 to i8*
+  call void @free(i8* %6)
+  %7 = bitcast %ref.bool* %ref to i8*
+  call void @free(i8* %7)
+  call void @freeMsg()
+  br label %exit
+
+exit:                                             ; preds = %if.then, %entry
+  ret void
+}
+
+define void @freeMsg() {
+entry:
+  %0 = getelementptr inbounds [17 x i8], [17 x i8]* @.strFree, i32 0, i32 0
+  %1 = alloca %type.string, align 8
+  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
+  store i32 17, i32* %2, align 8
+  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
+  store i32 17, i32* %3, align 8
+  %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
+  store i8* %0, i8** %4, align 8
+  %5 = load %type.string, %type.string* %1, align 8
+  call void @.println(%type.string %5)
+  ret void
+}
+
+define %type.string @".conv:bool_string"(i1 %bool) {
+entry:
+  %.ret = alloca %type.string, align 8
+  br i1 %bool, label %if.then, label %if.else
+
+if.then:                                          ; preds = %entry
+  %0 = getelementptr inbounds [4 x i8], [4 x i8]* @.strTrue, i32 0, i32 0
+  %1 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
+  store i32 4, i32* %1, align 8
+  %2 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
+  store i32 4, i32* %2, align 8
+  %3 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
+  store i8* %0, i8** %3, align 8
+  br label %exit
+
+if.else:                                          ; preds = %entry
+  %4 = getelementptr inbounds [5 x i8], [5 x i8]* @.strFalse, i32 0, i32 0
+  %5 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
+  store i32 5, i32* %5, align 8
+  %6 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
+  store i32 5, i32* %6, align 8
+  %7 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
+  store i8* %4, i8** %7, align 8
+  br label %exit
+
+exit:                                             ; preds = %if.else, %if.then
+  %8 = load %type.string, %type.string* %.ret, align 8
+  ret %type.string %8
+}
+
+define %ref.float* @"newref:float"(float %value) {
+entry:
+  %value.addr = alloca float, align 4
+  %ref = alloca %ref.float*, align 8
+  store float %value, float* %value.addr, align 4
+  %call = call i8* @malloc(i32 16)
+  %0 = bitcast i8* %call to %ref.float*
+  store %ref.float* %0, %ref.float** %ref, align 8
+  %call1 = call i8* @malloc(i32 4)
+  %1 = bitcast i8* %call1 to float*
+  %2 = load %ref.float*, %ref.float** %ref, align 8
+  %value2 = getelementptr inbounds %ref.float, %ref.float* %2, i32 0, i32 0
+  store float* %1, float** %value2, align 8
+  %3 = load float, float* %value.addr, align 4
+  %4 = load %ref.float*, %ref.float** %ref, align 8
+  %value3 = getelementptr inbounds %ref.float, %ref.float* %4, i32 0, i32 0
+  %5 = load float*, float** %value3, align 8
+  store float %3, float* %5, align 4
+  %6 = load %ref.float*, %ref.float** %ref, align 8
+  %count = getelementptr inbounds %ref.float, %ref.float* %6, i32 0, i32 1
+  store i32 0, i32* %count, align 8
+  %7 = load %ref.float*, %ref.float** %ref, align 8
+  ret %ref.float* %7
+}
+
+define void @"ref:float"(%ref.float* %ref) {
+entry:
+  %0 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 1
+  %1 = load i32, i32* %0, align 8
+  %2 = add i32 %1, 1
+  call void @countMsg(i32 %2)
+  store i32 %2, i32* %0, align 8
+  ret void
+}
+
 define void @"deref:float"(%ref.float* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 1
@@ -378,21 +453,6 @@ if.then:                                          ; preds = %entry
   br label %exit
 
 exit:                                             ; preds = %if.then, %entry
-  ret void
-}
-
-define void @freeMsg() {
-entry:
-  %0 = getelementptr inbounds [17 x i8], [17 x i8]* @.strFree, i32 0, i32 0
-  %1 = alloca %type.string, align 8
-  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 17, i32* %2, align 8
-  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-  store i32 17, i32* %3, align 8
-  %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
-  store i8* %0, i8** %4, align 8
-  %5 = load %type.string, %type.string* %1, align 8
-  call void @.println(%type.string %5)
   ret void
 }
 
@@ -1770,29 +1830,52 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %0 = call %type.string @".conv:float_string"(float 0.000000e+00)
-  call void @.println(%type.string %0)
-  %1 = call %type.string @".conv:float_string"(float -0.000000e+00)
-  call void @.println(%type.string %1)
-  %2 = fdiv float 0.000000e+00, 0.000000e+00
-  %3 = call %type.string @".conv:float_string"(float %2)
+  %x = call %ref.bool* @"newref:bool"(i1 true)
+  %0 = getelementptr inbounds %ref.bool, %ref.bool* %x, i32 0, i32 0
+  %1 = load i1*, i1** %0, align 8
+  %2 = load i1, i1* %1, align 1
+  %3 = call %type.string @".conv:bool_string"(i1 %2)
   call void @.println(%type.string %3)
-  %4 = fdiv float 1.000000e+00, 0.000000e+00
-  %5 = call %type.string @".conv:float_string"(float %4)
-  call void @.println(%type.string %5)
-  %6 = fdiv float -1.000000e+00, 0.000000e+00
-  %7 = call %type.string @".conv:float_string"(float %6)
+  call void @"ref:bool"(%ref.bool* %x)
+  call void @mod.applyRec(%ref.bool* %x)
+  %4 = getelementptr inbounds %ref.bool, %ref.bool* %x, i32 0, i32 0
+  %5 = load i1*, i1** %4, align 8
+  %6 = load i1, i1* %5, align 1
+  %7 = call %type.string @".conv:bool_string"(i1 %6)
   call void @.println(%type.string %7)
-  %8 = call %type.string @".conv:float_string"(float 0x419D6BFEE0000000)
-  call void @.println(%type.string %8)
-  %9 = call %type.string @".conv:float_string"(float 0xBEFDC62B20000000)
-  call void @.println(%type.string %9)
-  %10 = call %type.string @".conv:float_string"(float 0x40503379A0000000)
-  call void @.println(%type.string %10)
+  call void @"deref:bool"(%ref.bool* %x)
   br label %exit
 
 exit:                                             ; preds = %entry
   ret void
+}
+
+define private void @mod.applyRec(%ref.bool* %0) {
+entry:
+  %1 = getelementptr inbounds %ref.bool, %ref.bool* %0, i32 0, i32 0
+  %2 = load i1*, i1** %1, align 8
+  %3 = load i1, i1* %2, align 1
+  %4 = icmp eq i1 %3, false
+  br i1 %4, label %if.then0, label %if.end0
+
+exit:                                             ; preds = %if.end0
+  ret void
+
+if.then0:                                         ; preds = %entry
+  %5 = getelementptr inbounds %ref.bool, %ref.bool* %0, i32 0, i32 0
+  %6 = load i1*, i1** %5, align 8
+  %7 = load i1, i1* %6, align 1
+  %8 = icmp eq i1 %7, false
+  %9 = getelementptr inbounds %ref.bool, %ref.bool* %0, i32 0, i32 0
+  %10 = load i1*, i1** %9, align 8
+  store i1 %8, i1* %10, align 8
+  call void @"ref:bool"(%ref.bool* %0)
+  call void @mod.applyRec(%ref.bool* %0)
+  call void @"deref:bool"(%ref.bool* %0)
+  br label %if.end0
+
+if.end0:                                          ; preds = %if.then0, %entry
+  br label %exit
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }

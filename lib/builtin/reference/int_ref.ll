@@ -16,7 +16,7 @@ entry:
     %call = call i8* @malloc(i32 16) ; sizeof(&int) = 16
     %0 = bitcast i8* %call to %ref.int*
     store %ref.int* %0, %ref.int** %ref, align 8
-    %call1 = call i8* @malloc(i32 4) ; sizeof(int) = 16
+    %call1 = call i8* @malloc(i32 4) ; sizeof(int) = 4
     %1 = bitcast i8* %call1 to i32*
     %2 = load %ref.int*, %ref.int** %ref, align 8
     %value2 = getelementptr inbounds %ref.int, %ref.int* %2, i32 0, i32 0
