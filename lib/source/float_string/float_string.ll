@@ -1,5 +1,3 @@
-source_filename = "lib/builtin/conversion/float_string"
-
 %type.string = type { i32, i32, i8* }
 %union.anon = type { float }
 
@@ -10,8 +8,6 @@ source_filename = "lib/builtin/conversion/float_string"
 @.strNegInf = private unnamed_addr constant [5 x i8] c"-inf\00", align 1
 @.strPosZero = private unnamed_addr constant [4 x i8] c"0.0\00", align 1
 @.strNegZero = private unnamed_addr constant [5 x i8] c"-0.0\00", align 1
-
-declare void @.println(%type.string)
 
 define private i32 @pow5bits(i32 %e) {
 entry:
@@ -178,7 +174,7 @@ return:
     ret i32 %5
 }
 
-define private i32 @decimalLength(i32 %val) {
+define private i32 @decimalLength(i32 private %val) {
 entry:
     %val.addr = alloca i32, align 4
     %len = alloca i32, align 4
@@ -219,7 +215,7 @@ for.end:
     ret i32 %5
 }
 
-define private { i64, i8* } @normalString(float %num, i32 %bits) {
+define private { i64, i8* } @normal_string(float %num, i32 %bits) {
 entry:
     %retval = alloca %type.string, align 8
     %num.addr = alloca float, align 4
@@ -1118,7 +1114,7 @@ if.end353:
     store i32 %220, i32* %size, align 4
     %221 = load i32, i32* %idx, align 4
     %conv354 = sext i32 %221 to i64
-    %call355 = call noalias i8* @malloc(i64 %conv354)
+    %call355 = call noalias i8* @malloc(i64 %conv354) #5
     %addr = getelementptr inbounds %type.string, %type.string* %retval, i32 0, i32 2
     store i8* %call355, i8** %addr, align 8
     %addr356 = getelementptr inbounds %type.string, %type.string* %retval, i32 0, i32 2
@@ -1129,18 +1125,19 @@ if.end353:
     %mul358 = mul i64 %conv357, 1
     call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 1 %222, i8* align 1 %223, i64 %mul358, i1 false)
     %225 = load i8*, i8** %result, align 8
-    call void @free(i8* %225)
+    call void @free(i8* %225) #5
     %226 = bitcast %type.string* %retval to { i64, i8* }*
     %227 = load { i64, i8* }, { i64, i8* }* %226, align 8
     ret { i64, i8* } %227
 }
 
-declare void @llvm.memcpy.p0i8.p0i8.i64(i8* noalias nocapture writeonly, i8* noalias nocapture readonly, i64, i1 immarg)
+declare dso_local noalias i8* @malloc(i64 noundef) #3
 
-declare i8* @malloc(i64)
-declare void @free(i8*)
+declare void @llvm.memcpy.p0i8.p0i8.i64(i8* noalias nocapture writeonly, i8* noalias nocapture readonly, i64, i1 immarg) #4
 
-define %type.string @".conv:float_string"(float %num) {
+declare dso_local void @free(i8* noundef) #3
+
+define dso_local { i64, i8* } @conv_float_string(float %num) {
 entry:
     %retval = alloca %type.string, align 8
     %num.addr = alloca float, align 4
@@ -1246,7 +1243,7 @@ if.end:
 if.else24:
     %17 = load float, float* %num.addr, align 4
     %18 = load i32, i32* %bits, align 4
-    %call = call { i64, i8* } @normalString(float %17, i32 %18)
+    %call = call { i64, i8* } @normal_string(float %17, i32 %18)
     %19 = bitcast %type.string* %retval to { i64, i8* }*
     %20 = getelementptr inbounds { i64, i8* }, { i64, i8* }* %19, i32 0, i32 0
     %21 = extractvalue { i64, i8* } %call, 0
@@ -1257,6 +1254,7 @@ if.else24:
     br label %return
 
 return:
-    %24 = load %type.string, %type.string* %retval, align 8
-    ret %type.string %24
+    %24 = bitcast %type.string* %retval to { i64, i8* }*
+    %25 = load { i64, i8* }, { i64, i8* }* %24, align 8
+    ret { i64, i8* } %25
 }
