@@ -1830,52 +1830,29 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %x = call %ref.bool* @"newref:bool"(i1 true)
-  %0 = getelementptr inbounds %ref.bool, %ref.bool* %x, i32 0, i32 0
-  %1 = load i1*, i1** %0, align 8
-  %2 = load i1, i1* %1, align 1
-  %3 = call %type.string @".conv:bool_string"(i1 %2)
+  %0 = call %type.string @".conv:float_string"(float 0.000000e+00)
+  call void @.println(%type.string %0)
+  %1 = call %type.string @".conv:float_string"(float -0.000000e+00)
+  call void @.println(%type.string %1)
+  %2 = fdiv float 0.000000e+00, 0.000000e+00
+  %3 = call %type.string @".conv:float_string"(float %2)
   call void @.println(%type.string %3)
-  call void @"ref:bool"(%ref.bool* %x)
-  call void @mod.applyRec(%ref.bool* %x)
-  %4 = getelementptr inbounds %ref.bool, %ref.bool* %x, i32 0, i32 0
-  %5 = load i1*, i1** %4, align 8
-  %6 = load i1, i1* %5, align 1
-  %7 = call %type.string @".conv:bool_string"(i1 %6)
+  %4 = fdiv float 1.000000e+00, 0.000000e+00
+  %5 = call %type.string @".conv:float_string"(float %4)
+  call void @.println(%type.string %5)
+  %6 = fdiv float -1.000000e+00, 0.000000e+00
+  %7 = call %type.string @".conv:float_string"(float %6)
   call void @.println(%type.string %7)
-  call void @"deref:bool"(%ref.bool* %x)
+  %8 = call %type.string @".conv:float_string"(float 0x419D6BFEE0000000)
+  call void @.println(%type.string %8)
+  %9 = call %type.string @".conv:float_string"(float 0xBEFDC62B20000000)
+  call void @.println(%type.string %9)
+  %10 = call %type.string @".conv:float_string"(float 0x40503379A0000000)
+  call void @.println(%type.string %10)
   br label %exit
 
 exit:                                             ; preds = %entry
   ret void
-}
-
-define private void @mod.applyRec(%ref.bool* %0) {
-entry:
-  %1 = getelementptr inbounds %ref.bool, %ref.bool* %0, i32 0, i32 0
-  %2 = load i1*, i1** %1, align 8
-  %3 = load i1, i1* %2, align 1
-  %4 = icmp eq i1 %3, false
-  br i1 %4, label %if.then0, label %if.end0
-
-exit:                                             ; preds = %if.end0
-  ret void
-
-if.then0:                                         ; preds = %entry
-  %5 = getelementptr inbounds %ref.bool, %ref.bool* %0, i32 0, i32 0
-  %6 = load i1*, i1** %5, align 8
-  %7 = load i1, i1* %6, align 1
-  %8 = icmp eq i1 %7, false
-  %9 = getelementptr inbounds %ref.bool, %ref.bool* %0, i32 0, i32 0
-  %10 = load i1*, i1** %9, align 8
-  store i1 %8, i1* %10, align 8
-  call void @"ref:bool"(%ref.bool* %0)
-  call void @mod.applyRec(%ref.bool* %0)
-  call void @"deref:bool"(%ref.bool* %0)
-  br label %if.end0
-
-if.end0:                                          ; preds = %if.then0, %entry
-  br label %exit
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }

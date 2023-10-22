@@ -1812,67 +1812,45 @@ LBB27_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	mov	w0, #1
-	bl	"_newref:bool"
-	ldr	x8, [x0]
-	mov	x19, x0
-	ldrb	w0, [x8]
-	bl	"_.conv:bool_string"
+	movi	d0, #0000000000000000
+	bl	"_.conv:float_string"
 	bl	_.println
-	mov	x0, x19
-	bl	"_ref:bool"
-	mov	x0, x19
-	bl	l_mod.applyRec
-	ldr	x8, [x19]
-	ldrb	w0, [x8]
-	bl	"_.conv:bool_string"
+	mov	w8, #-2147483648
+	fmov	s0, w8
+	bl	"_.conv:float_string"
 	bl	_.println
-	mov	x0, x19
-	bl	"_deref:bool"
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
-	ret
-	.cfi_endproc
-                                        ; -- End function
-	.p2align	2                               ; -- Begin function mod.applyRec
-l_mod.applyRec:                         ; @mod.applyRec
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	ldr	x8, [x0]
-	ldrb	w8, [x8]
-	cbz	w8, LBB29_2
-; %bb.1:                                ; %if.end0
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
-	ret
-LBB29_2:                                ; %if.then0
-	ldr	x8, [x0]
-	mov	x19, x0
-	ldrb	w9, [x8]
-	mvn	w9, w9
-	and	w9, w9, #0x1
-	strb	w9, [x8]
-	bl	"_ref:bool"
-	mov	x0, x19
-	bl	l_mod.applyRec
-	mov	x0, x19
-	bl	"_deref:bool"
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	mov	w8, #2143289344
+	fmov	s0, w8
+	bl	"_.conv:float_string"
+	bl	_.println
+	mov	w8, #2139095040
+	fmov	s0, w8
+	bl	"_.conv:float_string"
+	bl	_.println
+	mov	w8, #-8388608
+	fmov	s0, w8
+	bl	"_.conv:float_string"
+	bl	_.println
+	mov	w8, #24567
+	movk	w8, #19691, lsl #16
+	fmov	s0, w8
+	bl	"_.conv:float_string"
+	bl	_.println
+	mov	w8, #12633
+	movk	w8, #47086, lsl #16
+	fmov	s0, w8
+	bl	"_.conv:float_string"
+	bl	_.println
+	mov	w8, #39885
+	movk	w8, #17025, lsl #16
+	fmov	s0, w8
+	bl	"_.conv:float_string"
+	bl	_.println
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret
 	.cfi_endproc
                                         ; -- End function

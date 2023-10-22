@@ -1,15 +1,17 @@
 # TODO
-- Allow variables to be referenced directly (not just through function calls)
-- Add %.copy:string_string(%type.string str) and use when copying
-- Implement autofree
-- Official reference syntax (currently WIP in notes)
-- Labeled breaks / continues with #'s
 - Automatic type inference 
     - `println(5)` = `println(string!(5))`
     - `6 + 3.4` = `float!(6) + 3.4`
     - `8 + "th"` = `string!(8) + "th"`
+- Allow variables to be referenced directly (not just through function calls)
+- Add %.copy:string_string(%type.string str) and use when copying
+- Implement autofree
+- Automatic type inference 
+- Labeled breaks / continues with #'s
 - Work on error & enum syntax
 - Better escaped characters
+- Complex numbers
+- Complex number to string
 - Unsigned integer & byte literals
 - Official ask/reply syntax
 - Official event syntax
@@ -22,3 +24,5 @@
 - Unsigned integer to string
 - Switch from 1-byte strings to 4-byte strings
 - Remove allocas from single-use variables
+- `sizeof` operator
+- Add `string.length` and `string[idx]`
