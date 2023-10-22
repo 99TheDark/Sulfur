@@ -4,7 +4,6 @@
 - Implement autofree
 - Official reference syntax (currently WIP in notes)
 - Labeled breaks / continues with #'s
-- Float to string generation
 - Automatic type inference 
     - `println(5)` = `println(string!(5))`
     - `6 + 3.4` = `float!(6) + 3.4`

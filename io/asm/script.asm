@@ -1861,21 +1861,23 @@ l_float_pow5_split:
 	.quad	1615587133892632177             ; 0x166bb7f0435c9e71
 	.quad	2019483917365790221             ; 0x1c06a5ec5433c60d
 
-	.section	__TEXT,__cstring,cstring_literals
 l_.strNaN:                              ; @.strNaN
-	.asciz	"nan"
+	.ascii	"nan"
 
 l_.strPosInf:                           ; @.strPosInf
-	.asciz	"inf"
+	.ascii	"inf"
 
+	.section	__TEXT,__literal4,4byte_literals
 l_.strNegInf:                           ; @.strNegInf
-	.asciz	"-inf"
+	.ascii	"-inf"
 
+	.section	__TEXT,__const
 l_.strPosZero:                          ; @.strPosZero
-	.asciz	"0.0"
+	.ascii	"0.0"
 
+	.section	__TEXT,__literal4,4byte_literals
 l_.strNegZero:                          ; @.strNegZero
-	.asciz	"-0.0"
+	.ascii	"-0.0"
 
 	.section	__TEXT,__const
 l_.strFree:                             ; @.strFree

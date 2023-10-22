@@ -11,11 +11,11 @@ source_filename = "llvm-link"
 @.strFalse = private unnamed_addr constant [5 x i8] c"false", align 1
 @float_pow5_inv_split = private constant [31 x i64] [i64 576460752303423489, i64 461168601842738791, i64 368934881474191033, i64 295147905179352826, i64 472236648286964522, i64 377789318629571618, i64 302231454903657294, i64 483570327845851670, i64 386856262276681336, i64 309485009821345069, i64 495176015714152110, i64 396140812571321688, i64 316912650057057351, i64 507060240091291761, i64 405648192073033409, i64 324518553658426727, i64 519229685853482763, i64 415383748682786211, i64 332306998946228969, i64 531691198313966350, i64 425352958651173080, i64 340282366920938464, i64 544451787073501542, i64 435561429658801234, i64 348449143727040987, i64 557518629963265579, i64 446014903970612463, i64 356811923176489971, i64 570899077082383953, i64 456719261665907162, i64 365375409332725730], align 16
 @float_pow5_split = private constant [47 x i64] [i64 1152921504606846976, i64 1441151880758558720, i64 1801439850948198400, i64 2251799813685248000, i64 1407374883553280000, i64 1759218604441600000, i64 2199023255552000000, i64 1374389534720000000, i64 1717986918400000000, i64 2147483648000000000, i64 1342177280000000000, i64 1677721600000000000, i64 2097152000000000000, i64 1310720000000000000, i64 1638400000000000000, i64 2048000000000000000, i64 1280000000000000000, i64 1600000000000000000, i64 2000000000000000000, i64 1250000000000000000, i64 1562500000000000000, i64 1953125000000000000, i64 1220703125000000000, i64 1525878906250000000, i64 1907348632812500000, i64 1192092895507812500, i64 1490116119384765625, i64 1862645149230957031, i64 1164153218269348144, i64 1455191522836685180, i64 1818989403545856475, i64 2273736754432320594, i64 1421085471520200371, i64 1776356839400250464, i64 2220446049250313080, i64 1387778780781445675, i64 1734723475976807094, i64 2168404344971008868, i64 1355252715606880542, i64 1694065894508600678, i64 2117582368135750847, i64 1323488980084844279, i64 1654361225106055349, i64 2067951531382569187, i64 1292469707114105741, i64 1615587133892632177, i64 2019483917365790221], align 16
-@.strNaN = private unnamed_addr constant [4 x i8] c"nan\00", align 1
-@.strPosInf = private unnamed_addr constant [4 x i8] c"inf\00", align 1
-@.strNegInf = private unnamed_addr constant [5 x i8] c"-inf\00", align 1
-@.strPosZero = private unnamed_addr constant [4 x i8] c"0.0\00", align 1
-@.strNegZero = private unnamed_addr constant [5 x i8] c"-0.0\00", align 1
+@.strNaN = private unnamed_addr constant [3 x i8] c"nan", align 1
+@.strPosInf = private unnamed_addr constant [3 x i8] c"inf", align 1
+@.strNegInf = private unnamed_addr constant [4 x i8] c"-inf", align 1
+@.strPosZero = private unnamed_addr constant [3 x i8] c"0.0", align 1
+@.strNegZero = private unnamed_addr constant [4 x i8] c"-0.0", align 1
 @.strFree = private unnamed_addr constant [17 x i8] c"Freed from memory", align 1
 @.strCount = private unnamed_addr constant [11 x i8] c" references", align 1
 @.str0 = private unnamed_addr constant [9 x i8] c" now has ", align 1
@@ -422,7 +422,7 @@ if.then:                                          ; preds = %entry
   %size = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
   store i32 3, i32* %size, align 4
   %addr = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 2
-  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.strNaN, i64 0, i64 0), i8** %addr, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.strNaN, i64 0, i64 0), i8** %addr, align 8
   %4 = bitcast %type.string* %retval to i8*
   %5 = bitcast %type.string* %str to i8*
   call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 8 %4, i8* align 8 %5, i64 16, i1 false)
@@ -439,7 +439,7 @@ if.then2:                                         ; preds = %if.else
   %size4 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
   store i32 3, i32* %size4, align 4
   %addr5 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 2
-  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.strPosInf, i64 0, i64 0), i8** %addr5, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.strPosInf, i64 0, i64 0), i8** %addr5, align 8
   %7 = bitcast %type.string* %retval to i8*
   %8 = bitcast %type.string* %str to i8*
   call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 8 %7, i8* align 8 %8, i64 16, i1 false)
@@ -456,7 +456,7 @@ if.then8:                                         ; preds = %if.else6
   %size10 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
   store i32 4, i32* %size10, align 4
   %addr11 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 2
-  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @.strNegInf, i64 0, i64 0), i8** %addr11, align 8
+  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.strNegInf, i64 0, i64 0), i8** %addr11, align 8
   %10 = bitcast %type.string* %retval to i8*
   %11 = bitcast %type.string* %str to i8*
   call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 8 %10, i8* align 8 %11, i64 16, i1 false)
@@ -481,7 +481,7 @@ if.then16:                                        ; preds = %if.then14
   %size18 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
   store i32 3, i32* %size18, align 4
   %addr19 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 2
-  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.strPosZero, i64 0, i64 0), i8** %addr19, align 8
+  store i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.strPosZero, i64 0, i64 0), i8** %addr19, align 8
   br label %if.end
 
 if.else20:                                        ; preds = %if.then14
@@ -490,7 +490,7 @@ if.else20:                                        ; preds = %if.then14
   %size22 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
   store i32 4, i32* %size22, align 4
   %addr23 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 2
-  store i8* getelementptr inbounds ([5 x i8], [5 x i8]* @.strNegZero, i64 0, i64 0), i8** %addr23, align 8
+  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.strNegZero, i64 0, i64 0), i8** %addr23, align 8
   br label %if.end
 
 if.end:                                           ; preds = %if.else20, %if.then16
