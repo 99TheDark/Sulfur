@@ -4,4 +4,4 @@
 // println(string!(1.0 / 0.0))
 // println(string!(-1.0 / 0.0))
 // println(string!(-17.9))
-x := string!(-2509345104.0234)
+x := string!(-2509345104.10234)

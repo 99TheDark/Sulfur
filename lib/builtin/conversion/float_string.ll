@@ -100,10 +100,10 @@ zero.exit:
 	%28 = lshr i32 %27, 31
 	%29 = icmp eq i32 %28, 0
 	store i1 %29, i1* %sign, align 1
-    %30 = and i32 %27, 2139095040
+	%30 = and i32 %27, 2139095040
 	%31 = lshr i32 %30, 23
 	store i32 %31, i32* %exp, align 4
-    %32 = and i32 %27, 8388607
+	%32 = and i32 %27, 8388607
 	store i32 %32, i32* %man, align 4
 	%m2 = alloca i32 
 	%e2 = alloca i32 
@@ -128,28 +128,24 @@ exp_zero.else:
 	br label %exp_zero.exit
 
 exp_zero.exit:
-	%even = alloca i1
 	%mv = alloca i32
 	%mp = alloca i32
 	%mm = alloca i32
 	%39 = load i32, i32* %m2, align 4
-	%40 = and i32 %39, 1
-	%41 = icmp eq i32 %40, 0
-	store i1 %41, i1* %even
-	%42 = mul i32 4, %39
-	store i32 %42, i32* %mv, align 4
-	%43 = add i32 %42, 2
-	store i32 %43, i32* %mp, align 4
-	%44 = load i32, i32* %exp, align 4
-	%45 = icmp ne i32 %39, 8388608
-	%46 = icmp sle i32 %44, 1
-	%47 = or i1 %45, %46
-	%48 = select i1 %47, i32 2, i32 1
-	%49 = sub i32 %42, %48
-	store i32 %49, i32* %mm, align 4
-	%50 = load i32, i32* %e2, align 4
-	%51 = sub i32 %50, 2
-	store i32 %51, i32* %e2, align 4
+	%40 = mul i32 4, %39
+	store i32 %40, i32* %mv, align 4
+	%41 = add i32 %40, 2
+	store i32 %41, i32* %mp, align 4
+	%42 = load i32, i32* %exp, align 4
+	%43 = icmp ne i32 %39, 8388608
+	%44 = icmp sle i32 %42, 1
+	%45 = or i1 %43, %44
+	%46 = select i1 %45, i32 2, i32 1
+	%47 = sub i32 %40, %46
+	store i32 %47, i32* %mm, align 4
+	%48 = load i32, i32* %e2, align 4
+	%49 = sub i32 %48, 2
+	store i32 %49, i32* %e2, align 4
 	%dp = alloca i32
 	%dv = alloca i32
 	%dm = alloca i32
@@ -159,67 +155,67 @@ exp_zero.exit:
 	%dm_itz = alloca i1
 	%lastRem = alloca i32
 	store i32 0, i32* %lastRem, align 4
-	%52 = icmp sge i32 %51, 0
-	br i1 %52, label %if.then, label %if.else
+	%50 = icmp sge i32 %49, 0
+	br i1 %50, label %if.then, label %if.else
 
 if.then:
 	%q.large = alloca i32
 	%k.large = alloca i32
 	%i.large = alloca i32
-	%53 = load i32, i32* %e2, align 4
-	%54 = sitofp i32 %53 to float
-	%55 = fmul float %54, 0x3E9A209700000000 ; 0x3E9A209700000000 = 0.3010299 = log10_2_numerator / log10_2_denominator
-	%56 = fptosi float %55 to i32
-	store i32 %56, i32* %q.large, align 4
-	%57 = call i32 @pow5bits(i32 %56)
-	%58 = add i32 58, %57 ; pow5_inv_bitcount - 1, pow5_inv_bitcount = 59
-	store i32 %58, i32* %k.large, align 4
-	%59 = add i32 %56, %58
-	%60 = sub i32 %59, %53
-	store i32 %60, i32* %i.large, align 4
-	%61 = load i32, i32* %mv, align 4
-	%62 = call i32 @mulPow5InvDivPow2(i32 %61, i32 %56, i32 %60)
-	store i32 %62, i32* %dv, align 4
-	%63 = load i32, i32* %mp, align 4
-	%64 = call i32 @mulPow5InvDivPow2(i32 %63, i32 %56, i32 %60)
-	store i32 %64, i32* %dp, align 4
-	%65 = load i32, i32* %mm, align 4
-	%66 = call i32 @mulPow5InvDivPow2(i32 %65, i32 %56, i32 %60)
-	store i32 %66, i32* %dm, align 4
-	%67 = icmp ne i32 %56, 0 
-	%68 = sub i32 %64, 1
-	%69 = sdiv i32 %68, 10
-	%70 = sdiv i32 %66, 10
-	%71 = icmp sle i32 %69, %70
-	%72 = and i1 %67, %71
-	br i1 %72, label %if.then2, label %if.exit2
+	%51 = load i32, i32* %e2, align 4
+	%52 = sitofp i32 %51 to float
+	%53 = fmul float %52, 0x3E9A209700000000 ; 0x3E9A209700000000 = 0.3010299 = log10_2_numerator / log10_2_denominator
+	%54 = fptosi float %53 to i32
+	store i32 %54, i32* %q.large, align 4
+	%55 = call i32 @pow5bits(i32 %54)
+	%56 = add i32 58, %55 ; pow5_inv_bitcount - 1, pow5_inv_bitcount = 59
+	store i32 %56, i32* %k.large, align 4
+	%57 = add i32 %54, %56
+	%58 = sub i32 %57, %51
+	store i32 %58, i32* %i.large, align 4
+	%59 = load i32, i32* %mv, align 4
+	%60 = call i32 @mulPow5InvDivPow2(i32 %59, i32 %54, i32 %58)
+	store i32 %60, i32* %dv, align 4
+	%61 = load i32, i32* %mp, align 4
+	%62 = call i32 @mulPow5InvDivPow2(i32 %61, i32 %54, i32 %58)
+	store i32 %62, i32* %dp, align 4
+	%63 = load i32, i32* %mm, align 4
+	%64 = call i32 @mulPow5InvDivPow2(i32 %63, i32 %54, i32 %58)
+	store i32 %64, i32* %dm, align 4
+	%65 = icmp ne i32 %54, 0 
+	%66 = sub i32 %62, 1
+	%67 = sdiv i32 %66, 10
+	%68 = sdiv i32 %64, 10
+	%69 = icmp sle i32 %67, %68
+	%70 = and i1 %65, %69
+	br i1 %70, label %if.then2, label %if.exit2
 
 if.then2:
-	%73 = load i32, i32* %q.large, align 4
-	%74 = sub i32 %73, 1
-	%75 = call i32 @pow5bits(i32 %74)
-	%76 = add i32 %75, 58 ; pow5_inv_bitcount - 1, pow5_inv_bitcount = 59
-	%77 = load i32, i32* %mv
-	%78 = load i32, i32* %e2, align 4
-	%79 = sub i32 %74, %78
-	%80 = add i32 %79, %76
-	%81 = call i32 @mulPow5InvDivPow2(i32 %77, i32 %74, i32 %80)
-	%82 = srem i32 %81, 10
-	store i32 %82, i32* %lastRem, align 4
+	%71 = load i32, i32* %q.large, align 4
+	%72 = sub i32 %71, 1
+	%73 = call i32 @pow5bits(i32 %72)
+	%74 = add i32 %73, 58 ; pow5_inv_bitcount - 1, pow5_inv_bitcount = 59
+	%75 = load i32, i32* %mv
+	%76 = load i32, i32* %e2, align 4
+	%77 = sub i32 %72, %76
+	%78 = add i32 %77, %74
+	%79 = call i32 @mulPow5InvDivPow2(i32 %75, i32 %72, i32 %78)
+	%80 = srem i32 %79, 10
+	store i32 %80, i32* %lastRem, align 4
 	br label %if.exit2
 
 if.exit2:
-	%83 = load i32, i32* %q.large, align 4
-	store i32 %83, i32* %e10, align 4
-	%84 = load i32, i32* %mv, align 4
-	%85 = call i1 @multipleOfPow5(i32 %84, i32 %83)
-	store i1 %85, i1* %dv_itz, align 1
-	%86 = load i32, i32* %mp, align 4
-	%87 = call i1 @multipleOfPow5(i32 %86, i32 %83)
-	store i1 %87, i1* %dp_itz, align 1
-	%88 = load i32, i32* %mm, align 4
-	%89 = call i1 @multipleOfPow5(i32 %88, i32 %83)
-	store i1 %89, i1* %dm_itz, align 1
+	%81 = load i32, i32* %q.large, align 4
+	store i32 %81, i32* %e10, align 4
+	%82 = load i32, i32* %mv, align 4
+	%83 = call i1 @multipleOfPow5(i32 %82, i32 %81)
+	store i1 %83, i1* %dv_itz, align 1
+	%84 = load i32, i32* %mp, align 4
+	%85 = call i1 @multipleOfPow5(i32 %84, i32 %81)
+	store i1 %85, i1* %dp_itz, align 1
+	%86 = load i32, i32* %mm, align 4
+	%87 = call i1 @multipleOfPow5(i32 %86, i32 %81)
+	store i1 %87, i1* %dm_itz, align 1
 	br label %if.exit
 
 if.else:
@@ -227,59 +223,137 @@ if.else:
 	%i.small = alloca i32
 	%k.small = alloca i32
 	%j = alloca i32
-	%90 = load i32, i32* %e2, align 4
-	%91 = sitofp i32 %90 to float
-	%92 = fmul float %91, 0xBF32EFB300000000; 0xBF32EFB300000000 = -0.69897 = -log10_5_numerator / log10_5_denominator
-	%93 = fptosi float %92 to i32
-	store i32 %93, i32* %q.small, align 4
-	%94 = sub i32 0, %90
-	%95 = sub i32 %94, %93
-	store i32 %95, i32* %i.small, align 4
-	%96 = call i32 @pow5bits(i32 %95)
-	%97 = sub i32 %96, 61 ; pow5_bitcount = 61
-	store i32 %97, i32* %k.small, align 4
-	%98 = sub i32 %93, %97
-	store i32 %98, i32* %j, align 4
-	%99 = load i32, i32* %mv, align 4
-	%100 = call i32 @mulPow5InvDivPow2(i32 %99, i32 %95, i32 %98)
-	store i32 %100, i32* %dv, align 4
-	%101 = load i32, i32* %mp, align 4
-	%102 = call i32 @mulPow5InvDivPow2(i32 %101, i32 %95, i32 %98)
-	store i32 %102, i32* %dp, align 4
-	%103 = load i32, i32* %mm, align 4
-	%104 = call i32 @mulPow5InvDivPow2(i32 %103, i32 %95, i32 %98)
-	store i32 %104, i32* %dm, align 4
-	%105 = icmp ne i32 %93, 0
-	%106 = sub i32 %102, 1
-	%107 = sdiv i32 %106, 10
-	%108 = sdiv i32 %104, 10
-	%109 = icmp sle i32 %107, %108
-	%110 = and i1 %105, %109
-	br i1 %110, label %if.then3, label %if.exit3
+	%88 = load i32, i32* %e2, align 4
+	%89 = sitofp i32 %88 to float
+	%90 = fmul float %89, 0xBF32EFB300000000; 0xBF32EFB300000000 = -0.69897 = -log10_5_numerator / log10_5_denominator
+	%91 = fptosi float %90 to i32
+	store i32 %91, i32* %q.small, align 4
+	%92 = sub i32 0, %88
+	%93 = sub i32 %92, %91
+	store i32 %93, i32* %i.small, align 4
+	%94 = call i32 @pow5bits(i32 %93)
+	%95 = sub i32 %94, 61 ; pow5_bitcount = 61
+	store i32 %95, i32* %k.small, align 4
+	%96 = sub i32 %91, %95
+	store i32 %96, i32* %j, align 4
+	%97 = load i32, i32* %mv, align 4
+	%98 = call i32 @mulPow5InvDivPow2(i32 %97, i32 %93, i32 %96)
+	store i32 %98, i32* %dv, align 4
+	%99 = load i32, i32* %mp, align 4
+	%100 = call i32 @mulPow5InvDivPow2(i32 %99, i32 %93, i32 %96)
+	store i32 %100, i32* %dp, align 4
+	%101 = load i32, i32* %mm, align 4
+	%102 = call i32 @mulPow5InvDivPow2(i32 %101, i32 %93, i32 %96)
+	store i32 %102, i32* %dm, align 4
+	%103 = icmp ne i32 %91, 0
+	%104 = sub i32 %100, 1
+	%105 = sdiv i32 %104, 10
+	%106 = sdiv i32 %102, 10
+	%107 = icmp sle i32 %105, %106
+	%108 = and i1 %103, %107
+	br i1 %108, label %if.then3, label %if.exit3
 
 if.then3:
 	; q - 1 - (pow5bits(i + 1) - pow5bitcount) = q - 1 - pow5bits(i + 1) + pow5bitcount = q - pow5bits(i + 1) + 60, pow5bitcount = 61
-	%111 = load i32, i32* %i.small, align 4
-	%112 = add i32 %111, 1
-	%113 = call i32 @pow5bits(i32 %112)
-	%114 = load i32, i32* %q.small, align 4
-	%115 = sub i32 %114, %113
-	%116 = add i32 %115, 60
-	store i32 %116, i32* %j, align 4
-	%117 = load i32, i32* %mv, align 4
-	%118 = call i32 @mulPow5DivPow2(i32 %117, i32 %112, i32 %116)
-	%119 = srem i32 %118, 10
+	%109 = load i32, i32* %i.small, align 4
+	%110 = add i32 %109, 1
+	%111 = call i32 @pow5bits(i32 %110)
+	%112 = load i32, i32* %q.small, align 4
+	%113 = sub i32 %112, %111
+	%114 = add i32 %113, 60
+	store i32 %114, i32* %j, align 4
+	%115 = load i32, i32* %mv, align 4
+	%116 = call i32 @mulPow5DivPow2(i32 %115, i32 %110, i32 %114)
+	%117 = srem i32 %116, 10
 	br label %if.exit3
 
 if.exit3:
-	%120 = load i32, i32* %q.small, align 4
-	%121 = load i32, i32* %e2, align 4
-	%122 = add i32 %120, %121
-	store i32 %122, i32* %e10
+	%118 = load i32, i32* %q.small, align 4
+	%119 = load i32, i32* %e2, align 4
+	%120 = add i32 %118, %119
+	store i32 %120, i32* %e10
+	%121 = icmp sge i32 %118, 1
+	store i1 %121, i1* %dp_itz, align 4
+	%122 = icmp slt i32 %118, 23 ; 23 = len(man)
+	%123 = sub i32 %118, 1
+	%124 = shl i32 1, %123
+	%125 = sub i32 %124, 1
+	%126 = load i32, i32* %mv, align 4
+	%127 = and i32 %126, %125
+	%128 = icmp eq i32 %127, 0
+	%129 = and i1 %122, %128
+	store i1 %129, i1* %dv_itz, align 1
+	%130 = load i32, i32* %mm, align 4
+	%131 = srem i32 %130, 2
+	%132 = icmp ne i32 %131, 1
+	%133 = zext i1 %132 to i32
+	%134 = icmp sge i32 %133, %118
+	store i1 %134, i1* %dm_itz, align 4
 	br label %if.exit
 
 if.exit:
-	br label %exit
+	%dp_len = alloca i32
+	%expon = alloca i32
+	%sciNot = alloca i1
+	%removed = alloca i32
+	%135 = load i32, i32* %dp, align 4
+	%136 = call i32 @decimalLength(i32 %135)
+	store i32 %136, i32* %dp_len, align 4
+	%137 = load i32, i32* %e10, align 4
+	%138 = add i32 %137, %136
+	%139 = sub i32 %138, 1
+	store i32 %139, i32* %expon, align 4
+	%140 = icmp sge i32 %139, -3
+	%141 = icmp slt i32 %139, 7
+	%142 = and i1 %140, %141
+	%143 = icmp ne i1 %142, 0
+	store i1 %143, i1* %sciNot, align 1
+	store i32 0, i32* %removed, align 4
+	%144 = load i1, i1* %dp_itz, align 1
+	br i1 %144, label %if.then4, label %while.cond
+
+if.then4:
+	%145 = load i32, i32* %dp, align 4
+	%146 = sub i32 %145, 1
+	store i32 %146, i32* %dp, align 4
+	br label %while.cond
+
+while.cond:
+	%147 = load i32, i32* %dp, align 4
+	%148 = sdiv i32 %147, 10
+	%149 = load i32, i32* %dm, align 4
+	%150 = sdiv i32 %149, 10
+	%151 = icmp sgt i32 %148, %150
+	br i1 %151, label %while.body, label %exit
+
+while.body:
+	%152 = load i32, i32* %dp, align 4
+	%153 = icmp slt i32 %152, 100
+	%154 = load i1, i1* %sciNot, align 1
+	%155 = and i1 %153, %154
+	br i1 %155, label %while.cond, label %if.exit4
+
+if.exit4:
+	%156 = load i32, i32* %dm, align 4
+	%157 = srem i32 %156, 10
+	%158 = icmp eq i32 %157, 0
+	%159 = load i1, i1* %dm_itz, align 1
+	%160 = and i1 %158, %159
+	store i1 %160, i1* %dm_itz, align 1
+	%161 = load i32, i32* %dp, align 4
+	%162 = sdiv i32 %161, 10
+	store i32 %162, i32* %dp, align 4
+	%163 = load i32, i32* %dv, align 4
+	%164 = srem i32 %163, 10
+	store i32 %164, i32* %lastRem, align 4
+	%165 = sdiv i32 %163, 10
+	store i32 %165, i32* %dv, align 4
+	%166 = sdiv i32 %156, 10
+	store i32 %166, i32* %dm, align 4
+	%167 = load i32, i32* %removed, align 4
+	%168 = add i32 %167, 1
+	store i32 %168, i32* %removed, align 4
+	br label %while.cond
 
 exit:
 	%final = load %type.string, %type.string* %.ret
@@ -385,4 +459,39 @@ if.exit:
 exit:
 	%9 = load i32, i32* %i, align 4
 	ret i32 %9
+}
+
+define private i32 @decimalLength(i32 %val) {
+entry:
+	%length = alloca i32
+	store i32 10, i32* %length, align 4
+	%factor = alloca i32
+	store i32 1000000000, i32* %factor, align 4
+	br label %for.cond
+
+for.cond:
+	%0 = load i32, i32* %length, align 4
+	%1 = icmp sgt i32 %0, 0
+	br i1 %1, label %for.body, label %exit
+
+for.body:
+	%2 = load i32, i32* %factor, align 4
+	%3 = icmp sge i32 %val, %2
+	br i1 %3, label %for.inc, label %if.exit
+
+if.exit:
+	%4 = load i32, i32* %factor, align 4
+	%5 = sdiv i32 %4, 10
+	store i32 %5, i32* %factor, align 4
+	br label %for.inc
+
+for.inc:
+	%6 = load i32, i32* %length, align 4
+	%7 = sub i32 %6, 1
+	store i32 %7, i32* %length, align 4
+	br label %for.cond
+
+exit:
+	%8 = load i32, i32* %length, align 4
+	ret i32 %8
 }
