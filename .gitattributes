@@ -1,4 +1,4 @@
-; *.ll linguist-language=LLVM
+*.ll linguist-language=JavaScript
 io/asm/* linguist-vendored
 lib/builtin/* linguist-vendored
 lib/source/* linguist-vendored
