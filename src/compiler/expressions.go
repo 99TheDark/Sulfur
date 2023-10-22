@@ -17,25 +17,25 @@ import (
 func (g *generator) genExpr(expr ast.Expr) value.Value {
 	switch x := expr.(type) {
 	case ast.Identifier:
-		return g.genIdentifier(x)
+		return g.autoCast(g.genIdentifier(x), x, "variable")
 	case ast.Integer:
-		return g.genInteger(x)
+		return g.autoCast(constant.NewInt(types.I32, x.Value), x, "integer")
 	case ast.Float:
-		return g.genFloat(x)
+		return g.autoCast(constant.NewFloat(types.Float, x.Value), x, "float")
 	case ast.Boolean:
-		return g.genBoolean(x)
+		return g.autoCast(constant.NewBool(x.Value), x, "boolean")
 	case ast.String:
 		return g.genString(x)
 	case ast.BinaryOp:
-		return g.genBinaryOp(x)
+		return g.autoCast(g.genBinaryOp(x), x, "binary operation")
 	case ast.UnaryOp:
-		return g.genUnaryOp(x)
+		return g.autoCast(g.genUnaryOp(x), x, "unary operation")
 	case ast.Comparison:
-		return g.genComparison(x)
+		return g.autoCast(g.genComparison(x), x, "comparison")
 	case ast.TypeConv:
 		return g.genTypeConv(x)
 	case ast.FuncCall:
-		return g.genFuncCall(x)
+		return g.autoCast(g.genFuncCall(x), x, "function call")
 	case ast.Reference:
 		return g.genReference(x)
 	}
@@ -69,45 +69,6 @@ func (g *generator) genString(x ast.String) value.Value {
 		constant.NewInt(types.I32, int64(len(x.Value))),
 		str,
 	)
-}
-
-func (g *generator) genInteger(x ast.Integer) value.Value {
-	val := constant.NewInt(types.I32, x.Value)
-	if conv, ok := g.autoconvs[x]; ok {
-		new := g.genBasicTypeConv(val, conv.From, conv.To)
-		if new == Zero {
-			Errors.Error("Unexpected generating error during integer generator", x.Loc())
-		}
-
-		return new
-	}
-	return val
-}
-
-func (g *generator) genFloat(x ast.Float) value.Value {
-	val := constant.NewFloat(types.Float, x.Value)
-	if conv, ok := g.autoconvs[x]; ok {
-		new := g.genBasicTypeConv(val, conv.From, conv.To)
-		if new == Zero {
-			Errors.Error("Unexpected generating error during float generator", x.Loc())
-		}
-
-		return new
-	}
-	return val
-}
-
-func (g *generator) genBoolean(x ast.Boolean) value.Value {
-	val := constant.NewBool(x.Value)
-	if conv, ok := g.autoconvs[x]; ok {
-		new := g.genBasicTypeConv(val, conv.From, conv.To)
-		if new == Zero {
-			Errors.Error("Unexpected generating error during boolean generator", x.Loc())
-		}
-
-		return new
-	}
-	return val
 }
 
 func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {

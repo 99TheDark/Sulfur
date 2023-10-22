@@ -1812,65 +1812,122 @@ LBB27_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #112
-	stp	x22, x21, [sp, #64]             ; 16-byte Folded Spill
-	stp	x20, x19, [sp, #80]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #96]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 112
+	sub	sp, sp, #32
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 32
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+Lloh32:
+	adrp	x2, l_.str4@PAGE
+	mov	x8, #30064771079
+Lloh33:
+	add	x2, x2, l_.str4@PAGEOFF
+	mov	w0, #7
+	mov	w1, #7
+	mov	w3, #1
+	stp	x8, x2, [sp]
+	bl	l_mod.combine
+	bl	_.println
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #32
+	ret
+	.loh AdrpAdd	Lloh32, Lloh33
+	.cfi_endproc
+                                        ; -- End function
+	.p2align	2                               ; -- Begin function mod.combine
+l_mod.combine:                          ; @mod.combine
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #144
+	stp	x24, x23, [sp, #80]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #96]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #112]            ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #128]            ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 144
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
 	.cfi_offset w19, -24
 	.cfi_offset w20, -32
 	.cfi_offset w21, -40
 	.cfi_offset w22, -48
-Lloh32:
-	adrp	x19, l_.str0.1@PAGE
-	mov	x8, #34359738376
-Lloh33:
-	add	x19, x19, l_.str0.1@PAGEOFF
+	.cfi_offset w23, -56
+	.cfi_offset w24, -64
+	mov	x5, x2
+Lloh34:
+	adrp	x2, l_.str0.1@PAGE
+	mov	w19, w3
+	mov	w4, w1
+	mov	w3, w0
+	mov	x23, #64424509455
+Lloh35:
+	add	x2, x2, l_.str0.1@PAGEOFF
+	mov	w0, #15
+	mov	w1, #15
+	stp	x23, x2, [sp, #48]
+	bl	"_.add:string_string"
+	mov	x8, #13
+Lloh36:
+	adrp	x5, l_.str1.2@PAGE
+	movk	x8, #13, lsl #32
+Lloh37:
+	add	x5, x5, l_.str1.2@PAGEOFF
+	mov	w3, #13
+	mov	w4, #13
+	stp	x8, x5, [sp, #32]
+	bl	"_.add:string_string"
+	mov	w20, w0
 	mov	w0, #10
-	stp	x8, x19, [sp, #48]
+	mov	w21, w1
+	mov	x22, x2
 	bl	"_.conv:int_string"
 	mov	w3, w0
 	mov	w4, w1
 	mov	x5, x2
-	mov	w0, #8
-	mov	w1, #8
-	mov	x2, x19
+	mov	w0, w20
+	mov	w1, w21
+	mov	x2, x22
 	bl	"_.add:string_string"
-Lloh34:
-	adrp	x5, l_.str1.2@PAGE
-	mov	x8, #64424509455
-Lloh35:
-	add	x5, x5, l_.str1.2@PAGEOFF
+Lloh38:
+	adrp	x5, l_.str2@PAGE
 	mov	w3, #15
+Lloh39:
+	add	x5, x5, l_.str2@PAGEOFF
 	mov	w4, #15
-	stp	x8, x5, [sp, #32]
+	stp	x23, x5, [sp, #16]
 	bl	"_.add:string_string"
-	mov	w19, w0
-	mov	w0, #1
-	mov	w20, w1
-	mov	x21, x2
+	mov	w20, w0
+	mov	w0, w19
+	mov	w21, w1
+	mov	x22, x2
 	bl	"_.conv:bool_string"
 	mov	w3, w0
 	mov	w4, w1
 	mov	x5, x2
-	mov	w0, w19
-	mov	w1, w20
-	mov	x2, x21
+	mov	w0, w20
+	mov	w1, w21
+	mov	x2, x22
 	bl	"_.add:string_string"
-	mov	w8, #53
-	stp	w0, w1, [sp, #16]
-	str	x2, [sp, #24]
-	str	w8, [sp, #12]
-	bl	_.println
-	ldp	x29, x30, [sp, #96]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #80]             ; 16-byte Folded Reload
-	ldp	x22, x21, [sp, #64]             ; 16-byte Folded Reload
-	add	sp, sp, #112
+Lloh40:
+	adrp	x5, l_.str3@PAGE
+	mov	x8, #4294967297
+Lloh41:
+	add	x5, x5, l_.str3@PAGEOFF
+	mov	w3, #1
+	mov	w4, #1
+	stp	x8, x5, [sp]
+	bl	"_.add:string_string"
+	ldp	x29, x30, [sp, #128]            ; 16-byte Folded Reload
+	str	x2, [sp, #72]
+	ldp	x20, x19, [sp, #112]            ; 16-byte Folded Reload
+	stp	w0, w1, [sp, #64]
+	ldp	x22, x21, [sp, #96]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #80]             ; 16-byte Folded Reload
+	add	sp, sp, #144
 	ret
+	.loh AdrpAdd	Lloh40, Lloh41
+	.loh AdrpAdd	Lloh38, Lloh39
+	.loh AdrpAdd	Lloh36, Lloh37
 	.loh AdrpAdd	Lloh34, Lloh35
-	.loh AdrpAdd	Lloh32, Lloh33
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -1999,12 +2056,19 @@ l_.str1:                                ; @.str1
 l_.strZero:                             ; @.strZero
 	.byte	48
 
-	.section	__TEXT,__literal8,8byte_literals
 l_.str0.1:                              ; @.str0.1
-	.ascii	"I am in "
+	.ascii	"Hi, my name is "
 
-	.section	__TEXT,__const
 l_.str1.2:                              ; @.str1.2
-	.ascii	"th grade, it's "
+	.ascii	", and I'm in "
+
+l_.str2:                                ; @.str2
+	.ascii	"th grade. It's "
+
+l_.str3:                                ; @.str3
+	.byte	33
+
+l_.str4:                                ; @.str4
+	.ascii	"TheDark"
 
 .subsections_via_symbols
