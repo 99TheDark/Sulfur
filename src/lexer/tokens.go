@@ -102,6 +102,7 @@ const (
 	Okay                           // 'okay'
 	Arrow                          // '=>'
 	Atsign                         // '@'
+	Sizeof                         // 'sizeof'
 	EOF
 )
 
@@ -146,6 +147,7 @@ var Keywords = map[string]TokenType{
 	"throws":      Throws,
 	"catch":       Catch,
 	"okay":        Okay,
+	"sizeof":      Sizeof,
 }
 
 var Symbols = map[string]TokenType{
@@ -373,6 +375,8 @@ func (tt TokenType) String() string {
 		return "Arrow"
 	case Atsign:
 		return "Atsign"
+	case Sizeof:
+		return "Sizeof"
 	case EOF:
 		return "EOF"
 	default:
