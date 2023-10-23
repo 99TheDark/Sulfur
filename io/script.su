@@ -1,13 +1,7 @@
-x := 499
-println(x)
-applyRec(&x)
+x := "Hello x"
+x += 5
 println(x)
 
-func applyRec(&int num) {
-    if num % 3 == 0 {
-        num++
-    } else {
-        num -= 71
-        applyRec(&num)
-    }
-}
+y := "Hello, "
+y += "world!"
+println(y)

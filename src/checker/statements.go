@@ -90,19 +90,27 @@ func (c *checker) inferAssignment(x ast.Assignment) {
 
 	val := c.inferExpr(x.Value)
 	if vari.Type != val {
-		Errors.Error("Expected "+vari.Type.String()+", but got "+val.String()+" instead", x.Loc())
+		conv, ok := c.AutoSingleInfer(val, vari.Type, x.Value)
+		if ok {
+			val, _ = AutoSwitch(val, vari.Type, conv)
+		} else {
+			Errors.Error("Expected "+vari.Type.String()+", but got "+val.String()+" instead", x.Loc())
+		}
 	}
 
 	if lexer.Empty(x.Op) {
 		return
 	}
 
-	for _, binop := range c.program.BinaryOps {
+	for i, binop := range c.program.BinaryOps {
 		if binop.Op != x.Op.Type {
 			continue
 		}
 
 		if binop.Left == vari.Type && binop.Right == val {
+			binop.Uses++
+			c.program.BinaryOps[i] = binop
+
 			return
 		}
 	}

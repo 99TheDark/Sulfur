@@ -62,6 +62,7 @@ func (g *generator) genAssignment(x ast.Assignment) {
 		iden := g.genBasicIden(vari)
 
 		val := g.genBasicBinaryOp(iden, g.genExpr(x.Value), x.Op.Type, g.types[x.Value])
+
 		g.genBasicAssign(x.Name.Name, val, x.Name.Loc())
 	}
 }
