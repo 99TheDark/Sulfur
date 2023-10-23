@@ -1,4 +1,6 @@
 # TODO
+- Make it illegal to pass references where not allowed
+- Use alloca instead of just calls for references
 - Allow variables to be referenced directly (not just through function calls)
 - Add %.copy:string(%type.string str) and use when copying
 - Implement autofree

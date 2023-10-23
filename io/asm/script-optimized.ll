@@ -1830,6 +1830,20 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
+  %x = alloca i32, align 4
+  store i32 94, i32* %x, align 4
+  %0 = load i32, i32* %x, align 4
+  call void @mod.something(i32 %0)
+  br label %exit
+
+exit:                                             ; preds = %entry
+  ret void
+}
+
+define private void @mod.something(i32 %0) {
+entry:
+  %1 = call %type.string @".conv:int_string"(i32 %0)
+  call void @.println(%type.string %1)
   br label %exit
 
 exit:                                             ; preds = %entry

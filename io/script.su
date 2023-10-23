@@ -1,0 +1,7 @@
+x := 94
+// y := &x
+something(&x)
+
+func something(int abc) {
+    println(abc)
+}
