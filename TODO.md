@@ -1,6 +1,6 @@
 # TODO
 - Allow variables to be referenced directly (not just through function calls)
-- Add %.copy:string_string(%type.string str) and use when copying
+- Add %.copy:string(%type.string str) and use when copying
 - Implement autofree
 - Labeled breaks / continues with #'s
 - Work on error & enum syntax
@@ -8,8 +8,7 @@
 - Complex numbers
 - Complex number to string
 - Unsigned integer & byte literals
-- Official ask/reply syntax
-- Official event syntax
+- Research unicode representation
 - Classes
 - String equals string 
 - Return out of a void function
@@ -20,3 +19,4 @@
 - Remove allocas from single-use variables
 - Implementation of `sizeof` operator
 - Add `string.length` and `string[idx]`
+- String interpolation

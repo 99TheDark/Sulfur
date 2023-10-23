@@ -1,7 +1,0 @@
-x := "Hello x"
-x += 5
-println(x)
-
-y := "Hello, "
-y += "world!"
-println(y)

@@ -1812,60 +1812,7 @@ LBB27_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #112
-	stp	x20, x19, [sp, #80]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #96]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 112
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-Lloh32:
-	adrp	x19, l_.str0.1@PAGE
-	mov	x20, #30064771079
-Lloh33:
-	add	x19, x19, l_.str0.1@PAGEOFF
-	mov	w0, #5
-	stp	x20, x19, [sp, #64]
-	stp	x20, x19, [sp, #48]
-	bl	"_.conv:int_string"
-	mov	w3, w0
-	mov	w4, w1
-	mov	x5, x2
-	mov	w0, #7
-	mov	w1, #7
-	mov	x2, x19
-	bl	"_.add:string_string"
-	stp	w0, w1, [sp, #48]
-	str	x2, [sp, #56]
-	bl	_.println
-Lloh34:
-	adrp	x2, l_.str1.2@PAGE
-Lloh35:
-	adrp	x5, l_.str2@PAGE
-Lloh36:
-	add	x2, x2, l_.str1.2@PAGEOFF
-	mov	x8, #25769803782
-Lloh37:
-	add	x5, x5, l_.str2@PAGEOFF
-	mov	w0, #7
-	mov	w1, #7
-	mov	w3, #6
-	mov	w4, #6
-	stp	x20, x2, [sp, #32]
-	stp	x20, x2, [sp, #16]
-	stp	x8, x5, [sp]
-	bl	"_.add:string_string"
-	stp	w0, w1, [sp, #16]
-	str	x2, [sp, #24]
-	bl	_.println
-	ldp	x29, x30, [sp, #96]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #80]             ; 16-byte Folded Reload
-	add	sp, sp, #112
 	ret
-	.loh AdrpAdd	Lloh35, Lloh37
-	.loh AdrpAdd	Lloh34, Lloh36
-	.loh AdrpAdd	Lloh32, Lloh33
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -1993,14 +1940,5 @@ l_.str1:                                ; @.str1
 
 l_.strZero:                             ; @.strZero
 	.byte	48
-
-l_.str0.1:                              ; @.str0.1
-	.ascii	"Hello x"
-
-l_.str1.2:                              ; @.str1.2
-	.ascii	"Hello, "
-
-l_.str2:                                ; @.str2
-	.ascii	"world!"
 
 .subsections_via_symbols
