@@ -4,25 +4,22 @@ import (
 	"sulfur/src/ast"
 	"sulfur/src/builtins"
 	"sulfur/src/typing"
+	"sulfur/src/utils"
 )
 
-type TypeMap map[ast.Expr]typing.Type
-type AutoTypeConvMap map[ast.Expr]builtins.TypeConvSignature
-
 type checker struct {
-	program   *ast.Program
-	top       *ast.Scope
-	topfun    *ast.FuncScope
-	types     TypeMap
-	autoconvs AutoTypeConvMap
+	program *ast.Program
+	top     *ast.Scope
+	topfun  *ast.FuncScope
+	*VariableProperties
 }
 
 func (c *checker) typ(x ast.Expr, typ typing.Type) typing.Type {
-	c.types[x] = typ
+	c.Types[x] = typ
 	return typ
 }
 
-func TypeCheck(program *ast.Program) (TypeMap, AutoTypeConvMap) {
+func TypeCheck(program *ast.Program) *VariableProperties {
 	program.Functions = append(program.Functions, builtins.Funcs...)
 	program.BinaryOps = append(program.BinaryOps, builtins.BinaryOps...)
 	program.UnaryOps = append(program.UnaryOps, builtins.UnaryOps...)
@@ -38,12 +35,15 @@ func TypeCheck(program *ast.Program) (TypeMap, AutoTypeConvMap) {
 			Return: typing.Void,
 			Counts: make(map[string]int),
 		},
-		make(TypeMap),
-		make(AutoTypeConvMap),
+		&VariableProperties{
+			make(TypeMap),
+			make(AutoTypeConvMap),
+			utils.NewSet[ast.Expr](),
+		},
 	}
 
 	for _, x := range program.Contents.Body {
 		c.inferStmt(x)
 	}
-	return c.types, c.autoconvs
+	return c.VariableProperties
 }

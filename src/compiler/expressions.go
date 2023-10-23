@@ -72,7 +72,7 @@ func (g *generator) genString(x ast.String) value.Value {
 }
 
 func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
-	val := g.genBasicBinaryOp(g.genExpr(x.Left), g.genExpr(x.Right), x.Op.Type, g.types[x])
+	val := g.genBasicBinaryOp(g.genExpr(x.Left), g.genExpr(x.Right), x.Op.Type, g.Types[x])
 	if val == Zero {
 		Errors.Error("Unexpected generating error during binary operation", x.Op.Location)
 	}
@@ -84,7 +84,7 @@ func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
 func (g *generator) genUnaryOp(x ast.UnaryOp) value.Value {
 	bl := g.bl
 	val := g.genExpr(x.Value)
-	typ := g.types[x]
+	typ := g.Types[x]
 	switch x.Op.Type {
 	case lexer.Subtraction:
 		switch typ {
@@ -111,7 +111,7 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 	left := g.genExpr(x.Left)
 	right := g.genExpr(x.Right)
 	comp := x.Comp
-	typ := g.types[x.Left] // or x.Right
+	typ := g.Types[x.Left] // or x.Right
 
 	switch comp.Type {
 	case lexer.LessThan:
@@ -165,7 +165,7 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
 	val := g.genExpr(x.Value)
 
-	g.genBasicTypeConv(val, g.types[x.Value], g.types[x])
+	g.genBasicTypeConv(val, g.Types[x.Value], g.Types[x])
 
 	Errors.Error("Unexpected generating error during type conversion", x.Loc())
 	return Zero
@@ -199,7 +199,9 @@ func (g *generator) genReference(x ast.Reference) value.Value {
 
 	bundle := g.refs[vari.Type]
 
-	bl.NewCall(bundle.ref, *vari.Value)
+	load := bl.NewLoad(bundle.ptr, *vari.Value)
+	load.Align = 8
+	bl.NewCall(bundle.ref, load)
 
-	return *vari.Value
+	return load
 }

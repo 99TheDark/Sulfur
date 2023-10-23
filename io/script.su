@@ -1,7 +1,8 @@
-x := 94
-// y := &x
+x := 50
 something(&x)
+println(x)
+// y := &x
 
-func something(int abc) {
-    println(abc)
+func something(&int value) {
+    value += 5
 }

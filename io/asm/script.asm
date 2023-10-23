@@ -1812,17 +1812,31 @@ LBB27_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #32
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
+	sub	sp, sp, #48
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 48
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	w8, #94
-	mov	w0, #94
-	str	w8, [sp, #12]
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	mov	w0, #50
+	bl	"_newref:int"
+	mov	x19, x0
+	str	x0, [sp, #8]
+	bl	"_ref:int"
+	mov	x0, x19
 	bl	l_mod.something
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #32
+	ldr	x8, [sp, #8]
+	ldr	x8, [x8]
+	ldr	w0, [x8]
+	bl	"_.conv:int_string"
+	bl	_.println
+	ldr	x0, [sp, #8]
+	bl	"_deref:int"
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #48
 	ret
 	.cfi_endproc
                                         ; -- End function
@@ -1830,13 +1844,10 @@ _main:                                  ; @main
 l_mod.something:                        ; @mod.something
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 16
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	bl	"_.conv:int_string"
-	bl	_.println
-	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ldr	x8, [x0]
+	ldr	w9, [x8]
+	add	w9, w9, #5
+	str	w9, [x8]
 	ret
 	.cfi_endproc
                                         ; -- End function

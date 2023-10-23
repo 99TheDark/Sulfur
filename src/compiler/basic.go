@@ -12,13 +12,21 @@ import (
 	"github.com/llir/llvm/ir/value"
 )
 
+// TODO: Clean this up
 func (g *generator) genBasicRawIden(vari *ast.Variable) value.Value {
 	bl := g.bl
 	if vari.Referenced {
 		bundle := g.refs[vari.Type]
 		ref := *vari.Value
 
-		ptr := bl.NewGetElementPtr(bundle.typ, ref, Zero, Zero)
+		src := ref
+		if vari.Status != ast.Parameter {
+			load := bl.NewLoad(bundle.ptr, ref)
+			load.Align = 8
+			src = load
+		}
+
+		ptr := bl.NewGetElementPtr(bundle.typ, src, Zero, Zero)
 		ptr.InBounds = true
 
 		valptr := bl.NewLoad(g.llptr(vari.Type), ptr)
@@ -51,9 +59,14 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 	if vari.Referenced {
 		bundle := g.refs[vari.Type]
 
+		alloca := bl.NewAlloca(bundle.ptr)
+		alloca.LocalName = vari.LLName()
+
 		call := bl.NewCall(bundle.newref, val)
-		call.LocalName = vari.LLName()
-		*vari.Value = call
+		store := bl.NewStore(call, alloca)
+		store.Align = 8
+
+		*vari.Value = alloca
 	} else {
 		alloca := bl.NewAlloca(typ)
 		alloca.LocalName = vari.LLName()

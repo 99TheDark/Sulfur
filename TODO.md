@@ -1,23 +1,21 @@
 # TODO
-- Make it illegal to pass references where not allowed
-- Use alloca instead of just calls for references
 - Allow variables to be referenced directly (not just through function calls)
 - Add %.copy:string(%type.string str) and use when copying
 - Implement autofree
 - Labeled breaks / continues with #'s
 - Work on error & enum syntax
 - Better escaped characters
+- Return out of a void function
 - Complex numbers
 - Complex number to string
 - Unsigned integer & byte literals
 - Research unicode representation
+- Switch from 1-byte strings to 4-byte strings
+- Better token to string handling
 - Classes
 - String equals string 
-- Return out of a void function
-- Only link functions when needed
-- Better token to string handling
 - Unsigned integer to string
-- Switch from 1-byte strings to 4-byte strings
+- Only link functions when needed
 - Remove allocas from single-use variables
 - Implementation of `sizeof` operator
 - Add `string.length` and `string[idx]`

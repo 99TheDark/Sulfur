@@ -157,9 +157,13 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 				typ := c.inferExpr(param)
 				paramTyp := fun.Params[i].Type
 
-				if fun.Params[i].Reference {
-					if _, ok := param.(ast.Reference); !ok {
+				paramRef := fun.Params[i].Reference
+				givenRef := c.Refs.Has(param)
+				if paramRef != givenRef {
+					if paramRef {
 						Errors.Error("Expected &"+string(paramTyp)+", but got "+string(typ)+" instead", param.Loc())
+					} else {
+						Errors.Error("Expected "+string(paramTyp)+", but got &"+string(typ)+" instead", param.Loc())
 					}
 				}
 
@@ -187,7 +191,11 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 func (c *checker) inferReference(x ast.Reference) typing.Type {
 	vari := c.top.Lookup(x.Variable.Name, x.Variable.Loc())
 	vari.Referenced = true
+
 	c.program.References.Add(vari.Type)
 	c.top.ActiveRefs = append(c.top.ActiveRefs, vari)
+
+	c.Refs.Add(x)
+
 	return c.typ(x, vari.Type)
 }

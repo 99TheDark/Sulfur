@@ -17,6 +17,9 @@ func (g *generator) leaveRefs() {
 	bl := g.bl
 	for _, vari := range g.top.ActiveRefs {
 		bundle := g.refs[vari.Type]
-		bl.NewCall(bundle.deref, *vari.Value)
+
+		load := bl.NewLoad(bundle.ptr, *vari.Value)
+		load.Align = 8
+		bl.NewCall(bundle.deref, load)
 	}
 }

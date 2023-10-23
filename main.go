@@ -40,10 +40,10 @@ func main() {
 		}
 
 		errors.Step = errors.Inferring
-		types, autoconvs := checker.TypeCheck(ast)
+		props := checker.TypeCheck(ast)
 
 		errors.Step = errors.Generating
-		llcode := compiler.Generate(ast, types, autoconvs)
+		llcode := compiler.Generate(ast, props)
 		if err := compiler.Save("; ModuleID = 'script.su'\n"+llcode, "io/asm/script.ll"); err != nil {
 			log.Fatalln(err)
 		}
@@ -65,10 +65,10 @@ func main() {
 		ast := parser.Parse(code, tokens)
 
 		errors.Step = errors.Inferring
-		types, autoconvs := checker.TypeCheck(ast)
+		props := checker.TypeCheck(ast)
 
 		errors.Step = errors.Generating
-		llcode := compiler.Generate(ast, types, autoconvs)
+		llcode := compiler.Generate(ast, props)
 
 		fmt.Print(llcode)
 	}
