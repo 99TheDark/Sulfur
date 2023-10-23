@@ -1,12 +1,7 @@
 # TODO
-- Automatic type inference 
-    - `println(5)` = `println(string!(5))`
-    - `6 + 3.4` = `float!(6) + 3.4`
-    - `8 + "th"` = `string!(8) + "th"`
 - Allow variables to be referenced directly (not just through function calls)
 - Add %.copy:string_string(%type.string str) and use when copying
 - Implement autofree
-- Automatic type inference 
 - Labeled breaks / continues with #'s
 - Work on error & enum syntax
 - Better escaped characters
@@ -17,7 +12,6 @@
 - Official event syntax
 - Classes
 - String equals string 
-- Complex numbers
 - Return out of a void function
 - Only link functions when needed
 - Better token to string handling
