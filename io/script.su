@@ -1,11 +1,16 @@
 x := 50
-something(&x)
+x--
 
-/*println(x)
-y := &x
-y = 0
-println(x)*/
+y := 84.3
+y += 12
 
-func something(&int value) {
+z := &x
+
+println(x)
+something(&z, true)
+println(x)
+
+func something(&int value, bool other) {
+    println(other)
     value += 5
 }

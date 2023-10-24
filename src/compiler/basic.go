@@ -15,9 +15,10 @@ import (
 // TODO: Clean up all the refence code to be more concise and fight with each other less
 func (g *generator) genBasicRawIden(vari *ast.Variable) value.Value {
 	bl := g.bl
-	if vari.Referenced {
+
+	if vari.Referenced || vari.References {
 		bundle := g.refs[vari.Type]
-		ref := *vari.Value
+		ref := vari.Value
 
 		src := ref
 		if vari.Status != ast.Parameter {
@@ -33,7 +34,7 @@ func (g *generator) genBasicRawIden(vari *ast.Variable) value.Value {
 		valptr.Align = 8
 		return valptr
 	} else {
-		return *vari.Value
+		return vari.Value
 	}
 }
 
@@ -42,7 +43,7 @@ func (g *generator) genBasicIden(vari *ast.Variable) value.Value {
 
 	val := g.genBasicRawIden(vari)
 
-	if !vari.Referenced && vari.Status == ast.Parameter {
+	if vari.Status == ast.Parameter && !vari.Referenced && !vari.References {
 		return val
 	}
 
@@ -56,7 +57,17 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 
 	vari := g.top.Lookup(name, loc)
 
-	if vari.Referenced {
+	if vari.References {
+		bundle := g.refs[vari.Type]
+
+		alloca := bl.NewAlloca(bundle.ptr)
+		alloca.LocalName = vari.LLName()
+
+		store := bl.NewStore(val, alloca)
+		store.Align = 8
+
+		vari.Value = alloca
+	} else if vari.Referenced {
 		bundle := g.refs[vari.Type]
 
 		alloca := bl.NewAlloca(bundle.ptr)
@@ -66,23 +77,13 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 		store := bl.NewStore(call, alloca)
 		store.Align = 8
 
-		*vari.Value = alloca
-	} else if false {
-		bundle := g.refs[vari.Type]
-
-		alloca := bl.NewAlloca(bundle.ptr)
-		alloca.LocalName = vari.LLName()
-
-		store := bl.NewStore(val, alloca)
-		store.Align = 8
-
-		*vari.Value = alloca
+		vari.Value = alloca
 	} else {
 		alloca := bl.NewAlloca(typ)
 		alloca.LocalName = vari.LLName()
 
 		bl.NewStore(val, alloca)
-		*vari.Value = alloca
+		vari.Value = alloca
 	}
 }
 
@@ -90,13 +91,13 @@ func (g *generator) genBasicAssign(name string, val value.Value, loc *typing.Loc
 	bl := g.bl
 	vari := g.top.Lookup(name, loc)
 
-	if vari.References {
+	if vari.Referenced || vari.References {
 		iden := g.genBasicRawIden(vari)
 
 		store := bl.NewStore(val, iden)
 		store.Align = 8
 	} else {
-		bl.NewStore(val, *vari.Value)
+		bl.NewStore(val, vari.Value)
 	}
 }
 

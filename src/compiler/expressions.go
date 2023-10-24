@@ -199,7 +199,7 @@ func (g *generator) genReference(x ast.Reference) value.Value {
 
 	bundle := g.refs[vari.Type]
 
-	load := bl.NewLoad(bundle.ptr, *vari.Value)
+	load := bl.NewLoad(bundle.ptr, vari.Value)
 	load.Align = 8
 	bl.NewCall(bundle.ref, load)
 

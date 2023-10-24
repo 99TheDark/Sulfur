@@ -1,5 +1,4 @@
 # TODO
-- Allow variables to be referenced directly (not just through function calls)
 - Add %.copy:string(%type.string str) and use when copying
 - Implement autofree
 - Labeled breaks / continues with #'s

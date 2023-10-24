@@ -24,7 +24,7 @@ type Variable struct {
 	References bool
 	Type       typing.Type
 	Status     VariableType
-	Value      *value.Value
+	Value      value.Value
 }
 
 type Scope struct {
@@ -133,7 +133,7 @@ func NewVariable(fscope *FuncScope, name string, refs bool, typ typing.Type, sta
 		refs,
 		typ,
 		status,
-		new(value.Value),
+		nil,
 	}
 	fscope.Counts[name]++
 	return vari

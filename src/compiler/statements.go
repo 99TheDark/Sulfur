@@ -119,7 +119,7 @@ func (g *generator) genFunction(x ast.Function) {
 
 	for i, param := range x.Params {
 		vari := x.Body.Scope.Vars[param.Name.Name]
-		*vari.Value = src.Params[i].Ir
+		vari.Value = src.Params[i].Ir
 	}
 
 	g.ctx = &context{
