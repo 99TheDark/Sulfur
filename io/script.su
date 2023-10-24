@@ -1,16 +1,1 @@
-x := 50
-x--
-
-y := 84.3
-y += 12
-
-z := &x
-
-println(x)
-something(&z, true)
-println(x)
-
-func something(&int value, bool other) {
-    println(other)
-    value += 5
-}
+msg := "Hello, world!"

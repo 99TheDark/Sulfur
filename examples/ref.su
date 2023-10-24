@@ -1,13 +1,16 @@
-x := 499
+x := 50
+x--
+
+y := 84.3
+y += 12
+
+z := &x
+
 println(x)
-applyRec(&x)
+something(&z, true)
 println(x)
 
-func applyRec(&int num) {
-    if num % 3 == 0 {
-        num++
-    } else {
-        num -= 71
-        applyRec(&num)
-    }
+func something(&int value, bool other) {
+    println(other)
+    value += 5
 }

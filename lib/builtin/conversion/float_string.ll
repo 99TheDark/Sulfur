@@ -696,7 +696,7 @@ lor.end168:
     %117 = load i32, i32* %removed, align 4
     %sub171 = sub nsw i32 %116, %117
     store i32 %sub171, i32* %outLen, align 4
-    %call172 = call noalias i8* @malloc(i64 15) #5
+    %call172 = call noalias i8* @malloc(i64 15) 
     store i8* %call172, i8** %result, align 8
     store i32 0, i32* %idx, align 4
     %118 = load float, float* %num.addr, align 4
