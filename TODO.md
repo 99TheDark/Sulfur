@@ -1,5 +1,5 @@
 # TODO
-- Add %.copy:string(%type.string str) and use when copying
+- Use copy string when using a string
 - Implement autofree
 - Labeled breaks / continues with #'s
 - Work on error & enum syntax
