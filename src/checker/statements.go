@@ -66,7 +66,7 @@ func (c *checker) inferDeclaration(x ast.Declaration) {
 		Errors.Error("Expected "+x.Type.Name+", but got "+val.String()+" instead", x.Loc())
 	}
 
-	c.top.Vars[x.Name.Name] = ast.NewVariable(c.topfun, x.Name.Name, false, val, ast.Local)
+	c.top.Vars[x.Name.Name] = ast.NewVariable(c.topfun, x.Name.Name, c.Refs.Has(x.Value), val, ast.Local)
 }
 
 func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
@@ -79,12 +79,12 @@ func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
 		Errors.Error("Cannot declare a variable to have no type", x.Value.Loc())
 	}
 
-	c.top.Vars[x.Name.Name] = ast.NewVariable(c.topfun, x.Name.Name, false, val, ast.Local)
+	c.top.Vars[x.Name.Name] = ast.NewVariable(c.topfun, x.Name.Name, c.Refs.Has(x.Value), val, ast.Local)
 }
 
 func (c *checker) inferAssignment(x ast.Assignment) {
 	vari := c.top.Lookup(x.Name.Name, x.Name.Pos)
-	if vari.Status == ast.Parameter && !vari.Referenced {
+	if vari.Status == ast.Parameter && !vari.References {
 		Errors.Error("Illegal modification of a parameter", x.Value.Loc())
 	}
 
@@ -145,14 +145,14 @@ func (c *checker) inferFunction(x ast.Function) {
 	}
 	c.inferBlock(x.Body, func() {
 		for _, param := range x.Params {
-			if param.Reference {
+			if param.Referenced {
 				c.program.References.Add(typing.Type(param.Type.Name))
 			}
 
 			c.top.Vars[param.Name.Name] = ast.NewVariable(
 				c.topfun,
 				param.Name.Name,
-				param.Reference,
+				param.Referenced,
 				typing.Type(param.Type.Name),
 				ast.Parameter,
 			)

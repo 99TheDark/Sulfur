@@ -1827,11 +1827,6 @@ _main:                                  ; @main
 	bl	"_ref:int"
 	mov	x0, x19
 	bl	l_mod.something
-	ldr	x8, [sp, #8]
-	ldr	x8, [x8]
-	ldr	w0, [x8]
-	bl	"_.conv:int_string"
-	bl	_.println
 	ldr	x0, [sp, #8]
 	bl	"_deref:int"
 	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
@@ -1844,10 +1839,6 @@ _main:                                  ; @main
 l_mod.something:                        ; @mod.something
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	ldr	x8, [x0]
-	ldr	w9, [x8]
-	add	w9, w9, #5
-	str	w9, [x8]
 	ret
 	.cfi_endproc
                                         ; -- End function

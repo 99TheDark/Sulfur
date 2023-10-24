@@ -1,7 +1,10 @@
 x := 50
 something(&x)
-println(x)
-// y := &x
+
+/*println(x)
+y := &x
+y = 0
+println(x)*/
 
 func something(&int value) {
     value += 5

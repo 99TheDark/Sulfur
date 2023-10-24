@@ -21,6 +21,7 @@ type Variable struct {
 	Name       string
 	Id         int
 	Referenced bool
+	References bool
 	Type       typing.Type
 	Status     VariableType
 	Value      *value.Value
@@ -124,11 +125,12 @@ func NewScope() *Scope {
 	}
 }
 
-func NewVariable(fscope *FuncScope, name string, ref bool, typ typing.Type, status VariableType) *Variable {
+func NewVariable(fscope *FuncScope, name string, refs bool, typ typing.Type, status VariableType) *Variable {
 	vari := &Variable{
 		name,
 		fscope.Counts[name],
-		ref,
+		false,
+		refs,
 		typ,
 		status,
 		new(value.Value),

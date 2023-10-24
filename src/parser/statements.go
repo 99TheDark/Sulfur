@@ -124,7 +124,7 @@ func (p *parser) parseFunction() ast.Function {
 	// TODO: Check if function already exists
 	psigs := []builtins.ParamSignature{}
 	for _, param := range params {
-		psigs = append(psigs, builtins.QuickModParam(typing.Type(param.Type.Name), param.Reference))
+		psigs = append(psigs, builtins.QuickModParam(typing.Type(param.Type.Name), param.Referenced))
 	}
 
 	sig := builtins.QuickModFunc(
@@ -249,19 +249,19 @@ func (p *parser) parseParam() ast.Param {
 		typ := p.parseIdentifier()
 		name := p.parseIdentifier()
 		return ast.Param{
-			Pos:       ref.Location,
-			Type:      typ,
-			Name:      name,
-			Reference: true,
+			Pos:        ref.Location,
+			Type:       typ,
+			Name:       name,
+			Referenced: true,
 		}
 	} else {
 		typ := p.parseIdentifier()
 		name := p.parseIdentifier()
 		return ast.Param{
-			Pos:       typ.Loc(),
-			Type:      typ,
-			Name:      name,
-			Reference: false,
+			Pos:        typ.Loc(),
+			Type:       typ,
+			Name:       name,
+			Referenced: false,
 		}
 	}
 }

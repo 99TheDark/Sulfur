@@ -157,7 +157,7 @@ func (c *checker) inferFuncCall(x ast.FuncCall) typing.Type {
 				typ := c.inferExpr(param)
 				paramTyp := fun.Params[i].Type
 
-				paramRef := fun.Params[i].Reference
+				paramRef := fun.Params[i].Referenced
 				givenRef := c.Refs.Has(param)
 				if paramRef != givenRef {
 					if paramRef {

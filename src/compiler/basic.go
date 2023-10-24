@@ -12,7 +12,7 @@ import (
 	"github.com/llir/llvm/ir/value"
 )
 
-// TODO: Clean this up
+// TODO: Clean up all the refence code to be more concise and fight with each other less
 func (g *generator) genBasicRawIden(vari *ast.Variable) value.Value {
 	bl := g.bl
 	if vari.Referenced {
@@ -67,6 +67,16 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 		store.Align = 8
 
 		*vari.Value = alloca
+	} else if false {
+		bundle := g.refs[vari.Type]
+
+		alloca := bl.NewAlloca(bundle.ptr)
+		alloca.LocalName = vari.LLName()
+
+		store := bl.NewStore(val, alloca)
+		store.Align = 8
+
+		*vari.Value = alloca
 	} else {
 		alloca := bl.NewAlloca(typ)
 		alloca.LocalName = vari.LLName()
@@ -79,7 +89,8 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 func (g *generator) genBasicAssign(name string, val value.Value, loc *typing.Location) {
 	bl := g.bl
 	vari := g.top.Lookup(name, loc)
-	if vari.Referenced {
+
+	if vari.References {
 		iden := g.genBasicRawIden(vari)
 
 		store := bl.NewStore(val, iden)

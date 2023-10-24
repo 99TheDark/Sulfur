@@ -97,10 +97,10 @@ type (
 	}
 
 	Param struct {
-		Pos       *typing.Location `json:"-"`
-		Type      Identifier
-		Name      Identifier
-		Reference bool
+		Pos        *typing.Location `json:"-"`
+		Type       Identifier
+		Name       Identifier
+		Referenced bool
 	}
 
 	Method struct {

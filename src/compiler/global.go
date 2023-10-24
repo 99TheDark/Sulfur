@@ -84,7 +84,7 @@ func (g *generator) genFuncs() {
 
 		params := []*ir.Param{}
 		for i, param := range fun.Params {
-			if param.Reference {
+			if param.Referenced {
 				p := ir.NewParam("", g.refs[param.Type].ptr)
 				fun.Params[i].Ir = p
 				params = append(params, p)

@@ -1837,13 +1837,7 @@ entry:
   call void @"ref:int"(%ref.int* %1)
   call void @mod.something(%ref.int* %1)
   %2 = load %ref.int*, %ref.int** %x, align 8
-  %3 = getelementptr inbounds %ref.int, %ref.int* %2, i32 0, i32 0
-  %4 = load i32*, i32** %3, align 8
-  %5 = load i32, i32* %4, align 4
-  %6 = call %type.string @".conv:int_string"(i32 %5)
-  call void @.println(%type.string %6)
-  %7 = load %ref.int*, %ref.int** %x, align 8
-  call void @"deref:int"(%ref.int* %7)
+  call void @"deref:int"(%ref.int* %2)
   br label %exit
 
 exit:                                             ; preds = %entry
@@ -1852,13 +1846,6 @@ exit:                                             ; preds = %entry
 
 define private void @mod.something(%ref.int* %0) {
 entry:
-  %1 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
-  %2 = load i32*, i32** %1, align 8
-  %3 = load i32, i32* %2, align 4
-  %4 = add i32 %3, 5
-  %5 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
-  %6 = load i32*, i32** %5, align 8
-  store i32 %4, i32* %6, align 8
   br label %exit
 
 exit:                                             ; preds = %entry
