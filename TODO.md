@@ -1,5 +1,5 @@
 # TODO
-- Work on error & enum syntax
+- Work on enum syntax (see Zig & Python)
 - Delete & warn dead code (code after return, break or continue, it should be the last statement in the scope)
 - Better escaped characters
 - Use copy string when using a string
@@ -18,4 +18,5 @@
 - Remove allocas from single-use variables
 - Implementation of `sizeof` operator
 - Add `string.length` and `string[idx]`
+- Raw strings using backticks
 - String interpolation

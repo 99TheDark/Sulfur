@@ -23,7 +23,6 @@ source_filename = "llvm-link"
 @.str1 = private unnamed_addr constant [11 x i8] c" references", align 1
 @.strZero = private unnamed_addr constant [1 x i8] c"0", align 1
 @.str0.1 = private unnamed_addr constant [11 x i8] c"it happened", align 1
-@.str1.2 = private unnamed_addr constant [2 x i8] c"no", align 1
 
 define %ref.bool* @"newref:bool"(i1 %value) {
 entry:
@@ -1890,16 +1889,6 @@ while.body0:                                      ; preds = %while.cond0
   store i8* %0, i8** %4, align 8
   %5 = load %type.string, %type.string* %1, align 8
   call void @.println(%type.string %5)
-  %6 = getelementptr inbounds [2 x i8], [2 x i8]* @.str1.2, i32 0, i32 0
-  %7 = alloca %type.string, align 8
-  %8 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 0
-  store i32 2, i32* %8, align 8
-  %9 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 1
-  store i32 2, i32* %9, align 8
-  %10 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 2
-  store i8* %6, i8** %10, align 8
-  %11 = load %type.string, %type.string* %7, align 8
-  call void @.println(%type.string %11)
   br label %exit
 
 while.end0:                                       ; preds = %while.cond0

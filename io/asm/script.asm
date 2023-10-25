@@ -1862,9 +1862,9 @@ l_mod.add:                              ; @mod.add
 l_mod.doSomething:                      ; @mod.doSomething
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #48
-	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 48
+	sub	sp, sp, #32
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 32
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
 	mov	x8, #11
@@ -1875,21 +1875,11 @@ Lloh33:
 	add	x2, x2, l_.str0.1@PAGEOFF
 	mov	w0, #11
 	mov	w1, #11
-	stp	x8, x2, [sp, #16]
-	bl	_.println
-Lloh34:
-	adrp	x2, l_.str1.2@PAGE
-	mov	x8, #8589934594
-Lloh35:
-	add	x2, x2, l_.str1.2@PAGEOFF
-	mov	w0, #2
-	mov	w1, #2
 	stp	x8, x2, [sp]
 	bl	_.println
-	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
-	add	sp, sp, #48
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #32
 	ret
-	.loh AdrpAdd	Lloh34, Lloh35
 	.loh AdrpAdd	Lloh32, Lloh33
 	.cfi_endproc
                                         ; -- End function
@@ -2021,8 +2011,5 @@ l_.strZero:                             ; @.strZero
 
 l_.str0.1:                              ; @.str0.1
 	.ascii	"it happened"
-
-l_.str1.2:                              ; @.str1.2
-	.ascii	"no"
 
 .subsections_via_symbols

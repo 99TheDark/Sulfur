@@ -1,35 +1,14 @@
-# Basic Structures
+# Prototyping Syntax
 - Arrays
     ```
     // Arrays literals are made from the type, and filled with brackets
     float[] myArray = float[3.7, -6.4, 12.9, 5.0]
     ```
-- Inference
-    ```
-    // x is a float
-    x := 8.9
-
-    // otherPi is inferred as an int[]
-    otherPi := int[3, 1, 4, 1, 5]
-    ```
-- Type Convertion
-    ```
-    // to_type!(from_type)
-    str_num := string!(543) // str_num = "543"
-    ```
-- String Interpolation
-    ```
-    x := 5
-    saying := "good morning"
-
-    // Equivalent to 'println("I said " + string!(saying) + " " + string!(x) + " times!")'
-    println("I said $(saying) $(x) times!")
-    ```
 - Classes
     ```
     // Person class
     class Person {
-        // All fields without a visibility modifier are public
+        // All fields and methods must have a visibility modifier
         val string name
         pub int    age
         pri int    days_old
@@ -42,12 +21,13 @@
 
         // del() is a destructor
 
-        // Automatically public
-        talk() {
+        // DEfine a method
+        pub talk() {
             println("Hello, my name is $(.name).")
         }
 
-        // Define typeconv, now string!(Person) is possible
+        // Define type conversion, now string!(Person) is possible
+        // Type conversion and operator overloading is always public, so no pub keyword is necessary
         to string {
             return "$(.name), $(.age) years old"
         }
@@ -56,19 +36,19 @@
     // Extend classes
     class Student extends Person {
         // Static variable
-        stat MaxGrade = 12
+        val stat MaxGrade = 12
 
-        uint   grade
-        string school
+        pub uint   grade
+        pub string school
 
-        new(string ~name, int ~age, uint ~grade, string ~school) {}
+        pub new(string ~name, int ~age, uint ~grade, string ~school) {}
 
-        del() {
+        pub del() {
             println("$(.name) left $(.school)")
         }
 
         // Override
-        talk() {
+        pub talk() {
             // Any parent calls must be explicit
             super.talk()
             println("I am a student at $(.school), in grade $(.grade).")
@@ -100,9 +80,9 @@
     }
 
     class Vec3 {
-        int x, y, z
+        pub int x, y, z
 
-        new(int ~x, int ~y, int ~z)
+        pub new(int ~x, int ~y, int ~z)
 
         // Must have either one or two parameters (unary/binary operator)
         operator + (Vec3 a, Vec3 b) (Vec3) {
@@ -160,64 +140,11 @@
     x := 5
     x.printFloat() // prints "5.0"
     ```
-- Enums 
-    ```
-    // Enum declaration
-    enum Season {
-        Winter
-        Spring
-        Summer
-        Fall
-    }
-
-    enum Mood {
-        Happy
-        Sad
-        Angry
-    }
-
-    // Illegal
-    Season.Winter == Mood.Happy
-
-    // Legal
-    int!(Season.Winter) == int!(Mood.Happy) // true
-
-    // Conversion available
-    Season!(0) == Season.Winter // true
-
-    // Compact Declaration
-    enum Month {
-        January; February; March; April; May; June; July; August; September; October; November; December
-    }
-
-    // Subcatagory of a enum
-    enum WarmMonth from Month {
-        May
-        June
-        July
-        August
-    }
-
-    // True
-    WarmMonth.June == Month.June
-
-    // Give the values of an enum a type and raw value
-    enum Response[uint] {
-        Ok         = 200u
-        Found      = 302u
-        Bad        = 400u
-        Forbidden  = 403u
-        NotFound   = 404u
-        BadGateway = 502u
-    }
-
-    Response.Ok == 200u // True
-    ```
 - Loops
     ```
     // For loop
     for x := 0; x < 5; x++ {
-        println("#$(x)")
+        println("#$(x + 1)")
     }
     
     // While loop
@@ -230,7 +157,7 @@
         sum += prompt("What number?")
     } while sum < 100
 
-    arr := [6, 5, -2, 8, -4, 0, -1]
+    arr := int[6, 5, -2, 8, -4, 0, -1]
 
     // For each loop
     for el, i in arr {

@@ -15,8 +15,8 @@ var order []typing.Type = []typing.Type{
 	typing.Integer,
 	typing.Float,
 	typing.Complex,
-	typing.String,
 	typing.Any,
+	typing.String,
 }
 
 // Minimum acceptable type to automatically cast bools to
