@@ -22,7 +22,8 @@ source_filename = "llvm-link"
 @.str0 = private unnamed_addr constant [9 x i8] c" now has ", align 1
 @.str1 = private unnamed_addr constant [11 x i8] c" references", align 1
 @.strZero = private unnamed_addr constant [1 x i8] c"0", align 1
-@.str0.1 = private unnamed_addr constant [13 x i8] c"Hello, world!", align 1
+@.str0.1 = private unnamed_addr constant [11 x i8] c"it happened", align 1
+@.str1.2 = private unnamed_addr constant [2 x i8] c"no", align 1
 
 define %ref.bool* @"newref:bool"(i1 %value) {
 entry:
@@ -1848,21 +1849,61 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %0 = getelementptr inbounds [13 x i8], [13 x i8]* @.str0.1, i32 0, i32 0
-  %1 = alloca %type.string, align 8
-  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 13, i32* %2, align 8
-  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-  store i32 13, i32* %3, align 8
-  %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
-  store i8* %0, i8** %4, align 8
-  %5 = load %type.string, %type.string* %1, align 8
-  %msg = alloca %type.string, align 8
-  store %type.string %5, %type.string* %msg, align 8
+  %0 = call i32 @mod.add(i32 3, i32 1)
+  call void @mod.doSomething()
   br label %exit
 
 exit:                                             ; preds = %entry
   ret void
+}
+
+define private i32 @mod.add(i32 %0, i32 %1) {
+entry:
+  %.ret = alloca i32, align 4
+  %2 = add i32 %0, %1
+  store i32 %2, i32* %.ret, align 4
+  br label %exit
+
+exit:                                             ; preds = %entry
+  %3 = load i32, i32* %.ret, align 4
+  ret i32 %3
+}
+
+define private void @mod.doSomething() {
+entry:
+  br label %while.cond0
+
+exit:                                             ; preds = %while.end0, %while.body0
+  ret void
+
+while.cond0:                                      ; preds = %entry
+  br i1 true, label %while.body0, label %while.end0
+
+while.body0:                                      ; preds = %while.cond0
+  %0 = getelementptr inbounds [11 x i8], [11 x i8]* @.str0.1, i32 0, i32 0
+  %1 = alloca %type.string, align 8
+  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
+  store i32 11, i32* %2, align 8
+  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
+  store i32 11, i32* %3, align 8
+  %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
+  store i8* %0, i8** %4, align 8
+  %5 = load %type.string, %type.string* %1, align 8
+  call void @.println(%type.string %5)
+  %6 = getelementptr inbounds [2 x i8], [2 x i8]* @.str1.2, i32 0, i32 0
+  %7 = alloca %type.string, align 8
+  %8 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 0
+  store i32 2, i32* %8, align 8
+  %9 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 1
+  store i32 2, i32* %9, align 8
+  %10 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 2
+  store i8* %6, i8** %10, align 8
+  %11 = load %type.string, %type.string* %7, align 8
+  call void @.println(%type.string %11)
+  br label %exit
+
+while.end0:                                       ; preds = %while.cond0
+  br label %exit
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }

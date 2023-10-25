@@ -288,9 +288,9 @@ func (g *generator) genDoWhileLoop(x ast.DoWhileLoop) {
 
 func (g *generator) genReturn(x ast.Return) {
 	bl := g.bl
-	val := g.genExpr(x.Value)
 
 	if g.ctx.ret != nil {
+		val := g.genExpr(x.Value)
 		if g.ctx.complex {
 			store := bl.NewStore(val, g.ctx.ret)
 			store.Align = 8
@@ -298,6 +298,8 @@ func (g *generator) genReturn(x ast.Return) {
 			bl.NewStore(val, g.ctx.ret)
 		}
 	}
+
+	g.breaks[g.bl] = true
 	bl.NewBr(g.ctx.exits.Final())
 }
 

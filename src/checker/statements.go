@@ -212,7 +212,13 @@ func (c *checker) inferReturn(x ast.Return) {
 	if c.topfun.Parent == nil {
 		Errors.Error("Cannot use a return statement outside of a function", x.Pos)
 	}
-	val := c.inferExpr(x.Value)
+	var val typing.Type
+	if ast.Empty(x.Value) {
+		val = typing.Void
+	} else {
+		val = c.inferExpr(x.Value)
+	}
+
 	ret := c.topfun.Return
 	if ret != val {
 		Errors.Error("Expected "+ret.String()+", but got "+val.String()+" instead", x.Loc())

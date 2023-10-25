@@ -1,1 +1,13 @@
-msg := "Hello, world!"
+func add(int a, int b) (int) {
+    return a + b
+}
+
+func doSomething() {
+    while true {
+        println("it happened")
+        return
+    }
+}
+
+add(3, 1)
+doSomething()

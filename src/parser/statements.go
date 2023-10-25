@@ -36,7 +36,7 @@ func (p *parser) parseStmt() ast.Expr {
 	}
 
 	Errors.Error("Invalid statement", tok.Location)
-	return &ast.BadExpr{
+	return &ast.NoExpr{
 		Pos: tok.Location,
 	}
 }
@@ -268,7 +268,7 @@ func (p *parser) parseParam() ast.Param {
 
 func (p *parser) parseReturn() ast.Return {
 	tok := p.expect(lexer.Return)
-	val := p.parseExpr()
+	val := p.parsePossibleExpr()
 	return ast.Return{
 		Pos:   tok.Location,
 		Value: val,

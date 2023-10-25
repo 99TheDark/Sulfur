@@ -11,7 +11,7 @@ func (p *parser) parseHybridStmt() ast.Expr {
 	hybrid := p.parseHybrid()
 	if iden, ok := hybrid.(ast.Identifier); ok {
 		Errors.Error("Incomplete statement", iden.Pos)
-		return &ast.BadExpr{
+		return &ast.NoExpr{
 			Pos: iden.Pos,
 		}
 	}

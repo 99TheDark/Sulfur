@@ -1834,17 +1834,62 @@ LBB28_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #32
-	.cfi_def_cfa_offset 32
-	mov	x8, #13
-Lloh32:
-	adrp	x9, l_.str0.1@PAGE
-	movk	x8, #13, lsl #32
-Lloh33:
-	add	x9, x9, l_.str0.1@PAGEOFF
-	stp	x8, x9, [sp, #16]
-	stp	x8, x9, [sp], #32
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 16
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	mov	w0, #3
+	mov	w1, #1
+	bl	l_mod.add
+	bl	l_mod.doSomething
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret
+	.cfi_endproc
+                                        ; -- End function
+	.p2align	2                               ; -- Begin function mod.add
+l_mod.add:                              ; @mod.add
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #16
+	.cfi_def_cfa_offset 16
+	add	w0, w0, w1
+	str	w0, [sp, #12]
+	add	sp, sp, #16
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.p2align	2                               ; -- Begin function mod.doSomething
+l_mod.doSomething:                      ; @mod.doSomething
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #48
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 48
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	mov	x8, #11
+Lloh32:
+	adrp	x2, l_.str0.1@PAGE
+	movk	x8, #11, lsl #32
+Lloh33:
+	add	x2, x2, l_.str0.1@PAGEOFF
+	mov	w0, #11
+	mov	w1, #11
+	stp	x8, x2, [sp, #16]
+	bl	_.println
+Lloh34:
+	adrp	x2, l_.str1.2@PAGE
+	mov	x8, #8589934594
+Lloh35:
+	add	x2, x2, l_.str1.2@PAGEOFF
+	mov	w0, #2
+	mov	w1, #2
+	stp	x8, x2, [sp]
+	bl	_.println
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #48
+	ret
+	.loh AdrpAdd	Lloh34, Lloh35
 	.loh AdrpAdd	Lloh32, Lloh33
 	.cfi_endproc
                                         ; -- End function
@@ -1975,6 +2020,9 @@ l_.strZero:                             ; @.strZero
 	.byte	48
 
 l_.str0.1:                              ; @.str0.1
-	.ascii	"Hello, world!"
+	.ascii	"it happened"
+
+l_.str1.2:                              ; @.str1.2
+	.ascii	"no"
 
 .subsections_via_symbols

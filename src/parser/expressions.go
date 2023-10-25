@@ -8,6 +8,13 @@ import (
 	"sulfur/src/lexer"
 )
 
+func (p *parser) parsePossibleExpr() ast.Expr {
+	if p.tt() == lexer.NewLine || p.tt() == lexer.Semicolon {
+		return ast.NoExpr{}
+	}
+	return p.parseExpr()
+}
+
 func (p *parser) parseExpr() ast.Expr {
 	return p.parseLogical()
 }
@@ -180,7 +187,7 @@ func (p *parser) parsePrimary() ast.Expr {
 	}
 
 	Errors.Error("Unknown token '"+strings.ReplaceAll(p.at().Value, "\n", "\\n")+"'", p.at().Location)
-	return ast.BadExpr{
+	return ast.NoExpr{
 		Pos: tok.Location,
 	}
 }
@@ -214,7 +221,7 @@ func (p *parser) parseNumber() ast.Expr {
 	}
 
 	Errors.Error("Invalid number", tok.Location)
-	return ast.BadExpr{
+	return ast.NoExpr{
 		Pos: tok.Location,
 	}
 }

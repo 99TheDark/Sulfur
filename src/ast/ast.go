@@ -28,7 +28,7 @@ type (
 		Contents    Block
 	}
 
-	BadExpr struct {
+	NoExpr struct {
 		Pos *typing.Location `json:"-"`
 	}
 
@@ -247,7 +247,7 @@ type (
 )
 
 func (x Program) Loc() *typing.Location      { return typing.NoLocation }
-func (x BadExpr) Loc() *typing.Location      { return x.Pos }
+func (x NoExpr) Loc() *typing.Location       { return x.Pos }
 func (x Block) Loc() *typing.Location        { return x.Pos }
 func (x Identifier) Loc() *typing.Location   { return x.Pos }
 func (x Integer) Loc() *typing.Location      { return x.Pos }
@@ -285,7 +285,7 @@ func (x Break) Loc() *typing.Location        { return x.Pos }
 func (x Continue) Loc() *typing.Location     { return x.Pos }
 
 func Valid(expr Expr) bool {
-	if _, ok := expr.(*BadExpr); ok {
+	if _, ok := expr.(*NoExpr); ok {
 		return false
 	}
 	return true
