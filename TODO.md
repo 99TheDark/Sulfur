@@ -1,16 +1,16 @@
 # TODO
-- Use copy string when using a string
-- Implement autofree
-- Labeled breaks / continues with #'s
+- Return out of a void function
 - Work on error & enum syntax
 - Better escaped characters
-- Return out of a void function
+- Use copy string when using a string
 - Complex numbers
 - Complex number to string
+- Implement autofree
 - Unsigned integer & byte literals
 - Research unicode representation
 - Switch from 1-byte strings to 4-byte strings
 - Better token to string handling
+- Force all variables and functions to have a visibility modifier
 - Classes
 - String equals string 
 - Unsigned integer to string
