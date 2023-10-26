@@ -221,63 +221,61 @@ LBB3_12:                                ; %exit
 "_.add:string_string":                  ; @".add:string_string"
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #96
-	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 96
+	sub	sp, sp, #80
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 80
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	add	w19, w1, w4
-	add	w8, w0, w3
-	stp	w0, w1, [sp, #32]
-	mov	w0, w19
-	mov	w20, w1
-	str	x2, [sp, #40]
-	stp	w3, w4, [sp, #16]
-	str	x5, [sp, #24]
-	stp	w8, w19, [sp, #48]
+	add	w8, w0, w2
+	str	w0, [sp, #32]
+	lsl	w0, w8, #2
+	str	w2, [sp, #16]
+	str	x1, [sp, #40]
+	str	x3, [sp, #24]
+	str	w8, [sp, #48]
 	bl	_malloc
 	str	xzr, [sp, #8]
 	str	x0, [sp, #56]
 	lsr	x8, xzr, #32
-	cmp	w8, w20
+	ldr	w9, [sp, #32]
+	cmp	w8, w9
 	b.ge	LBB4_3
-LBB4_1:                                 ; %while1.body
+LBB4_1:                                 ; %while.body1
                                         ; =>This Inner Loop Header: Depth=1
 	ldrsw	x8, [sp, #12]
-	ldr	x9, [sp, #40]
-	ldr	x10, [sp, #56]
-	ldrb	w9, [x9, x8]
-	add	w11, w8, #1
-	strb	w9, [x10, x8]
-	str	w11, [sp, #12]
-	mov	w8, w11
-	cmp	w8, w20
+	ldr	x10, [sp, #40]
+	ldr	x11, [sp, #56]
+	lsl	x9, x8, #2
+	add	w8, w8, #1
+	ldr	w10, [x10, x9]
+	str	w8, [sp, #12]
+	str	w10, [x11, x9]
+	mov	w8, w8
+	ldr	w9, [sp, #32]
+	cmp	w8, w9
 	b.lt	LBB4_1
 	b	LBB4_3
-LBB4_2:                                 ; %while2.body
+LBB4_2:                                 ; %while.body2
                                         ;   in Loop: Header=BB4_3 Depth=1
-	ldpsw	x9, x8, [sp, #8]
-	ldr	x10, [sp, #24]
+	ldpsw	x9, x10, [sp, #8]
+	ldr	x8, [sp, #24]
 	ldr	x11, [sp, #56]
-	ldrb	w10, [x10, x9]
-	add	w12, w8, #1
+	ldr	w8, [x8, x9, lsl #2]
+	add	w12, w10, #1
 	add	w9, w9, #1
-	strb	w10, [x11, x8]
+	str	w8, [x11, x10, lsl #2]
 	stp	w9, w12, [sp, #8]
-LBB4_3:                                 ; %while2.cond
+LBB4_3:                                 ; %while.cond2
                                         ; =>This Inner Loop Header: Depth=1
 	ldr	w8, [sp, #12]
-	cmp	w8, w19
+	ldr	w9, [sp, #48]
+	cmp	w8, w9
 	b.lt	LBB4_2
-; %bb.4:                                ; %while2.end
-	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
-	ldp	w0, w1, [sp, #48]
-	ldr	x2, [sp, #56]
-	add	sp, sp, #96
+; %bb.4:                                ; %while.exit2
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldr	w0, [sp, #48]
+	ldr	x1, [sp, #56]
+	add	sp, sp, #80
 	ret
 	.cfi_endproc
                                         ; -- End function
@@ -2000,26 +1998,38 @@ LBB32_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #48
-	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 48
+	sub	sp, sp, #80
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 80
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
 Lloh32:
 	adrp	x1, l_.str0.1@PAGE
-	mov	w8, #8
 Lloh33:
+	adrp	x3, l_.str1.2@PAGE
+Lloh34:
 	add	x1, x1, l_.str0.1@PAGEOFF
+	mov	w8, #8
+	mov	w9, #7
+Lloh35:
+	add	x3, x3, l_.str1.2@PAGEOFF
 	mov	w0, #8
-	str	w8, [sp, #16]
-	str	x1, [sp, #24]
-	str	w8, [sp]
-	str	x1, [sp, #8]
+	mov	w2, #7
+	str	x1, [sp, #56]
+	str	x1, [sp, #40]
+	str	w8, [sp, #48]
+	str	w8, [sp, #32]
+	str	w9, [sp, #16]
+	str	x3, [sp, #24]
+	str	w9, [sp]
+	str	x3, [sp, #8]
+	bl	"_.add:string_string"
 	bl	_.println
-	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
-	add	sp, sp, #48
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	add	sp, sp, #80
 	ret
-	.loh AdrpAdd	Lloh32, Lloh33
+	.loh AdrpAdd	Lloh33, Lloh35
+	.loh AdrpAdd	Lloh32, Lloh34
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal4,4byte_literals
@@ -2158,5 +2168,15 @@ l_.str0.1:
 	.long	145838                          ; 0x239ae
 	.long	172300                          ; 0x2a10c
 	.long	33                              ; 0x21
+
+	.p2align	2                               ; @.str1.2
+l_.str1.2:
+	.long	32                              ; 0x20
+	.long	72                              ; 0x48
+	.long	101                             ; 0x65
+	.long	108                             ; 0x6c
+	.long	108                             ; 0x6c
+	.long	111                             ; 0x6f
+	.long	46                              ; 0x2e
 
 .subsections_via_symbols

@@ -1,6 +1,7 @@
 # TODO
 - Update string conversions
-- Update string concatenations
+- Update string copy
+- Use i8* malloc(32) instead of i32* malloc(i32)
 - Work on error syntax (see Zig & Python)
 - Add alignment to allocas
 - Delete & warn dead code (code after return, break or continue, it should be the last statement in the scope)
