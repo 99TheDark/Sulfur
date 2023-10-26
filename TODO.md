@@ -1,5 +1,8 @@
 # TODO
-- Work on enum syntax (see Zig & Python)
+- Update string conversions
+- Update string concatenations
+- Work on error syntax (see Zig & Python)
+- Add alignment to allocas
 - Delete & warn dead code (code after return, break or continue, it should be the last statement in the scope)
 - Better escaped characters
 - Use copy string when using a string
@@ -7,8 +10,6 @@
 - Complex number to string
 - Implement autofree
 - Unsigned integer & byte literals
-- Research unicode representation
-- Switch from 1-byte strings to 4-byte strings
 - Better token to string handling
 - Force all variables and functions to have a visibility modifier
 - Classes

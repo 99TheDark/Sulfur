@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/function/print"
+source_filename = "lib/builtin/function/print_utf8"
 
 declare void @putchar(i32)
 
@@ -85,7 +85,7 @@ if.end35:
     ret void
 }
 
-define void @.print(%type.utf8_string %str) {
+define void @.print_utf8(%type.utf8_string %str) {
 entry:
     %ptr.str = alloca %type.utf8_string, align 8
 	store %type.utf8_string %str, %type.utf8_string* %ptr.str, align 8
@@ -119,9 +119,9 @@ for.exit:
     ret void
 }
 
-define void @.println(%type.utf8_string %str) {
+define void @.println_utf8(%type.utf8_string %str) {
 entry:
-    call void @.print(%type.utf8_string %str)
+    call void @.print_utf8(%type.utf8_string %str)
     call void @putchar(i32 10)
     ret void
 }

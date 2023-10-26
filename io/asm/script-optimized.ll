@@ -3,6 +3,7 @@ source_filename = "llvm-link"
 
 %ref.bool = type { i1*, i32 }
 %type.string = type { i32, i32, i8* }
+%type.utf8_string = type { i32, i32* }
 %ref.float = type { float*, i32 }
 %union.anon = type { float }
 %ref.int = type { i32*, i32 }
@@ -22,7 +23,7 @@ source_filename = "llvm-link"
 @.str0 = private unnamed_addr constant [9 x i8] c" now has ", align 1
 @.str1 = private unnamed_addr constant [11 x i8] c" references", align 1
 @.strZero = private unnamed_addr constant [1 x i8] c"0", align 1
-@.str0.1 = private unnamed_addr constant [11 x i8] c"it happened", align 1
+@.str0.1 = private unnamed_addr constant [8 x i32] [i32 97, i32 957, i32 1490, i32 2827, i32 66370, i32 145838, i32 172300, i32 33], align 4
 
 define %ref.bool* @"newref:bool"(i1 %value) {
 entry:
@@ -74,7 +75,7 @@ entry:
   store i8* %2, i8** %6, align 8
   %7 = load %type.string, %type.string* %3, align 8
   %8 = call %type.string @".add:string_string"(%type.string %1, %type.string %7)
-  call void @.println(%type.string %8)
+  call void bitcast (void (%type.utf8_string)* @.println to void (%type.string)*)(%type.string %8)
   ret void
 }
 
@@ -280,52 +281,129 @@ while2.end:                                       ; preds = %while2.cond
   ret %type.string %39
 }
 
-define void @.println(%type.string %str) {
+define void @.println(%type.utf8_string %str) {
 entry:
-  call void @.print(%type.string %str)
-  call void @putchar(i8 10)
+  call void @.print(%type.utf8_string %str)
+  call void @putchar(i32 10)
   ret void
 }
 
-define void @.print(%type.string %str) {
+define void @.print(%type.utf8_string %str) {
 entry:
-  %ptr.str = alloca %type.string, align 8
-  store %type.string %str, %type.string* %ptr.str, align 8
-  %i = alloca i32, align 8
-  %0 = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 1
-  %1 = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 2
-  %2 = load i32, i32* %0, align 8
-  %3 = load i8*, i8** %1, align 8
-  store i32 0, i32* %i, align 8
+  %ptr.str = alloca %type.utf8_string, align 8
+  store %type.utf8_string %str, %type.utf8_string* %ptr.str, align 8
+  %i = alloca i32, align 4
+  store i32 0, i32* %i, align 4
   br label %for.cond
 
 for.cond:                                         ; preds = %for.inc, %entry
-  %4 = load i32, i32* %i, align 8
-  %ptr.str.len = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 1
-  %5 = load i32, i32* %ptr.str.len, align 8
-  %cmp = icmp slt i32 %4, %5
-  br i1 %cmp, label %for.body, label %for.end
+  %0 = load i32, i32* %i, align 4
+  %1 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %ptr.str, i32 0, i32 0
+  %2 = load i32, i32* %1, align 4
+  %3 = icmp slt i32 %0, %2
+  br i1 %3, label %for.body, label %for.exit
 
 for.body:                                         ; preds = %for.cond
-  %ptr.str.addr = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 2
-  %6 = load i8*, i8** %ptr.str.addr, align 8
-  %7 = load i32, i32* %i, align 8
-  %ptr.str.idx = getelementptr inbounds i8, i8* %6, i32 %7
-  %8 = load i8, i8* %ptr.str.idx, align 1
-  call void @putchar(i8 %8)
+  %4 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %ptr.str, i32 0, i32 1
+  %5 = load i32*, i32** %4, align 4
+  %6 = load i32, i32* %i, align 4
+  %7 = getelementptr inbounds i32, i32* %5, i32 %6
+  %8 = load i32, i32* %7, align 4
+  call void @printChar(i32 %8)
   br label %for.inc
 
 for.inc:                                          ; preds = %for.body
-  %9 = load i32, i32* %i, align 8
-  %inc = add nsw i32 %9, 1
-  store i32 %inc, i32* %i, align 8
+  %9 = load i32, i32* %i, align 4
+  %10 = add i32 %9, 1
+  store i32 %10, i32* %i, align 4
   br label %for.cond
 
-for.end:                                          ; preds = %for.cond
+for.exit:                                         ; preds = %for.cond
   ret void
 }
 
-declare void @putchar(i8)
+declare void @putchar(i32)
+
+define private void @printChar(i32 %cp) {
+entry:
+  %cp.addr = alloca i32, align 4
+  store i32 %cp, i32* %cp.addr, align 4
+  %0 = load i32, i32* %cp.addr, align 4
+  %cmp = icmp sle i32 %0, 127
+  br i1 %cmp, label %if.then, label %if.else
+
+if.then:                                          ; preds = %entry
+  %1 = load i32, i32* %cp.addr, align 4
+  call void @putchar(i32 %1)
+  br label %if.end35
+
+if.else:                                          ; preds = %entry
+  %2 = load i32, i32* %cp.addr, align 4
+  %cmp1 = icmp sle i32 %2, 2047
+  br i1 %cmp1, label %if.then2, label %if.else6
+
+if.then2:                                         ; preds = %if.else
+  %3 = load i32, i32* %cp.addr, align 4
+  %shr = ashr i32 %3, 6
+  %or = or i32 192, %shr
+  call void @putchar(i32 %or)
+  %4 = load i32, i32* %cp.addr, align 4
+  %and = and i32 %4, 63
+  %or4 = or i32 128, %and
+  call void @putchar(i32 %or4)
+  br label %if.end34
+
+if.else6:                                         ; preds = %if.else
+  %5 = load i32, i32* %cp.addr, align 4
+  %cmp7 = icmp sle i32 %5, 65535
+  br i1 %cmp7, label %if.then8, label %if.else19
+
+if.then8:                                         ; preds = %if.else6
+  %6 = load i32, i32* %cp.addr, align 4
+  %shr9 = ashr i32 %6, 12
+  %or10 = or i32 224, %shr9
+  call void @putchar(i32 %or10)
+  %7 = load i32, i32* %cp.addr, align 4
+  %shr12 = ashr i32 %7, 6
+  %and13 = and i32 %shr12, 63
+  %or14 = or i32 128, %and13
+  call void @putchar(i32 %or14)
+  %8 = load i32, i32* %cp.addr, align 4
+  %and16 = and i32 %8, 63
+  %or17 = or i32 128, %and16
+  call void @putchar(i32 %or17)
+  br label %if.end
+
+if.else19:                                        ; preds = %if.else6
+  %9 = load i32, i32* %cp.addr, align 4
+  %shr20 = ashr i32 %9, 18
+  %or21 = or i32 240, %shr20
+  call void @putchar(i32 %or21)
+  %10 = load i32, i32* %cp.addr, align 4
+  %shr23 = ashr i32 %10, 12
+  %and24 = and i32 %shr23, 63
+  %or25 = or i32 128, %and24
+  call void @putchar(i32 %or25)
+  %11 = load i32, i32* %cp.addr, align 4
+  %shr27 = ashr i32 %11, 6
+  %and28 = and i32 %shr27, 63
+  %or29 = or i32 128, %and28
+  call void @putchar(i32 %or29)
+  %12 = load i32, i32* %cp.addr, align 4
+  %and31 = and i32 %12, 63
+  %or32 = or i32 128, %and31
+  call void @putchar(i32 %or32)
+  br label %if.end
+
+if.end:                                           ; preds = %if.else19, %if.then8
+  br label %if.end34
+
+if.end34:                                         ; preds = %if.end, %if.then2
+  br label %if.end35
+
+if.end35:                                         ; preds = %if.end34, %if.then
+  ret void
+}
 
 declare void @free(i8*)
 
@@ -364,7 +442,7 @@ entry:
   %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
   store i8* %0, i8** %4, align 8
   %5 = load %type.string, %type.string* %1, align 8
-  call void @.println(%type.string %5)
+  call void bitcast (void (%type.utf8_string)* @.println to void (%type.string)*)(%type.string %5)
   ret void
 }
 
@@ -1787,10 +1865,132 @@ entry:
   store i8* %12, i8** %16, align 8
   %17 = load %type.string, %type.string* %13, align 8
   %18 = call %type.string @".add:string_string"(%type.string %11, %type.string %17)
-  call void @.println(%type.string %18)
+  call void bitcast (void (%type.utf8_string)* @.println to void (%type.string)*)(%type.string %18)
   br label %exit
 
 exit:                                             ; preds = %entry
+  ret void
+}
+
+define void @.print_utf8(%type.utf8_string %str) {
+entry:
+  %ptr.str = alloca %type.utf8_string, align 8
+  store %type.utf8_string %str, %type.utf8_string* %ptr.str, align 8
+  %i = alloca i32, align 4
+  store i32 0, i32* %i, align 4
+  br label %for.cond
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %0 = load i32, i32* %i, align 4
+  %1 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %ptr.str, i32 0, i32 0
+  %2 = load i32, i32* %1, align 4
+  %3 = icmp slt i32 %0, %2
+  br i1 %3, label %for.body, label %for.exit
+
+for.body:                                         ; preds = %for.cond
+  %4 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %ptr.str, i32 0, i32 1
+  %5 = load i32*, i32** %4, align 4
+  %6 = load i32, i32* %i, align 4
+  %7 = getelementptr inbounds i32, i32* %5, i32 %6
+  %8 = load i32, i32* %7, align 4
+  call void @printChar.9(i32 %8)
+  br label %for.inc
+
+for.inc:                                          ; preds = %for.body
+  %9 = load i32, i32* %i, align 4
+  %10 = add i32 %9, 1
+  store i32 %10, i32* %i, align 4
+  br label %for.cond
+
+for.exit:                                         ; preds = %for.cond
+  ret void
+}
+
+define private void @printChar.9(i32 %cp) {
+entry:
+  %cp.addr = alloca i32, align 4
+  store i32 %cp, i32* %cp.addr, align 4
+  %0 = load i32, i32* %cp.addr, align 4
+  %cmp = icmp sle i32 %0, 127
+  br i1 %cmp, label %if.then, label %if.else
+
+if.then:                                          ; preds = %entry
+  %1 = load i32, i32* %cp.addr, align 4
+  call void @putchar(i32 %1)
+  br label %if.end35
+
+if.else:                                          ; preds = %entry
+  %2 = load i32, i32* %cp.addr, align 4
+  %cmp1 = icmp sle i32 %2, 2047
+  br i1 %cmp1, label %if.then2, label %if.else6
+
+if.then2:                                         ; preds = %if.else
+  %3 = load i32, i32* %cp.addr, align 4
+  %shr = ashr i32 %3, 6
+  %or = or i32 192, %shr
+  call void @putchar(i32 %or)
+  %4 = load i32, i32* %cp.addr, align 4
+  %and = and i32 %4, 63
+  %or4 = or i32 128, %and
+  call void @putchar(i32 %or4)
+  br label %if.end34
+
+if.else6:                                         ; preds = %if.else
+  %5 = load i32, i32* %cp.addr, align 4
+  %cmp7 = icmp sle i32 %5, 65535
+  br i1 %cmp7, label %if.then8, label %if.else19
+
+if.then8:                                         ; preds = %if.else6
+  %6 = load i32, i32* %cp.addr, align 4
+  %shr9 = ashr i32 %6, 12
+  %or10 = or i32 224, %shr9
+  call void @putchar(i32 %or10)
+  %7 = load i32, i32* %cp.addr, align 4
+  %shr12 = ashr i32 %7, 6
+  %and13 = and i32 %shr12, 63
+  %or14 = or i32 128, %and13
+  call void @putchar(i32 %or14)
+  %8 = load i32, i32* %cp.addr, align 4
+  %and16 = and i32 %8, 63
+  %or17 = or i32 128, %and16
+  call void @putchar(i32 %or17)
+  br label %if.end
+
+if.else19:                                        ; preds = %if.else6
+  %9 = load i32, i32* %cp.addr, align 4
+  %shr20 = ashr i32 %9, 18
+  %or21 = or i32 240, %shr20
+  call void @putchar(i32 %or21)
+  %10 = load i32, i32* %cp.addr, align 4
+  %shr23 = ashr i32 %10, 12
+  %and24 = and i32 %shr23, 63
+  %or25 = or i32 128, %and24
+  call void @putchar(i32 %or25)
+  %11 = load i32, i32* %cp.addr, align 4
+  %shr27 = ashr i32 %11, 6
+  %and28 = and i32 %shr27, 63
+  %or29 = or i32 128, %and28
+  call void @putchar(i32 %or29)
+  %12 = load i32, i32* %cp.addr, align 4
+  %and31 = and i32 %12, 63
+  %or32 = or i32 128, %and31
+  call void @putchar(i32 %or32)
+  br label %if.end
+
+if.end:                                           ; preds = %if.else19, %if.then8
+  br label %if.end34
+
+if.end34:                                         ; preds = %if.end, %if.then2
+  br label %if.end35
+
+if.end35:                                         ; preds = %if.end34, %if.then
+  ret void
+}
+
+define void @.println_utf8(%type.utf8_string %str) {
+entry:
+  call void @.print_utf8(%type.utf8_string %str)
+  call void @putchar(i32 10)
   ret void
 }
 
@@ -1848,51 +2048,21 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %0 = call i32 @mod.add(i32 3, i32 1)
-  call void @mod.doSomething()
+  %0 = getelementptr inbounds [8 x i32], [8 x i32]* @.str0.1, i32 0, i32 0
+  %1 = alloca %type.utf8_string, align 8
+  %2 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %1, i32 0, i32 0
+  store i32 8, i32* %2, align 8
+  %3 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %1, i32 0, i32 1
+  store i32* %0, i32** %3, align 8
+  %4 = load %type.utf8_string, %type.utf8_string* %1, align 8
+  %x = alloca %type.utf8_string, align 8
+  store %type.utf8_string %4, %type.utf8_string* %x, align 8
+  %5 = load %type.utf8_string, %type.utf8_string* %x, align 8
+  call void @.println(%type.utf8_string %5)
   br label %exit
 
 exit:                                             ; preds = %entry
   ret void
-}
-
-define private i32 @mod.add(i32 %0, i32 %1) {
-entry:
-  %.ret = alloca i32, align 4
-  %2 = add i32 %0, %1
-  store i32 %2, i32* %.ret, align 4
-  br label %exit
-
-exit:                                             ; preds = %entry
-  %3 = load i32, i32* %.ret, align 4
-  ret i32 %3
-}
-
-define private void @mod.doSomething() {
-entry:
-  br label %while.cond0
-
-exit:                                             ; preds = %while.end0, %while.body0
-  ret void
-
-while.cond0:                                      ; preds = %entry
-  br i1 true, label %while.body0, label %while.end0
-
-while.body0:                                      ; preds = %while.cond0
-  %0 = getelementptr inbounds [11 x i8], [11 x i8]* @.str0.1, i32 0, i32 0
-  %1 = alloca %type.string, align 8
-  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 11, i32* %2, align 8
-  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-  store i32 11, i32* %3, align 8
-  %4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
-  store i8* %0, i8** %4, align 8
-  %5 = load %type.string, %type.string* %1, align 8
-  call void @.println(%type.string %5)
-  br label %exit
-
-while.end0:                                       ; preds = %while.cond0
-  br label %exit
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }

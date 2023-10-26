@@ -23,12 +23,19 @@ func (g *generator) genStrings() {
 			continue
 		}
 
-		arr := constant.NewCharArrayFromString(val)
+		runes := []rune(val)
+		chars := []constant.Constant{}
+		for _, char := range runes {
+			constant := constant.NewInt(types.I32, int64(char))
+			chars = append(chars, constant)
+		}
+
+		arr := constant.NewArray(types.NewArray(uint64(len(runes)), types.I32), chars...)
 		strGlob := g.mod.NewGlobalDef(".str"+fmt.Sprint(i), arr)
 		strGlob.Linkage = enum.LinkagePrivate
 		strGlob.UnnamedAddr = enum.UnnamedAddrUnnamedAddr
 		strGlob.Immutable = true
-		strGlob.Align = 1
+		strGlob.Align = 4
 
 		g.strs[val] = StringGlobal{
 			strGlob,

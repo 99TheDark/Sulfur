@@ -48,7 +48,7 @@ func (g *generator) genBasicIden(vari *ast.Variable) value.Value {
 	}
 
 	load := bl.NewLoad(g.lltyp(vari.Type), val)
-	load.Align = ir.Align(g.size(vari.Type))
+	load.Align = ir.Align(g.align(vari.Type))
 	return load
 }
 

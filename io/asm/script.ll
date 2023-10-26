@@ -1,58 +1,28 @@
 ; ModuleID = 'script.su'
 source_filename = "script.su"
 
-%type.string = type { i32, i32, i8* }
+%type.utf8_string = type { i32, i32* }
 %type.complex = type { float, float }
 
-@.str0 = private unnamed_addr constant [11 x i8] c"it happened", align 1
+@.str0 = private unnamed_addr constant [8 x i32] [i32 97, i32 957, i32 1490, i32 2827, i32 66370, i32 145838, i32 172300, i32 33], align 4
 
 define void @main() {
 entry:
-	%0 = call i32 @mod.add(i32 3, i32 1)
-	call void @mod.doSomething()
+	%0 = getelementptr inbounds [8 x i32], [8 x i32]* @.str0, i32 0, i32 0
+	%1 = alloca %type.utf8_string, align 8
+	%2 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %1, i32 0, i32 0
+	store i32 8, i32* %2, align 8
+	%3 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %1, i32 0, i32 1
+	store i32* %0, i32** %3, align 8
+	%4 = load %type.utf8_string, %type.utf8_string* %1, align 8
+	%x = alloca %type.utf8_string
+	store %type.utf8_string %4, %type.utf8_string* %x
+	%5 = load %type.utf8_string, %type.utf8_string* %x, align 8
+	call void @.println(%type.utf8_string %5)
 	br label %exit
 
 exit:
 	ret void
 }
 
-define private i32 @mod.add(i32 %0, i32 %1) {
-entry:
-	%.ret = alloca i32
-	%2 = add i32 %0, %1
-	store i32 %2, i32* %.ret
-	br label %exit
-
-exit:
-	%3 = load i32, i32* %.ret
-	ret i32 %3
-}
-
-define private void @mod.doSomething() {
-entry:
-	br label %while.cond0
-
-exit:
-	ret void
-
-while.cond0:
-	br i1 true, label %while.body0, label %while.end0
-
-while.body0:
-	%0 = getelementptr inbounds [11 x i8], [11 x i8]* @.str0, i32 0, i32 0
-	%1 = alloca %type.string, align 8
-	%2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-	store i32 11, i32* %2, align 8
-	%3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-	store i32 11, i32* %3, align 8
-	%4 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 2
-	store i8* %0, i8** %4, align 8
-	%5 = load %type.string, %type.string* %1, align 8
-	call void @.println(%type.string %5)
-	br label %exit
-
-while.end0:
-	br label %exit
-}
-
-declare void @.println(%type.string %0)
+declare void @.println(%type.utf8_string %0)

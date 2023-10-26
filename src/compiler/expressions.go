@@ -66,7 +66,6 @@ func (g *generator) genString(x ast.String) value.Value {
 	return g.genBasicStruct(
 		g.str,
 		constant.NewInt(types.I32, int64(utf8.RuneCountInString(x.Value))),
-		constant.NewInt(types.I32, int64(len(x.Value))),
 		str,
 	)
 }
