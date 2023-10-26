@@ -27,10 +27,8 @@ entry:
 	%9 = load %type.utf8_string, %type.utf8_string* %6, align 8
 	%y = alloca %type.utf8_string
 	store %type.utf8_string %9, %type.utf8_string* %y
-	%10 = load %type.utf8_string, %type.utf8_string* %x, align 8
-	%11 = load %type.utf8_string, %type.utf8_string* %y, align 8
-	%12 = call %type.utf8_string @".add:string_string"(%type.utf8_string %10, %type.utf8_string %11)
-	call void @.println(%type.utf8_string %12)
+	%10 = call %type.utf8_string @".conv:int_string"(i32 -804)
+	call void @.println(%type.utf8_string %10)
 	br label %exit
 
 exit:
@@ -39,4 +37,4 @@ exit:
 
 declare void @.println(%type.utf8_string %0)
 
-declare %type.utf8_string @".add:string_string"(%type.utf8_string %0, %type.utf8_string %1)
+declare %type.utf8_string @".conv:int_string"(i32 %0)

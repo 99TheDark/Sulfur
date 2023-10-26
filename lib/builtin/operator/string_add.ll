@@ -21,7 +21,7 @@ entry:
 	%5 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 0
 	store i32 %4, i32* %5, align 8
 
-    ; ret.addr = malloc(ret.len * sizeof(int))
+    ; ret.chars = malloc(ret.len * sizeof(int))
     %6 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 1
     %7 = mul i32 %4, 4
     %8 = call i8* @malloc(i32 %7)
@@ -68,7 +68,7 @@ while.cond2:
     %24 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 0
     %25 = load i32, i32* %24, align 8
     %26 = icmp slt i32 %23, %25
-    br i1 %26, label %while.body2, label %while.exit2
+    br i1 %26, label %while.body2, label %while.end2
 
 while.body2:
     %27 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %ptr.b, i32 0, i32 1
@@ -87,7 +87,7 @@ while.body2:
     store i32 %37, i32* %j, align 4
     br label %while.cond2
 
-while.exit2:
+while.end2:
     %final = load %type.utf8_string, %type.utf8_string* %.ret, align 8
     ret %type.utf8_string %final
 }
