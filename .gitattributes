@@ -1,5 +1,5 @@
 *.ll linguist-language=LLVM
 io/asm/** linguist-vendored
 lib/builtin/** linguist-vendored
-lib/source/**.ll linguist-vendored
-lib/source/**.bc linguist-vendored
+lib/**.ll linguist-vendored
+lib/**.bc linguist-vendored

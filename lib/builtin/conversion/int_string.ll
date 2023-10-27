@@ -65,7 +65,7 @@ while.end:
     %18 = load i32, i32* %i, align 4
     %19 = sub i32 9, %18
     %20 = load i32, i32* %sign, align 4
-    %21 = add i32 %18, %20
+    %21 = add i32 %19, %20
     store i32 %21, i32* %size, align 4
     %22 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 0
     store i32 %21, i32* %22, align 8
@@ -122,6 +122,9 @@ for.inc:
     br label %for.cond
 
 exit:
-    %final = load %type.utf8_string, %type.utf8_string* %.ret, align 8
-    ret %type.utf8_string %final
+    %48 = load i32*, i32** %buf, align 8
+    %49 = bitcast i32* %buf to i8*
+    call void @free(i8* %49)
+    %50 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
+    ret %type.utf8_string %50
 }
