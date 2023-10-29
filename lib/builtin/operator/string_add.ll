@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/operator/string_add"
+source_filename = "lib/builtin/operator/string_add.ll"
 
 %type.utf8_string = type { i32, i32* }
 

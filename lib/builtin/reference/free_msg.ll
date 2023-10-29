@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/reference/free_msg"
+source_filename = "lib/builtin/reference/free_msg.ll"
 
 %type.string = type { i32, i32, i8* }
 

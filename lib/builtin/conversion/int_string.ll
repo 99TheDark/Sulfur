@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/conversion/int_string"
+source_filename = "lib/builtin/conversion/int_string.ll"
 
 %type.utf8_string = type { i32, i32* }
 
@@ -12,6 +12,10 @@ entry:
     %.ret = alloca %type.utf8_string
     %int.addr = alloca i32
     store i32 %int, i32* %int.addr, align 4
+    %i = alloca i32
+    %sign = alloca i32
+    %buf = alloca i32*
+    %size = alloca i32
     %0 = icmp eq i32 %int, 0
     br i1 %0, label %if.then1, label %if.end1
 
@@ -24,14 +28,10 @@ if.then1:
     br label %exit
 
 if.end1:
-    %buf = alloca i32*
     %4 = call i8* @malloc(i32 40) ; 10 * sizeof(4)
     %5 = bitcast i8* %4 to i32*
     store i32* %5, i32** %buf, align 8
-    %i = alloca i32
-    store i32 9, i32* %i, align 4
-    %sign = alloca i32
-    store i32 0, i32* %sign, align 4
+    store i32 9, i32* %i, align 4    store i32 0, i32* %sign, align 4
     %6 = icmp slt i32 %int, 0
     br i1 %6, label %if.then2, label %while.cond
 
@@ -61,7 +61,6 @@ while.body:
     br label %while.cond
 
 while.end:
-    %size = alloca i32
     %18 = load i32, i32* %i, align 4
     %19 = sub i32 9, %18
     %20 = load i32, i32* %sign, align 4
@@ -123,7 +122,7 @@ for.inc:
 
 exit:
     %48 = load i32*, i32** %buf, align 8
-    %49 = bitcast i32* %buf to i8*
+    %49 = bitcast i32* %48 to i8*
     call void @free(i8* %49)
     %50 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
     ret %type.utf8_string %50

@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/function/print"
+source_filename = "lib/builtin/function/print.ll"
 
 declare void @putchar(i32)
 

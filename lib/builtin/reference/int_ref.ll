@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/reference/int_ref"
+source_filename = "lib/builtin/reference/int_ref.ll"
 
 %ref.int = type { i32*, i32 }
 

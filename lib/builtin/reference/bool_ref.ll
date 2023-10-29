@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/reference/bool_ref"
+source_filename = "lib/builtin/reference/bool_ref.ll"
 
 %ref.bool = type { i1*, i32 }
 

@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/conversion/bool_string"
+source_filename = "lib/builtin/conversion/bool_string.ll"
 
 %type.string = type { i32, i32, i8* }
 

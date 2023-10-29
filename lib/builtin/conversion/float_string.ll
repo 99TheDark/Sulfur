@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/conversion/float_string"
+source_filename = "lib/builtin/conversion/float_string.ll"
 
 %type.string = type { i32, i32, i8* }
 %union.anon = type { float }

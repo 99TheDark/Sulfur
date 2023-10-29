@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/reference/float_ref"
+source_filename = "lib/builtin/reference/float_ref.ll"
 
 %ref.float = type { float*, i32 }
 

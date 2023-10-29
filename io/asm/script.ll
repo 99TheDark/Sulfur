@@ -6,13 +6,8 @@ source_filename = "script.su"
 
 define void @main() {
 entry:
-    %num = alloca %type.utf8_string
-	%0 = call %type.utf8_string @".conv:int_string"(i32 632)
-    store %type.utf8_string %0, %type.utf8_string* %num, align 8
-	%1 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %num, i32 0, i32 0
-    %2 = load i32, i32* %1, align 4
-    %3 = call %type.utf8_string @".conv:int_string"(i32 %2)
-    call void @.println(%type.utf8_string %3)
+	%0 = call %type.utf8_string @".conv:int_string"(i32 -632)
+	call void @.println(%type.utf8_string %0)
 	br label %exit
 
 exit:

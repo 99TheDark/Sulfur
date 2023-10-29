@@ -1,4 +1,4 @@
-source_filename = "lib/builtin/copy/string_copy"
+source_filename = "lib/builtin/copy/string_copy.ll"
 
 %type.string = type { i32, i32, i8* }
 

@@ -83,6 +83,10 @@ entry:
   %.ret = alloca %type.utf8_string, align 8
   %int.addr = alloca i32, align 4
   store i32 %int, i32* %int.addr, align 4
+  %i = alloca i32, align 4
+  %sign = alloca i32, align 4
+  %buf = alloca i32*, align 8
+  %size = alloca i32, align 4
   %0 = icmp eq i32 %int, 0
   br i1 %0, label %if.then1, label %if.end1
 
@@ -95,13 +99,10 @@ if.then1:                                         ; preds = %entry
   br label %exit
 
 if.end1:                                          ; preds = %entry
-  %buf = alloca i32*, align 8
   %4 = call i8* @malloc(i32 40)
   %5 = bitcast i8* %4 to i32*
   store i32* %5, i32** %buf, align 8
-  %i = alloca i32, align 4
   store i32 9, i32* %i, align 4
-  %sign = alloca i32, align 4
   store i32 0, i32* %sign, align 4
   %6 = icmp slt i32 %int, 0
   br i1 %6, label %if.then2, label %while.cond
@@ -132,11 +133,10 @@ while.body:                                       ; preds = %while.cond
   br label %while.cond
 
 while.end:                                        ; preds = %while.cond
-  %size = alloca i32, align 4
   %18 = load i32, i32* %i, align 4
   %19 = sub i32 9, %18
   %20 = load i32, i32* %sign, align 4
-  %21 = add i32 %18, %20
+  %21 = add i32 %19, %20
   store i32 %21, i32* %size, align 4
   %22 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 0
   store i32 %21, i32* %22, align 8
@@ -193,8 +193,11 @@ for.inc:                                          ; preds = %for.body
   br label %for.cond
 
 exit:                                             ; preds = %for.cond, %if.then1
-  %final = load %type.utf8_string, %type.utf8_string* %.ret, align 8
-  ret %type.utf8_string %final
+  %48 = load i32*, i32** %buf, align 8
+  %49 = bitcast i32* %48 to i8*
+  call void @free(i8* %49)
+  %50 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
+  ret %type.utf8_string %50
 }
 
 define %type.utf8_string @".add:string_string"(%type.utf8_string %a, %type.utf8_string %b) {
@@ -396,6 +399,8 @@ if.end35:                                         ; preds = %if.end34, %if.then
   ret void
 }
 
+declare void @free(i8*)
+
 define void @"deref:bool"(%ref.bool* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.bool, %ref.bool* %ref, i32 0, i32 1
@@ -419,8 +424,6 @@ if.then:                                          ; preds = %entry
 exit:                                             ; preds = %if.then, %entry
   ret void
 }
-
-declare void @free(i8*)
 
 define void @freeMsg() {
 entry:
@@ -2039,13 +2042,8 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %num = alloca %type.utf8_string, align 8
-  %0 = call %type.utf8_string @".conv:int_string"(i32 632)
-  store %type.utf8_string %0, %type.utf8_string* %num, align 8
-  %1 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %num, i32 0, i32 0
-  %2 = load i32, i32* %1, align 4
-  %3 = call %type.utf8_string @".conv:int_string"(i32 50)
-  call void @.println(%type.utf8_string %3)
+  %0 = call %type.utf8_string @".conv:int_string"(i32 -632)
+  call void @.println(%type.utf8_string %0)
   br label %exit
 
 exit:                                             ; preds = %entry
