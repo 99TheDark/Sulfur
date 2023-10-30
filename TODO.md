@@ -1,5 +1,4 @@
 # TODO
-- Use i8* malloc(32) instead of i32* malloc(i32)
 - Work on error syntax (see Zig, V & Python)
 - Move all allocas to %entry
 - Add alignment to allocas
