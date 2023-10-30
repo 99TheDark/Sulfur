@@ -207,61 +207,42 @@ LBB3_11:                                ; %for.end
 "_.add:string_string":                  ; @".add:string_string"
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #80
-	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 80
+	sub	sp, sp, #96
+	stp	x22, x21, [sp, #48]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 96
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	.cfi_offset w21, -40
+	.cfi_offset w22, -48
 	add	w8, w0, w2
-	str	w0, [sp, #32]
+	mov	w20, w0
+	str	w0, [sp, #16]
 	lsl	w0, w8, #2
-	str	w2, [sp, #16]
-	str	x1, [sp, #40]
-	str	x3, [sp, #24]
-	str	w8, [sp, #48]
+	mov	w19, w2
+	str	w2, [sp]
+	str	x1, [sp, #24]
+	str	x3, [sp, #8]
+	str	w8, [sp, #32]
 	bl	_malloc
-	str	xzr, [sp, #8]
-	str	x0, [sp, #56]
-	lsr	x8, xzr, #32
-	ldr	w9, [sp, #32]
-	cmp	w8, w9
-	b.ge	LBB4_3
-LBB4_1:                                 ; %while.body1
-                                        ; =>This Inner Loop Header: Depth=1
-	ldrsw	x8, [sp, #12]
-	ldr	x10, [sp, #40]
-	ldr	x11, [sp, #56]
-	lsl	x9, x8, #2
-	add	w8, w8, #1
-	ldr	w10, [x10, x9]
-	str	w8, [sp, #12]
-	str	w10, [x11, x9]
-	mov	w8, w8
-	ldr	w9, [sp, #32]
-	cmp	w8, w9
-	b.lt	LBB4_1
-	b	LBB4_3
-LBB4_2:                                 ; %while.body2
-                                        ;   in Loop: Header=BB4_3 Depth=1
-	ldpsw	x9, x10, [sp, #8]
-	ldr	x8, [sp, #24]
-	ldr	x11, [sp, #56]
-	ldr	w8, [x8, x9, lsl #2]
-	add	w12, w10, #1
-	add	w9, w9, #1
-	str	w8, [x11, x10, lsl #2]
-	stp	w9, w12, [sp, #8]
-LBB4_3:                                 ; %while.cond2
-                                        ; =>This Inner Loop Header: Depth=1
-	ldr	w8, [sp, #12]
-	ldr	w9, [sp, #48]
-	cmp	w8, w9
-	b.lt	LBB4_2
-; %bb.4:                                ; %while.end2
-	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
-	ldr	w0, [sp, #48]
-	ldr	x1, [sp, #56]
-	add	sp, sp, #80
+	ldr	x1, [sp, #24]
+	lsl	w2, w20, #2
+	mov	x21, x0
+	str	x0, [sp, #40]
+	bl	_memcpy
+	add	x0, x21, w20, sxtw #2
+	ldr	x1, [sp, #8]
+	lsl	w2, w19, #2
+	bl	_memcpy
+	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #48]             ; 16-byte Folded Reload
+	ldr	w0, [sp, #32]
+	ldr	x1, [sp, #40]
+	add	sp, sp, #96
 	ret
 	.cfi_endproc
                                         ; -- End function
