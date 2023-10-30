@@ -1,3 +1,5 @@
+source_filename = "lib/builtin/conversion/float_string.ll"
+
 %type.utf8_string = type { i32, i32* }
 %union.anon = type { float }
 
@@ -10,8 +12,10 @@
 @strPosZero = private unnamed_addr constant [3 x i32] [i32 48, i32 46, i32 48], align 4
 @strNegZero = private unnamed_addr constant [4 x i32] [i32 45, i32 48, i32 46, i32 48], align 16
 
-declare private i8* @malloc(i64)
-declare private void @free(i8*)
+declare i8* @malloc(i64)
+declare void @free(i8*)
+
+declare void @llvm.memcpy.p0i8.p0i8.i64(i8* noalias nocapture writeonly, i8* noalias nocapture readonly, i64, i1 immarg)
 
 define private i32 @pow5bits(i32 %e) {
 entry:
@@ -219,7 +223,7 @@ for.end:
     ret i32 %5
 }
 
-define private { i32, i32* } @normalString(float %num, i32 %bits) {
+define private %type.utf8_string @normalString(float %num, i32 %bits) {
 entry:
     %.ret = alloca %type.utf8_string, align 8
     %num.addr = alloca float, align 4
@@ -1125,12 +1129,11 @@ if.end345:
     %228 = load i32*, i32** %result, align 8
     %229 = bitcast i32* %228 to i8*
     call void @free(i8* %229) 
-    %230 = bitcast %type.utf8_string* %.ret to { i32, i32* }*
-    %231 = load { i32, i32* }, { i32, i32* }* %230, align 8
-    ret { i32, i32* } %231
+    %230 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
+    ret %type.utf8_string %230
 }
 
-define %type.utf8_string @".conv:int_string"(float %num) {
+define %type.utf8_string @".conv:float_string"(float %num) {
 entry:
     %.ret = alloca %type.utf8_string, align 8
     %num.addr = alloca float, align 4
@@ -1226,17 +1229,11 @@ if.end:
 if.else20:
     %17 = load float, float* %num.addr, align 4
     %18 = load i32, i32* %bits, align 4
-    %call = call { i32, i32* } @normalString(float %17, i32 %18)
-    %19 = bitcast %type.utf8_string* %.ret to { i32, i32* }*
-    %20 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %19, i32 0, i32 0
-    %21 = extractvalue { i32, i32* } %call, 0
-    store i32 %21, i32* %20, align 8
-    %22 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %19, i32 0, i32 1
-    %23 = extractvalue { i32, i32* } %call, 1
-    store i32* %23, i32** %22, align 8
+    %call = call %type.utf8_string @normalString(float %17, i32 %18)
+    store %type.utf8_string %call, %type.utf8_string* %.ret, align 8
     br label %return
 
 return:
-    %24 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
-    ret %type.utf8_string %24
+    %19 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
+    ret %type.utf8_string %19
 }

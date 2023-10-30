@@ -162,12 +162,12 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 }
 
 func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
-	val := g.genExpr(x.Value)
+	conv := g.genBasicTypeConv(g.genExpr(x.Value), g.Types[x.Value], g.Types[x])
+	if conv == Zero {
+		Errors.Error("Unexpected generating error during type conversion", x.Loc())
+	}
 
-	g.genBasicTypeConv(val, g.Types[x.Value], g.Types[x])
-
-	Errors.Error("Unexpected generating error during type conversion", x.Loc())
-	return Zero
+	return conv
 }
 
 func (g *generator) genFuncCall(x ast.FuncCall) value.Value {

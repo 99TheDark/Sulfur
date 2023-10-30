@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
+#include <string.h>
 
 struct utf8_string {
     int len;
@@ -36,7 +37,7 @@ const unsigned long FLOAT_POW5_SPLIT[] = {
 
 int pow5bits(int e) {
     return e == 0 ? 1 : (int) ((e * 23219280 + 9999999) / 10000000);
-};
+}
 
 int mulShift(int m, long factor, int shift) {
     int factor_low = (int) factor;
@@ -58,10 +59,6 @@ int mulPow5divPow2(int m, int i, int j) {
     return mulShift(m, FLOAT_POW5_SPLIT[i], j);
 }
 
-int multipleOfPow5(int x, int p) {
-    return pow5Factor(x) >= p;
-}
-
 int pow5Factor(int val) {
     int i = 0;
     while(val > 0) {
@@ -73,7 +70,11 @@ int pow5Factor(int val) {
         i++;
     }
     return 0;
-};
+}
+
+int multipleOfPow5(int x, int p) {
+    return pow5Factor(x) >= p;
+}
 
 int decimalLength(int val) {
     int len = 10;
@@ -85,7 +86,7 @@ int decimalLength(int val) {
         factor /= 10;
     }
     return len;
-};
+}
 
 const int strNaN[] = { 110, 97, 110 };
 const int strPosInf[] = { 105, 110, 102 };
@@ -314,9 +315,32 @@ struct utf8_string float2String(float num) {
     }
 }
 
-int main() {
-    struct utf8_string str = float2String(-24.28512f);
-    println(str);
+// Demo
+const int byteLead = 0x80;
+const int byteMask = 0x3F;
 
-    return 0;
+const int byte2Lead = 0xC0;
+const int byte3Lead = 0xE0;
+const int byte4Lead = 0xF0;
+
+const int byteMax = (1 << 7) - 1;
+const int byte2Max = (1 << 11) - 1;
+const int byte3Max = (1 << 16) - 1;
+
+void printChar(int cp) {
+    if(cp <= byteMax) {
+        putchar(cp);
+    } else if(cp <= byte2Max) {
+        putchar(byte2Lead | cp >> 6);
+        putchar(byteLead | cp & byteMask);
+    } else if(cp <= byte3Max) {
+        putchar(byte3Lead | cp >> 12);
+        putchar(byteLead | cp >> 6 & byteMask);
+        putchar(byteLead | cp & byteMask);
+    } else {
+        putchar(byte4Lead | cp >> 18);
+        putchar(byteLead | cp >> 12 & byteMask);
+        putchar(byteLead | cp >> 6 & byteMask);
+        putchar(byteLead | cp & byteMask);
+    }
 }

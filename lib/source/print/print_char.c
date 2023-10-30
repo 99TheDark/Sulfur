@@ -28,16 +28,3 @@ void printChar(int cp) {
         putchar(byteLead | cp & byteMask);
     }
 }
-
-int main() {
-    // console.log("a".codePointAt(0));
-    printChar(97);     // a
-    printChar(957);    // ν
-    printChar(1490);   // ג
-    printChar(2827);   // ଋ
-    printChar(66370);  // 𐍂
-    printChar(145838); // 𣦮
-    printChar(172300); // 𪄌
-
-    return 0;
-}
