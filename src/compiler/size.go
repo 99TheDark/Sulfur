@@ -1,6 +1,10 @@
 package compiler
 
-import "sulfur/src/typing"
+import (
+	"sulfur/src/typing"
+
+	"github.com/llir/llvm/ir"
+)
 
 func (g *generator) size(typ typing.Type) int {
 	switch typ {
@@ -15,7 +19,7 @@ func (g *generator) size(typ typing.Type) int {
 	}
 }
 
-func (g *generator) align(typ typing.Type) int {
+func (g *generator) align(typ typing.Type) ir.Align {
 	switch typ {
 	case typing.Integer, typing.Unsigned, typing.Float:
 		return 4

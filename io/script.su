@@ -1,5 +1,5 @@
-func something(&int ref) {
-    msg := "Hello, " + "world!" + " (x" + ref + ")"
+func something(&int ref, string str) {
+    msg := str + " (x" + ref + ")"
     if true {
         msg := 2160
         println(msg)
@@ -8,4 +8,5 @@ func something(&int ref) {
 }
 
 x := 7
-something(&x)
+str := "Hello, " + "world!"
+something(&x, str)

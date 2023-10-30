@@ -23,10 +23,10 @@ source_filename = "llvm-link"
 @.str0 = private unnamed_addr constant [9 x i8] c" now has ", align 1
 @.str1 = private unnamed_addr constant [11 x i8] c" references", align 1
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
-@.str0.1 = private unnamed_addr constant [7 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 44, i32 32], align 4
-@.str1.2 = private unnamed_addr constant [6 x i32] [i32 119, i32 111, i32 114, i32 108, i32 100, i32 33], align 4
-@.str2 = private unnamed_addr constant [3 x i32] [i32 32, i32 40, i32 120], align 4
-@.str3 = private unnamed_addr constant [1 x i32] [i32 41], align 4
+@.str0.1 = private unnamed_addr constant [3 x i32] [i32 32, i32 40, i32 120], align 4
+@.str1.2 = private unnamed_addr constant [1 x i32] [i32 41], align 4
+@.str2 = private unnamed_addr constant [7 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 44, i32 32], align 4
+@.str3 = private unnamed_addr constant [6 x i32] [i32 119, i32 111, i32 114, i32 108, i32 100, i32 33], align 4
 
 define %ref.bool* @"newref:bool"(i1 %value) {
 entry:
@@ -1986,31 +1986,17 @@ exit:                                             ; preds = %if.then, %entry
 define void @main() {
 entry:
   %x = alloca %ref.int*, align 8
+  %str = alloca %type.string, align 8
   %0 = call %ref.int* @"newref:int"(i32 7)
   store %ref.int* %0, %ref.int** %x, align 8
-  %1 = load %ref.int*, %ref.int** %x, align 8
-  call void @"ref:int"(%ref.int* %1)
-  call void @mod.something(%ref.int* %1)
-  %2 = load %ref.int*, %ref.int** %x, align 8
-  call void @"deref:int"(%ref.int* %2)
-  br label %exit
-
-exit:                                             ; preds = %entry
-  ret void
-}
-
-define private void @mod.something(%ref.int* %0) {
-entry:
-  %msg = alloca %type.string, align 8
-  %msg.1 = alloca i32, align 4
-  %1 = getelementptr inbounds [7 x i32], [7 x i32]* @.str0.1, i32 0, i32 0
+  %1 = getelementptr inbounds [7 x i32], [7 x i32]* @.str2, i32 0, i32 0
   %2 = alloca %type.string, align 8
   %3 = getelementptr inbounds %type.string, %type.string* %2, i32 0, i32 0
   store i32 7, i32* %3, align 8
   %4 = getelementptr inbounds %type.string, %type.string* %2, i32 0, i32 1
   store i32* %1, i32** %4, align 8
   %5 = load %type.string, %type.string* %2, align 8
-  %6 = getelementptr inbounds [6 x i32], [6 x i32]* @.str1.2, i32 0, i32 0
+  %6 = getelementptr inbounds [6 x i32], [6 x i32]* @.str3, i32 0, i32 0
   %7 = alloca %type.string, align 8
   %8 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 0
   store i32 6, i32* %8, align 8
@@ -2018,28 +2004,45 @@ entry:
   store i32* %6, i32** %9, align 8
   %10 = load %type.string, %type.string* %7, align 8
   %11 = call %type.string @".add:string_string"(%type.string %5, %type.string %10)
-  %12 = getelementptr inbounds [3 x i32], [3 x i32]* @.str2, i32 0, i32 0
-  %13 = alloca %type.string, align 8
-  %14 = getelementptr inbounds %type.string, %type.string* %13, i32 0, i32 0
-  store i32 3, i32* %14, align 8
-  %15 = getelementptr inbounds %type.string, %type.string* %13, i32 0, i32 1
-  store i32* %12, i32** %15, align 8
-  %16 = load %type.string, %type.string* %13, align 8
-  %17 = call %type.string @".add:string_string"(%type.string %11, %type.string %16)
-  %18 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
-  %19 = load i32*, i32** %18, align 8
-  %20 = load i32, i32* %19, align 4
-  %21 = call %type.string @".conv:int_string"(i32 %20)
-  %22 = call %type.string @".add:string_string"(%type.string %17, %type.string %21)
-  %23 = getelementptr inbounds [1 x i32], [1 x i32]* @.str3, i32 0, i32 0
-  %24 = alloca %type.string, align 8
-  %25 = getelementptr inbounds %type.string, %type.string* %24, i32 0, i32 0
-  store i32 1, i32* %25, align 8
-  %26 = getelementptr inbounds %type.string, %type.string* %24, i32 0, i32 1
-  store i32* %23, i32** %26, align 8
-  %27 = load %type.string, %type.string* %24, align 8
-  %28 = call %type.string @".add:string_string"(%type.string %22, %type.string %27)
-  store %type.string %28, %type.string* %msg, align 8
+  store %type.string %11, %type.string* %str, align 8
+  %12 = load %ref.int*, %ref.int** %x, align 8
+  call void @"ref:int"(%ref.int* %12)
+  %13 = load %type.string, %type.string* %str, align 8
+  call void @mod.something(%ref.int* %12, %type.string %13)
+  %14 = load %ref.int*, %ref.int** %x, align 8
+  call void @"deref:int"(%ref.int* %14)
+  br label %exit
+
+exit:                                             ; preds = %entry
+  ret void
+}
+
+define private void @mod.something(%ref.int* %0, %type.string %1) {
+entry:
+  %msg = alloca %type.string, align 8
+  %msg.1 = alloca i32, align 4
+  %2 = getelementptr inbounds [3 x i32], [3 x i32]* @.str0.1, i32 0, i32 0
+  %3 = alloca %type.string, align 8
+  %4 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 0
+  store i32 3, i32* %4, align 8
+  %5 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 1
+  store i32* %2, i32** %5, align 8
+  %6 = load %type.string, %type.string* %3, align 8
+  %7 = call %type.string @".add:string_string"(%type.string %1, %type.string %6)
+  %8 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+  %9 = load i32*, i32** %8, align 8
+  %10 = load i32, i32* %9, align 4
+  %11 = call %type.string @".conv:int_string"(i32 %10)
+  %12 = call %type.string @".add:string_string"(%type.string %7, %type.string %11)
+  %13 = getelementptr inbounds [1 x i32], [1 x i32]* @.str1.2, i32 0, i32 0
+  %14 = alloca %type.string, align 8
+  %15 = getelementptr inbounds %type.string, %type.string* %14, i32 0, i32 0
+  store i32 1, i32* %15, align 8
+  %16 = getelementptr inbounds %type.string, %type.string* %14, i32 0, i32 1
+  store i32* %13, i32** %16, align 8
+  %17 = load %type.string, %type.string* %14, align 8
+  %18 = call %type.string @".add:string_string"(%type.string %12, %type.string %17)
+  store %type.string %18, %type.string* %msg, align 8
   br i1 true, label %if.then0, label %if.end0
 
 exit:                                             ; preds = %if.end0
@@ -2047,14 +2050,14 @@ exit:                                             ; preds = %if.end0
 
 if.then0:                                         ; preds = %entry
   store i32 2160, i32* %msg.1, align 4
-  %29 = load i32, i32* %msg.1, align 4
-  %30 = call %type.string @".conv:int_string"(i32 %29)
-  call void @.println(%type.string %30)
+  %19 = load i32, i32* %msg.1, align 4
+  %20 = call %type.string @".conv:int_string"(i32 %19)
+  call void @.println(%type.string %20)
   br label %if.end0
 
 if.end0:                                          ; preds = %if.then0, %entry
-  %31 = load %type.string, %type.string* %msg, align 8
-  call void @.println(%type.string %31)
+  %21 = load %type.string, %type.string* %msg, align 8
+  call void @.println(%type.string %21)
   br label %exit
 }
 

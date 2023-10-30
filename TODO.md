@@ -1,5 +1,4 @@
 # TODO
-- Add alignment to allocas
 - Delete & warn dead code (code after return, break or continue, it should be the last statement in the scope)
 - Better escaped characters
 - Use copy string when using a string
