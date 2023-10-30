@@ -1983,8 +1983,9 @@ _main:                                  ; @main
 	.cfi_def_cfa_offset 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	w0, #-632
-	bl	"_.conv:int_string"
+	mov	w8, #2143289344
+	fmov	s0, w8
+	bl	"_.conv:float_string"
 	bl	_.println
 	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret

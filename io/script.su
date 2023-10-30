@@ -4,4 +4,4 @@ z := -804
 
 println(x + "<" + 0 + ">" + y + " " + z)*/
 
-println(-632)
+println(-632.345)

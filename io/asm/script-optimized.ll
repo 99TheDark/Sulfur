@@ -2042,8 +2042,9 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %0 = call %type.utf8_string @".conv:int_string"(i32 -632)
-  call void @.println(%type.utf8_string %0)
+  %0 = fdiv float 0.000000e+00, 0.000000e+00
+  %1 = call %type.utf8_string bitcast (%type.string (float)* @".conv:float_string" to %type.utf8_string (float)*)(float %0)
+  call void @.println(%type.utf8_string %1)
   br label %exit
 
 exit:                                             ; preds = %entry

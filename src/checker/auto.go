@@ -74,7 +74,7 @@ func (c *checker) AutoInfer(a, b typing.Type, srcA, srcB ast.Expr) (builtins.Typ
 	for i, conv := range builtins.TypeConvs {
 		if conv.From == from && conv.To == to {
 			c.AutoConvs[exitSrc] = conv
-			c.Types[exitSrc] = to
+			c.Types[exitSrc] = from
 			conv.Uses++
 			c.program.TypeConvs[i] = conv
 
@@ -106,7 +106,7 @@ func (c *checker) AutoSingleInfer(have, want typing.Type, src ast.Expr) (builtin
 		for i, conv := range builtins.TypeConvs {
 			if conv.From == have && conv.To == want {
 				c.AutoConvs[src] = conv
-				c.Types[src] = want
+				c.Types[src] = have
 				conv.Uses++
 				c.program.TypeConvs[i] = conv
 

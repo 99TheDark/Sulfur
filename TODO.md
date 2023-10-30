@@ -2,7 +2,8 @@
 - Update string conversions
 - Update string copy
 - Use i8* malloc(32) instead of i32* malloc(i32)
-- Work on error syntax (see Zig & Python)
+- Work on error syntax (see Zig, V & Python)
+- Move all allocas to %entry
 - Add alignment to allocas
 - Delete & warn dead code (code after return, break or continue, it should be the last statement in the scope)
 - Better escaped characters
