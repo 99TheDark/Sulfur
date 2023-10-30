@@ -13,7 +13,6 @@
 - Unsigned integer to string
 - Only link functions when needed
 - Remove allocas from single-use variables
-- Implementation of `sizeof` operator
 - Add `string.length` and `string[idx]`
 - Raw strings using backticks
 - String interpolation
