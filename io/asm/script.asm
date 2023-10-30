@@ -1987,49 +1987,26 @@ LBB32_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	add	x29, sp, #16
-	sub	sp, sp, #16
-	.cfi_def_cfa w29, 16
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-Lloh32:
-	adrp	x19, l_.str0.1@PAGE
-	mov	w20, #3
-Lloh33:
-	add	x19, x19, l_.str0.1@PAGEOFF
-	stp	wzr, w20, [x29, #-24]
-	ldur	w8, [x29, #-24]
-	cmp	w8, #9
-	b.gt	LBB33_2
-LBB33_1:                                ; %for.body0
-                                        ; =>This Inner Loop Header: Depth=1
-	ldur	w0, [x29, #-24]
-	bl	"_.conv:int_string"
-	bl	_.println
-	mov	x8, sp
-	sub	x9, x8, #16
-	mov	sp, x9
-	mov	w0, #3
-	mov	x1, x19
-	stur	w20, [x8, #-16]
-	stur	x19, [x8, #-8]
-	bl	_.println
-	ldur	w8, [x29, #-24]
-	add	w8, w8, #1
-	stur	w8, [x29, #-24]
-	mov	w8, w8
-	cmp	w8, #9
-	b.le	LBB33_1
-LBB33_2:                                ; %for.end0
-	sub	sp, x29, #16
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	bl	l_mod.something
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret
-	.loh AdrpAdd	Lloh32, Lloh33
+	.cfi_endproc
+                                        ; -- End function
+	.p2align	2                               ; -- Begin function mod.something
+l_mod.something:                        ; @mod.something
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #16
+	.cfi_def_cfa_offset 16
+	mov	w8, #1
+	mov	w0, #1
+	strb	w8, [sp, #15]
+	add	sp, sp, #16
+	ret
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal16,16byte_literals
@@ -2215,12 +2192,5 @@ l_.str1:                                ; @.str1
 	.p2align	2                               ; @.strZero
 l_.strZero:
 	.long	48                              ; 0x30
-
-	.section	__TEXT,__const
-	.p2align	2                               ; @.str0.1
-l_.str0.1:
-	.long	78                              ; 0x4e
-	.long	111                             ; 0x6f
-	.long	33                              ; 0x21
 
 .subsections_via_symbols

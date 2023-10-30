@@ -23,7 +23,6 @@ source_filename = "llvm-link"
 @.str0 = private unnamed_addr constant [9 x i8] c" now has ", align 1
 @.str1 = private unnamed_addr constant [11 x i8] c" references", align 1
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
-@.str0.1 = private unnamed_addr constant [3 x i32] [i32 78, i32 111, i32 33], align 4
 
 define %ref.bool* @"newref:bool"(i1 %value) {
 entry:
@@ -1982,42 +1981,22 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %a = alloca i32, align 4
-  %i = alloca i32, align 4
-  store i32 3, i32* %a, align 4
-  store i32 0, i32* %i, align 4
-  br label %for.cond0
-
-exit:                                             ; preds = %for.end0
-  ret void
-
-for.cond0:                                        ; preds = %for.inc0, %entry
-  %0 = load i32, i32* %i, align 4
-  %1 = icmp slt i32 %0, 10
-  br i1 %1, label %for.body0, label %for.end0
-
-for.body0:                                        ; preds = %for.cond0
-  %2 = load i32, i32* %i, align 4
-  %3 = call %type.string @".conv:int_string"(i32 %2)
-  call void @.println(%type.string %3)
-  %4 = getelementptr inbounds [3 x i32], [3 x i32]* @.str0.1, i32 0, i32 0
-  %5 = alloca %type.string, align 8
-  %6 = getelementptr inbounds %type.string, %type.string* %5, i32 0, i32 0
-  store i32 3, i32* %6, align 8
-  %7 = getelementptr inbounds %type.string, %type.string* %5, i32 0, i32 1
-  store i32* %4, i32** %7, align 8
-  %8 = load %type.string, %type.string* %5, align 8
-  call void @.println(%type.string %8)
-  br label %for.inc0
-
-for.inc0:                                         ; preds = %for.body0
-  %9 = load i32, i32* %i, align 4
-  %10 = add i32 %9, 1
-  store i32 %10, i32* %i, align 4
-  br label %for.cond0
-
-for.end0:                                         ; preds = %for.cond0
+  %0 = call i1 @mod.something()
   br label %exit
+
+exit:                                             ; preds = %entry
+  ret void
+}
+
+define private i1 @mod.something() {
+entry:
+  %.ret = alloca i1, align 1
+  store i1 true, i1* %.ret, align 1
+  br label %exit
+
+exit:                                             ; preds = %entry
+  %0 = load i1, i1* %.ret, align 1
+  ret i1 %0
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }

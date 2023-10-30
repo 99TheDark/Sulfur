@@ -16,6 +16,10 @@ import (
 )
 
 func (g *generator) genStmt(expr ast.Expr) {
+	if g.bl.Term != nil {
+		return
+	}
+
 	switch x := expr.(type) {
 	case ast.Declaration:
 		g.genBasicDecl(x.Name.Name, g.typ(x.Value), g.genExpr(x.Value), x.Name.Loc())

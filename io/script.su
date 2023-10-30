@@ -1,6 +1,6 @@
-a := 3
-for i := 0; i < 10; i++ {
-    println(i)
-    continue
-    println("No!")
+func something() (bool) {
+    return true
+    println("Nothing should happen")
 }
+
+something()
