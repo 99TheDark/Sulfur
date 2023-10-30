@@ -118,8 +118,12 @@ func (p *parser) parseFunction() ast.Function {
 		p.expect(lexer.CloseParen)
 	}
 
+	fnscope := ast.NewFuncScope(p.topfun, typing.Type(ret.Name))
+
+	p.topfun = fnscope
 	body := p.parseBlock()
 	body.Scope.Seperate = true
+	p.topfun = fnscope.Parent
 
 	// TODO: Check if function already exists
 	psigs := []builtins.ParamSignature{}
@@ -136,11 +140,12 @@ func (p *parser) parseFunction() ast.Function {
 	p.program.Functions = append(p.program.Functions, sig)
 
 	return ast.Function{
-		Pos:    tok.Location,
-		Name:   name,
-		Params: params,
-		Return: ret,
-		Body:   body,
+		Pos:       tok.Location,
+		Name:      name,
+		Params:    params,
+		Return:    ret,
+		FuncScope: fnscope,
+		Body:      body,
 	}
 }
 

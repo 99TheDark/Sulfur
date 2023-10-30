@@ -1,13 +1,13 @@
 # TODO
-- Work on error syntax (see Zig, V & Python)
-- Move all allocas to %entry
 - Add alignment to allocas
 - Delete & warn dead code (code after return, break or continue, it should be the last statement in the scope)
 - Better escaped characters
 - Use copy string when using a string
 - Implement autofree
+- Work on error syntax (see Zig, V & Python)
 - Unsigned integer & byte literals
 - Better token to string handling
+- Basic CLI
 - Force all variables and functions to have a visibility modifier
 - Classes
 - String equals string 

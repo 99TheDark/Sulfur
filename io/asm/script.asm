@@ -1987,30 +1987,72 @@ LBB32_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #96
-	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 96
+	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 16
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	bl	l_mod.otherthing
+	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.p2align	2                               ; -- Begin function mod.otherthing
+l_mod.otherthing:                       ; @mod.otherthing
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #48
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 48
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
 	.cfi_offset w19, -24
 	.cfi_offset w20, -32
+	mov	w0, #7
+	bl	"_newref:int"
+	mov	x19, x0
+	str	x0, [sp, #8]
+	bl	"_ref:int"
+	mov	x0, x19
+	bl	l_mod.something
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #48
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.p2align	2                               ; -- Begin function mod.something
+l_mod.something:                        ; @mod.something
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #144
+	stp	x22, x21, [sp, #96]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #112]            ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #128]            ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 144
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	.cfi_offset w21, -40
+	.cfi_offset w22, -48
 Lloh32:
 	adrp	x1, l_.str0.1@PAGE
 Lloh33:
 	adrp	x3, l_.str1.2@PAGE
+	mov	x19, x0
+	mov	w8, #7
 Lloh34:
 	add	x1, x1, l_.str0.1@PAGEOFF
-	mov	w8, #7
 	mov	w9, #6
 Lloh35:
 	add	x3, x3, l_.str1.2@PAGEOFF
 	mov	w0, #7
 	mov	w2, #6
-	str	x1, [sp, #56]
-	str	w8, [sp, #48]
-	str	w9, [sp, #32]
-	str	x3, [sp, #40]
+	str	w8, [sp, #56]
+	str	x1, [sp, #64]
+	str	w9, [sp, #40]
+	str	x3, [sp, #48]
 	bl	"_.add:string_string"
 Lloh36:
 	adrp	x3, l_.str2@PAGE
@@ -2018,17 +2060,18 @@ Lloh36:
 Lloh37:
 	add	x3, x3, l_.str2@PAGEOFF
 	mov	w2, #3
-	str	w8, [sp, #16]
-	str	x3, [sp, #24]
+	str	w8, [sp, #24]
+	str	x3, [sp, #32]
 	bl	"_.add:string_string"
-	mov	w19, w0
-	mov	w0, #10
-	mov	x20, x1
+	ldr	x8, [x19]
+	mov	w20, w0
+	mov	x21, x1
+	ldr	w0, [x8]
 	bl	"_.conv:int_string"
 	mov	w2, w0
 	mov	x3, x1
-	mov	w0, w19
-	mov	x1, x20
+	mov	w0, w20
+	mov	x1, x21
 	bl	"_.add:string_string"
 Lloh38:
 	adrp	x3, l_.str3@PAGE
@@ -2036,13 +2079,22 @@ Lloh38:
 Lloh39:
 	add	x3, x3, l_.str3@PAGEOFF
 	mov	w2, #1
-	str	w8, [sp]
-	str	x3, [sp, #8]
+	str	w8, [sp, #8]
+	str	x3, [sp, #16]
 	bl	"_.add:string_string"
+	mov	w8, #2160
+	str	x1, [sp, #88]
+	stp	w8, w0, [sp, #76]
+	mov	w0, #2160
+	bl	"_.conv:int_string"
 	bl	_.println
-	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
-	add	sp, sp, #96
+	ldr	x1, [sp, #88]
+	ldr	w0, [sp, #80]
+	bl	_.println
+	ldp	x29, x30, [sp, #128]            ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #112]            ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #96]             ; 16-byte Folded Reload
+	add	sp, sp, #144
 	ret
 	.loh AdrpAdd	Lloh38, Lloh39
 	.loh AdrpAdd	Lloh36, Lloh37

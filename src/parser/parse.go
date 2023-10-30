@@ -17,6 +17,7 @@ type parser struct {
 	program *ast.Program
 	size    int
 	top     *ast.Scope
+	topfun  *ast.FuncScope
 	idx     int
 }
 
@@ -95,6 +96,7 @@ func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 		IncDecs:     []builtins.IncDecSignature{},
 		Classes:     []builtins.ClassSignature{},
 		Strings:     []ast.String{},
+		FuncScope:   ast.NewFuncScope(nil, typing.Void),
 		Contents:    ast.Block{},
 	}
 
@@ -104,6 +106,7 @@ func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 		&prog,
 		len(*tokens),
 		scope,
+		prog.FuncScope,
 		0,
 	}
 

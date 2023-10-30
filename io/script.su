@@ -1,1 +1,15 @@
-println("Hello, " + "world!" + " (x" + 10 + ")")
+func something(&int ref) {
+    msg := "Hello, " + "world!" + " (x" + ref + ")"
+    if true {
+        msg := 2160
+        println(msg)
+    }
+    println(msg)
+}
+
+func otherthing() {
+    x := 7
+    something(&x)
+}
+
+otherthing()

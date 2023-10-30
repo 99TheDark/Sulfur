@@ -56,13 +56,9 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 	bl := g.bl
 
 	vari := g.top.Lookup(name, loc)
+	alloca := g.topfun.Decls[vari]
 
 	if vari.References {
-		bundle := g.refs[vari.Type]
-
-		alloca := bl.NewAlloca(bundle.ptr)
-		alloca.LocalName = vari.LLName()
-
 		store := bl.NewStore(val, alloca)
 		store.Align = 8
 
@@ -70,18 +66,12 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 	} else if vari.Referenced {
 		bundle := g.refs[vari.Type]
 
-		alloca := bl.NewAlloca(bundle.ptr)
-		alloca.LocalName = vari.LLName()
-
 		call := bl.NewCall(bundle.newref, val)
 		store := bl.NewStore(call, alloca)
 		store.Align = 8
 
 		vari.Value = alloca
 	} else {
-		alloca := bl.NewAlloca(typ)
-		alloca.LocalName = vari.LLName()
-
 		bl.NewStore(val, alloca)
 		vari.Value = alloca
 	}

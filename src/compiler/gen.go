@@ -18,6 +18,7 @@ type generator struct {
 	mod      *ir.Module
 	ctx      *context
 	top      *ast.Scope
+	topfun   *ast.FuncScope
 	bl       *ir.Block // TODO: Move bl to context
 	breaks   map[*ir.Block]bool
 	str      types.Type
@@ -81,6 +82,7 @@ func Generate(program *ast.Program, props *checker.VariableProperties) string {
 			0,
 		},
 		program.Contents.Scope,
+		program.FuncScope,
 		bl,
 		make(map[*ir.Block]bool),
 		str,

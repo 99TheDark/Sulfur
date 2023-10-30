@@ -53,7 +53,7 @@ func (c *checker) inferBlock(x ast.Block, header func()) {
 }
 
 func (c *checker) inferDeclaration(x ast.Declaration) {
-	if c.top.Has(x.Name.Name) {
+	if _, ok := c.top.Vars[x.Name.Name]; ok {
 		Errors.Error(x.Name.Name+" is already defined", x.Name.Loc())
 	}
 
@@ -66,11 +66,13 @@ func (c *checker) inferDeclaration(x ast.Declaration) {
 		Errors.Error("Expected "+x.Type.Name+", but got "+val.String()+" instead", x.Loc())
 	}
 
-	c.top.Vars[x.Name.Name] = ast.NewVariable(c.topfun, x.Name.Name, c.Refs.Has(x.Value), val, ast.Local)
+	vari := ast.NewVariable(c.topfun, x.Name.Name, c.Refs.Has(x.Value), val, ast.Local)
+	c.top.Vars[x.Name.Name] = vari
+	c.topfun.Decls[vari] = nil
 }
 
 func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
-	if c.top.Has(x.Name.Name) {
+	if _, ok := c.top.Vars[x.Name.Name]; ok {
 		Errors.Error(x.Name.Name+" is already defined", x.Name.Loc())
 	}
 
@@ -79,7 +81,9 @@ func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
 		Errors.Error("Cannot declare a variable to have no type", x.Value.Loc())
 	}
 
-	c.top.Vars[x.Name.Name] = ast.NewVariable(c.topfun, x.Name.Name, c.Refs.Has(x.Value), val, ast.Local)
+	vari := ast.NewVariable(c.topfun, x.Name.Name, c.Refs.Has(x.Value), val, ast.Local)
+	c.top.Vars[x.Name.Name] = vari
+	c.topfun.Decls[vari] = nil
 }
 
 func (c *checker) inferAssignment(x ast.Assignment) {
@@ -138,11 +142,7 @@ func (c *checker) inferIncDec(x ast.IncDec) {
 }
 
 func (c *checker) inferFunction(x ast.Function) {
-	c.topfun = &ast.FuncScope{
-		Parent: c.topfun,
-		Return: typing.Type(x.Return.Name),
-		Counts: make(map[string]int),
-	}
+	c.topfun = x.FuncScope
 	c.inferBlock(x.Body, func() {
 		for _, param := range x.Params {
 			if param.Referenced {

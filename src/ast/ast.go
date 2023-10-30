@@ -23,8 +23,8 @@ type (
 		TypeConvs   []builtins.TypeConvSignature   `json:"-"`
 		IncDecs     []builtins.IncDecSignature     `json:"-"`
 		Classes     []builtins.ClassSignature      `json:"-"`
-		Strings     []String
-		FuncScope   FuncScope
+		Strings     []String                       `json:"-"`
+		FuncScope   *FuncScope                     `json:"-"`
 		Contents    Block
 	}
 
@@ -35,7 +35,7 @@ type (
 	Block struct {
 		Pos   *typing.Location `json:"-"`
 		Body  []Expr
-		Scope *Scope // `json:"-"`
+		Scope *Scope `json:"-"`
 	}
 
 	Identifier struct {
@@ -73,7 +73,7 @@ type (
 		Name      Identifier
 		Params    []Param
 		Return    Identifier
-		FuncScope FuncScope
+		FuncScope *FuncScope `json:"-"`
 		Body      Block
 	}
 

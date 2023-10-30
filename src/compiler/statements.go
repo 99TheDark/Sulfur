@@ -134,6 +134,9 @@ func (g *generator) genFunction(x ast.Function) {
 	bl := g.bl
 	g.bl = entry
 	g.top = x.Body.Scope
+	g.topfun = x.FuncScope
+
+	g.genAllocas(g.topfun)
 
 	for _, expr := range x.Body.Body {
 		g.genStmt(expr)
@@ -150,6 +153,7 @@ func (g *generator) genFunction(x ast.Function) {
 	g.ctx = g.ctx.parent
 	g.bl = bl
 	g.top = x.Body.Scope.Parent
+	g.topfun = x.FuncScope.Parent
 }
 
 func (g *generator) genIfStmt(x ast.IfStatement) {
