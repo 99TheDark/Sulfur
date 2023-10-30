@@ -99,7 +99,6 @@ const (
 	Assert                         // 'assert'
 	Throws                         // 'throws'
 	Catch                          // 'catch'
-	Okay                           // 'okay'
 	Arrow                          // '=>'
 	Atsign                         // '@'
 	Sizeof                         // 'sizeof'
@@ -146,7 +145,6 @@ var Keywords = map[string]TokenType{
 	"assert":      Assert,
 	"throws":      Throws,
 	"catch":       Catch,
-	"okay":        Okay,
 	"sizeof":      Sizeof,
 }
 
@@ -369,8 +367,6 @@ func (tt TokenType) String() string {
 		return "Throws"
 	case Catch:
 		return "Catch"
-	case Okay:
-		return "Okay"
 	case Arrow:
 		return "Arrow"
 	case Atsign:

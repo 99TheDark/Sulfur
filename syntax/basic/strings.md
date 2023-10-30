@@ -20,6 +20,7 @@ A list of all escapable characters is below:
 |`\r`|Carriage return|
 |`\t`|Tab|
 |`\v`|Vertical tab|
+|`\0`|Null|
 |`\"`|Double quote|
 |`\\`|Backslash|
 |`\$(`|Dollar sign & left parenthesis

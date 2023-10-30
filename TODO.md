@@ -2,8 +2,8 @@
 - Better escaped characters
 - Use copy string when using a string
 - Implement autofree
+- Unsigned integer literal
 - Work on error syntax (see Zig, V & Python)
-- Unsigned integer & byte literals
 - Better token to string handling
 - Basic CLI
 - Force all variables and functions to have a visibility modifier
