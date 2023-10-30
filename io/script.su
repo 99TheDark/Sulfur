@@ -1,12 +1,6 @@
-func something(&int ref, string str) {
-    msg := str + " (x" + ref + ")"
-    if true {
-        msg := 2160
-        println(msg)
-    }
-    println(msg)
+a := 3
+for i := 0; i < 10; i++ {
+    println(i)
+    continue
+    println("No!")
 }
-
-x := 7
-str := "Hello, " + "world!"
-something(&x, str)

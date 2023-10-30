@@ -1987,115 +1987,49 @@ LBB32_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #96
-	stp	x20, x19, [sp, #64]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #80]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 96
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	add	x29, sp, #16
+	sub	sp, sp, #16
+	.cfi_def_cfa w29, 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
 	.cfi_offset w19, -24
 	.cfi_offset w20, -32
-	mov	w0, #7
-	mov	w19, #7
-	bl	"_newref:int"
 Lloh32:
-	adrp	x1, l_.str2@PAGE
+	adrp	x19, l_.str0.1@PAGE
+	mov	w20, #3
 Lloh33:
-	adrp	x3, l_.str3@PAGE
-Lloh34:
-	add	x1, x1, l_.str2@PAGEOFF
-	mov	w8, #6
-	str	x0, [sp, #56]
-Lloh35:
-	add	x3, x3, l_.str3@PAGEOFF
-	mov	w0, #7
-	mov	w2, #6
-	str	w19, [sp, #24]
-	str	x1, [sp, #32]
-	str	w8, [sp, #8]
-	str	x3, [sp, #16]
-	bl	"_.add:string_string"
-	ldr	x19, [sp, #56]
-	str	w0, [sp, #40]
-	str	x1, [sp, #48]
-	mov	x0, x19
-	bl	"_ref:int"
-	ldr	x2, [sp, #48]
-	mov	x0, x19
-	ldr	w1, [sp, #40]
-	bl	l_mod.something
-	ldr	x0, [sp, #56]
-	bl	"_deref:int"
-	ldp	x29, x30, [sp, #80]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #64]             ; 16-byte Folded Reload
-	add	sp, sp, #96
-	ret
-	.loh AdrpAdd	Lloh33, Lloh35
-	.loh AdrpAdd	Lloh32, Lloh34
-	.cfi_endproc
-                                        ; -- End function
-	.p2align	2                               ; -- Begin function mod.something
-l_mod.something:                        ; @mod.something
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #112
-	stp	x22, x21, [sp, #64]             ; 16-byte Folded Spill
-	stp	x20, x19, [sp, #80]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #96]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 112
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	.cfi_offset w21, -40
-	.cfi_offset w22, -48
-Lloh36:
-	adrp	x3, l_.str0.1@PAGE
-	mov	x19, x0
-	mov	w8, #3
-Lloh37:
-	add	x3, x3, l_.str0.1@PAGEOFF
-	mov	w0, w1
-	mov	x1, x2
-	mov	w2, #3
-	str	x3, [sp, #32]
-	str	w8, [sp, #24]
-	bl	"_.add:string_string"
-	ldr	x8, [x19]
-	mov	w20, w0
-	mov	x21, x1
-	ldr	w0, [x8]
-	bl	"_.conv:int_string"
-	mov	w2, w0
-	mov	x3, x1
-	mov	w0, w20
-	mov	x1, x21
-	bl	"_.add:string_string"
-Lloh38:
-	adrp	x3, l_.str1.2@PAGE
-	mov	w8, #1
-Lloh39:
-	add	x3, x3, l_.str1.2@PAGEOFF
-	mov	w2, #1
-	str	w8, [sp, #8]
-	str	x3, [sp, #16]
-	bl	"_.add:string_string"
-	mov	w8, #2160
-	str	x1, [sp, #56]
-	stp	w8, w0, [sp, #44]
-	mov	w0, #2160
+	add	x19, x19, l_.str0.1@PAGEOFF
+	stp	wzr, w20, [x29, #-24]
+	ldur	w8, [x29, #-24]
+	cmp	w8, #9
+	b.gt	LBB33_2
+LBB33_1:                                ; %for.body0
+                                        ; =>This Inner Loop Header: Depth=1
+	ldur	w0, [x29, #-24]
 	bl	"_.conv:int_string"
 	bl	_.println
-	ldr	x1, [sp, #56]
-	ldr	w0, [sp, #48]
+	mov	x8, sp
+	sub	x9, x8, #16
+	mov	sp, x9
+	mov	w0, #3
+	mov	x1, x19
+	stur	w20, [x8, #-16]
+	stur	x19, [x8, #-8]
 	bl	_.println
-	ldp	x29, x30, [sp, #96]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #80]             ; 16-byte Folded Reload
-	ldp	x22, x21, [sp, #64]             ; 16-byte Folded Reload
-	add	sp, sp, #112
+	ldur	w8, [x29, #-24]
+	add	w8, w8, #1
+	stur	w8, [x29, #-24]
+	mov	w8, w8
+	cmp	w8, #9
+	b.le	LBB33_1
+LBB33_2:                                ; %for.end0
+	sub	sp, x29, #16
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
 	ret
-	.loh AdrpAdd	Lloh38, Lloh39
-	.loh AdrpAdd	Lloh36, Lloh37
+	.loh AdrpAdd	Lloh32, Lloh33
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal16,16byte_literals
@@ -2285,33 +2219,8 @@ l_.strZero:
 	.section	__TEXT,__const
 	.p2align	2                               ; @.str0.1
 l_.str0.1:
-	.long	32                              ; 0x20
-	.long	40                              ; 0x28
-	.long	120                             ; 0x78
-
-	.section	__TEXT,__literal4,4byte_literals
-	.p2align	2                               ; @.str1.2
-l_.str1.2:
-	.long	41                              ; 0x29
-
-	.section	__TEXT,__const
-	.p2align	2                               ; @.str2
-l_.str2:
-	.long	72                              ; 0x48
-	.long	101                             ; 0x65
-	.long	108                             ; 0x6c
-	.long	108                             ; 0x6c
+	.long	78                              ; 0x4e
 	.long	111                             ; 0x6f
-	.long	44                              ; 0x2c
-	.long	32                              ; 0x20
-
-	.p2align	2                               ; @.str3
-l_.str3:
-	.long	119                             ; 0x77
-	.long	111                             ; 0x6f
-	.long	114                             ; 0x72
-	.long	108                             ; 0x6c
-	.long	100                             ; 0x64
 	.long	33                              ; 0x21
 
 .subsections_via_symbols

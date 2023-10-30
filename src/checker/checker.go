@@ -30,7 +30,7 @@ func TypeCheck(program *ast.Program) *VariableProperties {
 	c := checker{
 		program,
 		program.Contents.Scope,
-		ast.NewFuncScope(nil, typing.Void),
+		program.FuncScope,
 		&VariableProperties{
 			make(TypeMap),
 			make(AutoTypeConvMap),
