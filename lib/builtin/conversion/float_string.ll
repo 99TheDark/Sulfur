@@ -1,6 +1,6 @@
 source_filename = "lib/builtin/conversion/float_string.ll"
 
-%type.utf8_string = type { i32, i32* }
+%type.string = type { i32, i32* }
 %union.anon = type { float }
 
 @FLOAT_POW5_INV_SPLIT = private unnamed_addr constant [31 x i64] [i64 576460752303423489, i64 461168601842738791, i64 368934881474191033, i64 295147905179352826, i64 472236648286964522, i64 377789318629571618, i64 302231454903657294, i64 483570327845851670, i64 386856262276681336, i64 309485009821345069, i64 495176015714152110, i64 396140812571321688, i64 316912650057057351, i64 507060240091291761, i64 405648192073033409, i64 324518553658426727, i64 519229685853482763, i64 415383748682786211, i64 332306998946228969, i64 531691198313966350, i64 425352958651173080, i64 340282366920938464, i64 544451787073501542, i64 435561429658801234, i64 348449143727040987, i64 557518629963265579, i64 446014903970612463, i64 356811923176489971, i64 570899077082383953, i64 456719261665907162, i64 365375409332725730], align 16
@@ -223,9 +223,9 @@ for.end:
     ret i32 %5
 }
 
-define private %type.utf8_string @normalString(float %num, i32 %bits) {
+define private %type.string @normalString(float %num, i32 %bits) {
 entry:
-    %.ret = alloca %type.utf8_string, align 8
+    %.ret = alloca %type.string, align 8
     %num.addr = alloca float, align 4
     %bits.addr = alloca i32, align 4
     %exponent = alloca i32, align 4
@@ -1108,16 +1108,16 @@ if.end344:
 
 if.end345:
     %220 = load i32, i32* %idx, align 4
-    %len = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 0
+    %len = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
     store i32 %220, i32* %len, align 8
     %221 = load i32, i32* %idx, align 4
     %conv346 = sext i32 %221 to i64
     %mul347 = mul i64 %conv346, 4
     %call348 = call noalias i8* @malloc(i64 %mul347)
     %222 = bitcast i8* %call348 to i32*
-    %chars = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 1
+    %chars = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
     store i32* %222, i32** %chars, align 8
-    %chars349 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 1
+    %chars349 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
     %223 = load i32*, i32** %chars349, align 8
     %224 = bitcast i32* %223 to i8*
     %225 = load i32*, i32** %result, align 8
@@ -1129,17 +1129,17 @@ if.end345:
     %228 = load i32*, i32** %result, align 8
     %229 = bitcast i32* %228 to i8*
     call void @free(i8* %229) 
-    %230 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
-    ret %type.utf8_string %230
+    %230 = load %type.string, %type.string* %.ret, align 8
+    ret %type.string %230
 }
 
-define %type.utf8_string @".conv:float_string"(float %num) {
+define %type.string @".conv:float_string"(float %num) {
 entry:
-    %.ret = alloca %type.utf8_string, align 8
+    %.ret = alloca %type.string, align 8
     %num.addr = alloca float, align 4
     %bits = alloca i32, align 4
     %.compoundliteral = alloca %union.anon, align 4
-    %str = alloca %type.utf8_string, align 8
+    %str = alloca %type.string, align 8
     %sign = alloca i32, align 4
     store float %num, float* %num.addr, align 4
     %f = bitcast %union.anon* %.compoundliteral to float*
@@ -1154,12 +1154,12 @@ entry:
     br i1 %cmp, label %if.then, label %if.else
 
 if.then:
-    %len = getelementptr inbounds %type.utf8_string, %type.utf8_string* %str, i32 0, i32 0
+    %len = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 0
     store i32 3, i32* %len, align 8
-    %chars = getelementptr inbounds %type.utf8_string, %type.utf8_string* %str, i32 0, i32 1
+    %chars = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
     store i32* getelementptr inbounds ([3 x i32], [3 x i32]* @strNaN, i64 0, i64 0), i32** %chars, align 8
-    %4 = bitcast %type.utf8_string* %.ret to i8*
-    %5 = bitcast %type.utf8_string* %str to i8*
+    %4 = bitcast %type.string* %.ret to i8*
+    %5 = bitcast %type.string* %str to i8*
     call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 8 %4, i8* align 8 %5, i64 16, i1 false)
     br label %return
 
@@ -1169,12 +1169,12 @@ if.else:
     br i1 %cmp1, label %if.then2, label %if.else5
 
 if.then2:
-    %len3 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %str, i32 0, i32 0
+    %len3 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 0
     store i32 3, i32* %len3, align 8
-    %chars4 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %str, i32 0, i32 1
+    %chars4 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
     store i32* getelementptr inbounds ([3 x i32], [3 x i32]* @strPosInf, i64 0, i64 0), i32** %chars4, align 8
-    %7 = bitcast %type.utf8_string* %.ret to i8*
-    %8 = bitcast %type.utf8_string* %str to i8*
+    %7 = bitcast %type.string* %.ret to i8*
+    %8 = bitcast %type.string* %str to i8*
     call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 8 %7, i8* align 8 %8, i64 16, i1 false)
     br label %return
 
@@ -1184,12 +1184,12 @@ if.else5:
     br i1 %cmp6, label %if.then7, label %if.else10
 
 if.then7:
-    %len8 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %str, i32 0, i32 0
+    %len8 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 0
     store i32 4, i32* %len8, align 8
-    %chars9 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %str, i32 0, i32 1
+    %chars9 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
     store i32* getelementptr inbounds ([4 x i32], [4 x i32]* @strNegInf, i64 0, i64 0), i32** %chars9, align 8
-    %10 = bitcast %type.utf8_string* %.ret to i8*
-    %11 = bitcast %type.utf8_string* %str to i8*
+    %10 = bitcast %type.string* %.ret to i8*
+    %11 = bitcast %type.string* %str to i8*
     call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 8 %10, i8* align 8 %11, i64 16, i1 false)
     br label %return
 
@@ -1207,33 +1207,33 @@ if.then12:
     br i1 %cmp13, label %if.then14, label %if.else17
 
 if.then14:
-    %len15 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %str, i32 0, i32 0
+    %len15 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 0
     store i32 3, i32* %len15, align 8
-    %chars16 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %str, i32 0, i32 1
+    %chars16 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
     store i32* getelementptr inbounds ([3 x i32], [3 x i32]* @strPosZero, i64 0, i64 0), i32** %chars16, align 8
     br label %if.end
 
 if.else17:
-    %len18 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %str, i32 0, i32 0
+    %len18 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 0
     store i32 4, i32* %len18, align 8
-    %chars19 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %str, i32 0, i32 1
+    %chars19 = getelementptr inbounds %type.string, %type.string* %str, i32 0, i32 1
     store i32* getelementptr inbounds ([4 x i32], [4 x i32]* @strNegZero, i64 0, i64 0), i32** %chars19, align 8
     br label %if.end
 
 if.end:
-    %15 = bitcast %type.utf8_string* %.ret to i8*
-    %16 = bitcast %type.utf8_string* %str to i8*
+    %15 = bitcast %type.string* %.ret to i8*
+    %16 = bitcast %type.string* %str to i8*
     call void @llvm.memcpy.p0i8.p0i8.i64(i8* align 8 %15, i8* align 8 %16, i64 16, i1 false)
     br label %return
 
 if.else20:
     %17 = load float, float* %num.addr, align 4
     %18 = load i32, i32* %bits, align 4
-    %call = call %type.utf8_string @normalString(float %17, i32 %18)
-    store %type.utf8_string %call, %type.utf8_string* %.ret, align 8
+    %call = call %type.string @normalString(float %17, i32 %18)
+    store %type.string %call, %type.string* %.ret, align 8
     br label %return
 
 return:
-    %19 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
-    ret %type.utf8_string %19
+    %19 = load %type.string, %type.string* %.ret, align 8
+    ret %type.string %19
 }

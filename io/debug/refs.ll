@@ -1,7 +1,7 @@
 ; ModuleID = 'script.su'
 source_filename = "script.su"
 
-%type.string = type { i32, i32, i8* }
+%type.string = type { i32, i32* }
 %ref.int = type { i32*, i32 }
 
 define void @main() {

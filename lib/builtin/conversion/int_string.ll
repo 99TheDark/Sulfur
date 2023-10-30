@@ -1,15 +1,15 @@
 source_filename = "lib/builtin/conversion/int_string.ll"
 
-%type.utf8_string = type { i32, i32* }
+%type.string = type { i32, i32* }
 
 declare i8* @malloc(i32)
 declare void @free(i8*)
 
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
 
-define %type.utf8_string @".conv:int_string"(i32 %int) {
+define %type.string @".conv:int_string"(i32 %int) {
 entry:
-    %.ret = alloca %type.utf8_string
+    %.ret = alloca %type.string
     %int.addr = alloca i32
     store i32 %int, i32* %int.addr, align 4
     %i = alloca i32
@@ -20,9 +20,9 @@ entry:
     br i1 %0, label %if.then1, label %if.end1
 
 if.then1:
-    %1 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 0
+    %1 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
     store i32 1, i32* %1, align 8
-    %2 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 1
+    %2 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
     %3 = getelementptr inbounds [1 x i32], [1 x i32]* @.strZero, i32 0, i32 0
     store i32* %3, i32** %2, align 8
     br label %exit
@@ -66,18 +66,18 @@ while.end:
     %20 = load i32, i32* %sign, align 4
     %21 = add i32 %19, %20
     store i32 %21, i32* %size, align 4
-    %22 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 0
+    %22 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
     store i32 %21, i32* %22, align 8
     %23 = mul i32 %21, 4
     %24 = call i8* @malloc(i32 %23)
     %25 = bitcast i8* %24 to i32*
-    %26 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 1
+    %26 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
     store i32* %25, i32** %26, align 8
     %27 = icmp ne i32 %20, 0
     br i1 %27, label %if.then3, label %if.else3
 
 if.then3:
-    %28 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 1
+    %28 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
     %29 = load i32*, i32** %28, align 8
     %30 = getelementptr inbounds i32, i32* %29, i32 0
     store i32 45, i32* %30, align 4
@@ -108,7 +108,7 @@ for.body:
     %40 = add i32 %38, %39
     %41 = getelementptr inbounds i32, i32* %37, i32 %40
     %42 = load i32, i32* %41, align 4
-    %43 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 1
+    %43 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
     %44 = load i32*, i32** %43, align 8
     %45 = getelementptr inbounds i32, i32* %44, i32 %39
     store i32 %42, i32* %45, align 4
@@ -127,6 +127,6 @@ for.end:
     br label %exit
 
 exit:
-    %50 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
-    ret %type.utf8_string %50
+    %50 = load %type.string, %type.string* %.ret, align 8
+    ret %type.string %50
 }

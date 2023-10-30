@@ -2,7 +2,7 @@ source_filename = "lib/builtin/function/print.ll"
 
 declare void @putchar(i32)
 
-%type.utf8_string = type { i32, i32* }
+%type.string = type { i32, i32* }
 
 define private void @printChar(i32 %cp) {
 entry:
@@ -85,23 +85,23 @@ if.end35:
     ret void
 }
 
-define void @.print(%type.utf8_string %str) {
+define void @.print(%type.string %str) {
 entry:
-    %ptr.str = alloca %type.utf8_string, align 8
-	store %type.utf8_string %str, %type.utf8_string* %ptr.str, align 8
+    %ptr.str = alloca %type.string, align 8
+	store %type.string %str, %type.string* %ptr.str, align 8
     %i = alloca i32
     store i32 0, i32* %i, align 4
     br label %for.cond
 
 for.cond:
     %0 = load i32, i32* %i, align 4
-    %1 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %ptr.str, i32 0, i32 0
+    %1 = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 0
     %2 = load i32, i32* %1, align 4
     %3 = icmp slt i32 %0, %2
     br i1 %3, label %for.body, label %for.exit
 
 for.body:
-    %4 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %ptr.str, i32 0, i32 1
+    %4 = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 1
     %5 = load i32*, i32** %4, align 4
     %6 = load i32, i32* %i, align 4
     %7 = getelementptr inbounds i32, i32* %5, i32 %6
@@ -119,9 +119,9 @@ for.exit:
     ret void
 }
 
-define void @.println(%type.utf8_string %str) {
+define void @.println(%type.string %str) {
 entry:
-    call void @.print(%type.utf8_string %str)
+    call void @.print(%type.string %str)
     call void @putchar(i32 10)
     ret void
 }
