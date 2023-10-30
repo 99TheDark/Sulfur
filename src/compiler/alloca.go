@@ -1,7 +1,6 @@
 package compiler
 
 import (
-	"fmt"
 	"sulfur/src/ast"
 
 	"github.com/llir/llvm/ir/types"
@@ -21,7 +20,5 @@ func (g *generator) genAllocas(fnscope *ast.FuncScope) {
 		alloca := bl.NewAlloca(typ)
 		alloca.LocalName = decl.LLName()
 		g.topfun.Decls[decl] = alloca
-
-		fmt.Println(alloca.LLString())
 	}
 }

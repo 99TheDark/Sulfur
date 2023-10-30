@@ -1987,19 +1987,6 @@ LBB32_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 16
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	bl	l_mod.otherthing
-	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
-	ret
-	.cfi_endproc
-                                        ; -- End function
-	.p2align	2                               ; -- Begin function mod.otherthing
-l_mod.otherthing:                       ; @mod.otherthing
-	.cfi_startproc
-; %bb.0:                                ; %entry
 	sub	sp, sp, #48
 	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
 	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
@@ -2015,6 +2002,8 @@ l_mod.otherthing:                       ; @mod.otherthing
 	bl	"_ref:int"
 	mov	x0, x19
 	bl	l_mod.something
+	ldr	x0, [sp, #8]
+	bl	"_deref:int"
 	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
 	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
 	add	sp, sp, #48

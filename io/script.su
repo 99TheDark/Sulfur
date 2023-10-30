@@ -7,9 +7,5 @@ func something(&int ref) {
     println(msg)
 }
 
-func otherthing() {
-    x := 7
-    something(&x)
-}
-
-otherthing()
+x := 7
+something(&x)

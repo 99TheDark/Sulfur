@@ -109,6 +109,8 @@ func Generate(program *ast.Program, props *checker.VariableProperties) string {
 	g.genComps()
 	g.genTypeConvs()
 
+	g.genAllocas(g.topfun)
+
 	for _, x := range program.Contents.Body {
 		g.genStmt(x)
 	}

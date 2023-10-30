@@ -1985,21 +1985,14 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  call void @mod.otherthing()
-  br label %exit
-
-exit:                                             ; preds = %entry
-  ret void
-}
-
-define private void @mod.otherthing() {
-entry:
   %x = alloca %ref.int*, align 8
   %0 = call %ref.int* @"newref:int"(i32 7)
   store %ref.int* %0, %ref.int** %x, align 8
   %1 = load %ref.int*, %ref.int** %x, align 8
   call void @"ref:int"(%ref.int* %1)
   call void @mod.something(%ref.int* %1)
+  %2 = load %ref.int*, %ref.int** %x, align 8
+  call void @"deref:int"(%ref.int* %2)
   br label %exit
 
 exit:                                             ; preds = %entry
