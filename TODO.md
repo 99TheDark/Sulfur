@@ -6,8 +6,6 @@
 - Delete & warn dead code (code after return, break or continue, it should be the last statement in the scope)
 - Better escaped characters
 - Use copy string when using a string
-- Complex numbers
-- Complex number to string
 - Implement autofree
 - Unsigned integer & byte literals
 - Better token to string handling
@@ -21,3 +19,5 @@
 - Add `string.length` and `string[idx]`
 - Raw strings using backticks
 - String interpolation
+- Complex numbers
+- Complex number to string
