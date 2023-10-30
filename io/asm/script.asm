@@ -425,24 +425,26 @@ Lloh5:
 	tbz	w0, #0, LBB10_2
 ; %bb.1:                                ; %if.then
 Lloh6:
-	adrp	x2, l_.strTrue@PAGE
-	mov	w1, #4
+	adrp	x9, l_.strTrue@PAGE
+	mov	w8, #4
 Lloh7:
-	add	x2, x2, l_.strTrue@PAGEOFF
-	stp	w1, w1, [sp]
-	mov	w0, w1
-	str	x2, [sp, #8]
+	add	x9, x9, l_.strTrue@PAGEOFF
+	str	w8, [sp]
+	mov	w0, w8
+	str	x9, [sp, #8]
+	mov	x1, x9
 	add	sp, sp, #16
 	ret
 LBB10_2:                                ; %if.else
 Lloh8:
-	adrp	x2, l_.strFalse@PAGE
-	mov	w1, #5
+	adrp	x9, l_.strFalse@PAGE
+	mov	w8, #5
 Lloh9:
-	add	x2, x2, l_.strFalse@PAGEOFF
-	stp	w1, w1, [sp]
-	mov	w0, w1
-	str	x2, [sp, #8]
+	add	x9, x9, l_.strFalse@PAGEOFF
+	str	w8, [sp]
+	mov	w0, w8
+	str	x9, [sp, #8]
+	mov	x1, x9
 	add	sp, sp, #16
 	ret
 	.loh AdrpAdd	Lloh6, Lloh7
@@ -2075,6 +2077,15 @@ Lloh43:
 	mov	w0, w19
 	mov	x1, x20
 	bl	"_.add:string_string"
+	mov	w19, w0
+	mov	w0, #1
+	mov	x20, x1
+	bl	"_.conv:bool_string"
+	mov	w2, w0
+	mov	x3, x1
+	mov	w0, w19
+	mov	x1, x20
+	bl	"_.add:string_string"
 	bl	_.println
 	ldp	x29, x30, [sp, #176]            ; 16-byte Folded Reload
 	ldp	x20, x19, [sp, #160]            ; 16-byte Folded Reload
@@ -2089,13 +2100,22 @@ Lloh43:
 	.loh AdrpAdd	Lloh32, Lloh34
 	.cfi_endproc
                                         ; -- End function
-	.section	__TEXT,__literal4,4byte_literals
-l_.strTrue:                             ; @.strTrue
-	.ascii	"true"
+	.section	__TEXT,__literal16,16byte_literals
+	.p2align	2                               ; @.strTrue
+l_.strTrue:
+	.long	116                             ; 0x74
+	.long	114                             ; 0x72
+	.long	117                             ; 0x75
+	.long	101                             ; 0x65
 
 	.section	__TEXT,__const
-l_.strFalse:                            ; @.strFalse
-	.ascii	"false"
+	.p2align	2                               ; @.strFalse
+l_.strFalse:
+	.long	102                             ; 0x66
+	.long	97                              ; 0x61
+	.long	108                             ; 0x6c
+	.long	115                             ; 0x73
+	.long	101                             ; 0x65
 
 	.p2align	4                               ; @FLOAT_POW5_INV_SPLIT
 l_FLOAT_POW5_INV_SPLIT:

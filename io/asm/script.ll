@@ -77,7 +77,9 @@ entry:
 	%42 = load float, float* %w, align 4
 	%43 = call %type.utf8_string @".conv:float_string"(float %42)
 	%44 = call %type.utf8_string @".add:string_string"(%type.utf8_string %41, %type.utf8_string %43)
-	call void @.println(%type.utf8_string %44)
+	%45 = call %type.utf8_string @".conv:bool_string"(i1 true)
+	%46 = call %type.utf8_string @".add:string_string"(%type.utf8_string %44, %type.utf8_string %45)
+	call void @.println(%type.utf8_string %46)
 	br label %exit
 
 exit:
@@ -91,3 +93,5 @@ declare %type.utf8_string @".add:string_string"(%type.utf8_string %0, %type.utf8
 declare %type.utf8_string @".conv:int_string"(i32 %0)
 
 declare %type.utf8_string @".conv:float_string"(float %0)
+
+declare %type.utf8_string @".conv:bool_string"(i1 %0)

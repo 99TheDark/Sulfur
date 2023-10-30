@@ -45,6 +45,6 @@ entry:
     %18 = mul i32 %3, 4
     call void @llvm.memcpy.p0i32.p0i32.i32(i32* %15, i32* %17, i32 %18, i1 false)
 
-    %final = load %type.utf8_string, %type.utf8_string* %.ret, align 8
-    ret %type.utf8_string %final
+    %19 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
+    ret %type.utf8_string %19
 }

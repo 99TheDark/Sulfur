@@ -9,8 +9,8 @@ source_filename = "llvm-link"
 %ref.int = type { i32*, i32 }
 %ref.string = type { %type.string*, i32 }
 
-@.strTrue = private unnamed_addr constant [4 x i8] c"true", align 1
-@.strFalse = private unnamed_addr constant [5 x i8] c"false", align 1
+@.strTrue = private unnamed_addr constant [4 x i32] [i32 116, i32 114, i32 117, i32 101], align 4
+@.strFalse = private unnamed_addr constant [5 x i32] [i32 102, i32 97, i32 108, i32 115, i32 101], align 4
 @FLOAT_POW5_INV_SPLIT = private unnamed_addr constant [31 x i64] [i64 576460752303423489, i64 461168601842738791, i64 368934881474191033, i64 295147905179352826, i64 472236648286964522, i64 377789318629571618, i64 302231454903657294, i64 483570327845851670, i64 386856262276681336, i64 309485009821345069, i64 495176015714152110, i64 396140812571321688, i64 316912650057057351, i64 507060240091291761, i64 405648192073033409, i64 324518553658426727, i64 519229685853482763, i64 415383748682786211, i64 332306998946228969, i64 531691198313966350, i64 425352958651173080, i64 340282366920938464, i64 544451787073501542, i64 435561429658801234, i64 348449143727040987, i64 557518629963265579, i64 446014903970612463, i64 356811923176489971, i64 570899077082383953, i64 456719261665907162, i64 365375409332725730], align 16
 @FLOAT_POW5_SPLIT = private unnamed_addr constant [47 x i64] [i64 1152921504606846976, i64 1441151880758558720, i64 1801439850948198400, i64 2251799813685248000, i64 1407374883553280000, i64 1759218604441600000, i64 2199023255552000000, i64 1374389534720000000, i64 1717986918400000000, i64 2147483648000000000, i64 1342177280000000000, i64 1677721600000000000, i64 2097152000000000000, i64 1310720000000000000, i64 1638400000000000000, i64 2048000000000000000, i64 1280000000000000000, i64 1600000000000000000, i64 2000000000000000000, i64 1250000000000000000, i64 1562500000000000000, i64 1953125000000000000, i64 1220703125000000000, i64 1525878906250000000, i64 1907348632812500000, i64 1192092895507812500, i64 1490116119384765625, i64 1862645149230957031, i64 1164153218269348144, i64 1455191522836685180, i64 1818989403545856475, i64 2273736754432320594, i64 1421085471520200371, i64 1776356839400250464, i64 2220446049250313080, i64 1387778780781445675, i64 1734723475976807094, i64 2168404344971008868, i64 1355252715606880542, i64 1694065894508600678, i64 2117582368135750847, i64 1323488980084844279, i64 1654361225106055349, i64 2067951531382569187, i64 1292469707114105741, i64 1615587133892632177, i64 2019483917365790221], align 16
 @strNaN = private unnamed_addr constant [3 x i32] [i32 110, i32 97, i32 110], align 4
@@ -239,8 +239,8 @@ entry:
   %17 = load i32*, i32** %16, align 8
   %18 = mul i32 %3, 4
   call void @llvm.memcpy.p0i32.p0i32.i32(i32* %15, i32* %17, i32 %18, i1 false)
-  %final = load %type.utf8_string, %type.utf8_string* %.ret, align 8
-  ret %type.utf8_string %final
+  %19 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
+  ret %type.utf8_string %19
 }
 
 define void @.println(%type.utf8_string %str) {
@@ -411,34 +411,30 @@ entry:
   ret void
 }
 
-define %type.string @".conv:bool_string"(i1 %bool) {
+define %type.utf8_string @".conv:bool_string"(i1 %bool) {
 entry:
-  %.ret = alloca %type.string, align 8
+  %.ret = alloca %type.utf8_string, align 8
   br i1 %bool, label %if.then, label %if.else
 
 if.then:                                          ; preds = %entry
-  %0 = getelementptr inbounds [4 x i8], [4 x i8]* @.strTrue, i32 0, i32 0
-  %1 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
-  store i32 4, i32* %1, align 8
-  %2 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
-  store i32 4, i32* %2, align 8
-  %3 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
-  store i8* %0, i8** %3, align 8
+  %0 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 0
+  store i32 4, i32* %0, align 8
+  %1 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 1
+  %2 = getelementptr inbounds [4 x i32], [4 x i32]* @.strTrue, i32 0, i32 0
+  store i32* %2, i32** %1, align 8
   br label %exit
 
 if.else:                                          ; preds = %entry
-  %4 = getelementptr inbounds [5 x i8], [5 x i8]* @.strFalse, i32 0, i32 0
-  %5 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
-  store i32 5, i32* %5, align 8
-  %6 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
-  store i32 5, i32* %6, align 8
-  %7 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 2
-  store i8* %4, i8** %7, align 8
+  %3 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 0
+  store i32 5, i32* %3, align 8
+  %4 = getelementptr inbounds %type.utf8_string, %type.utf8_string* %.ret, i32 0, i32 1
+  %5 = getelementptr inbounds [5 x i32], [5 x i32]* @.strFalse, i32 0, i32 0
+  store i32* %5, i32** %4, align 8
   br label %exit
 
 exit:                                             ; preds = %if.else, %if.then
-  %8 = load %type.string, %type.string* %.ret, align 8
-  ret %type.string %8
+  %6 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
+  ret %type.utf8_string %6
 }
 
 define %ref.float* @"newref:float"(float %value) {
@@ -2056,7 +2052,9 @@ entry:
   %42 = load float, float* %w, align 4
   %43 = call %type.utf8_string @".conv:float_string"(float %42)
   %44 = call %type.utf8_string @".add:string_string"(%type.utf8_string %41, %type.utf8_string %43)
-  call void @.println(%type.utf8_string %44)
+  %45 = call %type.utf8_string @".conv:bool_string"(i1 true)
+  %46 = call %type.utf8_string @".add:string_string"(%type.utf8_string %44, %type.utf8_string %45)
+  call void @.println(%type.utf8_string %46)
   br label %exit
 
 exit:                                             ; preds = %entry
