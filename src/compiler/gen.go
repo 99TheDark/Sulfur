@@ -21,7 +21,6 @@ type generator struct {
 	bl       *ir.Block // TODO: Move bl to context
 	breaks   map[*ir.Block]bool
 	str      types.Type
-	cmplx    types.Type
 	refs     map[typing.Type]ref_bundle
 	strs     map[string]StringGlobal
 	builtins llvm_builtins
@@ -62,11 +61,6 @@ func Generate(program *ast.Program, props *checker.VariableProperties) string {
 		types.I32Ptr, // address
 	))
 
-	cmplx := mod.NewTypeDef("type.complex", types.NewStruct(
-		types.Float, // real
-		types.Float, // imaginary
-	))
-
 	main := mod.NewFunc("main", types.Void)
 	bl := main.NewBlock("entry")
 	exit := main.NewBlock("exit")
@@ -90,7 +84,6 @@ func Generate(program *ast.Program, props *checker.VariableProperties) string {
 		bl,
 		make(map[*ir.Block]bool),
 		str,
-		cmplx,
 		make(map[typing.Type]ref_bundle),
 		make(map[string]StringGlobal),
 		llvm_builtins{

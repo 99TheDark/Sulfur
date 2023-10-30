@@ -99,7 +99,7 @@ for.cond:
     %34 = load i32, i32* %j, align 4
     %35 = load i32, i32* %size, align 4
     %36 = icmp slt i32 %34, %35
-    br i1 %36, label %for.body, label %exit
+    br i1 %36, label %for.body, label %for.end
 
 for.body:
     %37 = load i32*, i32** %buf, align 8
@@ -120,10 +120,13 @@ for.inc:
     store i32 %47, i32* %j, align 4
     br label %for.cond
 
-exit:
+for.end:
     %48 = load i32*, i32** %buf, align 8
     %49 = bitcast i32* %48 to i8*
     call void @free(i8* %49)
+    br label %exit
+
+exit:
     %50 = load %type.utf8_string, %type.utf8_string* %.ret, align 8
     ret %type.utf8_string %50
 }
