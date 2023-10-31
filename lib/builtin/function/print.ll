@@ -89,7 +89,7 @@ define void @.print(%type.string %str) {
 entry:
     %ptr.str = alloca %type.string, align 8
 	store %type.string %str, %type.string* %ptr.str, align 8
-    %i = alloca i32
+    %i = alloca i32, align 4
     store i32 0, i32* %i, align 4
     br label %for.cond
 

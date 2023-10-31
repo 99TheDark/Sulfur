@@ -15,7 +15,7 @@ entry:
 
 define %type.string @".copy:string"(%type.string %str) {
 entry:
-    %.ret = alloca %type.string
+    %.ret = alloca %type.string, align 8
     %ptr.str = alloca %type.string, align 8
 	store %type.string %str, %type.string* %ptr.str, align 8
     %0 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0

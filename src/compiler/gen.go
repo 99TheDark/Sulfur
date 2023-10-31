@@ -31,6 +31,7 @@ func (g *generator) scope(scope *ast.Scope, body func()) {
 	g.top = scope
 	body()
 	g.leaveRefs()
+	g.autoFree()
 	g.top = scope.Parent
 }
 

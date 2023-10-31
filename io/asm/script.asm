@@ -1774,25 +1774,35 @@ _.copy:                                 ; @.copy
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #32
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
+	sub	sp, sp, #80
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 80
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
 Lloh28:
-	adrp	x1, l_.str0@PAGE
-	mov	w8, #5
+	adrp	x8, l_.str0@PAGE
 Lloh29:
-	add	x1, x1, l_.str0@PAGEOFF
+	adrp	x1, l_.str1@PAGE
+Lloh30:
+	add	x8, x8, l_.str0@PAGEOFF
+	mov	w9, #5
+Lloh31:
+	add	x1, x1, l_.str1@PAGEOFF
 	mov	w0, #5
-	str	w8, [sp]
+	str	x8, [sp, #24]
+	str	x8, [sp, #56]
+	str	w9, [sp, #16]
+	str	w9, [sp, #48]
+	str	w9, [sp]
 	str	x1, [sp, #8]
-	bl	_.copy
+	str	w9, [sp, #32]
+	str	x1, [sp, #40]
 	bl	_.println
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #32
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	add	sp, sp, #80
 	ret
-	.loh AdrpAdd	Lloh28, Lloh29
+	.loh AdrpAdd	Lloh29, Lloh31
+	.loh AdrpAdd	Lloh28, Lloh30
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal16,16byte_literals
@@ -1976,10 +1986,18 @@ l_.strZero:
 	.section	__TEXT,__const
 	.p2align	2                               ; @.str0
 l_.str0:
-	.long	104                             ; 0x68
+	.long	72                              ; 0x48
 	.long	101                             ; 0x65
 	.long	108                             ; 0x6c
 	.long	108                             ; 0x6c
 	.long	111                             ; 0x6f
+
+	.p2align	2                               ; @.str1
+l_.str1:
+	.long	87                              ; 0x57
+	.long	111                             ; 0x6f
+	.long	114                             ; 0x72
+	.long	108                             ; 0x6c
+	.long	100                             ; 0x64
 
 .subsections_via_symbols

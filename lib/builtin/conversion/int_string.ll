@@ -9,13 +9,14 @@ declare void @free(i8*)
 
 define %type.string @".conv:int_string"(i32 %int) {
 entry:
-    %.ret = alloca %type.string
-    %int.addr = alloca i32
+    %.ret = alloca %type.string, align 8
+    %int.addr = alloca i32, align 4
     store i32 %int, i32* %int.addr, align 4
-    %i = alloca i32
-    %sign = alloca i32
-    %buf = alloca i32*
-    %size = alloca i32
+    %i = alloca i32, align 4
+    %sign = alloca i32, align 4
+    %buf = alloca i32*, align 4
+    %size = alloca i32, align 4
+    %j = alloca i32, align 4
     %0 = icmp eq i32 %int, 0
     br i1 %0, label %if.then1, label %if.end1
 
@@ -91,7 +92,6 @@ if.else3:
 
 if.end3:
     %33 = load i32, i32* %sign, align 4
-    %j = alloca i32
     store i32 %33, i32* %j, align 4
     br label %for.cond
 

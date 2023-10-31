@@ -14,7 +14,7 @@ entry:
 	%0 = getelementptr inbounds [17 x i32], [17 x i32]* @.strFree, i32 0, i32 0
 	%1 = alloca %type.string, align 8
 	%2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-	store i32 17, i32* %2, align 8
+	store i32 17, i32* %2, align 4
 	%3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
 	store i32* %0, i32** %3, align 8
 	%4 = load %type.string, %type.string* %1, align 8

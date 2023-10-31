@@ -13,6 +13,7 @@
 - Remove allocas from single-use variables
 - Add `string.length` and `string[idx]`
 - Raw strings using backticks
+- Loop blocks
 - String interpolation
 - Complex numbers
 - Complex number to string

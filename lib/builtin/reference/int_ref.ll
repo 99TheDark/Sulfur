@@ -28,7 +28,7 @@ entry:
     store i32 %3, i32* %5, align 4
     %6 = load %ref.int*, %ref.int** %ref, align 8
     %count = getelementptr inbounds %ref.int, %ref.int* %6, i32 0, i32 1
-    store i32 0, i32* %count, align 8
+    store i32 0, i32* %count, align 4
     %7 = load %ref.int*, %ref.int** %ref, align 8
     ret %ref.int* %7
 }
@@ -36,20 +36,20 @@ entry:
 define void @"ref:int"(%ref.int* %ref) {
 entry:
     %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
-    %1 = load i32, i32* %0, align 8
+    %1 = load i32, i32* %0, align 4
     %2 = add i32 %1, 1
     call void @countMsg(i32 %2)
-    store i32 %2, i32* %0, align 8
+    store i32 %2, i32* %0, align 4
     ret void
 }
 
 define void @"deref:int"(%ref.int* %ref) {
 entry:
     %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
-    %1 = load i32, i32* %0, align 8
+    %1 = load i32, i32* %0, align 4
     %2 = add i32 %1, -1
     call void @countMsg(i32 %2)
-    store i32 %2, i32* %0, align 8
+    store i32 %2, i32* %0, align 4
     %3 = icmp eq i32 %2, 0
     br i1 %3, label %if.then, label %exit
 
