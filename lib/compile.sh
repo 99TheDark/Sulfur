@@ -10,3 +10,4 @@ done
 
 bc=(./bytecode/*.bc)
 llvm-link "${bc[@]}" -o linked.bc
+llvm-dis linked.bc -o linked.ll

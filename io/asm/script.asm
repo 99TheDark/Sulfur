@@ -1723,171 +1723,16 @@ LBB25_2:                                ; %if.then
 	ret
 	.cfi_endproc
                                         ; -- End function
-	.globl	_.refMsg                        ; -- Begin function .refMsg
+	.globl	_.copy                          ; -- Begin function .copy
 	.p2align	2
-_.refMsg:                               ; @.refMsg
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #80
-	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
-	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 80
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	.cfi_offset w21, -40
-	.cfi_offset w22, -48
-	mov	w19, w1
-	bl	"_.conv:int_string"
-	mov	x8, #9
-Lloh28:
-	adrp	x5, l_.str0@PAGE
-	movk	x8, #9, lsl #32
-Lloh29:
-	add	x5, x5, l_.str0@PAGEOFF
-	mov	w3, #9
-	mov	w4, #9
-	stp	x8, x5, [sp, #16]
-	bl	"_.add:string_string"
-	mov	w20, w0
-	mov	w0, w19
-	mov	w21, w1
-	mov	x22, x2
-	bl	"_.conv:int_string"
-	mov	w3, w0
-	mov	w4, w1
-	mov	x5, x2
-	mov	w0, w20
-	mov	w1, w21
-	mov	x2, x22
-	bl	"_.add:string_string"
-	mov	x8, #11
-Lloh30:
-	adrp	x5, l_.str1@PAGE
-	movk	x8, #11, lsl #32
-Lloh31:
-	add	x5, x5, l_.str1@PAGEOFF
-	mov	w3, #11
-	mov	w4, #11
-	stp	x8, x5, [sp]
-	bl	"_.add:string_string"
-	bl	_.println
-	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
-	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
-	add	sp, sp, #80
-	ret
-	.loh AdrpAdd	Lloh30, Lloh31
-	.loh AdrpAdd	Lloh28, Lloh29
-	.cfi_endproc
-                                        ; -- End function
-	.globl	_.print_utf8                    ; -- Begin function .print_utf8
-	.p2align	2
-_.print_utf8:                           ; @.print_utf8
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #48
-	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 48
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	stp	wzr, w0, [sp, #12]
-	str	x1, [sp, #24]
-	ldp	w8, w9, [sp, #12]
-	cmp	w8, w9
-	b.ge	LBB27_2
-LBB27_1:                                ; %for.body
-                                        ; =>This Inner Loop Header: Depth=1
-	ldrsw	x8, [sp, #12]
-	ldr	x9, [sp, #24]
-	ldr	w0, [x9, x8, lsl #2]
-	bl	l_printChar.9
-	ldr	w8, [sp, #12]
-	add	w8, w8, #1
-	str	w8, [sp, #12]
-	ldp	w8, w9, [sp, #12]
-	cmp	w8, w9
-	b.lt	LBB27_1
-LBB27_2:                                ; %for.exit
-	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
-	add	sp, sp, #48
-	ret
-	.cfi_endproc
-                                        ; -- End function
-	.p2align	2                               ; -- Begin function printChar.9
-l_printChar.9:                          ; @printChar.9
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #48
-	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 48
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	cmp	w0, #128
-	str	w0, [sp, #12]
-	b.lt	LBB28_7
-; %bb.1:                                ; %if.else
-	ldr	w8, [sp, #12]
-	cmp	w0, #2047
-	b.gt	LBB28_3
-; %bb.2:                                ; %if.then2
-	asr	w8, w8, #6
-	orr	w0, w8, #0xc0
-	b	LBB28_6
-LBB28_3:                                ; %if.else6
-	ldr	w9, [sp, #12]
-	cmp	w8, #16, lsl #12                ; =65536
-	b.ge	LBB28_5
-; %bb.4:                                ; %if.then8
-	asr	w8, w9, #12
-	orr	w0, w8, #0xe0
-	bl	_putchar
-	ldr	w8, [sp, #12]
-	mov	w0, #128
-	bfxil	w0, w8, #6, #6
-	b	LBB28_6
-LBB28_5:                                ; %if.else19
-	asr	w8, w9, #18
-	orr	w0, w8, #0xf0
-	bl	_putchar
-	ldr	w8, [sp, #12]
-	mov	w0, #128
-	mov	w19, #128
-	bfxil	w0, w8, #12, #6
-	bl	_putchar
-	ldr	w8, [sp, #12]
-	bfxil	w19, w8, #6, #6
-	mov	w0, w19
-LBB28_6:                                ; %if.end34
-	bl	_putchar
-	ldr	w8, [sp, #12]
-	mov	w0, #128
-	bfxil	w0, w8, #0, #6
-LBB28_7:                                ; %if.end35
-	bl	_putchar
-	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #48
-	ret
-	.cfi_endproc
-                                        ; -- End function
-	.globl	_.println_utf8                  ; -- Begin function .println_utf8
-	.p2align	2
-_.println_utf8:                         ; @.println_utf8
+_.copy:                                 ; @.copy
 	.cfi_startproc
 ; %bb.0:                                ; %entry
 	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
 	.cfi_def_cfa_offset 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	bl	_.print_utf8
-	mov	w0, #10
-	bl	_putchar
+	bl	"_.copy:string"
 	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret
 	.cfi_endproc
@@ -1924,99 +1769,30 @@ _.println_utf8:                         ; @.println_utf8
 	ret
 	.cfi_endproc
                                         ; -- End function
-	.globl	"_ref:string"                   ; -- Begin function ref:string
-	.p2align	2
-"_ref:string":                          ; @"ref:string"
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #64
-	stp	x22, x21, [sp, #16]             ; 16-byte Folded Spill
-	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 64
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	.cfi_offset w21, -40
-	.cfi_offset w22, -48
-	mov	w21, w0
-	mov	w0, #4
-	mov	x19, x2
-	mov	w20, w1
-	bl	_malloc
-	mov	x8, x0
-	mov	w9, #1
-	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
-	str	x0, [sp]
-	mov	x0, sp
-	stp	w21, w20, [x8]
-	str	x19, [x8, #8]
-	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
-	str	w9, [sp, #8]
-	ldp	x22, x21, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #64
-	ret
-	.cfi_endproc
-                                        ; -- End function
-	.globl	"_deref:string"                 ; -- Begin function deref:string
-	.p2align	2
-"_deref:string":                        ; @"deref:string"
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 16
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	ldr	w8, [x0, #8]
-	subs	w8, w8, #1
-	str	w8, [x0, #8]
-	b.eq	LBB32_2
-; %bb.1:                                ; %exit
-	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
-	ret
-LBB32_2:                                ; %if.then
-	ldr	x0, [x0]
-	bl	_free
-	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
-	ret
-	.cfi_endproc
-                                        ; -- End function
 	.globl	_main                           ; -- Begin function main
 	.p2align	2
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #64
-	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 64
+	sub	sp, sp, #32
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 32
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-Lloh32:
-	adrp	x19, l_.str0.1@PAGE
-	mov	w8, #3
-	mov	w9, #4
-Lloh33:
-	add	x19, x19, l_.str0.1@PAGEOFF
-	mov	w0, #3
-	str	w8, [sp, #28]
-	str	w9, [sp, #8]
-	str	x19, [sp, #16]
-	bl	"_.conv:int_string"
-	mov	w2, w0
-	mov	x3, x1
-	mov	w0, #4
-	mov	x1, x19
-	bl	"_.add:string_string"
+Lloh28:
+	adrp	x1, l_.str0@PAGE
+	mov	w8, #5
+Lloh29:
+	add	x1, x1, l_.str0@PAGEOFF
+	mov	w0, #5
+	str	w8, [sp]
+	str	x1, [sp, #8]
+	bl	_.copy
 	bl	_.println
-	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
-	add	sp, sp, #64
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #32
 	ret
-	.loh AdrpAdd	Lloh32, Lloh33
+	.loh AdrpAdd	Lloh28, Lloh29
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal16,16byte_literals
@@ -2192,23 +1968,18 @@ l_.strCount:
 	.long	115                             ; 0x73
 	.long	41                              ; 0x29
 
-l_.str0:                                ; @.str0
-	.ascii	" now has "
-
-l_.str1:                                ; @.str1
-	.ascii	" references"
-
 	.section	__TEXT,__literal4,4byte_literals
 	.p2align	2                               ; @.strZero
 l_.strZero:
 	.long	48                              ; 0x30
 
-	.section	__TEXT,__literal16,16byte_literals
-	.p2align	2                               ; @.str0.1
-l_.str0.1:
-	.long	128075                          ; 0x1f44b
-	.long	32                              ; 0x20
-	.long	61                              ; 0x3d
-	.long	32                              ; 0x20
+	.section	__TEXT,__const
+	.p2align	2                               ; @.str0
+l_.str0:
+	.long	104                             ; 0x68
+	.long	101                             ; 0x65
+	.long	108                             ; 0x6c
+	.long	108                             ; 0x6c
+	.long	111                             ; 0x6f
 
 .subsections_via_symbols

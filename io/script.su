@@ -1,2 +1,1 @@
-👋 := 3
-println("👋 = " + 👋)
+println(copy("hello"))

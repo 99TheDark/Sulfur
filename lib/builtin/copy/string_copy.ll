@@ -6,6 +6,13 @@ declare i8* @malloc(i32)
 
 declare void @llvm.memcpy.p0i32.p0i32.i32(i32* noalias nocapture writeonly, i32* noalias nocapture readonly, i32, i1 immarg)
 
+; Temporary
+define %type.string @".copy"(%type.string %str) {
+entry:
+    %0 = call %type.string @".copy:string"(%type.string %str)
+    ret %type.string %0
+}
+
 define %type.string @".copy:string"(%type.string %str) {
 entry:
     %.ret = alloca %type.string

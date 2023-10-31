@@ -6,8 +6,6 @@ source_filename = "llvm-link"
 %ref.float = type { float*, i32 }
 %union.anon = type { float }
 %ref.int = type { i32*, i32 }
-%type.string.2 = type { i32, i32, i8* }
-%ref.string = type { %type.string.2*, i32 }
 
 @.strTrue = private unnamed_addr constant [4 x i32] [i32 116, i32 114, i32 117, i32 101], align 4
 @.strFalse = private unnamed_addr constant [5 x i32] [i32 102, i32 97, i32 108, i32 115, i32 101], align 4
@@ -20,10 +18,8 @@ source_filename = "llvm-link"
 @strNegZero = private unnamed_addr constant [4 x i32] [i32 45, i32 48, i32 46, i32 48], align 16
 @.strFree = private unnamed_addr constant [17 x i32] [i32 70, i32 114, i32 101, i32 101, i32 100, i32 32, i32 102, i32 114, i32 111, i32 109, i32 32, i32 109, i32 101, i32 109, i32 111, i32 114, i32 121], align 4
 @.strCount = private unnamed_addr constant [13 x i32] [i32 32, i32 114, i32 101, i32 102, i32 101, i32 114, i32 101, i32 110, i32 99, i32 101, i32 40, i32 115, i32 41], align 4
-@.str0 = private unnamed_addr constant [9 x i8] c" now has ", align 1
-@.str1 = private unnamed_addr constant [11 x i8] c" references", align 1
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
-@.str0.1 = private unnamed_addr constant [4 x i32] [i32 128075, i32 32, i32 61, i32 32], align 4
+@.str0 = private unnamed_addr constant [5 x i32] [i32 104, i32 101, i32 108, i32 108, i32 111], align 4
 
 define %ref.bool* @"newref:bool"(i1 %value) {
 entry:
@@ -1770,158 +1766,10 @@ exit:                                             ; preds = %if.then, %entry
   ret void
 }
 
-define void @.refMsg(i32 %0, i32 %1) {
+define %type.string @.copy(%type.string %str) {
 entry:
-  %2 = call %type.string.2 bitcast (%type.string (i32)* @".conv:int_string" to %type.string.2 (i32)*)(i32 %0)
-  %3 = getelementptr inbounds [9 x i8], [9 x i8]* @.str0, i32 0, i32 0
-  %4 = alloca %type.string.2, align 8
-  %5 = getelementptr inbounds %type.string.2, %type.string.2* %4, i32 0, i32 0
-  store i32 9, i32* %5, align 8
-  %6 = getelementptr inbounds %type.string.2, %type.string.2* %4, i32 0, i32 1
-  store i32 9, i32* %6, align 8
-  %7 = getelementptr inbounds %type.string.2, %type.string.2* %4, i32 0, i32 2
-  store i8* %3, i8** %7, align 8
-  %8 = load %type.string.2, %type.string.2* %4, align 8
-  %9 = call %type.string.2 bitcast (%type.string (%type.string, %type.string)* @".add:string_string" to %type.string.2 (%type.string.2, %type.string.2)*)(%type.string.2 %2, %type.string.2 %8)
-  %10 = call %type.string.2 bitcast (%type.string (i32)* @".conv:int_string" to %type.string.2 (i32)*)(i32 %1)
-  %11 = call %type.string.2 bitcast (%type.string (%type.string, %type.string)* @".add:string_string" to %type.string.2 (%type.string.2, %type.string.2)*)(%type.string.2 %9, %type.string.2 %10)
-  %12 = getelementptr inbounds [11 x i8], [11 x i8]* @.str1, i32 0, i32 0
-  %13 = alloca %type.string.2, align 8
-  %14 = getelementptr inbounds %type.string.2, %type.string.2* %13, i32 0, i32 0
-  store i32 11, i32* %14, align 8
-  %15 = getelementptr inbounds %type.string.2, %type.string.2* %13, i32 0, i32 1
-  store i32 11, i32* %15, align 8
-  %16 = getelementptr inbounds %type.string.2, %type.string.2* %13, i32 0, i32 2
-  store i8* %12, i8** %16, align 8
-  %17 = load %type.string.2, %type.string.2* %13, align 8
-  %18 = call %type.string.2 bitcast (%type.string (%type.string, %type.string)* @".add:string_string" to %type.string.2 (%type.string.2, %type.string.2)*)(%type.string.2 %11, %type.string.2 %17)
-  call void bitcast (void (%type.string)* @.println to void (%type.string.2)*)(%type.string.2 %18)
-  br label %exit
-
-exit:                                             ; preds = %entry
-  ret void
-}
-
-define void @.print_utf8(%type.string %str) {
-entry:
-  %ptr.str = alloca %type.string, align 8
-  store %type.string %str, %type.string* %ptr.str, align 8
-  %i = alloca i32, align 4
-  store i32 0, i32* %i, align 4
-  br label %for.cond
-
-for.cond:                                         ; preds = %for.inc, %entry
-  %0 = load i32, i32* %i, align 4
-  %1 = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 0
-  %2 = load i32, i32* %1, align 4
-  %3 = icmp slt i32 %0, %2
-  br i1 %3, label %for.body, label %for.exit
-
-for.body:                                         ; preds = %for.cond
-  %4 = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 1
-  %5 = load i32*, i32** %4, align 4
-  %6 = load i32, i32* %i, align 4
-  %7 = getelementptr inbounds i32, i32* %5, i32 %6
-  %8 = load i32, i32* %7, align 4
-  call void @printChar.9(i32 %8)
-  br label %for.inc
-
-for.inc:                                          ; preds = %for.body
-  %9 = load i32, i32* %i, align 4
-  %10 = add i32 %9, 1
-  store i32 %10, i32* %i, align 4
-  br label %for.cond
-
-for.exit:                                         ; preds = %for.cond
-  ret void
-}
-
-define private void @printChar.9(i32 %cp) {
-entry:
-  %cp.addr = alloca i32, align 4
-  store i32 %cp, i32* %cp.addr, align 4
-  %0 = load i32, i32* %cp.addr, align 4
-  %cmp = icmp sle i32 %0, 127
-  br i1 %cmp, label %if.then, label %if.else
-
-if.then:                                          ; preds = %entry
-  %1 = load i32, i32* %cp.addr, align 4
-  call void @putchar(i32 %1)
-  br label %if.end35
-
-if.else:                                          ; preds = %entry
-  %2 = load i32, i32* %cp.addr, align 4
-  %cmp1 = icmp sle i32 %2, 2047
-  br i1 %cmp1, label %if.then2, label %if.else6
-
-if.then2:                                         ; preds = %if.else
-  %3 = load i32, i32* %cp.addr, align 4
-  %shr = ashr i32 %3, 6
-  %or = or i32 192, %shr
-  call void @putchar(i32 %or)
-  %4 = load i32, i32* %cp.addr, align 4
-  %and = and i32 %4, 63
-  %or4 = or i32 128, %and
-  call void @putchar(i32 %or4)
-  br label %if.end34
-
-if.else6:                                         ; preds = %if.else
-  %5 = load i32, i32* %cp.addr, align 4
-  %cmp7 = icmp sle i32 %5, 65535
-  br i1 %cmp7, label %if.then8, label %if.else19
-
-if.then8:                                         ; preds = %if.else6
-  %6 = load i32, i32* %cp.addr, align 4
-  %shr9 = ashr i32 %6, 12
-  %or10 = or i32 224, %shr9
-  call void @putchar(i32 %or10)
-  %7 = load i32, i32* %cp.addr, align 4
-  %shr12 = ashr i32 %7, 6
-  %and13 = and i32 %shr12, 63
-  %or14 = or i32 128, %and13
-  call void @putchar(i32 %or14)
-  %8 = load i32, i32* %cp.addr, align 4
-  %and16 = and i32 %8, 63
-  %or17 = or i32 128, %and16
-  call void @putchar(i32 %or17)
-  br label %if.end
-
-if.else19:                                        ; preds = %if.else6
-  %9 = load i32, i32* %cp.addr, align 4
-  %shr20 = ashr i32 %9, 18
-  %or21 = or i32 240, %shr20
-  call void @putchar(i32 %or21)
-  %10 = load i32, i32* %cp.addr, align 4
-  %shr23 = ashr i32 %10, 12
-  %and24 = and i32 %shr23, 63
-  %or25 = or i32 128, %and24
-  call void @putchar(i32 %or25)
-  %11 = load i32, i32* %cp.addr, align 4
-  %shr27 = ashr i32 %11, 6
-  %and28 = and i32 %shr27, 63
-  %or29 = or i32 128, %and28
-  call void @putchar(i32 %or29)
-  %12 = load i32, i32* %cp.addr, align 4
-  %and31 = and i32 %12, 63
-  %or32 = or i32 128, %and31
-  call void @putchar(i32 %or32)
-  br label %if.end
-
-if.end:                                           ; preds = %if.else19, %if.then8
-  br label %if.end34
-
-if.end34:                                         ; preds = %if.end, %if.then2
-  br label %if.end35
-
-if.end35:                                         ; preds = %if.end34, %if.then
-  ret void
-}
-
-define void @.println_utf8(%type.string %str) {
-entry:
-  call void @.print_utf8(%type.string %str)
-  call void @putchar(i32 10)
-  ret void
+  %0 = call %type.string @".copy:string"(%type.string %str)
+  ret %type.string %0
 }
 
 define %type.string @".copy:string"(%type.string %str) {
@@ -1945,56 +1793,17 @@ entry:
   ret %type.string %9
 }
 
-define %ref.string* @"ref:string"(%type.string.2 %value) {
-entry:
-  %ref = alloca %ref.string, align 8
-  %ref.value = getelementptr inbounds %ref.string, %ref.string* %ref, i32 0, i32 0
-  %0 = call i8* @malloc(i32 4)
-  %1 = bitcast i8* %0 to %type.string.2*
-  store %type.string.2* %1, %type.string.2** %ref.value, align 8
-  %ref.value2 = getelementptr inbounds %ref.string, %ref.string* %ref, i32 0, i32 0
-  %2 = load %type.string.2*, %type.string.2** %ref.value2, align 8
-  store %type.string.2 %value, %type.string.2* %2, align 8
-  %ref.count = getelementptr inbounds %ref.string, %ref.string* %ref, i32 0, i32 1
-  store i32 1, i32* %ref.count, align 8
-  ret %ref.string* %ref
-}
-
-define void @"deref:string"(%ref.string* %ref) {
-entry:
-  %0 = getelementptr inbounds %ref.string, %ref.string* %ref, i32 0, i32 1
-  %1 = load i32, i32* %0, align 8
-  %2 = sub i32 %1, 1
-  store i32 %2, i32* %0, align 8
-  %3 = icmp eq i32 %2, 0
-  br i1 %3, label %if.then, label %exit
-
-if.then:                                          ; preds = %entry
-  %4 = getelementptr inbounds %ref.string, %ref.string* %ref, i32 0, i32 0
-  %5 = load %type.string.2*, %type.string.2** %4, align 8
-  %6 = bitcast %type.string.2* %5 to i8*
-  call void @free(i8* %6)
-  br label %exit
-
-exit:                                             ; preds = %if.then, %entry
-  ret void
-}
-
 define void @main() {
 entry:
-  %"\F0\9F\91\8B" = alloca i32, align 4
-  store i32 3, i32* %"\F0\9F\91\8B", align 4
-  %0 = getelementptr inbounds [4 x i32], [4 x i32]* @.str0.1, i32 0, i32 0
+  %0 = getelementptr inbounds [5 x i32], [5 x i32]* @.str0, i32 0, i32 0
   %1 = alloca %type.string, align 8
   %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 4, i32* %2, align 8
+  store i32 5, i32* %2, align 8
   %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
   store i32* %0, i32** %3, align 8
   %4 = load %type.string, %type.string* %1, align 8
-  %5 = load i32, i32* %"\F0\9F\91\8B", align 4
-  %6 = call %type.string @".conv:int_string"(i32 %5)
-  %7 = call %type.string @".add:string_string"(%type.string %4, %type.string %6)
-  call void @.println(%type.string %7)
+  %5 = call %type.string @.copy(%type.string %4)
+  call void @.println(%type.string %5)
   br label %exit
 
 exit:                                             ; preds = %entry
