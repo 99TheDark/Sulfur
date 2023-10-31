@@ -1,8 +1,1 @@
-x := "Hello"
-if true {
-    y := "World"
-    z := y
-    println(y)
-    y = "nooo!"
-    println(z)
-}
+x := 15u

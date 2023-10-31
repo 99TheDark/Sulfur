@@ -46,6 +46,11 @@ const (
 	Nor                            // '!|'
 	Nand                           // '!&'
 	Not                            // '!'
+	RightShift                     // '>>'
+	LeftShift                      // '<<'
+	ZeroFillRightShift             // '>>>'
+	CountLeadingZeros              // '<..'
+	CountTrailingZeros             // '>..'
 	NaN                            // 'nan'
 	Infinity                       // 'inf'
 	Is                             // 'is'
@@ -171,6 +176,11 @@ var Symbols = map[string]TokenType{
 	"!|":  Nor,
 	"!&":  Nand,
 	"!":   Not,
+	">>":  RightShift,
+	"<<":  LeftShift,
+	">>>": ZeroFillRightShift,
+	"<..": CountLeadingZeros,
+	">..": CountTrailingZeros,
 	"==":  EqualTo,
 	"!=":  NotEqualTo,
 	">":   GreaterThan,
@@ -263,6 +273,16 @@ func (tt TokenType) String() string {
 		return "Nand"
 	case Not:
 		return "Not"
+	case RightShift:
+		return "RightShift"
+	case LeftShift:
+		return "LeftShift"
+	case ZeroFillRightShift:
+		return "ZeroFillRightShift"
+	case CountLeadingZeros:
+		return "CountLeadingZeros"
+	case CountTrailingZeros:
+		return "CountTrailingZeros"
 	case NaN:
 		return "NaN"
 	case Infinity:
