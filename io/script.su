@@ -1,1 +1,2 @@
-println("Hello, \"world!\"\n\u03BE\U0002A10C")
+👋 := 3
+println("👋 = " + 👋)

@@ -57,7 +57,7 @@ func Generate(program *ast.Program, props *checker.VariableProperties) string {
 	mod := ir.NewModule()
 	mod.SourceFilename = "script.su"
 
-	str := mod.NewTypeDef("type.utf8_string", types.NewStruct(
+	str := mod.NewTypeDef("type.string", types.NewStruct(
 		types.I32,    // length
 		types.I32Ptr, // address
 	))

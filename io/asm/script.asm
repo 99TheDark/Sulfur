@@ -1987,22 +1987,34 @@ LBB32_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #32
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
+	sub	sp, sp, #64
+	stp	x20, x19, [sp, #32]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #48]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 64
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
 Lloh32:
-	adrp	x1, l_.str0.1@PAGE
-	mov	w8, #18
+	adrp	x19, l_.str0.1@PAGE
+	mov	w8, #3
+	mov	w9, #4
 Lloh33:
-	add	x1, x1, l_.str0.1@PAGEOFF
-	mov	w0, #18
-	str	w8, [sp]
-	str	x1, [sp, #8]
+	add	x19, x19, l_.str0.1@PAGEOFF
+	mov	w0, #3
+	str	w8, [sp, #28]
+	str	w9, [sp, #8]
+	str	x19, [sp, #16]
+	bl	"_.conv:int_string"
+	mov	w2, w0
+	mov	x3, x1
+	mov	w0, #4
+	mov	x1, x19
+	bl	"_.add:string_string"
 	bl	_.println
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #32
+	ldp	x29, x30, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #32]             ; 16-byte Folded Reload
+	add	sp, sp, #64
 	ret
 	.loh AdrpAdd	Lloh32, Lloh33
 	.cfi_endproc
@@ -2191,26 +2203,12 @@ l_.str1:                                ; @.str1
 l_.strZero:
 	.long	48                              ; 0x30
 
-	.section	__TEXT,__const
+	.section	__TEXT,__literal16,16byte_literals
 	.p2align	2                               ; @.str0.1
 l_.str0.1:
-	.long	72                              ; 0x48
-	.long	101                             ; 0x65
-	.long	108                             ; 0x6c
-	.long	108                             ; 0x6c
-	.long	111                             ; 0x6f
-	.long	44                              ; 0x2c
+	.long	128075                          ; 0x1f44b
 	.long	32                              ; 0x20
-	.long	34                              ; 0x22
-	.long	119                             ; 0x77
-	.long	111                             ; 0x6f
-	.long	114                             ; 0x72
-	.long	108                             ; 0x6c
-	.long	100                             ; 0x64
-	.long	33                              ; 0x21
-	.long	34                              ; 0x22
-	.long	10                              ; 0xa
-	.long	958                             ; 0x3be
-	.long	172300                          ; 0x2a10c
+	.long	61                              ; 0x3d
+	.long	32                              ; 0x20
 
 .subsections_via_symbols
