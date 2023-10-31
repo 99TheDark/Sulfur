@@ -1992,22 +1992,19 @@ _main:                                  ; @main
 	.cfi_def_cfa_offset 32
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	w8, #7
-	mov	w9, #-7
-	mov	w0, #7
-	stp	w8, w8, [sp, #4]
-	str	w9, [sp, #12]
-	bl	"_.conv:int_string"
-	bl	_.println
-	ldr	w0, [sp, #12]
-	bl	"_.conv:int_string"
-	bl	_.println
-	ldr	w0, [sp, #8]
-	bl	"_.conv:int_string"
+Lloh32:
+	adrp	x1, l_.str0.1@PAGE
+	mov	w8, #18
+Lloh33:
+	add	x1, x1, l_.str0.1@PAGEOFF
+	mov	w0, #18
+	str	w8, [sp]
+	str	x1, [sp, #8]
 	bl	_.println
 	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
 	add	sp, sp, #32
 	ret
+	.loh AdrpAdd	Lloh32, Lloh33
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal16,16byte_literals
@@ -2193,5 +2190,27 @@ l_.str1:                                ; @.str1
 	.p2align	2                               ; @.strZero
 l_.strZero:
 	.long	48                              ; 0x30
+
+	.section	__TEXT,__const
+	.p2align	2                               ; @.str0.1
+l_.str0.1:
+	.long	72                              ; 0x48
+	.long	101                             ; 0x65
+	.long	108                             ; 0x6c
+	.long	108                             ; 0x6c
+	.long	111                             ; 0x6f
+	.long	44                              ; 0x2c
+	.long	32                              ; 0x20
+	.long	34                              ; 0x22
+	.long	119                             ; 0x77
+	.long	111                             ; 0x6f
+	.long	114                             ; 0x72
+	.long	108                             ; 0x6c
+	.long	100                             ; 0x64
+	.long	33                              ; 0x21
+	.long	34                              ; 0x22
+	.long	10                              ; 0xa
+	.long	958                             ; 0x3be
+	.long	172300                          ; 0x2a10c
 
 .subsections_via_symbols

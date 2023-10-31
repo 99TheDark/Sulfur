@@ -26,6 +26,13 @@ func (l *lexer) at() rune {
 	return l.source[l.loc.Idx]
 }
 
+func (l *lexer) peek() rune {
+	if l.loc.Idx+1 == len(l.source) {
+		return '\x00'
+	}
+	return l.source[l.loc.Idx+1]
+}
+
 func (l *lexer) step() {
 	if l.at() == '\n' {
 		l.loc.Col = 0
@@ -192,7 +199,10 @@ func Lex(source string) *[]Token {
 			}
 		} else {
 			if l.mode == String {
-				if l.end("\"") {
+				if l.at() == '\\' && (l.peek() == '"' || l.peek() == '\\') {
+					l.step()
+					l.step()
+				} else if l.end("\"") {
 					tok := &l.tokens[len(l.tokens)-1]
 					val := tok.Value
 					for escape, value := range Escape {

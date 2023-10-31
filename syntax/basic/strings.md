@@ -27,4 +27,4 @@ A list of all escapable characters is below:
 </center>
 <br>
 
-Finally, any UTF-8 encoded character can be represented by a lowercase 'u' and 4 hex characters, or a capital 'U' and 8 hex characters. For example, `"\u03BE"` for `"ξ"`, or `"U0002A10C"` for `"𪄌"`.
+Finally, any UTF-8 encoded character can be represented by a lowercase 'u' and 4 hex characters, or a capital 'U' and 8 hex characters. For example, `"\u03BE"` for `"ξ"`, or `"\U0002A10C"` for `"𪄌"`.

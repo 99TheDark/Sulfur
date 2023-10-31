@@ -2,7 +2,7 @@ package lexer
 
 import (
 	"regexp"
-	"unicode/utf8"
+	"strconv"
 )
 
 var Escape = map[string]string{
@@ -18,10 +18,11 @@ var Escape = map[string]string{
 	"\\": "\\",
 }
 
-var UnicodeFour = regexp.MustCompile("[\\]u[0-F]{4}")
-var UnicodeEight = regexp.MustCompile("[\\]U[0-F]{8}")
+var UnicodeFour = regexp.MustCompile("[\\\\]u[0-F]{4}")
+var UnicodeEight = regexp.MustCompile("[\\\\]U[0-F]{8}")
 
-var escapeReplace = func(str string) string {
-	char, _ := utf8.DecodeLastRuneInString(str)
-	return string(char)
+func escapeReplace(str string) string {
+	// TODO: Add errors for invalid utf-8 ranges
+	val, _ := strconv.ParseInt(str[2:], 16, 64)
+	return string(rune(val))
 }
