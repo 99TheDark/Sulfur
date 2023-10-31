@@ -1,6 +1,4 @@
 # TODO
-- Use copy string when using a string
-- Implement autofree
 - Unsigned integer literal
 - Work on error syntax (see Zig, V & Python)
 - Better token to string handling

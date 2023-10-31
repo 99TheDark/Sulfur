@@ -176,6 +176,7 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 			g.bl = thenBl
 
 			g.genBlock(x.Body)
+			g.autoFree()
 			g.exit()
 
 			g.bl = endBl
@@ -192,6 +193,7 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 			g.bl = thenBl
 
 			g.genBlock(x.Body)
+			g.autoFree()
 			g.exit()
 
 			g.bl = endBl
@@ -202,6 +204,7 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 			g.bl = elseBl
 
 			g.genBlock(x.Else)
+			g.autoFree()
 			g.exit()
 
 			g.bl = endBl
@@ -233,6 +236,7 @@ func (g *generator) genForLoop(x ast.ForLoop) {
 
 		g.bl = bodyBl
 		g.genBlock(x.Body)
+		g.autoFree()
 
 		g.bl.NewBr(incBl)
 
@@ -266,6 +270,7 @@ func (g *generator) genWhileLoop(x ast.WhileLoop) {
 		g.enter(condBl)
 		g.bl = bodyBl
 		g.genBlock(x.Body)
+		g.autoFree()
 		g.exit()
 
 		condBl.NewCondBr(cond, bodyBl, endBl)
@@ -294,6 +299,7 @@ func (g *generator) genDoWhileLoop(x ast.DoWhileLoop) {
 		g.enter(condBl)
 		g.bl = bodyBl
 		g.genBlock(x.Body)
+		g.autoFree()
 		g.exit()
 
 		condBl.NewCondBr(cond, bodyBl, endBl)

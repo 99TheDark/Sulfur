@@ -8,9 +8,6 @@ import (
 var Funcs = []FuncSignature{
 	QuickFunc("print", typing.Void, typing.String),
 	QuickFunc("println", typing.Void, typing.String),
-
-	// Temporary
-	QuickFunc("copy", typing.String, typing.String),
 }
 
 var BinaryOps = []BinaryOpSignature{

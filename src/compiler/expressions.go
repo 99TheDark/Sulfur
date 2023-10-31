@@ -63,11 +63,17 @@ func (g *generator) genString(x ast.String) value.Value {
 	)
 	str.InBounds = true
 
-	return g.genBasicStruct(
+	strStruct := g.genBasicStruct(
 		g.str,
 		constant.NewInt(types.I32, int64(utf8.RuneCountInString(x.Value))),
 		str,
 	)
+	copy := g.copys[typing.String]
+
+	copied := bl.NewCall(copy, strStruct)
+	g.top.Strings[copied] = typing.String
+
+	return copied
 }
 
 func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {

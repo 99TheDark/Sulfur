@@ -15,23 +15,24 @@ import (
 type generator struct {
 	program *ast.Program
 	*checker.VariableProperties
-	mod      *ir.Module
-	ctx      *context
-	top      *ast.Scope
-	topfun   *ast.FuncScope
-	bl       *ir.Block // TODO: Move bl to context
-	breaks   map[*ir.Block]bool
-	str      types.Type
-	refs     map[typing.Type]ref_bundle
-	strs     map[string]StringGlobal
-	builtins llvm_builtins
+	mod       *ir.Module
+	ctx       *context
+	top       *ast.Scope
+	topfun    *ast.FuncScope
+	bl        *ir.Block // TODO: Move bl to context
+	breaks    map[*ir.Block]bool
+	str       types.Type
+	refs      map[typing.Type]ref_bundle
+	strs      map[string]StringGlobal
+	builtins  llvm_builtins
+	copys     map[typing.Type]*ir.Func
+	autofrees map[typing.Type]*ir.Func
 }
 
 func (g *generator) scope(scope *ast.Scope, body func()) {
 	g.top = scope
 	body()
 	g.leaveRefs()
-	g.autoFree()
 	g.top = scope.Parent
 }
 
@@ -98,6 +99,8 @@ func Generate(program *ast.Program, props *checker.VariableProperties) string {
 			make(map[string]*builtins.ComparisonSignature),
 			make(map[string]*builtins.TypeConvSignature),
 		},
+		make(map[typing.Type]*ir.Func),
+		make(map[typing.Type]*ir.Func),
 	}
 
 	g.genStrings()
@@ -109,6 +112,7 @@ func Generate(program *ast.Program, props *checker.VariableProperties) string {
 	g.genIncDecs()
 	g.genComps()
 	g.genTypeConvs()
+	g.genHiddens()
 
 	g.genAllocas(g.topfun)
 
@@ -116,6 +120,7 @@ func Generate(program *ast.Program, props *checker.VariableProperties) string {
 		g.genStmt(x)
 	}
 	g.leaveRefs()
+	// g.autoFree()
 
 	g.exit()
 	exit.NewRet(nil)

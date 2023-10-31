@@ -21,12 +21,13 @@ source_filename = "llvm-link"
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
 @.str0 = private unnamed_addr constant [5 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111], align 4
 @.str1 = private unnamed_addr constant [5 x i32] [i32 87, i32 111, i32 114, i32 108, i32 100], align 4
+@.str2 = private unnamed_addr constant [5 x i32] [i32 110, i32 111, i32 111, i32 111, i32 33], align 4
 
 define %ref.bool* @"newref:bool"(i1 %value) {
 entry:
-  %value.addr = alloca i1, align 4
+  %value.addr = alloca i1, align 1
   %ref = alloca %ref.bool*, align 8
-  store i1 %value, i1* %value.addr, align 4
+  store i1 %value, i1* %value.addr, align 1
   %call = call i8* @malloc(i32 16)
   %0 = bitcast i8* %call to %ref.bool*
   store %ref.bool* %0, %ref.bool** %ref, align 8
@@ -35,14 +36,14 @@ entry:
   %2 = load %ref.bool*, %ref.bool** %ref, align 8
   %value2 = getelementptr inbounds %ref.bool, %ref.bool* %2, i32 0, i32 0
   store i1* %1, i1** %value2, align 8
-  %3 = load i1, i1* %value.addr, align 4
+  %3 = load i1, i1* %value.addr, align 1
   %4 = load %ref.bool*, %ref.bool** %ref, align 8
   %value3 = getelementptr inbounds %ref.bool, %ref.bool* %4, i32 0, i32 0
   %5 = load i1*, i1** %value3, align 8
-  store i1 %3, i1* %5, align 4
+  store i1 %3, i1* %5, align 1
   %6 = load %ref.bool*, %ref.bool** %ref, align 8
   %count = getelementptr inbounds %ref.bool, %ref.bool* %6, i32 0, i32 1
-  store i32 0, i32* %count, align 8
+  store i32 0, i32* %count, align 4
   %7 = load %ref.bool*, %ref.bool** %ref, align 8
   ret %ref.bool* %7
 }
@@ -52,10 +53,10 @@ declare i8* @malloc(i32)
 define void @"ref:bool"(%ref.bool* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.bool, %ref.bool* %ref, i32 0, i32 1
-  %1 = load i32, i32* %0, align 8
+  %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, 1
   call void @countMsg(i32 %2)
-  store i32 %2, i32* %0, align 8
+  store i32 %2, i32* %0, align 4
   ret void
 }
 
@@ -81,8 +82,9 @@ entry:
   store i32 %int, i32* %int.addr, align 4
   %i = alloca i32, align 4
   %sign = alloca i32, align 4
-  %buf = alloca i32*, align 8
+  %buf = alloca i32*, align 4
   %size = alloca i32, align 4
+  %j = alloca i32, align 4
   %0 = icmp eq i32 %int, 0
   br i1 %0, label %if.then1, label %if.end1
 
@@ -159,7 +161,6 @@ if.else3:                                         ; preds = %while.end
 
 if.end3:                                          ; preds = %if.else3, %if.then3
   %33 = load i32, i32* %sign, align 4
-  %j = alloca i32, align 4
   store i32 %33, i32* %j, align 4
   br label %for.cond
 
@@ -365,16 +366,16 @@ declare void @free(i8*)
 define void @"deref:bool"(%ref.bool* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.bool, %ref.bool* %ref, i32 0, i32 1
-  %1 = load i32, i32* %0, align 8
+  %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, -1
   call void @countMsg(i32 %2)
-  store i32 %2, i32* %0, align 8
+  store i32 %2, i32* %0, align 4
   %3 = icmp eq i32 %2, 0
   br i1 %3, label %if.then, label %exit
 
 if.then:                                          ; preds = %entry
   %4 = getelementptr inbounds %ref.bool, %ref.bool* %ref, i32 0, i32 0
-  %5 = load i1*, i1** %4, align 8
+  %5 = load i1*, i1** %4, align 1
   %6 = bitcast i1* %5 to i8*
   call void @free(i8* %6)
   %7 = bitcast %ref.bool* %ref to i8*
@@ -391,7 +392,7 @@ entry:
   %0 = getelementptr inbounds [17 x i32], [17 x i32]* @.strFree, i32 0, i32 0
   %1 = alloca %type.string, align 8
   %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 17, i32* %2, align 8
+  store i32 17, i32* %2, align 4
   %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
   store i32* %0, i32** %3, align 8
   %4 = load %type.string, %type.string* %1, align 8
@@ -445,7 +446,7 @@ entry:
   store float %3, float* %5, align 4
   %6 = load %ref.float*, %ref.float** %ref, align 8
   %count = getelementptr inbounds %ref.float, %ref.float* %6, i32 0, i32 1
-  store i32 0, i32* %count, align 8
+  store i32 0, i32* %count, align 4
   %7 = load %ref.float*, %ref.float** %ref, align 8
   ret %ref.float* %7
 }
@@ -453,26 +454,26 @@ entry:
 define void @"ref:float"(%ref.float* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 1
-  %1 = load i32, i32* %0, align 8
+  %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, 1
   call void @countMsg(i32 %2)
-  store i32 %2, i32* %0, align 8
+  store i32 %2, i32* %0, align 4
   ret void
 }
 
 define void @"deref:float"(%ref.float* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 1
-  %1 = load i32, i32* %0, align 8
+  %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, -1
   call void @countMsg(i32 %2)
-  store i32 %2, i32* %0, align 8
+  store i32 %2, i32* %0, align 4
   %3 = icmp eq i32 %2, 0
   br i1 %3, label %if.then, label %exit
 
 if.then:                                          ; preds = %entry
   %4 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 0
-  %5 = load float*, float** %4, align 8
+  %5 = load float*, float** %4, align 4
   %6 = bitcast float* %5 to i8*
   call void @free(i8* %6)
   %7 = bitcast %ref.float* %ref to i8*
@@ -1708,6 +1709,17 @@ return:                                           ; preds = %while.end, %if.then
   ret i32 %5
 }
 
+define void @".free:string"(%type.string %str) {
+entry:
+  %ptr.str = alloca %type.string, align 8
+  store %type.string %str, %type.string* %ptr.str, align 8
+  %0 = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 1
+  %1 = load i32*, i32** %0, align 8
+  %2 = bitcast i32* %1 to i8*
+  call void @free(i8* %2)
+  ret void
+}
+
 define %ref.int* @"newref:int"(i32 %value) {
 entry:
   %value.addr = alloca i32, align 4
@@ -1728,7 +1740,7 @@ entry:
   store i32 %3, i32* %5, align 4
   %6 = load %ref.int*, %ref.int** %ref, align 8
   %count = getelementptr inbounds %ref.int, %ref.int* %6, i32 0, i32 1
-  store i32 0, i32* %count, align 8
+  store i32 0, i32* %count, align 4
   %7 = load %ref.int*, %ref.int** %ref, align 8
   ret %ref.int* %7
 }
@@ -1736,20 +1748,20 @@ entry:
 define void @"ref:int"(%ref.int* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
-  %1 = load i32, i32* %0, align 8
+  %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, 1
   call void @countMsg(i32 %2)
-  store i32 %2, i32* %0, align 8
+  store i32 %2, i32* %0, align 4
   ret void
 }
 
 define void @"deref:int"(%ref.int* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
-  %1 = load i32, i32* %0, align 8
+  %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, -1
   call void @countMsg(i32 %2)
-  store i32 %2, i32* %0, align 8
+  store i32 %2, i32* %0, align 4
   %3 = icmp eq i32 %2, 0
   br i1 %3, label %if.then, label %exit
 
@@ -1765,12 +1777,6 @@ if.then:                                          ; preds = %entry
 
 exit:                                             ; preds = %if.then, %entry
   ret void
-}
-
-define %type.string @.copy(%type.string %str) {
-entry:
-  %0 = call %type.string @".copy:string"(%type.string %str)
-  ret %type.string %0
 }
 
 define %type.string @".copy:string"(%type.string %str) {
@@ -1796,6 +1802,7 @@ entry:
 
 define void @main() {
 entry:
+  %z = alloca %type.string, align 8
   %x = alloca %type.string, align 8
   %y = alloca %type.string, align 8
   %0 = getelementptr inbounds [5 x i32], [5 x i32]* @.str0, i32 0, i32 0
@@ -1805,23 +1812,40 @@ entry:
   %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
   store i32* %0, i32** %3, align 8
   %4 = load %type.string, %type.string* %1, align 8
-  store %type.string %4, %type.string* %x, align 8
+  %5 = call %type.string @".copy:string"(%type.string %4)
+  store %type.string %5, %type.string* %x, align 8
   br i1 true, label %if.then0, label %if.end0
 
 exit:                                             ; preds = %if.end0
   ret void
 
 if.then0:                                         ; preds = %entry
-  %5 = getelementptr inbounds [5 x i32], [5 x i32]* @.str1, i32 0, i32 0
-  %6 = alloca %type.string, align 8
-  %7 = getelementptr inbounds %type.string, %type.string* %6, i32 0, i32 0
-  store i32 5, i32* %7, align 8
-  %8 = getelementptr inbounds %type.string, %type.string* %6, i32 0, i32 1
-  store i32* %5, i32** %8, align 8
-  %9 = load %type.string, %type.string* %6, align 8
-  store %type.string %9, %type.string* %y, align 8
-  %10 = load %type.string, %type.string* %y, align 8
-  call void @.println(%type.string %10)
+  %6 = getelementptr inbounds [5 x i32], [5 x i32]* @.str1, i32 0, i32 0
+  %7 = alloca %type.string, align 8
+  %8 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 0
+  store i32 5, i32* %8, align 8
+  %9 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 1
+  store i32* %6, i32** %9, align 8
+  %10 = load %type.string, %type.string* %7, align 8
+  %11 = call %type.string @".copy:string"(%type.string %10)
+  store %type.string %11, %type.string* %y, align 8
+  %12 = load %type.string, %type.string* %y, align 8
+  store %type.string %12, %type.string* %z, align 8
+  %13 = load %type.string, %type.string* %y, align 8
+  call void @.println(%type.string %13)
+  %14 = getelementptr inbounds [5 x i32], [5 x i32]* @.str2, i32 0, i32 0
+  %15 = alloca %type.string, align 8
+  %16 = getelementptr inbounds %type.string, %type.string* %15, i32 0, i32 0
+  store i32 5, i32* %16, align 8
+  %17 = getelementptr inbounds %type.string, %type.string* %15, i32 0, i32 1
+  store i32* %14, i32** %17, align 8
+  %18 = load %type.string, %type.string* %15, align 8
+  %19 = call %type.string @".copy:string"(%type.string %18)
+  store %type.string %19, %type.string* %y, align 8
+  %20 = load %type.string, %type.string* %z, align 8
+  call void @.println(%type.string %20)
+  call void @".free:string"(%type.string %11)
+  call void @".free:string"(%type.string %19)
   br label %if.end0
 
 if.end0:                                          ; preds = %if.then0, %entry

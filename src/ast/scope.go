@@ -17,6 +17,7 @@ type Scope struct {
 	Exit       *ir.Block
 	Loop       bool
 	Seperate   bool
+	Strings    map[value.Value]typing.Type
 }
 
 func (s *Scope) Lookup(name string, loc *typing.Location) *Variable {
@@ -89,5 +90,6 @@ func NewScope() *Scope {
 		nil,
 		false,
 		false,
+		make(map[value.Value]typing.Type),
 	}
 }
