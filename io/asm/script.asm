@@ -1987,25 +1987,26 @@ LBB32_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 16
+	sub	sp, sp, #32
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 32
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	bl	l_mod.something
-	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
-	ret
-	.cfi_endproc
-                                        ; -- End function
-	.p2align	2                               ; -- Begin function mod.something
-l_mod.something:                        ; @mod.something
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #16
-	.cfi_def_cfa_offset 16
-	mov	w8, #1
-	mov	w0, #1
-	strb	w8, [sp, #15]
-	add	sp, sp, #16
+	mov	w8, #7
+	mov	w9, #-7
+	mov	w0, #7
+	stp	w8, w8, [sp, #4]
+	str	w9, [sp, #12]
+	bl	"_.conv:int_string"
+	bl	_.println
+	ldr	w0, [sp, #12]
+	bl	"_.conv:int_string"
+	bl	_.println
+	ldr	w0, [sp, #8]
+	bl	"_.conv:int_string"
+	bl	_.println
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #32
 	ret
 	.cfi_endproc
                                         ; -- End function

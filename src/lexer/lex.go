@@ -44,6 +44,10 @@ func (l *lexer) move(str string) {
 	}
 }
 
+func (l *lexer) pop() {
+	l.tokens = l.tokens[:len(l.tokens)-1]
+}
+
 func (l *lexer) get(loc typing.Location, count int) string {
 	return string(l.source[loc.Idx : loc.Idx+count])
 }
@@ -191,11 +195,11 @@ func Lex(source string) *[]Token {
 				if l.end("\"") {
 					tok := &l.tokens[len(l.tokens)-1]
 					val := tok.Value
-					val = strings.ReplaceAll(val, "\\f", "\f")
-					val = strings.ReplaceAll(val, "\\n", "\n")
-					val = strings.ReplaceAll(val, "\\r", "\r")
-					val = strings.ReplaceAll(val, "\\t", "\t")
-					val = strings.ReplaceAll(val, "\\v", "\v")
+					for escape, value := range Escape {
+						val = strings.ReplaceAll(val, "\\"+escape, value)
+					}
+					val = UnicodeFour.ReplaceAllStringFunc(val, escapeReplace)
+					val = UnicodeEight.ReplaceAllStringFunc(val, escapeReplace)
 
 					tok.Value = val
 				}
@@ -210,11 +214,13 @@ func Lex(source string) *[]Token {
 					num := l.get(l.begin, l.loc.Idx-l.begin.Idx)
 					prev := l.source[l.begin.Idx-1]
 
-					// TODO: Allow +number
 					if prev == '-' {
-						l.tokens = l.tokens[:len(l.tokens)-1]
+						l.pop()
 						l.addAt(Number, "-"+num, l.begin)
 					} else {
+						if prev == '+' {
+							l.pop()
+						}
 						l.addAt(Number, num, l.begin)
 					}
 

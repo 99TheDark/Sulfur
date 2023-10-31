@@ -1981,22 +1981,25 @@ exit:                                             ; preds = %if.then, %entry
 
 define void @main() {
 entry:
-  %0 = call i1 @mod.something()
+  %y = alloca i32, align 4
+  %z = alloca i32, align 4
+  %x = alloca i32, align 4
+  store i32 7, i32* %x, align 4
+  store i32 -7, i32* %y, align 4
+  store i32 7, i32* %z, align 4
+  %0 = load i32, i32* %x, align 4
+  %1 = call %type.string @".conv:int_string"(i32 %0)
+  call void @.println(%type.string %1)
+  %2 = load i32, i32* %y, align 4
+  %3 = call %type.string @".conv:int_string"(i32 %2)
+  call void @.println(%type.string %3)
+  %4 = load i32, i32* %z, align 4
+  %5 = call %type.string @".conv:int_string"(i32 %4)
+  call void @.println(%type.string %5)
   br label %exit
 
 exit:                                             ; preds = %entry
   ret void
-}
-
-define private i1 @mod.something() {
-entry:
-  %.ret = alloca i1, align 1
-  store i1 true, i1* %.ret, align 1
-  br label %exit
-
-exit:                                             ; preds = %entry
-  %0 = load i1, i1* %.ret, align 1
-  ret i1 %0
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }

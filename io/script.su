@@ -1,6 +1,1 @@
-func something() (bool) {
-    return true
-    println("Nothing should happen")
-}
-
-something()
+println("Hello, \"world!\"")
