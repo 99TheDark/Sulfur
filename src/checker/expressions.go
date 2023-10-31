@@ -13,6 +13,8 @@ func (c *checker) inferExpr(expr ast.Expr) typing.Type {
 		return c.inferIdentifier(x)
 	case ast.Integer:
 		return c.typ(x, typing.Integer)
+	case ast.UnsignedInteger:
+		return c.typ(x, typing.Unsigned)
 	case ast.Float:
 		return c.typ(x, typing.Float)
 	case ast.Boolean:

@@ -20,6 +20,8 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 		return g.autoCast(g.genIdentifier(x), x, "variable")
 	case ast.Integer:
 		return g.autoCast(constant.NewInt(types.I32, x.Value), x, "integer")
+	case ast.UnsignedInteger:
+		return g.autoCast(constant.NewInt(types.I32, int64(x.Value)), x, "unsigned integer")
 	case ast.Float:
 		return g.autoCast(constant.NewFloat(types.Float, x.Value), x, "float")
 	case ast.Boolean:

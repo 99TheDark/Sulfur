@@ -1773,73 +1773,12 @@ LBB26_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #144
-	stp	x22, x21, [sp, #96]             ; 16-byte Folded Spill
-	stp	x20, x19, [sp, #112]            ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #128]            ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 144
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-	.cfi_offset w19, -24
-	.cfi_offset w20, -32
-	.cfi_offset w21, -40
-	.cfi_offset w22, -48
-Lloh28:
-	adrp	x1, l_.str0@PAGE
-	mov	w21, #5
-Lloh29:
-	add	x1, x1, l_.str0@PAGEOFF
-	mov	w0, #5
-	str	w21, [sp, #32]
-	str	x1, [sp, #40]
-	bl	"_.copy:string"
-Lloh30:
-	adrp	x8, l_.str1@PAGE
-	str	w0, [sp, #64]
-Lloh31:
-	add	x8, x8, l_.str1@PAGEOFF
-	str	x1, [sp, #72]
-	mov	w0, #5
-	mov	x1, x8
-	str	w21, [sp, #16]
-	str	x8, [sp, #24]
-	bl	"_.copy:string"
-	mov	w19, w0
-	mov	x20, x1
-	str	w0, [sp, #48]
-	str	x1, [sp, #56]
-	str	w0, [sp, #80]
-	str	x1, [sp, #88]
-	bl	_.println
-Lloh32:
-	adrp	x1, l_.str2@PAGE
-	mov	w0, #5
-Lloh33:
-	add	x1, x1, l_.str2@PAGEOFF
-	str	w21, [sp]
-	str	x1, [sp, #8]
-	bl	"_.copy:string"
-	mov	w21, w0
-	mov	x22, x1
-	ldr	w0, [sp, #80]
-	ldr	x1, [sp, #88]
-	str	w21, [sp, #48]
-	str	x22, [sp, #56]
-	bl	_.println
-	mov	w0, w19
-	mov	x1, x20
-	bl	"_.free:string"
-	mov	w0, w21
-	mov	x1, x22
-	bl	"_.free:string"
-	ldp	x29, x30, [sp, #128]            ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #112]            ; 16-byte Folded Reload
-	ldp	x22, x21, [sp, #96]             ; 16-byte Folded Reload
-	add	sp, sp, #144
+	sub	sp, sp, #16
+	.cfi_def_cfa_offset 16
+	mov	w8, #15
+	str	w8, [sp, #12]
+	add	sp, sp, #16
 	ret
-	.loh AdrpAdd	Lloh32, Lloh33
-	.loh AdrpAdd	Lloh30, Lloh31
-	.loh AdrpAdd	Lloh28, Lloh29
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal16,16byte_literals
@@ -2019,30 +1958,5 @@ l_.strCount:
 	.p2align	2                               ; @.strZero
 l_.strZero:
 	.long	48                              ; 0x30
-
-	.section	__TEXT,__const
-	.p2align	2                               ; @.str0
-l_.str0:
-	.long	72                              ; 0x48
-	.long	101                             ; 0x65
-	.long	108                             ; 0x6c
-	.long	108                             ; 0x6c
-	.long	111                             ; 0x6f
-
-	.p2align	2                               ; @.str1
-l_.str1:
-	.long	87                              ; 0x57
-	.long	111                             ; 0x6f
-	.long	114                             ; 0x72
-	.long	108                             ; 0x6c
-	.long	100                             ; 0x64
-
-	.p2align	2                               ; @.str2
-l_.str2:
-	.long	110                             ; 0x6e
-	.long	111                             ; 0x6f
-	.long	111                             ; 0x6f
-	.long	111                             ; 0x6f
-	.long	33                              ; 0x21
 
 .subsections_via_symbols

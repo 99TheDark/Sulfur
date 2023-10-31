@@ -48,6 +48,11 @@ type (
 		Value int64
 	}
 
+	UnsignedInteger struct {
+		Pos   *typing.Location `json:"-"`
+		Value uint64
+	}
+
 	Float struct {
 		Pos   *typing.Location `json:"-"`
 		Value float64
@@ -246,43 +251,44 @@ type (
 	}
 )
 
-func (x Program) Loc() *typing.Location      { return typing.NoLocation }
-func (x NoExpr) Loc() *typing.Location       { return x.Pos }
-func (x Block) Loc() *typing.Location        { return x.Pos }
-func (x Identifier) Loc() *typing.Location   { return x.Pos }
-func (x Integer) Loc() *typing.Location      { return x.Pos }
-func (x Float) Loc() *typing.Location        { return x.Pos }
-func (x Boolean) Loc() *typing.Location      { return x.Pos }
-func (x String) Loc() *typing.Location       { return x.Pos }
-func (x Array) Loc() *typing.Location        { return x.Type.Loc() }
-func (x Function) Loc() *typing.Location     { return x.Pos }
-func (x Class) Loc() *typing.Location        { return x.Pos }
-func (x Enum) Loc() *typing.Location         { return x.Pos }
-func (x Param) Loc() *typing.Location        { return x.Pos }
-func (x Method) Loc() *typing.Location       { return x.Pos }
-func (x Field) Loc() *typing.Location        { return x.Pos }
-func (x To) Loc() *typing.Location           { return x.Pos }
-func (x Operation) Loc() *typing.Location    { return x.Pos }
-func (x Access) Loc() *typing.Location       { return x.Parent.Loc() }
-func (x New) Loc() *typing.Location          { return x.Pos }
-func (x BinaryOp) Loc() *typing.Location     { return x.Left.Loc() }
-func (x UnaryOp) Loc() *typing.Location      { return x.Value.Loc() }
-func (x Reference) Loc() *typing.Location    { return x.Pos }
-func (x Pipe) Loc() *typing.Location         { return x.Left.Func.Loc() }
-func (x Comparison) Loc() *typing.Location   { return x.Left.Loc() }
-func (x Declaration) Loc() *typing.Location  { return x.Type.Loc() }
-func (x ImplicitDecl) Loc() *typing.Location { return x.Name.Loc() }
-func (x Assignment) Loc() *typing.Location   { return x.Name.Loc() }
-func (x IncDec) Loc() *typing.Location       { return x.Name.Loc() }
-func (x FuncCall) Loc() *typing.Location     { return x.Func.Loc() }
-func (x TypeConv) Loc() *typing.Location     { return x.Type.Loc() }
-func (x IfStatement) Loc() *typing.Location  { return x.Pos }
-func (x ForLoop) Loc() *typing.Location      { return x.Pos }
-func (x WhileLoop) Loc() *typing.Location    { return x.Pos }
-func (x DoWhileLoop) Loc() *typing.Location  { return x.Pos }
-func (x Return) Loc() *typing.Location       { return x.Pos }
-func (x Break) Loc() *typing.Location        { return x.Pos }
-func (x Continue) Loc() *typing.Location     { return x.Pos }
+func (x Program) Loc() *typing.Location         { return typing.NoLocation }
+func (x NoExpr) Loc() *typing.Location          { return x.Pos }
+func (x Block) Loc() *typing.Location           { return x.Pos }
+func (x Identifier) Loc() *typing.Location      { return x.Pos }
+func (x Integer) Loc() *typing.Location         { return x.Pos }
+func (x UnsignedInteger) Loc() *typing.Location { return x.Pos }
+func (x Float) Loc() *typing.Location           { return x.Pos }
+func (x Boolean) Loc() *typing.Location         { return x.Pos }
+func (x String) Loc() *typing.Location          { return x.Pos }
+func (x Array) Loc() *typing.Location           { return x.Type.Loc() }
+func (x Function) Loc() *typing.Location        { return x.Pos }
+func (x Class) Loc() *typing.Location           { return x.Pos }
+func (x Enum) Loc() *typing.Location            { return x.Pos }
+func (x Param) Loc() *typing.Location           { return x.Pos }
+func (x Method) Loc() *typing.Location          { return x.Pos }
+func (x Field) Loc() *typing.Location           { return x.Pos }
+func (x To) Loc() *typing.Location              { return x.Pos }
+func (x Operation) Loc() *typing.Location       { return x.Pos }
+func (x Access) Loc() *typing.Location          { return x.Parent.Loc() }
+func (x New) Loc() *typing.Location             { return x.Pos }
+func (x BinaryOp) Loc() *typing.Location        { return x.Left.Loc() }
+func (x UnaryOp) Loc() *typing.Location         { return x.Value.Loc() }
+func (x Reference) Loc() *typing.Location       { return x.Pos }
+func (x Pipe) Loc() *typing.Location            { return x.Left.Func.Loc() }
+func (x Comparison) Loc() *typing.Location      { return x.Left.Loc() }
+func (x Declaration) Loc() *typing.Location     { return x.Type.Loc() }
+func (x ImplicitDecl) Loc() *typing.Location    { return x.Name.Loc() }
+func (x Assignment) Loc() *typing.Location      { return x.Name.Loc() }
+func (x IncDec) Loc() *typing.Location          { return x.Name.Loc() }
+func (x FuncCall) Loc() *typing.Location        { return x.Func.Loc() }
+func (x TypeConv) Loc() *typing.Location        { return x.Type.Loc() }
+func (x IfStatement) Loc() *typing.Location     { return x.Pos }
+func (x ForLoop) Loc() *typing.Location         { return x.Pos }
+func (x WhileLoop) Loc() *typing.Location       { return x.Pos }
+func (x DoWhileLoop) Loc() *typing.Location     { return x.Pos }
+func (x Return) Loc() *typing.Location          { return x.Pos }
+func (x Break) Loc() *typing.Location           { return x.Pos }
+func (x Continue) Loc() *typing.Location        { return x.Pos }
 
 func Valid(expr Expr) bool {
 	if _, ok := expr.(*NoExpr); ok {

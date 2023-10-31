@@ -19,9 +19,6 @@ source_filename = "llvm-link"
 @.strFree = private unnamed_addr constant [17 x i32] [i32 70, i32 114, i32 101, i32 101, i32 100, i32 32, i32 102, i32 114, i32 111, i32 109, i32 32, i32 109, i32 101, i32 109, i32 111, i32 114, i32 121], align 4
 @.strCount = private unnamed_addr constant [13 x i32] [i32 32, i32 114, i32 101, i32 102, i32 101, i32 114, i32 101, i32 110, i32 99, i32 101, i32 40, i32 115, i32 41], align 4
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
-@.str0 = private unnamed_addr constant [5 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111], align 4
-@.str1 = private unnamed_addr constant [5 x i32] [i32 87, i32 111, i32 114, i32 108, i32 100], align 4
-@.str2 = private unnamed_addr constant [5 x i32] [i32 110, i32 111, i32 111, i32 111, i32 33], align 4
 
 define %ref.bool* @"newref:bool"(i1 %value) {
 entry:
@@ -1802,54 +1799,12 @@ entry:
 
 define void @main() {
 entry:
-  %z = alloca %type.string, align 8
-  %x = alloca %type.string, align 8
-  %y = alloca %type.string, align 8
-  %0 = getelementptr inbounds [5 x i32], [5 x i32]* @.str0, i32 0, i32 0
-  %1 = alloca %type.string, align 8
-  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 5, i32* %2, align 8
-  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-  store i32* %0, i32** %3, align 8
-  %4 = load %type.string, %type.string* %1, align 8
-  %5 = call %type.string @".copy:string"(%type.string %4)
-  store %type.string %5, %type.string* %x, align 8
-  br i1 true, label %if.then0, label %if.end0
-
-exit:                                             ; preds = %if.end0
-  ret void
-
-if.then0:                                         ; preds = %entry
-  %6 = getelementptr inbounds [5 x i32], [5 x i32]* @.str1, i32 0, i32 0
-  %7 = alloca %type.string, align 8
-  %8 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 0
-  store i32 5, i32* %8, align 8
-  %9 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 1
-  store i32* %6, i32** %9, align 8
-  %10 = load %type.string, %type.string* %7, align 8
-  %11 = call %type.string @".copy:string"(%type.string %10)
-  store %type.string %11, %type.string* %y, align 8
-  %12 = load %type.string, %type.string* %y, align 8
-  store %type.string %12, %type.string* %z, align 8
-  %13 = load %type.string, %type.string* %y, align 8
-  call void @.println(%type.string %13)
-  %14 = getelementptr inbounds [5 x i32], [5 x i32]* @.str2, i32 0, i32 0
-  %15 = alloca %type.string, align 8
-  %16 = getelementptr inbounds %type.string, %type.string* %15, i32 0, i32 0
-  store i32 5, i32* %16, align 8
-  %17 = getelementptr inbounds %type.string, %type.string* %15, i32 0, i32 1
-  store i32* %14, i32** %17, align 8
-  %18 = load %type.string, %type.string* %15, align 8
-  %19 = call %type.string @".copy:string"(%type.string %18)
-  store %type.string %19, %type.string* %y, align 8
-  %20 = load %type.string, %type.string* %z, align 8
-  call void @.println(%type.string %20)
-  call void @".free:string"(%type.string %11)
-  call void @".free:string"(%type.string %19)
-  br label %if.end0
-
-if.end0:                                          ; preds = %if.then0, %entry
+  %x = alloca i32, align 4
+  store i32 15, i32* %x, align 4
   br label %exit
+
+exit:                                             ; preds = %entry
+  ret void
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }

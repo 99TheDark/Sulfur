@@ -30,6 +30,16 @@ func (tt TokenType) OperatorName() string {
 		return "nand"
 	case Not:
 		return "not"
+	case RightShift:
+		return "shr"
+	case LeftShift:
+		return "shl"
+	case ZeroFillRightShift:
+		return "zshr"
+	case CountLeadingZeros:
+		return "clz"
+	case CountTrailingZeros:
+		return "ctz"
 	case EqualTo:
 		return "eq"
 	case GreaterThan:

@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"strconv"
 	"strings"
 	"sulfur/src/ast"
 	. "sulfur/src/errors"
@@ -207,17 +206,31 @@ func (p *parser) parseBoolean() ast.Boolean {
 
 func (p *parser) parseNumber() ast.Expr {
 	tok := p.expect(lexer.Number)
-	if i64, err := strconv.ParseInt(tok.Value, 10, 64); err == nil {
-		return ast.Integer{
-			Pos:   tok.Location,
-			Value: i64,
+	val, loc := tok.Value, tok.Location
+	if p.at().Type == lexer.NumericalSuffix {
+		suf := p.eat()
+		switch suf.Value {
+		case "f":
+			if f, ok := parseFloat(val, loc); ok {
+				return f
+			} else {
+				Errors.Error("Invalid float literal", loc)
+			}
+		case "u":
+			if u, ok := parseUnsignedInt(val, loc); ok {
+				return u
+			} else {
+				Errors.Error("Invalid unsigned integer literal", loc)
+			}
+		default:
+			Errors.Error("Invalid numerical suffix", suf.Location)
 		}
-	}
-	if f64, err := strconv.ParseFloat(tok.Value, 64); err == nil {
-		return ast.Float{
-			Pos:   tok.Location,
-			Value: f64,
-		}
+	} else if f, ok := parseFloat(val, loc); ok {
+		return f
+	} else if u, ok := parseUnsignedInt(val, loc); ok {
+		return u
+	} else if i, ok := parseInteger(val, loc); ok {
+		return i
 	}
 
 	Errors.Error("Invalid number", tok.Location)

@@ -234,6 +234,11 @@ func Lex(source string) *[]Token {
 						l.addAt(Number, num, l.begin)
 					}
 
+					if utils.Contains(NumericalSuffixes, l.at()) {
+						l.add(NumericalSuffix, string(l.at()))
+						l.step()
+					}
+
 					l.mode = None
 				} else {
 					l.step()

@@ -28,7 +28,8 @@ const (
 	CloseParen                     // ')'
 	OpenBracket                    // '['
 	CloseBracket                   // ']'
-	Number                         // '3',  '.15', '-2', '-6.2'
+	Number                         // '3', '.15', '-2', '-6.2'
+	NumericalSuffix                // 'u', 'f'
 	Boolean                        // 'true', 'false'
 	String                         // '"' -> some text -> '"'
 	Assignment                     // '='
@@ -72,6 +73,7 @@ const (
 	Fallthrough                    // 'fallthrough'
 	Func                           // 'func'
 	Defer                          // 'defer'
+	Struct                         // 'struct'
 	Class                          // 'class'
 	New                            // 'new'
 	Delete                         // 'del'
@@ -123,6 +125,7 @@ var Keywords = map[string]TokenType{
 	"fallthrough": Fallthrough,
 	"func":        Func,
 	"defer":       Defer,
+	"struct":      Struct,
 	"class":       Class,
 	"new":         New,
 	"del":         Delete,
@@ -239,6 +242,8 @@ func (tt TokenType) String() string {
 		return "CloseBracket"
 	case Number:
 		return "Number"
+	case NumericalSuffix:
+		return "NumericalSuffix"
 	case Boolean:
 		return "Boolean"
 	case String:
@@ -323,6 +328,8 @@ func (tt TokenType) String() string {
 		return "Func"
 	case Defer:
 		return "Defer"
+	case Struct:
+		return "Struct"
 	case Class:
 		return "Class"
 	case New:
