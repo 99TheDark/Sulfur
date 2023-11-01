@@ -1,8 +1,11 @@
 # TODO
 - Move unary operation generation to basic
 - Work on error syntax (see Zig, V & Python)
-- More uint type conversion
+- More uint type conversion & operations
+- Uint references
 - Better token to string handling
+- Type promotion vs demotion syntax
+- Type demotion implementation
 - Basic Sulfur CLI
 - Force all variables and functions to have a visibility modifier
 - Classes

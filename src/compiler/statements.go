@@ -85,7 +85,7 @@ func (g *generator) genIncDec(x ast.IncDec) {
 
 	var val value.Value
 	switch vari.Type {
-	case typing.Integer:
+	case typing.Integer, typing.Unsigned:
 		val = g.genBasicBinaryOp(iden, One, op, vari.Type)
 	case typing.Float:
 		val = g.genBasicBinaryOp(iden, FOne, op, vari.Type)

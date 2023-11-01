@@ -9,7 +9,6 @@ const (
 	Float    = "float"
 	Boolean  = "bool"
 	String   = "string"
-	Byte     = "byte"
 	Complex  = "complex"
 	Any      = "any"
 )

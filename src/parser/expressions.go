@@ -225,12 +225,10 @@ func (p *parser) parseNumber() ast.Expr {
 		default:
 			Errors.Error("Invalid numerical suffix", suf.Location)
 		}
-	} else if f, ok := parseFloat(val, loc); ok {
-		return f
-	} else if u, ok := parseUnsignedInt(val, loc); ok {
-		return u
 	} else if i, ok := parseInteger(val, loc); ok {
 		return i
+	} else if f, ok := parseFloat(val, loc); ok {
+		return f
 	}
 
 	Errors.Error("Invalid number", tok.Location)

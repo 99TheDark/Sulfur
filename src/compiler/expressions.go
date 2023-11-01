@@ -133,44 +133,52 @@ func (g *generator) genComparison(x ast.Comparison) value.Value {
 	switch comp.Type {
 	case lexer.LessThan:
 		switch typ {
-		case typing.Integer:
+		case typing.Integer: // = int < int
 			return bl.NewICmp(enum.IPredSLT, left, right)
-		case typing.Float:
+		case typing.Unsigned: // = uint < uint
+			return bl.NewICmp(enum.IPredULT, left, right)
+		case typing.Float: // = float < float
 			return bl.NewFCmp(enum.FPredULT, left, right)
 		}
 	case lexer.GreaterThan:
 		switch typ {
-		case typing.Integer:
+		case typing.Integer: // = int > int
 			return bl.NewICmp(enum.IPredSGT, left, right)
-		case typing.Float:
+		case typing.Unsigned: // = uint > uint
+			return bl.NewICmp(enum.IPredUGT, left, right)
+		case typing.Float: // = float > float
 			return bl.NewFCmp(enum.FPredUGT, left, right)
 		}
 	case lexer.LessThanOrEqualTo:
 		switch typ {
-		case typing.Integer:
+		case typing.Integer: // = int <= int
 			return bl.NewICmp(enum.IPredSLE, left, right)
-		case typing.Float:
+		case typing.Unsigned: // = uint <= uint
+			return bl.NewICmp(enum.IPredULE, left, right)
+		case typing.Float: // = float <= float
 			return bl.NewFCmp(enum.FPredULE, left, right)
 		}
 	case lexer.GreaterThanOrEqualTo:
 		switch typ {
-		case typing.Integer:
+		case typing.Integer: // = int >= int
 			return bl.NewICmp(enum.IPredSGE, left, right)
-		case typing.Float:
+		case typing.Unsigned: // = uint >= uint
+			return bl.NewICmp(enum.IPredUGE, left, right)
+		case typing.Float: // = float >= float
 			return bl.NewFCmp(enum.FPredUGE, left, right)
 		}
 	case lexer.EqualTo:
 		switch typ {
-		case typing.Integer, typing.Boolean:
+		case typing.Integer, typing.Unsigned, typing.Boolean: // = int == int, uint == uint, bool == bool
 			return bl.NewICmp(enum.IPredEQ, left, right)
-		case typing.Float:
+		case typing.Float: // = float == float
 			return bl.NewFCmp(enum.FPredUEQ, left, right)
 		}
 	case lexer.NotEqualTo:
 		switch typ {
-		case typing.Integer, typing.Boolean:
+		case typing.Integer, typing.Unsigned, typing.Boolean: // = int != int, uint != uint, bool != bool
 			return bl.NewICmp(enum.IPredNE, left, right)
-		case typing.Float:
+		case typing.Float: // = float != float
 			return bl.NewFCmp(enum.FPredUNE, left, right)
 		}
 	}

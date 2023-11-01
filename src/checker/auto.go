@@ -10,7 +10,6 @@ import (
 var order []typing.Type = []typing.Type{
 	typing.Void,
 	typing.Boolean,
-	typing.Byte,
 	typing.Unsigned,
 	typing.Integer,
 	typing.Float,

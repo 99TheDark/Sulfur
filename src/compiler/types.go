@@ -21,8 +21,6 @@ func (g *generator) lltyp(typ typing.Type) types.Type {
 		return types.Float
 	case typing.Boolean:
 		return types.I1
-	case typing.Byte:
-		return types.I8
 	case typing.String:
 		return g.str
 	}

@@ -1799,8 +1799,8 @@ entry:
 
 define void @main() {
 entry:
-  %0 = uitofp i32 54 to float
-  %1 = call %type.string @".conv:float_string"(float %0)
+  %0 = icmp ult i32 3, 10
+  %1 = call %type.string @".conv:bool_string"(i1 %0)
   call void @.println(%type.string %1)
   br label %exit
 

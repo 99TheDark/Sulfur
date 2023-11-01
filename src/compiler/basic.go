@@ -195,6 +195,8 @@ func (g *generator) genBasicTypeConv(val value.Value, from, to typing.Type) valu
 				return val
 			case typing.Float:
 				return bl.NewUIToFP(val, typ)
+			case typing.Boolean:
+				return bl.NewICmp(enum.IPredNE, val, Zero)
 			}
 		case typing.Float:
 			switch to {

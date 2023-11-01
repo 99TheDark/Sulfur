@@ -125,6 +125,8 @@ var TypeConvs = []TypeConvSignature{
 	// uint
 	QuickTypeConv("uint", "int"),
 	QuickTypeConv("uint", "float"),
+	QuickTypeConv("uint", "bool"),
+	QuickTypeConv("uint", "string"),
 
 	// float
 	QuickTypeConv("float", "int"),
