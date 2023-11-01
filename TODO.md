@@ -10,6 +10,8 @@
 - Type demotion implementation
 - Look into removing `>>` and simply applying it to `uint`s 
 - Basic Sulfur CLI
+- Loop blocks (`loop {}`)
+- Rethink one-line blocks (`=>`)
 - Force all variables and functions to have a visibility modifier
 - Classes
 - String equals string 
@@ -18,10 +20,10 @@
 - Remove allocas from single-use variables
 - Add `string.length` and `string[idx]`
 - Raw strings using backticks
-- Loop blocks
 - String interpolation
 - Complex numbers
 - Complex number to string
 - Complex number operations
 - Seperate errors from global to file-based
     - Add error directly into lexer/parser/checker/generation (no name)
+- Try parsing multiple files
