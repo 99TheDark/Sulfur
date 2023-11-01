@@ -1,2 +1,1 @@
-x := 15u + 3u - 6u
-println(string!(int!(<..x) + int!(>..x)))
+println(string!(float!(54u)))
