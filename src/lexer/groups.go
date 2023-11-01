@@ -40,6 +40,9 @@ var Logical = []TokenType{
 	Nand,
 	Nor,
 	Is,
+	RightShift,
+	LeftShift,
+	ZeroFillRightShift,
 }
 
 var Additive = []TokenType{

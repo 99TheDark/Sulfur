@@ -1,1 +1,1 @@
-println(!23424324u)
+println(!(uint!(1 << 32)))

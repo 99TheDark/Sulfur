@@ -1870,8 +1870,6 @@ _main:                                  ; @main
 	.cfi_def_cfa_offset 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	w0, #37563
-	movk	w0, #65178, lsl #16
 	bl	"_.conv:uint_string"
 	bl	_.println
 	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload

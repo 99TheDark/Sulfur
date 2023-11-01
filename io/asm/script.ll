@@ -5,9 +5,10 @@ source_filename = "script.su"
 
 define void @main() {
 entry:
-	%0 = xor i32 23424324, -1
-	%1 = call %type.string @".conv:uint_string"(i32 %0)
-	call void @.println(%type.string %1)
+	%0 = shl i32 1, 32
+	%1 = xor i32 %0, -1
+	%2 = call %type.string @".conv:uint_string"(i32 %1)
+	call void @.println(%type.string %2)
 	br label %exit
 
 exit:
