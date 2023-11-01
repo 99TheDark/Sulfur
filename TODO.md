@@ -1,11 +1,14 @@
 # TODO
 - Move unary operation generation to basic
 - Move comparison operation generation to basic
-- Uint references
+- Import syntax
+- Export syntax
+- Unsigned integer references
 - Work on error syntax (see Zig, V & Python)
 - Better token to string handling
 - Type promotion vs demotion syntax
 - Type demotion implementation
+- Look into removing `>>` and simply applying it to `uint`s 
 - Basic Sulfur CLI
 - Force all variables and functions to have a visibility modifier
 - Classes
@@ -19,3 +22,6 @@
 - String interpolation
 - Complex numbers
 - Complex number to string
+- Complex number operations
+- Seperate errors from global to file-based
+    - Add error directly into lexer/parser/checker/generation (no name)

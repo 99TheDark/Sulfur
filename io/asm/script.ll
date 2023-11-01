@@ -5,10 +5,9 @@ source_filename = "script.su"
 
 define void @main() {
 entry:
-	%0 = shl i32 1, 32
-	%1 = xor i32 %0, -1
-	%2 = call %type.string @".conv:uint_string"(i32 %1)
-	call void @.println(%type.string %2)
+	%0 = lshr i32 -2341241, 5
+	%1 = call %type.string @".conv:int_string"(i32 %0)
+	call void @.println(%type.string %1)
 	br label %exit
 
 exit:
@@ -17,7 +16,7 @@ exit:
 
 declare void @.println(%type.string %0)
 
-declare %type.string @".conv:uint_string"(i32 %0)
+declare %type.string @".conv:int_string"(i32 %0)
 
 declare i32 @llvm.ctlz.i32(i32 %0, i1 immarg %1)
 
