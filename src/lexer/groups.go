@@ -11,12 +11,17 @@ var BinaryOperator = []TokenType{
 	And,
 	Nor,
 	Nand,
+	RightShift,
+	LeftShift,
+	ZeroFillRightShift,
 	Nullish,
 }
 
 var UnaryOperator = []TokenType{
 	Subtraction,
 	Not,
+	CountLeadingZeros,
+	CountTrailingZeros,
 }
 
 var Comparator = []TokenType{

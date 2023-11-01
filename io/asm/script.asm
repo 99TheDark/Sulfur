@@ -1773,11 +1773,18 @@ LBB26_2:                                ; %if.then
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #16
-	.cfi_def_cfa_offset 16
-	mov	w8, #15
+	sub	sp, sp, #32
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 32
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	mov	w8, #12
+	mov	w0, #30
 	str	w8, [sp, #12]
-	add	sp, sp, #16
+	bl	"_.conv:int_string"
+	bl	_.println
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #32
 	ret
 	.cfi_endproc
                                         ; -- End function

@@ -15,18 +15,19 @@ import (
 type generator struct {
 	program *ast.Program
 	*checker.VariableProperties
-	mod       *ir.Module
-	ctx       *context
-	top       *ast.Scope
-	topfun    *ast.FuncScope
-	bl        *ir.Block // TODO: Move bl to context
-	breaks    map[*ir.Block]bool
-	str       types.Type
-	refs      map[typing.Type]ref_bundle
-	strs      map[string]StringGlobal
-	builtins  llvm_builtins
-	copys     map[typing.Type]*ir.Func
-	autofrees map[typing.Type]*ir.Func
+	mod        *ir.Module
+	ctx        *context
+	top        *ast.Scope
+	topfun     *ast.FuncScope
+	bl         *ir.Block // TODO: Move bl to context
+	breaks     map[*ir.Block]bool
+	str        types.Type
+	refs       map[typing.Type]ref_bundle
+	strs       map[string]StringGlobal
+	builtins   llvm_builtins
+	copys      map[typing.Type]*ir.Func
+	autofrees  map[typing.Type]*ir.Func
+	intrinsics map[string]*ir.Func
 }
 
 func (g *generator) scope(scope *ast.Scope, body func()) {
@@ -101,6 +102,7 @@ func Generate(program *ast.Program, props *checker.VariableProperties) string {
 		},
 		make(map[typing.Type]*ir.Func),
 		make(map[typing.Type]*ir.Func),
+		make(map[string]*ir.Func),
 	}
 
 	g.genStrings()
@@ -112,6 +114,7 @@ func Generate(program *ast.Program, props *checker.VariableProperties) string {
 	g.genIncDecs()
 	g.genComps()
 	g.genTypeConvs()
+	g.genIntrinsics()
 	g.genHiddens()
 
 	g.genAllocas(g.topfun)

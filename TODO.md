@@ -1,6 +1,8 @@
 # TODO
-- Unsigned integer literal
 - Work on error syntax (see Zig, V & Python)
+- Fix auto type conversion not generating in type conversions, ie `println(int!(3u))`
+- Move unary operation generation to basic
+- More uint type conversion
 - Better token to string handling
 - Basic Sulfur CLI
 - Force all variables and functions to have a visibility modifier

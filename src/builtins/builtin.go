@@ -21,6 +21,21 @@ var BinaryOps = []BinaryOpSignature{
 	QuickBinOp("int", "int", lexer.And),
 	QuickBinOp("int", "int", lexer.Nor),
 	QuickBinOp("int", "int", lexer.Nand),
+	QuickBinOp("int", "int", lexer.RightShift),
+	QuickBinOp("int", "int", lexer.LeftShift),
+	QuickBinOp("int", "int", lexer.ZeroFillRightShift),
+
+	// uint
+	QuickBinOp("uint", "uint", lexer.Addition),
+	QuickBinOp("uint", "uint", lexer.Subtraction),
+	QuickBinOp("uint", "uint", lexer.Multiplication),
+	QuickBinOp("uint", "uint", lexer.Division),
+	QuickBinOp("uint", "uint", lexer.Modulus),
+	QuickBinOp("uint", "uint", lexer.Or),
+	QuickBinOp("uint", "uint", lexer.And),
+	QuickBinOp("uint", "uint", lexer.Nor),
+	QuickBinOp("uint", "uint", lexer.Nand),
+	// TODO: Add shifts
 
 	// float
 	QuickBinOp("float", "float", lexer.Addition),
@@ -44,6 +59,11 @@ var UnaryOps = []UnaryOpSignature{
 	QuickUnOp("int", lexer.Subtraction),
 	QuickUnOp("int", lexer.Not),
 
+	// uint
+	QuickUnOp("uint", lexer.Not),
+	QuickUnOp("uint", lexer.CountLeadingZeros),
+	QuickUnOp("uint", lexer.CountTrailingZeros),
+
 	// float
 	QuickUnOp("float", lexer.Subtraction),
 
@@ -55,6 +75,10 @@ var IncDecs = []IncDecSignature{
 	// int
 	QuickIncDec("int", lexer.Increment),
 	QuickIncDec("int", lexer.Decrement),
+
+	// uint
+	QuickIncDec("uint", lexer.Increment),
+	QuickIncDec("uint", lexer.Decrement),
 
 	// float
 	QuickIncDec("float", lexer.Increment),
@@ -69,6 +93,14 @@ var Comps = []ComparisonSignature{
 	QuickComp("int", lexer.LessThan),
 	QuickComp("int", lexer.GreaterThanOrEqualTo),
 	QuickComp("int", lexer.LessThanOrEqualTo),
+
+	// uint
+	QuickComp("uint", lexer.EqualTo),
+	QuickComp("uint", lexer.NotEqualTo),
+	QuickComp("uint", lexer.GreaterThan),
+	QuickComp("uint", lexer.LessThan),
+	QuickComp("uint", lexer.GreaterThanOrEqualTo),
+	QuickComp("uint", lexer.LessThanOrEqualTo),
 
 	// int
 	QuickComp("float", lexer.EqualTo),
@@ -85,9 +117,14 @@ var Comps = []ComparisonSignature{
 
 var TypeConvs = []TypeConvSignature{
 	// int
+	QuickTypeConv("int", "uint"),
 	QuickTypeConv("int", "float"),
 	QuickTypeConv("int", "bool"),
 	QuickTypeConv("int", "string"),
+
+	// uint
+	QuickTypeConv("uint", "int"),
+	QuickTypeConv("uint", "float"),
 
 	// float
 	QuickTypeConv("float", "int"),

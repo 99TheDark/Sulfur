@@ -99,21 +99,21 @@ func (g *generator) genBasicBinaryOp(left, right value.Value, op lexer.TokenType
 		case typing.String: // = string + string
 			call := bl.NewCall(g.srcBinop(lexer.Addition, typing.String, typing.String).Ir, left, right)
 			return call
-		case typing.Integer: // = int + int
+		case typing.Integer, typing.Unsigned: // = int + int, uint + uint
 			return bl.NewAdd(left, right)
 		case typing.Float: // = float + float
 			return bl.NewFAdd(left, right)
 		}
 	case lexer.Subtraction:
 		switch typ {
-		case typing.Integer: // = int - int
+		case typing.Integer, typing.Unsigned: // = int - int, uint - uint
 			return bl.NewSub(left, right)
 		case typing.Float: // = float - float
 			return bl.NewFSub(left, right)
 		}
 	case lexer.Multiplication:
 		switch typ {
-		case typing.Integer: // = int * int
+		case typing.Integer, typing.Unsigned: // = int * int, uint * uint
 			return bl.NewMul(left, right)
 		case typing.Float: // = float * float
 			return bl.NewFMul(left, right)
@@ -122,6 +122,8 @@ func (g *generator) genBasicBinaryOp(left, right value.Value, op lexer.TokenType
 		switch typ {
 		case typing.Integer: // = int / int
 			return bl.NewSDiv(left, right)
+		case typing.Unsigned: // = uint / uint
+			return bl.NewUDiv(left, right)
 		case typing.Float: // = float / float
 			return bl.NewFDiv(left, right)
 		}
@@ -129,18 +131,35 @@ func (g *generator) genBasicBinaryOp(left, right value.Value, op lexer.TokenType
 		switch typ {
 		case typing.Integer: // = int % int
 			return bl.NewSRem(left, right)
+		case typing.Unsigned: // = uint % uint
+			return bl.NewURem(left, right)
 		case typing.Float: // = float % float
 			return bl.NewFRem(left, right)
 		}
 	case lexer.Or:
 		switch typ {
-		case typing.Integer, typing.Boolean:
+		case typing.Integer, typing.Unsigned, typing.Boolean: // = int | int, uint | uint, bool | bool
 			return bl.NewOr(left, right)
 		}
 	case lexer.And:
 		switch typ {
-		case typing.Integer, typing.Boolean:
+		case typing.Integer, typing.Unsigned, typing.Boolean: // = int | int, uint | uint, bool | bool
 			return bl.NewAnd(left, right)
+		}
+	case lexer.RightShift:
+		switch typ {
+		case typing.Integer: // = int >> int
+			return bl.NewAShr(left, right)
+		}
+	case lexer.LeftShift:
+		switch typ {
+		case typing.Integer: // = int << int
+			return bl.NewShl(left, right)
+		}
+	case lexer.ZeroFillRightShift:
+		switch typ {
+		case typing.Integer: // = int >>> int
+			return bl.NewLShr(left, right)
 		}
 	}
 
@@ -163,10 +182,19 @@ func (g *generator) genBasicTypeConv(val value.Value, from, to typing.Type) valu
 		switch from {
 		case typing.Integer:
 			switch to {
+			case typing.Unsigned:
+				return val
 			case typing.Float:
 				return bl.NewSIToFP(val, typ)
 			case typing.Boolean:
 				return bl.NewICmp(enum.IPredNE, val, Zero)
+			}
+		case typing.Unsigned:
+			switch to {
+			case typing.Integer:
+				return val
+			case typing.Float:
+				return bl.NewUIToFP(val, typ)
 			}
 		case typing.Float:
 			switch to {

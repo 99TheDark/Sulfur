@@ -102,10 +102,20 @@ func (g *generator) genUnaryOp(x ast.UnaryOp) value.Value {
 		}
 	case lexer.Not:
 		switch typ {
-		case typing.Integer: // = !int
+		case typing.Integer: // = !int, !uint
 			return bl.NewXor(val, NegOne)
 		case typing.Boolean: // = !bool
 			return bl.NewICmp(enum.IPredEQ, val, Zero)
+		}
+	case lexer.CountLeadingZeros:
+		switch typ {
+		case typing.Unsigned:
+			return bl.NewCall(g.intrinsics["clz"], val, constant.False)
+		}
+	case lexer.CountTrailingZeros:
+		switch typ {
+		case typing.Unsigned:
+			return bl.NewCall(g.intrinsics["ctz"], val, constant.False)
 		}
 	}
 
