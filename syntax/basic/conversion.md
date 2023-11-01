@@ -15,7 +15,11 @@ while 14 {
 ```
 and 
 ```
-id := new Identification()
-println(id ^ 2)
+func add(int a, int b) (int) {
+    return a + b
+} 
+
+truthy := true
+x := add(1, true)
 ```
 never happen.
