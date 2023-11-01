@@ -1,5 +1,4 @@
 # TODO
-- Fix auto type conversion not generating in type conversions, ie `println(int!(3u))`
 - Move unary operation generation to basic
 - Work on error syntax (see Zig, V & Python)
 - More uint type conversion

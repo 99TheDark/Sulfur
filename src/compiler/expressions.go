@@ -35,7 +35,7 @@ func (g *generator) genExpr(expr ast.Expr) value.Value {
 	case ast.Comparison:
 		return g.autoCast(g.genComparison(x), x, "comparison")
 	case ast.TypeConv:
-		return g.genTypeConv(x)
+		return g.autoCast(g.genTypeConv(x), x, "type conversion")
 	case ast.FuncCall:
 		return g.autoCast(g.genFuncCall(x), x, "function call")
 	case ast.Reference:
