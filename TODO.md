@@ -1,7 +1,6 @@
 # TODO
 - Move unary operation generation to basic
 - Work on error syntax (see Zig, V & Python)
-- More uint type conversion & operations
 - Uint references
 - Better token to string handling
 - Type promotion vs demotion syntax

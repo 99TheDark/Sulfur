@@ -10,11 +10,11 @@ declare void @free(i8*)
 define %type.string @".conv:int_string"(i32 %int) {
 entry:
     %.ret = alloca %type.string, align 8
-    %int.addr = alloca i32, align 4
-    store i32 %int, i32* %int.addr, align 4
-    %i = alloca i32, align 4
+    %int.ptr = alloca i32, align 4
+    store i32 %int, i32* %int.ptr, align 4
     %sign = alloca i32, align 4
     %buf = alloca i32*, align 4
+    %i = alloca i32, align 4
     %size = alloca i32, align 4
     %j = alloca i32, align 4
     %0 = icmp eq i32 %int, 0
@@ -32,23 +32,24 @@ if.end1:
     %4 = call i8* @malloc(i32 40) ; 10 * sizeof(4)
     %5 = bitcast i8* %4 to i32*
     store i32* %5, i32** %buf, align 8
-    store i32 9, i32* %i, align 4    store i32 0, i32* %sign, align 4
+    store i32 9, i32* %i, align 4 
+    store i32 0, i32* %sign, align 4
     %6 = icmp slt i32 %int, 0
     br i1 %6, label %if.then2, label %while.cond
 
 if.then2:
     %7 = sub i32 0, %int
-    store i32 %7, i32* %int.addr, align 4
+    store i32 %7, i32* %int.ptr, align 4
     store i32 1, i32* %sign, align 4
     br label %while.cond
 
 while.cond:
-    %8 = load i32, i32* %int.addr, align 4
+    %8 = load i32, i32* %int.ptr, align 4
     %9 = icmp sgt i32 %8, 0
     br i1 %9, label %while.body, label %while.end
 
 while.body:
-    %10 = load i32, i32* %int.addr, align 4
+    %10 = load i32, i32* %int.ptr, align 4
     %11 = srem i32 %10, 10
     %12 = add i32 %11, 48
     %13 = load i32*, i32** %buf, align 8
@@ -56,7 +57,7 @@ while.body:
     %15 = getelementptr inbounds i32, i32* %13, i32 %14
     store i32 %12, i32* %15, align 4
     %16 = sdiv i32 %10, 10
-    store i32 %16, i32* %int.addr, align 4
+    store i32 %16, i32* %int.ptr, align 4
     %17 = add i32 %14, -1
     store i32 %17, i32* %i, align 4
     br label %while.cond

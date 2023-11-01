@@ -19,9 +19,9 @@ declare void @llvm.memcpy.p0i8.p0i8.i64(i8* noalias nocapture writeonly, i8* noa
 
 define private i32 @pow5bits(i32 %e) {
 entry:
-    %e.addr = alloca i32, align 4
-    store i32 %e, i32* %e.addr, align 4
-    %0 = load i32, i32* %e.addr, align 4
+    %e.ptr = alloca i32, align 4
+    store i32 %e, i32* %e.ptr, align 4
+    %0 = load i32, i32* %e.ptr, align 4
     %cmp = icmp eq i32 %0, 0
     br i1 %cmp, label %cond.true, label %cond.false
 
@@ -29,7 +29,7 @@ cond.true:
     br label %cond.end
 
 cond.false:
-    %1 = load i32, i32* %e.addr, align 4
+    %1 = load i32, i32* %e.ptr, align 4
     %mul = mul nsw i32 %1, 23219280
     %add = add nsw i32 %mul, 9999999
     %div = sdiv i32 %add, 10000000
@@ -42,32 +42,32 @@ cond.end:
 
 define private i32 @mulShift(i32 %m, i64 %factor, i32 %shift) {
 entry:
-    %m.addr = alloca i32, align 4
-    %factor.addr = alloca i64, align 8
-    %shift.addr = alloca i32, align 4
+    %m.ptr = alloca i32, align 4
+    %factor.ptr = alloca i64, align 8
+    %shift.ptr = alloca i32, align 4
     %factor_low = alloca i32, align 4
     %factor_high = alloca i32, align 4
     %bits0 = alloca i64, align 8
     %bits1 = alloca i64, align 8
     %sum = alloca i64, align 8
     %shiftedSum = alloca i64, align 8
-    store i32 %m, i32* %m.addr, align 4
-    store i64 %factor, i64* %factor.addr, align 8
-    store i32 %shift, i32* %shift.addr, align 4
-    %0 = load i64, i64* %factor.addr, align 8
+    store i32 %m, i32* %m.ptr, align 4
+    store i64 %factor, i64* %factor.ptr, align 8
+    store i32 %shift, i32* %shift.ptr, align 4
+    %0 = load i64, i64* %factor.ptr, align 8
     %conv = trunc i64 %0 to i32
     store i32 %conv, i32* %factor_low, align 4
-    %1 = load i64, i64* %factor.addr, align 8
+    %1 = load i64, i64* %factor.ptr, align 8
     %shr = ashr i64 %1, 32
     %conv1 = trunc i64 %shr to i32
     store i32 %conv1, i32* %factor_high, align 4
-    %2 = load i32, i32* %m.addr, align 4
+    %2 = load i32, i32* %m.ptr, align 4
     %conv2 = sext i32 %2 to i64
     %3 = load i32, i32* %factor_low, align 4
     %conv3 = sext i32 %3 to i64
     %mul = mul nsw i64 %conv2, %conv3
     store i64 %mul, i64* %bits0, align 8
-    %4 = load i32, i32* %m.addr, align 4
+    %4 = load i32, i32* %m.ptr, align 4
     %conv4 = sext i32 %4 to i64
     %5 = load i32, i32* %factor_high, align 4
     %conv5 = sext i32 %5 to i64
@@ -79,7 +79,7 @@ entry:
     %add = add nsw i64 %shr7, %7
     store i64 %add, i64* %sum, align 8
     %8 = load i64, i64* %sum, align 8
-    %9 = load i32, i32* %shift.addr, align 4
+    %9 = load i32, i32* %shift.ptr, align 4
     %sub = sub nsw i32 %9, 32
     %sh_prom = zext i32 %sub to i64
     %shr8 = ashr i64 %8, %sh_prom
@@ -91,49 +91,49 @@ entry:
 
 define private i32 @mulPow5InvDivPow2(i32 %m, i32 %q, i32 %j) {
 entry:
-    %m.addr = alloca i32, align 4
-    %q.addr = alloca i32, align 4
-    %j.addr = alloca i32, align 4
-    store i32 %m, i32* %m.addr, align 4
-    store i32 %q, i32* %q.addr, align 4
-    store i32 %j, i32* %j.addr, align 4
-    %0 = load i32, i32* %m.addr, align 4
-    %1 = load i32, i32* %q.addr, align 4
+    %m.ptr = alloca i32, align 4
+    %q.ptr = alloca i32, align 4
+    %j.ptr = alloca i32, align 4
+    store i32 %m, i32* %m.ptr, align 4
+    store i32 %q, i32* %q.ptr, align 4
+    store i32 %j, i32* %j.ptr, align 4
+    %0 = load i32, i32* %m.ptr, align 4
+    %1 = load i32, i32* %q.ptr, align 4
     %idxprom = sext i32 %1 to i64
     %arrayidx = getelementptr inbounds [31 x i64], [31 x i64]* @FLOAT_POW5_INV_SPLIT, i64 0, i64 %idxprom
     %2 = load i64, i64* %arrayidx, align 8
-    %3 = load i32, i32* %j.addr, align 4
+    %3 = load i32, i32* %j.ptr, align 4
     %call = call i32 @mulShift(i32 %0, i64 %2, i32 %3)
     ret i32 %call
 }
 
 define private i32 @mulPow5divPow2(i32 %m, i32 %i, i32 %j) {
 entry:
-    %m.addr = alloca i32, align 4
-    %i.addr = alloca i32, align 4
-    %j.addr = alloca i32, align 4
-    store i32 %m, i32* %m.addr, align 4
-    store i32 %i, i32* %i.addr, align 4
-    store i32 %j, i32* %j.addr, align 4
-    %0 = load i32, i32* %m.addr, align 4
-    %1 = load i32, i32* %i.addr, align 4
+    %m.ptr = alloca i32, align 4
+    %i.ptr = alloca i32, align 4
+    %j.ptr = alloca i32, align 4
+    store i32 %m, i32* %m.ptr, align 4
+    store i32 %i, i32* %i.ptr, align 4
+    store i32 %j, i32* %j.ptr, align 4
+    %0 = load i32, i32* %m.ptr, align 4
+    %1 = load i32, i32* %i.ptr, align 4
     %idxprom = sext i32 %1 to i64
     %arrayidx = getelementptr inbounds [47 x i64], [47 x i64]* @FLOAT_POW5_SPLIT, i64 0, i64 %idxprom
     %2 = load i64, i64* %arrayidx, align 8
-    %3 = load i32, i32* %j.addr, align 4
+    %3 = load i32, i32* %j.ptr, align 4
     %call = call i32 @mulShift(i32 %0, i64 %2, i32 %3)
     ret i32 %call
 }
 
 define private i32 @multipleOfPow5(i32 %x, i32 %p) {
 entry:
-    %x.addr = alloca i32, align 4
-    %p.addr = alloca i32, align 4
-    store i32 %x, i32* %x.addr, align 4
-    store i32 %p, i32* %p.addr, align 4
-    %0 = load i32, i32* %x.addr, align 4
+    %x.ptr = alloca i32, align 4
+    %p.ptr = alloca i32, align 4
+    store i32 %x, i32* %x.ptr, align 4
+    store i32 %p, i32* %p.ptr, align 4
+    %0 = load i32, i32* %x.ptr, align 4
     %call = call i32 @pow5Factor(i32 %0)
-    %1 = load i32, i32* %p.addr, align 4
+    %1 = load i32, i32* %p.ptr, align 4
     %cmp = icmp sge i32 %call, %1
     %conv = zext i1 %cmp to i32
     ret i32 %conv
@@ -142,19 +142,19 @@ entry:
 define private i32 @pow5Factor(i32 %val) {
 entry:
     %.ret = alloca i32, align 4
-    %val.addr = alloca i32, align 4
+    %val.ptr = alloca i32, align 4
     %i = alloca i32, align 4
-    store i32 %val, i32* %val.addr, align 4
+    store i32 %val, i32* %val.ptr, align 4
     store i32 0, i32* %i, align 4
     br label %while.cond
 
 while.cond:
-    %0 = load i32, i32* %val.addr, align 4
+    %0 = load i32, i32* %val.ptr, align 4
     %cmp = icmp sgt i32 %0, 0
     br i1 %cmp, label %while.body, label %while.end
 
 while.body:
-    %1 = load i32, i32* %val.addr, align 4
+    %1 = load i32, i32* %val.ptr, align 4
     %rem = srem i32 %1, 5
     %cmp1 = icmp eq i32 %rem, 0
     br i1 %cmp1, label %if.then, label %if.end
@@ -165,9 +165,9 @@ if.then:
     br label %return
 
 if.end:
-    %3 = load i32, i32* %val.addr, align 4
+    %3 = load i32, i32* %val.ptr, align 4
     %div = sdiv i32 %3, 5
-    store i32 %div, i32* %val.addr, align 4
+    store i32 %div, i32* %val.ptr, align 4
     %4 = load i32, i32* %i, align 4
     %inc = add nsw i32 %4, 1
     store i32 %inc, i32* %i, align 4
@@ -184,10 +184,10 @@ return:
 
 define private i32 @decimalLength(i32 %val) {
 entry:
-    %val.addr = alloca i32, align 4
+    %val.ptr = alloca i32, align 4
     %len = alloca i32, align 4
     %factor = alloca i32, align 4
-    store i32 %val, i32* %val.addr, align 4
+    store i32 %val, i32* %val.ptr, align 4
     store i32 10, i32* %len, align 4
     store i32 1000000000, i32* %factor, align 4
     br label %for.cond
@@ -198,7 +198,7 @@ for.cond:
     br i1 %cmp, label %for.body, label %for.end
 
 for.body:
-    %1 = load i32, i32* %val.addr, align 4
+    %1 = load i32, i32* %val.ptr, align 4
     %2 = load i32, i32* %factor, align 4
     %cmp1 = icmp sge i32 %1, %2
     br i1 %cmp1, label %if.then, label %if.end
@@ -226,8 +226,8 @@ for.end:
 define private %type.string @normalString(float %num, i32 %bits) {
 entry:
     %.ret = alloca %type.string, align 8
-    %num.addr = alloca float, align 4
-    %bits.addr = alloca i32, align 4
+    %num.ptr = alloca float, align 4
+    %bits.ptr = alloca i32, align 4
     %exponent = alloca i32, align 4
     %mantissa = alloca i32, align 4
     %e2 = alloca i32, align 4
@@ -268,13 +268,13 @@ entry:
     %i292 = alloca i32, align 4
     %cur311 = alloca i32, align 4
     %i313 = alloca i32, align 4
-    store float %num, float* %num.addr, align 4
-    store i32 %bits, i32* %bits.addr, align 4
-    %0 = load i32, i32* %bits.addr, align 4
+    store float %num, float* %num.ptr, align 4
+    store i32 %bits, i32* %bits.ptr, align 4
+    %0 = load i32, i32* %bits.ptr, align 4
     %and = and i32 %0, 2139095040
     %shr = lshr i32 %and, 23
     store i32 %shr, i32* %exponent, align 4
-    %1 = load i32, i32* %bits.addr, align 4
+    %1 = load i32, i32* %bits.ptr, align 4
     %and1 = and i32 %1, 8388607
     store i32 %and1, i32* %mantissa, align 4
     %2 = load i32, i32* %exponent, align 4
@@ -704,7 +704,7 @@ lor.end168:
     %118 = bitcast i8* %call172 to i32*
     store i32* %118, i32** %result, align 8
     store i32 0, i32* %idx, align 4
-    %119 = load float, float* %num.addr, align 4
+    %119 = load float, float* %num.ptr, align 4
     %cmp173 = fcmp olt float %119, 0.000000e+00
     br i1 %cmp173, label %if.then175, label %if.end177
 
@@ -1136,20 +1136,20 @@ if.end345:
 define %type.string @".conv:float_string"(float %num) {
 entry:
     %.ret = alloca %type.string, align 8
-    %num.addr = alloca float, align 4
+    %num.ptr = alloca float, align 4
     %bits = alloca i32, align 4
     %.compoundliteral = alloca %union.anon, align 4
     %str = alloca %type.string, align 8
     %sign = alloca i32, align 4
-    store float %num, float* %num.addr, align 4
+    store float %num, float* %num.ptr, align 4
     %f = bitcast %union.anon* %.compoundliteral to float*
-    %0 = load float, float* %num.addr, align 4
+    %0 = load float, float* %num.ptr, align 4
     store float %0, float* %f, align 4
     %i = bitcast %union.anon* %.compoundliteral to i32*
     %1 = load i32, i32* %i, align 4
     store i32 %1, i32* %bits, align 4
-    %2 = load float, float* %num.addr, align 4
-    %3 = load float, float* %num.addr, align 4
+    %2 = load float, float* %num.ptr, align 4
+    %3 = load float, float* %num.ptr, align 4
     %cmp = fcmp une float %2, %3
     br i1 %cmp, label %if.then, label %if.else
 
@@ -1164,7 +1164,7 @@ if.then:
     br label %return
 
 if.else:
-    %6 = load float, float* %num.addr, align 4
+    %6 = load float, float* %num.ptr, align 4
     %cmp1 = fcmp oeq float %6, 0x7FF0000000000000
     br i1 %cmp1, label %if.then2, label %if.else5
 
@@ -1179,7 +1179,7 @@ if.then2:
     br label %return
 
 if.else5:
-    %9 = load float, float* %num.addr, align 4
+    %9 = load float, float* %num.ptr, align 4
     %cmp6 = fcmp oeq float %9, 0xFFF0000000000000
     br i1 %cmp6, label %if.then7, label %if.else10
 
@@ -1194,7 +1194,7 @@ if.then7:
     br label %return
 
 if.else10:
-    %12 = load float, float* %num.addr, align 4
+    %12 = load float, float* %num.ptr, align 4
     %cmp11 = fcmp oeq float %12, 0.000000e+00
     br i1 %cmp11, label %if.then12, label %if.else20
 
@@ -1227,7 +1227,7 @@ if.end:
     br label %return
 
 if.else20:
-    %17 = load float, float* %num.addr, align 4
+    %17 = load float, float* %num.ptr, align 4
     %18 = load i32, i32* %bits, align 4
     %call = call %type.string @normalString(float %17, i32 %18)
     store %type.string %call, %type.string* %.ret, align 8
