@@ -1832,7 +1832,7 @@ while.cond:                                       ; preds = %while.body, %if.end
 
 while.body:                                       ; preds = %while.cond
   %8 = load i32, i32* %uint.ptr, align 4
-  %9 = srem i32 %8, 10
+  %9 = urem i32 %8, 10
   %10 = add i32 %9, 48
   %11 = load i32*, i32** %buf, align 8
   %12 = load i32, i32* %i, align 4

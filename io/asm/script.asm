@@ -1788,35 +1788,29 @@ LBB26_2:                                ; %if.then
 ; %bb.1:                                ; %if.end1
 	mov	w0, #40
 	bl	_malloc
-	mov	w8, #26215
-	mov	w10, #52429
-	mov	w11, #9
-	movk	w8, #26214, lsl #16
+	mov	w8, #52429
+	mov	w10, #9
+	movk	w8, #52428, lsl #16
 	mov	w9, #10
-	movk	w10, #52428, lsl #16
 	str	x0, [sp, #16]
-	str	w11, [sp, #12]
-	ldr	w11, [sp, #28]
-	cbz	w11, LBB28_3
+	str	w10, [sp, #12]
+	ldr	w10, [sp, #28]
+	cbz	w10, LBB28_3
 LBB28_2:                                ; %while.body
                                         ; =>This Inner Loop Header: Depth=1
-	ldr	w11, [sp, #28]
-	smull	x12, w11, w8
-	mul	x14, x11, x10
-	lsr	x13, x12, #63
-	asr	x12, x12, #34
-	add	w12, w12, w13
-	ldrsw	x13, [sp, #12]
-	lsr	x14, x14, #35
-	msub	w11, w12, w9, w11
-	ldr	x12, [sp, #16]
-	sub	w15, w13, #1
-	add	w11, w11, #48
-	str	w14, [sp, #28]
-	str	w11, [x12, x13, lsl #2]
-	str	w15, [sp, #12]
-	mov	w11, w14
-	cbnz	w11, LBB28_2
+	ldr	w10, [sp, #28]
+	ldrsw	x12, [sp, #12]
+	ldr	x13, [sp, #16]
+	mul	x11, x10, x8
+	sub	w14, w12, #1
+	lsr	x11, x11, #35
+	msub	w10, w11, w9, w10
+	str	w14, [sp, #12]
+	str	w11, [sp, #28]
+	add	w10, w10, #48
+	str	w10, [x13, x12, lsl #2]
+	mov	w10, w11
+	cbnz	w10, LBB28_2
 LBB28_3:                                ; %while.end
 	ldr	w19, [sp, #12]
 	mov	w8, #9
