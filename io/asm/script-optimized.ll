@@ -1895,8 +1895,8 @@ exit:                                             ; preds = %for.cond, %if.then1
 
 define void @main() {
 entry:
-  %0 = lshr i32 -2341241, 5
-  %1 = call %type.string @".conv:int_string"(i32 %0)
+  %0 = icmp sgt i32 3, 5
+  %1 = call %type.string @".conv:bool_string"(i1 %0)
   call void @.println(%type.string %1)
   br label %exit
 

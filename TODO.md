@@ -1,14 +1,15 @@
 # TODO
-- Move unary operation generation to basic
-- Move comparison operation generation to basic
 - Import syntax
 - Export syntax
+- Think of module hierarchy with imports and exports
+    - Create module syntax
 - Unsigned integer references
 - Work on error syntax (see Zig, V & Python)
 - Better token to string handling
 - Type promotion vs demotion syntax
 - Type demotion implementation
 - Look into removing `>>` and simply applying it to `uint`s 
+- Have intrinics be stored somewhere as consts
 - Basic Sulfur CLI
 - Loop blocks (`loop {}`)
 - Rethink one-line blocks (`=>`)

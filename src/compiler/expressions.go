@@ -2,14 +2,12 @@ package compiler
 
 import (
 	"sulfur/src/ast"
-	"sulfur/src/lexer"
 	"sulfur/src/typing"
 	"unicode/utf8"
 
 	. "sulfur/src/errors"
 
 	"github.com/llir/llvm/ir/constant"
-	"github.com/llir/llvm/ir/enum"
 	"github.com/llir/llvm/ir/types"
 	"github.com/llir/llvm/ir/value"
 )
@@ -87,104 +85,22 @@ func (g *generator) genBinaryOp(x ast.BinaryOp) value.Value {
 	return val
 }
 
-// TODO: Move to basic
 func (g *generator) genUnaryOp(x ast.UnaryOp) value.Value {
-	bl := g.bl
-	val := g.genExpr(x.Value)
-	typ := g.Types[x]
-	switch x.Op.Type {
-	case lexer.Subtraction:
-		switch typ {
-		case typing.Integer: // = -int
-			return bl.NewSub(Zero, val)
-		case typing.Float: // = -float
-			return bl.NewFSub(FZero, val)
-		}
-	case lexer.Not:
-		switch typ {
-		case typing.Integer, typing.Unsigned: // = !int, !uint
-			return bl.NewXor(val, NegOne)
-		case typing.Boolean: // = !bool
-			return bl.NewICmp(enum.IPredEQ, val, Zero)
-		}
-	case lexer.CountLeadingZeros:
-		switch typ {
-		case typing.Unsigned:
-			return bl.NewCall(g.intrinsics["clz"], val, constant.False)
-		}
-	case lexer.CountTrailingZeros:
-		switch typ {
-		case typing.Unsigned:
-			return bl.NewCall(g.intrinsics["ctz"], val, constant.False)
-		}
+	val := g.genBasicUnaryOp(g.genExpr(x.Value), x.Op.Type, g.Types[x])
+	if val == Zero {
+		Errors.Error("Unexpected generating error during unary operation", x.Op.Location)
 	}
 
-	Errors.Error("Unexpected generating error during unary operation", x.Op.Location)
-	return Zero
+	return val
 }
 
 func (g *generator) genComparison(x ast.Comparison) value.Value {
-	bl := g.bl
-	left := g.genExpr(x.Left)
-	right := g.genExpr(x.Right)
-	comp := x.Comp
-	typ := g.Types[x.Left] // or x.Right
-
-	switch comp.Type {
-	case lexer.LessThan:
-		switch typ {
-		case typing.Integer: // = int < int
-			return bl.NewICmp(enum.IPredSLT, left, right)
-		case typing.Unsigned: // = uint < uint
-			return bl.NewICmp(enum.IPredULT, left, right)
-		case typing.Float: // = float < float
-			return bl.NewFCmp(enum.FPredULT, left, right)
-		}
-	case lexer.GreaterThan:
-		switch typ {
-		case typing.Integer: // = int > int
-			return bl.NewICmp(enum.IPredSGT, left, right)
-		case typing.Unsigned: // = uint > uint
-			return bl.NewICmp(enum.IPredUGT, left, right)
-		case typing.Float: // = float > float
-			return bl.NewFCmp(enum.FPredUGT, left, right)
-		}
-	case lexer.LessThanOrEqualTo:
-		switch typ {
-		case typing.Integer: // = int <= int
-			return bl.NewICmp(enum.IPredSLE, left, right)
-		case typing.Unsigned: // = uint <= uint
-			return bl.NewICmp(enum.IPredULE, left, right)
-		case typing.Float: // = float <= float
-			return bl.NewFCmp(enum.FPredULE, left, right)
-		}
-	case lexer.GreaterThanOrEqualTo:
-		switch typ {
-		case typing.Integer: // = int >= int
-			return bl.NewICmp(enum.IPredSGE, left, right)
-		case typing.Unsigned: // = uint >= uint
-			return bl.NewICmp(enum.IPredUGE, left, right)
-		case typing.Float: // = float >= float
-			return bl.NewFCmp(enum.FPredUGE, left, right)
-		}
-	case lexer.EqualTo:
-		switch typ {
-		case typing.Integer, typing.Unsigned, typing.Boolean: // = int == int, uint == uint, bool == bool
-			return bl.NewICmp(enum.IPredEQ, left, right)
-		case typing.Float: // = float == float
-			return bl.NewFCmp(enum.FPredUEQ, left, right)
-		}
-	case lexer.NotEqualTo:
-		switch typ {
-		case typing.Integer, typing.Unsigned, typing.Boolean: // = int != int, uint != uint, bool != bool
-			return bl.NewICmp(enum.IPredNE, left, right)
-		case typing.Float: // = float != float
-			return bl.NewFCmp(enum.FPredUNE, left, right)
-		}
+	val := g.genBasicComparison(g.genExpr(x.Left), g.genExpr(x.Right), x.Comp.Type, g.Types[x.Left])
+	if val == Zero {
+		Errors.Error("Unexpected generating error during comparison", x.Comp.Location)
 	}
 
-	Errors.Error("Unexpected generating error during comparison", x.Comp.Location)
-	return Zero
+	return val
 }
 
 func (g *generator) genTypeConv(x ast.TypeConv) value.Value {
