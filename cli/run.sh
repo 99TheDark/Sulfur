@@ -7,5 +7,5 @@ if [ $(ls -A cli/tmp | wc -l ) -ne 0 ]; then
     rm cli/tmp/*
 fi
 
-bash cli/build.sh $@ || exit 1
+bash cli/create.sh $@ || exit 1
 "./cli/tmp/${name}" || exit 1

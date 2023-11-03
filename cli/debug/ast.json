@@ -7,7 +7,7 @@
       "Name": "i"
      },
      "Value": {
-      "Value": 0
+      "Value": 15
      }
     },
     "Cond": {
@@ -15,11 +15,11 @@
       "Name": "i"
      },
      "Right": {
-      "Value": 10
+      "Value": 30
      },
      "Comp": {
-      "Type": "LessThan",
-      "Value": "<"
+      "Type": "LessThanOrEqualTo",
+      "Value": "<="
      }
     },
     "Inc": {
@@ -34,44 +34,108 @@
     "Body": {
      "Body": [
       {
-       "Func": {
-        "Name": "print"
+       "Name": {
+        "Name": "age"
        },
-       "Params": [
-        {
-         "Left": {
-          "Left": {
-           "Left": {
-            "Name": "i"
-           },
-           "Right": {
-            "Value": 10
-           },
-           "Op": {
-            "Type": "Modulus",
-            "Value": "%"
-           }
-          },
-          "Right": {
-           "Value": 1
-          },
-          "Op": {
-           "Type": "Addition",
-           "Value": "+"
-          }
-         },
-         "Right": {
-          "Value": " "
-         },
-         "Op": {
-          "Type": "Addition",
-          "Value": "+"
-         }
+       "Value": {
+        "Type": {
+         "Name": "string"
+        },
+        "Value": {
+         "Name": "i"
         }
-       ]
+       }
+      },
+      {
+       "Cond": {
+        "Left": {
+         "Name": "i"
+        },
+        "Right": {
+         "Value": 21
+        },
+        "Comp": {
+         "Type": "GreaterThanOrEqualTo",
+         "Value": ">="
+        }
+       },
+       "Body": {
+        "Body": [
+         {
+          "Func": {
+           "Name": "println"
+          },
+          "Params": [
+           {
+            "Left": {
+             "Left": {
+              "Value": "It is legal to drink at "
+             },
+             "Right": {
+              "Name": "age"
+             },
+             "Op": {
+              "Type": "Addition",
+              "Value": "+"
+             }
+            },
+            "Right": {
+             "Value": " years old"
+            },
+            "Op": {
+             "Type": "Addition",
+             "Value": "+"
+            }
+           }
+          ]
+         }
+        ]
+       },
+       "Else": {
+        "Body": [
+         {
+          "Func": {
+           "Name": "println"
+          },
+          "Params": [
+           {
+            "Left": {
+             "Left": {
+              "Value": "It is illegal to drink at "
+             },
+             "Right": {
+              "Name": "age"
+             },
+             "Op": {
+              "Type": "Addition",
+              "Value": "+"
+             }
+            },
+            "Right": {
+             "Value": " years old"
+            },
+            "Op": {
+             "Type": "Addition",
+             "Value": "+"
+            }
+           }
+          ]
+         }
+        ]
+       }
       }
      ]
     }
+   },
+   {
+    "Func": {
+     "Name": "println"
+    },
+    "Params": [
+     {
+      "Value": ". . . . . . . . . . . . . "
+     }
+    ]
    }
   ]
  }

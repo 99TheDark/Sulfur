@@ -41,6 +41,13 @@
     Token{String ' ' at 1:24, #50}
     Token{CloseParen ')' at 1:26, #52}
     Token{NewLine '\n' at 1:27, #53}
-    Token{CloseBrace '}' at 2:0, #54}
-    Token{EOF 'EOF' at 2:1, #55}
+    Token{WhiteSpace ' ' at 2:0, #54}
+    Token{WhiteSpace ' ' at 2:1, #55}
+    Token{WhiteSpace ' ' at 2:2, #56}
+    Token{WhiteSpace ' ' at 2:3, #57}
+    Token{Identifier 'hello' at 2:4, #58}
+    Token{OpenParen '(' at 2:9, #63}
+    Token{NewLine '\n' at 2:10, #64}
+    Token{CloseBrace '}' at 3:0, #65}
+    Token{EOF 'EOF' at 3:1, #66}
 }

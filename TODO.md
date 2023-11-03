@@ -1,6 +1,8 @@
 # TODO
 - Work on error syntax (see Zig, V & Python)
 - Look into removing `>>` and simply applying it to `uint`s
+- `-o` for the output file
+- Build vs run commands
 - Better token to string handling
 - Loop blocks (`loop {}`)
 - Have intrinics be stored somewhere as consts

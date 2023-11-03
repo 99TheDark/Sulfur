@@ -16,9 +16,23 @@ import (
 
 func main() {
 	start := time.Now()
-	args := os.Args[1:]
+	args := utils.NewQueue(os.Args[1:])
 
-	for _, name := range args {
+	// TODO: Add build vs run mode
+	if _, ok := args.Next(); !ok {
+		log.Fatalln("No mode given")
+	}
+
+	var input string
+	if arg, ok := args.Next(); ok {
+		input = *arg
+	} else {
+		log.Fatalln("No file given")
+	}
+
+	for !args.Empty() {
+		name := *args.Consume()
+
 		if name[0] == '-' { // Is a flag
 			switch name[1:] {
 			case "trace":
@@ -31,8 +45,7 @@ func main() {
 		}
 	}
 
-	// TODO: Add build vs run mode
-	build(args[1])
+	build(input)
 
 	fmt.Println("Compile time:", time.Since(start))
 }
