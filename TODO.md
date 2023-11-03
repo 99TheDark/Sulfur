@@ -1,8 +1,6 @@
 # TODO
 - Work on error syntax (see Zig, V & Python)
 - Better token to string handling
-- Type promotion vs demotion syntax
-- Type demotion implementation
 - Look into removing `>>` and simply applying it to `uint`s 
 - Have intrinics be stored somewhere as consts
 - Basic Sulfur CLI
@@ -11,7 +9,8 @@
 - Force all variables and functions to have a visibility modifier
 - Classes
 - String equals string 
-- Unsigned integer to string
+- Type promotion vs demotion syntax
+- Type demotion implementation
 - Only link functions when needed
 - Remove allocas from single-use variables
 - Add `string.length` and `string[idx]`
