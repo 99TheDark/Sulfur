@@ -18,11 +18,6 @@ func main() {
 	start := time.Now()
 	args := utils.NewQueue(os.Args[1:])
 
-	// TODO: Add build vs run mode
-	if _, ok := args.Next(); !ok {
-		log.Fatalln("No mode given")
-	}
-
 	var input string
 	if arg, ok := args.Next(); ok {
 		input = *arg

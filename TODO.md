@@ -1,8 +1,8 @@
 # TODO
-- Work on error syntax (see Zig, V & Python)
+- Build vs run commands
 - Look into removing `>>` and simply applying it to `uint`s
 - `-o` for the output file
-- Build vs run commands
+- Work on error syntax (see Zig, V & Python)
 - Better token to string handling
 - Loop blocks (`loop {}`)
 - Have intrinics be stored somewhere as consts
@@ -28,4 +28,5 @@
 - Create package name
 - Implement way of storing project name, modules etc (maybe TOML?)
 - Implement import & exports
+- Ignore unused things in main modules
 - More sensical errors for missing braces, brackets & parentheses
