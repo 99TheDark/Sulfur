@@ -1,4 +1,4 @@
-; ModuleID = 'script-linked.bc'
+; ModuleID = 'cli/tmp/complex_mix-optimized.bc'
 source_filename = "llvm-link"
 
 %ref.bool = type { i1*, i32 }
@@ -20,7 +20,9 @@ source_filename = "llvm-link"
 @.strCount = private unnamed_addr constant [13 x i32] [i32 32, i32 114, i32 101, i32 102, i32 101, i32 114, i32 101, i32 110, i32 99, i32 101, i32 40, i32 115, i32 41], align 4
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
 @.strZero.11 = private unnamed_addr constant [1 x i32] [i32 48], align 4
-@.str0 = private unnamed_addr constant [1 x i32] [i32 32], align 4
+@.str0 = private unnamed_addr constant [2 x i32] [i32 44, i32 32], align 4
+@.str2 = private unnamed_addr constant [4 x i32] [i32 74, i32 111, i32 104, i32 110], align 4
+@.str3 = private unnamed_addr constant [5 x i32] [i32 83, i32 109, i32 105, i32 116, i32 104], align 4
 
 define %ref.bool* @"newref:bool"(i1 %bool) {
 entry:
@@ -1955,44 +1957,79 @@ exit:                                             ; preds = %for.cond, %if.then1
 
 define void @main() {
 entry:
-  %i = alloca i32, align 4
-  store i32 0, i32* %i, align 4
-  br label %for.cond0
-
-exit:                                             ; preds = %for.end0
-  ret void
-
-for.cond0:                                        ; preds = %for.inc0, %entry
-  %0 = load i32, i32* %i, align 4
-  %1 = icmp slt i32 %0, 10
-  br i1 %1, label %for.body0, label %for.end0
-
-for.body0:                                        ; preds = %for.cond0
-  %2 = load i32, i32* %i, align 4
-  %3 = srem i32 %2, 10
-  %4 = add i32 %3, 1
-  %5 = call %type.string @".conv:int_string"(i32 %4)
-  %6 = getelementptr inbounds [1 x i32], [1 x i32]* @.str0, i32 0, i32 0
-  %7 = alloca %type.string, align 8
-  %8 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 0
-  store i32 1, i32* %8, align 8
-  %9 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 1
-  store i32* %6, i32** %9, align 8
-  %10 = load %type.string, %type.string* %7, align 8
-  %11 = call %type.string @".copy:string"(%type.string %10)
-  %12 = call %type.string @".add:string_string"(%type.string %5, %type.string %11)
-  call void @.print(%type.string %12)
-  call void @".free:string"(%type.string %11)
-  br label %for.inc0
-
-for.inc0:                                         ; preds = %for.body0
-  %13 = load i32, i32* %i, align 4
-  %14 = add i32 %13, 1
-  store i32 %14, i32* %i, align 4
-  br label %for.cond0
-
-for.end0:                                         ; preds = %for.cond0
+  %0 = call i32 @mod.fibonacci(i32 25)
+  %1 = call %type.string @".conv:int_string"(i32 %0)
+  call void @.println(%type.string %1)
+  %2 = getelementptr inbounds [4 x i32], [4 x i32]* @.str2, i32 0, i32 0
+  %3 = alloca %type.string, align 8
+  %4 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 0
+  store i32 4, i32* %4, align 8
+  %5 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 1
+  store i32* %2, i32** %5, align 8
+  %6 = load %type.string, %type.string* %3, align 8
+  %7 = call %type.string @".copy:string"(%type.string %6)
+  %8 = getelementptr inbounds [5 x i32], [5 x i32]* @.str3, i32 0, i32 0
+  %9 = alloca %type.string, align 8
+  %10 = getelementptr inbounds %type.string, %type.string* %9, i32 0, i32 0
+  store i32 5, i32* %10, align 8
+  %11 = getelementptr inbounds %type.string, %type.string* %9, i32 0, i32 1
+  store i32* %8, i32** %11, align 8
+  %12 = load %type.string, %type.string* %9, align 8
+  %13 = call %type.string @".copy:string"(%type.string %12)
+  %14 = call %type.string @mod.formatName(%type.string %7, %type.string %13)
+  call void @.println(%type.string %14)
   br label %exit
+
+exit:                                             ; preds = %entry
+  ret void
+}
+
+define private i32 @mod.fibonacci(i32 %0) {
+entry:
+  %.ret = alloca i32, align 4
+  %1 = icmp sle i32 %0, 1
+  br i1 %1, label %if.then0, label %if.else0
+
+exit:                                             ; preds = %if.end0, %if.else0, %if.then0
+  %2 = load i32, i32* %.ret, align 4
+  ret i32 %2
+
+if.then0:                                         ; preds = %entry
+  store i32 1, i32* %.ret, align 4
+  br label %exit
+
+if.else0:                                         ; preds = %entry
+  %3 = sub i32 %0, 2
+  %4 = call i32 @mod.fibonacci(i32 %3)
+  %5 = sub i32 %0, 1
+  %6 = call i32 @mod.fibonacci(i32 %5)
+  %7 = add i32 %4, %6
+  store i32 %7, i32* %.ret, align 4
+  br label %exit
+
+if.end0:                                          ; No predecessors!
+  br label %exit
+}
+
+define private %type.string @mod.formatName(%type.string %0, %type.string %1) {
+entry:
+  %.ret = alloca %type.string, align 8
+  %2 = getelementptr inbounds [2 x i32], [2 x i32]* @.str0, i32 0, i32 0
+  %3 = alloca %type.string, align 8
+  %4 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 0
+  store i32 2, i32* %4, align 8
+  %5 = getelementptr inbounds %type.string, %type.string* %3, i32 0, i32 1
+  store i32* %2, i32** %5, align 8
+  %6 = load %type.string, %type.string* %3, align 8
+  %7 = call %type.string @".copy:string"(%type.string %6)
+  %8 = call %type.string @".add:string_string"(%type.string %1, %type.string %7)
+  %9 = call %type.string @".add:string_string"(%type.string %8, %type.string %0)
+  store %type.string %9, %type.string* %.ret, align 8
+  br label %exit
+
+exit:                                             ; preds = %entry
+  %10 = load %type.string, %type.string* %.ret, align 8
+  ret %type.string %10
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }

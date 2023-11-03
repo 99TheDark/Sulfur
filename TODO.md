@@ -1,10 +1,8 @@
 # TODO
 - Switch to use the two flags in the settings package
-- Basic Sulfur CLI
-    - Should work anywhere 
-    - Should not create absurd files in the same directory, rather the tmp directory
-    - The `debug` flag should be added
-    - The `color` flag should be added
+- Add the `color` flag to cli
+- Add the `trace` flag to cli
+- Add the `debug` flag to cli
 - Work on error syntax (see Zig, V & Python)
 - Look into removing `>>` and simply applying it to `uint`s
 - Better token to string handling

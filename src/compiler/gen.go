@@ -56,9 +56,9 @@ func (g *generator) exit() {
 	g.bl = exit
 }
 
-func Generate(program *ast.Program, props *checker.VariableProperties) string {
+func Generate(program *ast.Program, props *checker.VariableProperties, path string) string {
 	mod := ir.NewModule()
-	mod.SourceFilename = "script.su"
+	mod.SourceFilename = path
 
 	str := mod.NewTypeDef("type.string", types.NewStruct(
 		types.I32,    // length

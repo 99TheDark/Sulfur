@@ -1,0 +1,263 @@
+{
+ "Contents": {
+  "Body": [
+   {
+    "Name": {
+     "Name": "formatName"
+    },
+    "Params": [
+     {
+      "Type": {
+       "Name": "string"
+      },
+      "Name": {
+       "Name": "firstName"
+      },
+      "Referenced": false
+     },
+     {
+      "Type": {
+       "Name": "string"
+      },
+      "Name": {
+       "Name": "lastName"
+      },
+      "Referenced": false
+     }
+    ],
+    "Return": {
+     "Name": "string"
+    },
+    "Body": {
+     "Body": [
+      {
+       "Value": {
+        "Left": {
+         "Left": {
+          "Name": "lastName"
+         },
+         "Right": {
+          "Value": ", "
+         },
+         "Op": {
+          "Type": "Addition",
+          "Value": "+"
+         }
+        },
+        "Right": {
+         "Name": "firstName"
+        },
+        "Op": {
+         "Type": "Addition",
+         "Value": "+"
+        }
+       }
+      }
+     ]
+    }
+   },
+   {
+    "Name": {
+     "Name": "fibonacci"
+    },
+    "Params": [
+     {
+      "Type": {
+       "Name": "int"
+      },
+      "Name": {
+       "Name": "x"
+      },
+      "Referenced": false
+     }
+    ],
+    "Return": {
+     "Name": "int"
+    },
+    "Body": {
+     "Body": [
+      {
+       "Cond": {
+        "Left": {
+         "Name": "x"
+        },
+        "Right": {
+         "Value": 1
+        },
+        "Comp": {
+         "Type": "LessThanOrEqualTo",
+         "Value": "<="
+        }
+       },
+       "Body": {
+        "Body": [
+         {
+          "Value": {
+           "Value": 1
+          }
+         }
+        ]
+       },
+       "Else": {
+        "Body": [
+         {
+          "Value": {
+           "Left": {
+            "Func": {
+             "Name": "fibonacci"
+            },
+            "Params": [
+             {
+              "Left": {
+               "Name": "x"
+              },
+              "Right": {
+               "Value": 2
+              },
+              "Op": {
+               "Type": "Subtraction",
+               "Value": "-"
+              }
+             }
+            ]
+           },
+           "Right": {
+            "Func": {
+             "Name": "fibonacci"
+            },
+            "Params": [
+             {
+              "Left": {
+               "Name": "x"
+              },
+              "Right": {
+               "Value": 1
+              },
+              "Op": {
+               "Type": "Subtraction",
+               "Value": "-"
+              }
+             }
+            ]
+           },
+           "Op": {
+            "Type": "Addition",
+            "Value": "+"
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   },
+   {
+    "Name": {
+     "Name": "add"
+    },
+    "Params": [
+     {
+      "Type": {
+       "Name": "int"
+      },
+      "Name": {
+       "Name": "a"
+      },
+      "Referenced": false
+     },
+     {
+      "Type": {
+       "Name": "int"
+      },
+      "Name": {
+       "Name": "b"
+      },
+      "Referenced": false
+     }
+    ],
+    "Return": {
+     "Name": "int"
+    },
+    "Body": {
+     "Body": [
+      {
+       "Value": {
+        "Left": {
+         "Name": "a"
+        },
+        "Right": {
+         "Name": "b"
+        },
+        "Op": {
+         "Type": "Addition",
+         "Value": "+"
+        }
+       }
+      }
+     ]
+    }
+   },
+   {
+    "Name": {
+     "Name": "doSomething"
+    },
+    "Params": [],
+    "Return": {
+     "Name": ""
+    },
+    "Body": {
+     "Body": [
+      {
+       "Func": {
+        "Name": "println"
+       },
+       "Params": [
+        {
+         "Value": "I did something!"
+        }
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "Func": {
+     "Name": "println"
+    },
+    "Params": [
+     {
+      "Func": {
+       "Name": "fibonacci"
+      },
+      "Params": [
+       {
+        "Value": 25
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "Func": {
+     "Name": "println"
+    },
+    "Params": [
+     {
+      "Func": {
+       "Name": "formatName"
+      },
+      "Params": [
+       {
+        "Value": "John"
+       },
+       {
+        "Value": "Smith"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

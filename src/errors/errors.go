@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sulfur/src/settings"
 	"sulfur/src/typing"
 	"sulfur/src/utils"
 )
 
-const Debug = true
-const Build = false
-const Color = false
 const CodeBuffer = 4
 
 var Errors ErrorGenerator
@@ -29,12 +27,12 @@ func (gen *ErrorGenerator) message(msg, typ, colorStart, colorEnd string, loc *t
 
 	numSize := size(row + 1)
 
-	if !Color {
+	if !settings.Colored {
 		colorStart, colorEnd = "", ""
 	}
 
 	err := ""
-	if Debug {
+	if settings.Stacktrace {
 		err += "\n"
 	}
 
@@ -54,7 +52,7 @@ func (gen *ErrorGenerator) message(msg, typ, colorStart, colorEnd string, loc *t
 func (gen *ErrorGenerator) Error(msg string, loc *typing.Location) {
 	err := gen.message(msg, "Error", "\033[31m", "\033[0m", loc)
 
-	if Debug {
+	if settings.Stacktrace {
 		panic(err)
 	} else {
 		fmt.Println(err)
