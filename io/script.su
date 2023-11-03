@@ -1,7 +1,3 @@
-x := 14u
-change(&x)
-println(x)
-
-func change(&uint num) {
-    num += 4u
+for i := 0; i < 10; i++ {
+    print(i % 10 + 1 + " ")
 }

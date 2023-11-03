@@ -1,11 +1,17 @@
 # TODO
-- Work on error syntax (see Zig, V & Python)
-- Better token to string handling
-- Look into removing `>>` and simply applying it to `uint`s
-- Have intrinics be stored somewhere as consts
-- Loop blocks (`loop {}`)
+- Switch to use the two flags in the settings package
 - Basic Sulfur CLI
+    - Should work anywhere 
+    - Should not create absurd files in the same directory, rather the tmp directory
+    - The `debug` flag should be added
+    - The `color` flag should be added
+- Work on error syntax (see Zig, V & Python)
+- Look into removing `>>` and simply applying it to `uint`s
+- Better token to string handling
+- Loop blocks (`loop {}`)
+- Have intrinics be stored somewhere as consts
 - Rethink one-line blocks (`=>`)
+- Autofree message
 - Force all variables and functions to have a visibility modifier inside classes
 - Classes
 - String equals string

@@ -1951,43 +1951,82 @@ LBB31_6:                                ; %exit
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	sub	sp, sp, #48
-	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 48
+	stp	x26, x25, [sp, #-80]!           ; 16-byte Folded Spill
+	stp	x24, x23, [sp, #16]             ; 16-byte Folded Spill
+	stp	x22, x21, [sp, #32]             ; 16-byte Folded Spill
+	stp	x20, x19, [sp, #48]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #64]             ; 16-byte Folded Spill
+	add	x29, sp, #64
+	sub	sp, sp, #16
+	.cfi_def_cfa w29, 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
 	.cfi_offset w19, -24
 	.cfi_offset w20, -32
-	mov	w0, #14
-	bl	"_newref:uint"
-	mov	x19, x0
-	str	x0, [sp, #8]
-	bl	"_ref:uint"
-	mov	x0, x19
-	bl	l_mod.change
-	ldr	x8, [sp, #8]
-	ldr	x8, [x8]
-	ldr	w0, [x8]
-	bl	"_.conv:uint_string"
-	bl	_.println
-	ldr	x0, [sp, #8]
-	bl	"_deref:uint"
-	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #48
+	.cfi_offset w21, -40
+	.cfi_offset w22, -48
+	.cfi_offset w23, -56
+	.cfi_offset w24, -64
+	.cfi_offset w25, -72
+	.cfi_offset w26, -80
+	mov	w24, #26215
+Lloh30:
+	adrp	x19, l_.str0@PAGE
+	movk	w24, #26214, lsl #16
+	mov	w25, #10
+	mov	w26, #1
+Lloh31:
+	add	x19, x19, l_.str0@PAGEOFF
+	stur	wzr, [x29, #-68]
+	mov	w8, wzr
+	cmp	w8, #9
+	b.gt	LBB32_2
+LBB32_1:                                ; %for.body0
+                                        ; =>This Inner Loop Header: Depth=1
+	ldursw	x8, [x29, #-68]
+	mul	x9, x8, x24
+	lsr	x10, x9, #63
+	asr	x9, x9, #34
+	add	w9, w9, w10
+	msub	w8, w9, w25, w8
+	add	w0, w8, #1
+	bl	"_.conv:int_string"
+	mov	x8, sp
+	mov	w20, w0
+	sub	x9, x8, #16
+	mov	x21, x1
+	mov	sp, x9
+	mov	w0, #1
+	mov	x1, x19
+	stur	w26, [x8, #-16]
+	stur	x19, [x8, #-8]
+	bl	"_.copy:string"
+	mov	w22, w0
+	mov	x23, x1
+	mov	w0, w20
+	mov	x1, x21
+	mov	w2, w22
+	mov	x3, x23
+	bl	"_.add:string_string"
+	bl	_.print
+	mov	w0, w22
+	mov	x1, x23
+	bl	"_.free:string"
+	ldur	w8, [x29, #-68]
+	add	w8, w8, #1
+	stur	w8, [x29, #-68]
+	mov	w8, w8
+	cmp	w8, #9
+	b.le	LBB32_1
+LBB32_2:                                ; %for.end0
+	sub	sp, x29, #64
+	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
+	ldp	x22, x21, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x24, x23, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
 	ret
-	.cfi_endproc
-                                        ; -- End function
-	.p2align	2                               ; -- Begin function mod.change
-l_mod.change:                           ; @mod.change
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	ldr	x8, [x0]
-	ldr	w9, [x8]
-	add	w9, w9, #4
-	str	w9, [x8]
-	ret
+	.loh AdrpAdd	Lloh30, Lloh31
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal16,16byte_literals
@@ -2171,5 +2210,9 @@ l_.strZero:
 	.p2align	2                               ; @.strZero.11
 l_.strZero.11:
 	.long	48                              ; 0x30
+
+	.p2align	2                               ; @.str0
+l_.str0:
+	.long	32                              ; 0x20
 
 .subsections_via_symbols

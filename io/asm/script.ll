@@ -2,54 +2,56 @@
 source_filename = "script.su"
 
 %type.string = type { i32, i32* }
-%ref.uint = type { i32*, i32 }
+
+@.str0 = private unnamed_addr constant [1 x i32] [i32 32], align 4
 
 define void @main() {
 entry:
-	%x = alloca %ref.uint*, align 8
-	%0 = call %ref.uint* @"newref:uint"(i32 14)
-	store %ref.uint* %0, %ref.uint** %x, align 8
-	%1 = load %ref.uint*, %ref.uint** %x, align 8
-	call void @"ref:uint"(%ref.uint* %1)
-	call void @mod.change(%ref.uint* %1)
-	%2 = load %ref.uint*, %ref.uint** %x, align 8
-	%3 = getelementptr inbounds %ref.uint, %ref.uint* %2, i32 0, i32 0
-	%4 = load i32*, i32** %3, align 8
-	%5 = load i32, i32* %4, align 4
-	%6 = call %type.string @".conv:uint_string"(i32 %5)
-	call void @.println(%type.string %6)
-	%7 = load %ref.uint*, %ref.uint** %x, align 8
-	call void @"deref:uint"(%ref.uint* %7)
-	br label %exit
+	%i = alloca i32, align 4
+	store i32 0, i32* %i
+	br label %for.cond0
 
 exit:
 	ret void
-}
 
-declare %ref.uint* @"newref:uint"(i32 %0)
+for.cond0:
+	%0 = load i32, i32* %i, align 4
+	%1 = icmp slt i32 %0, 10
+	br i1 %1, label %for.body0, label %for.end0
 
-declare void @"ref:uint"(%ref.uint* %0)
+for.body0:
+	%2 = load i32, i32* %i, align 4
+	%3 = srem i32 %2, 10
+	%4 = add i32 %3, 1
+	%5 = call %type.string @".conv:int_string"(i32 %4)
+	%6 = getelementptr inbounds [1 x i32], [1 x i32]* @.str0, i32 0, i32 0
+	%7 = alloca %type.string, align 8
+	%8 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 0
+	store i32 1, i32* %8, align 8
+	%9 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 1
+	store i32* %6, i32** %9, align 8
+	%10 = load %type.string, %type.string* %7, align 8
+	%11 = call %type.string @".copy:string"(%type.string %10)
+	%12 = call %type.string @".add:string_string"(%type.string %5, %type.string %11)
+	call void @.print(%type.string %12)
+	call void @".free:string"(%type.string %11)
+	br label %for.inc0
 
-declare void @"deref:uint"(%ref.uint* %0)
+for.inc0:
+	%13 = load i32, i32* %i, align 4
+	%14 = add i32 %13, 1
+	store i32 %14, i32* %i
+	br label %for.cond0
 
-define private void @mod.change(%ref.uint* %0) {
-entry:
-	%1 = getelementptr inbounds %ref.uint, %ref.uint* %0, i32 0, i32 0
-	%2 = load i32*, i32** %1, align 8
-	%3 = load i32, i32* %2, align 4
-	%4 = add i32 %3, 4
-	%5 = getelementptr inbounds %ref.uint, %ref.uint* %0, i32 0, i32 0
-	%6 = load i32*, i32** %5, align 8
-	store i32 %4, i32* %6, align 8
+for.end0:
 	br label %exit
-
-exit:
-	ret void
 }
 
-declare void @.println(%type.string %0)
+declare void @.print(%type.string %0)
 
-declare %type.string @".conv:uint_string"(i32 %0)
+declare %type.string @".add:string_string"(%type.string %0, %type.string %1)
+
+declare %type.string @".conv:int_string"(i32 %0)
 
 declare i32 @llvm.ctlz.i32(i32 %0, i1 immarg %1)
 
