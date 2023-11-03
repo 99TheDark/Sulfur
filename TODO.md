@@ -1,5 +1,4 @@
 # TODO
-- Switch to use the two flags in the settings package
 - Work on error syntax (see Zig, V & Python)
 - Look into removing `>>` and simply applying it to `uint`s
 - Better token to string handling
