@@ -25,7 +25,8 @@
     Token{NewLine '\n' at 1:27, #53}
     Token{Identifier 'hello' at 2:4, #58}
     Token{OpenParen '(' at 2:9, #63}
-    Token{NewLine '\n' at 2:10, #64}
-    Token{CloseBrace '}' at 3:0, #65}
-    Token{EOF 'EOF' at 3:1, #66}
+    Token{CloseParen ')' at 2:10, #64}
+    Token{NewLine '\n' at 2:11, #65}
+    Token{CloseBrace '}' at 3:0, #66}
+    Token{EOF 'EOF' at 3:1, #67}
 }

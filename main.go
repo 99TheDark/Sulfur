@@ -62,27 +62,27 @@ func build(path string) {
 
 	errors.Step = errors.Lexing
 	unfiltered := lexer.Lex(code)
-	if err := lexer.Save(unfiltered, "cli/debug/unfiltered.txt"); err != nil { // TODO: Only work in Debug mode
-		log.Fatalln(err)
-	}
+	utils.AttemptSave(func() error {
+		return lexer.Save(unfiltered, "cli/debug/unfiltered.txt")
+	})
 
 	tokens := lexer.Filter(unfiltered)
-	if err := lexer.Save(tokens, "cli/debug/tokens.txt"); err != nil { // TODO: Only work in Debug mode
-		log.Fatalln(err)
-	}
+	utils.AttemptSave(func() error {
+		return lexer.Save(tokens, "cli/debug/tokens.txt")
+	})
 
 	errors.Step = errors.Parsing
 	ast := parser.Parse(code, tokens)
-	if err := parser.Save(ast, 1, "cli/debug/ast.json"); err != nil { // TODO: Only work in Debug mode
-		log.Fatalln(err)
-	}
+	utils.AttemptSave(func() error {
+		return parser.Save(ast, 1, "cli/debug/ast.json")
+	})
 
 	errors.Step = errors.Inferring
 	props := checker.TypeCheck(ast)
 
 	errors.Step = errors.Generating
 	llcode := compiler.Generate(ast, props, path)
-	if err := compiler.Save("; ModuleID = '"+path+"'\n"+llcode, "cli/tmp/"+name+".ll"); err != nil {
-		log.Fatalln(err)
-	}
+	utils.AttemptSave(func() error {
+		return compiler.Save("; ModuleID = '"+path+"'\n"+llcode, "cli/tmp/"+name+".ll")
+	})
 }
