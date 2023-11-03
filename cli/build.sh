@@ -1,3 +1,3 @@
 #!/bin/bash
-./sulfur build $1
-bash cli/compile.sh $1
+./sulfur build $@ || exit 1
+bash cli/compile.sh $@ || exit 1

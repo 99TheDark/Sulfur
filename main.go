@@ -9,6 +9,7 @@ import (
 	"sulfur/src/errors"
 	"sulfur/src/lexer"
 	"sulfur/src/parser"
+	"sulfur/src/settings"
 	"sulfur/src/utils"
 	"time"
 )
@@ -17,6 +18,20 @@ func main() {
 	start := time.Now()
 	args := os.Args[1:]
 
+	for _, name := range args {
+		if name[0] == '-' { // Is a flag
+			switch name[1:] {
+			case "trace":
+				settings.Stacktrace = true
+			case "debug":
+				settings.Debug = true
+			case "colorless":
+				settings.Colored = false
+			}
+		}
+	}
+
+	// TODO: Add build vs run mode
 	build(args[1])
 
 	fmt.Println("Compile time:", time.Since(start))

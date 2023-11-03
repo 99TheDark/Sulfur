@@ -1,8 +1,5 @@
 # TODO
 - Switch to use the two flags in the settings package
-- Add the `color` flag to cli
-- Add the `trace` flag to cli
-- Add the `debug` flag to cli
 - Work on error syntax (see Zig, V & Python)
 - Look into removing `>>` and simply applying it to `uint`s
 - Better token to string handling
@@ -30,3 +27,4 @@
 - Create package name
 - Implement way of storing project name, modules etc (maybe TOML?)
 - Implement import & exports
+- More sensical errors for missing braces, brackets & parentheses
