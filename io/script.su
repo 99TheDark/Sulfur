@@ -1,1 +1,7 @@
-println(3 > 5)
+x := 14u
+change(&x)
+println(x)
+
+func change(&uint num) {
+    num += 4u
+}

@@ -8,23 +8,23 @@ declare void @free(i8*)
 declare void @freeMsg()
 declare void @countMsg(i32)
 
-define %ref.bool* @"newref:bool"(i1 %value) {
+define %ref.bool* @"newref:bool"(i1 %bool) {
 entry:
-    %value.addr = alloca i1, align 1
+    %bool.addr = alloca i1, align 1
     %ref = alloca %ref.bool*, align 8
-    store i1 %value, i1* %value.addr, align 1
+    store i1 %bool, i1* %bool.addr, align 1
     %call = call i8* @malloc(i32 16) ; sizeof(&bool) = 16
     %0 = bitcast i8* %call to %ref.bool*
     store %ref.bool* %0, %ref.bool** %ref, align 8
     %call1 = call i8* @malloc(i32 1) ; sizeof(bool) = 1
     %1 = bitcast i8* %call1 to i1*
     %2 = load %ref.bool*, %ref.bool** %ref, align 8
-    %value2 = getelementptr inbounds %ref.bool, %ref.bool* %2, i32 0, i32 0
-    store i1* %1, i1** %value2, align 8
-    %3 = load i1, i1* %value.addr, align 1
+    %bool2 = getelementptr inbounds %ref.bool, %ref.bool* %2, i32 0, i32 0
+    store i1* %1, i1** %bool2, align 8
+    %3 = load i1, i1* %bool.addr, align 1
     %4 = load %ref.bool*, %ref.bool** %ref, align 8
-    %value3 = getelementptr inbounds %ref.bool, %ref.bool* %4, i32 0, i32 0
-    %5 = load i1*, i1** %value3, align 8
+    %bool3 = getelementptr inbounds %ref.bool, %ref.bool* %4, i32 0, i32 0
+    %5 = load i1*, i1** %bool3, align 8
     store i1 %3, i1* %5, align 1
     %6 = load %ref.bool*, %ref.bool** %ref, align 8
     %count = getelementptr inbounds %ref.bool, %ref.bool* %6, i32 0, i32 1

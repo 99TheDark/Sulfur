@@ -8,23 +8,23 @@ declare void @free(i8*)
 declare void @freeMsg()
 declare void @countMsg(i32)
 
-define %ref.int* @"newref:int"(i32 %value) {
+define %ref.int* @"newref:int"(i32 %int) {
 entry:
-    %value.addr = alloca i32, align 4
+    %int.addr = alloca i32, align 4
     %ref = alloca %ref.int*, align 8
-    store i32 %value, i32* %value.addr, align 4
+    store i32 %int, i32* %int.addr, align 4
     %call = call i8* @malloc(i32 16) ; sizeof(&int) = 16
     %0 = bitcast i8* %call to %ref.int*
     store %ref.int* %0, %ref.int** %ref, align 8
     %call1 = call i8* @malloc(i32 4) ; sizeof(int) = 4
     %1 = bitcast i8* %call1 to i32*
     %2 = load %ref.int*, %ref.int** %ref, align 8
-    %value2 = getelementptr inbounds %ref.int, %ref.int* %2, i32 0, i32 0
-    store i32* %1, i32** %value2, align 8
-    %3 = load i32, i32* %value.addr, align 4
+    %int2 = getelementptr inbounds %ref.int, %ref.int* %2, i32 0, i32 0
+    store i32* %1, i32** %int2, align 8
+    %3 = load i32, i32* %int.addr, align 4
     %4 = load %ref.int*, %ref.int** %ref, align 8
-    %value3 = getelementptr inbounds %ref.int, %ref.int* %4, i32 0, i32 0
-    %5 = load i32*, i32** %value3, align 8
+    %int3 = getelementptr inbounds %ref.int, %ref.int* %4, i32 0, i32 0
+    %5 = load i32*, i32** %int3, align 8
     store i32 %3, i32* %5, align 4
     %6 = load %ref.int*, %ref.int** %ref, align 8
     %count = getelementptr inbounds %ref.int, %ref.int* %6, i32 0, i32 1

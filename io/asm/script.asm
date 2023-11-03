@@ -1770,6 +1770,91 @@ LBB26_2:                                ; %if.then
 	ret
 	.cfi_endproc
                                         ; -- End function
+	.globl	"_newref:uint"                  ; -- Begin function newref:uint
+	.p2align	2
+"_newref:uint":                         ; @"newref:uint"
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #32
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 32
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	str	w0, [sp, #12]
+	mov	w0, #16
+	bl	_malloc
+	str	x0, [sp]
+	mov	w0, #4
+	bl	_malloc
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	mov	x9, x0
+	ldr	x8, [sp]
+	ldr	w10, [sp, #12]
+	mov	x0, x8
+	str	x9, [x8]
+	str	w10, [x9]
+	str	wzr, [x8, #8]
+	add	sp, sp, #32
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.globl	"_ref:uint"                     ; -- Begin function ref:uint
+	.p2align	2
+"_ref:uint":                            ; @"ref:uint"
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 32
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	ldr	w8, [x0, #8]
+	mov	x19, x0
+	add	w20, w8, #1
+	mov	w0, w20
+	bl	_countMsg
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	str	w20, [x19, #8]
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.globl	"_deref:uint"                   ; -- Begin function deref:uint
+	.p2align	2
+"_deref:uint":                          ; @"deref:uint"
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 32
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	ldr	w8, [x0, #8]
+	mov	x19, x0
+	sub	w20, w8, #1
+	mov	w0, w20
+	bl	_countMsg
+	str	w20, [x19, #8]
+	cbz	w20, LBB30_2
+; %bb.1:                                ; %exit
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+LBB30_2:                                ; %if.then
+	ldr	x0, [x19]
+	bl	_free
+	mov	x0, x19
+	bl	_free
+	bl	_freeMsg
+	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ret
+	.cfi_endproc
+                                        ; -- End function
 	.globl	"_.conv:uint_string"            ; -- Begin function .conv:uint_string
 	.p2align	2
 "_.conv:uint_string":                   ; @".conv:uint_string"
@@ -1784,7 +1869,7 @@ LBB26_2:                                ; %if.then
 	.cfi_offset w19, -24
 	.cfi_offset w20, -32
 	str	w0, [sp, #28]
-	cbz	w0, LBB28_5
+	cbz	w0, LBB31_5
 ; %bb.1:                                ; %if.end1
 	mov	w0, #40
 	bl	_malloc
@@ -1795,8 +1880,8 @@ LBB26_2:                                ; %if.then
 	str	x0, [sp, #16]
 	str	w10, [sp, #12]
 	ldr	w10, [sp, #28]
-	cbz	w10, LBB28_3
-LBB28_2:                                ; %while.body
+	cbz	w10, LBB31_3
+LBB31_2:                                ; %while.body
                                         ; =>This Inner Loop Header: Depth=1
 	ldr	w10, [sp, #28]
 	ldrsw	x12, [sp, #12]
@@ -1810,8 +1895,8 @@ LBB28_2:                                ; %while.body
 	add	w10, w10, #48
 	str	w10, [x13, x12, lsl #2]
 	mov	w10, w11
-	cbnz	w10, LBB28_2
-LBB28_3:                                ; %while.end
+	cbnz	w10, LBB31_2
+LBB31_3:                                ; %while.end
 	ldr	w19, [sp, #12]
 	mov	w8, #9
 	sub	w8, w8, w19
@@ -1825,8 +1910,8 @@ LBB28_3:                                ; %while.end
 	str	w8, [sp, #12]
 	ldp	w8, w9, [sp, #4]
 	cmp	w8, w9
-	b.ge	LBB28_6
-LBB28_4:                                ; %for.body
+	b.ge	LBB31_6
+LBB31_4:                                ; %for.body
                                         ; =>This Inner Loop Header: Depth=1
 	ldr	w8, [sp, #12]
 	ldrsw	x9, [sp, #4]
@@ -1839,9 +1924,9 @@ LBB28_4:                                ; %for.body
 	str	w8, [x10, x9, lsl #2]
 	ldp	w8, w9, [sp, #4]
 	cmp	w8, w9
-	b.lt	LBB28_4
-	b	LBB28_6
-LBB28_5:                                ; %if.then1
+	b.lt	LBB31_4
+	b	LBB31_6
+LBB31_5:                                ; %if.then1
 Lloh28:
 	adrp	x9, l_.strZero.11@PAGE
 	mov	w8, #1
@@ -1849,7 +1934,7 @@ Lloh29:
 	add	x9, x9, l_.strZero.11@PAGEOFF
 	str	w8, [sp, #32]
 	str	x9, [sp, #40]
-LBB28_6:                                ; %exit
+LBB31_6:                                ; %exit
 	ldr	x0, [sp, #16]
 	bl	_free
 	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
@@ -1866,14 +1951,42 @@ LBB28_6:                                ; %exit
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 16
+	sub	sp, sp, #48
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 48
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	mov	w0, wzr
-	bl	"_.conv:bool_string"
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	mov	w0, #14
+	bl	"_newref:uint"
+	mov	x19, x0
+	str	x0, [sp, #8]
+	bl	"_ref:uint"
+	mov	x0, x19
+	bl	l_mod.change
+	ldr	x8, [sp, #8]
+	ldr	x8, [x8]
+	ldr	w0, [x8]
+	bl	"_.conv:uint_string"
 	bl	_.println
-	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
+	ldr	x0, [sp, #8]
+	bl	"_deref:uint"
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #48
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.p2align	2                               ; -- Begin function mod.change
+l_mod.change:                           ; @mod.change
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	ldr	x8, [x0]
+	ldr	w9, [x8]
+	add	w9, w9, #4
+	str	w9, [x8]
 	ret
 	.cfi_endproc
                                         ; -- End function

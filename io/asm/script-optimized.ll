@@ -21,23 +21,23 @@ source_filename = "llvm-link"
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
 @.strZero.11 = private unnamed_addr constant [1 x i32] [i32 48], align 4
 
-define %ref.bool* @"newref:bool"(i1 %value) {
+define %ref.bool* @"newref:bool"(i1 %bool) {
 entry:
-  %value.addr = alloca i1, align 1
+  %bool.addr = alloca i1, align 1
   %ref = alloca %ref.bool*, align 8
-  store i1 %value, i1* %value.addr, align 1
+  store i1 %bool, i1* %bool.addr, align 1
   %call = call i8* @malloc(i32 16)
   %0 = bitcast i8* %call to %ref.bool*
   store %ref.bool* %0, %ref.bool** %ref, align 8
   %call1 = call i8* @malloc(i32 1)
   %1 = bitcast i8* %call1 to i1*
   %2 = load %ref.bool*, %ref.bool** %ref, align 8
-  %value2 = getelementptr inbounds %ref.bool, %ref.bool* %2, i32 0, i32 0
-  store i1* %1, i1** %value2, align 8
-  %3 = load i1, i1* %value.addr, align 1
+  %bool2 = getelementptr inbounds %ref.bool, %ref.bool* %2, i32 0, i32 0
+  store i1* %1, i1** %bool2, align 8
+  %3 = load i1, i1* %bool.addr, align 1
   %4 = load %ref.bool*, %ref.bool** %ref, align 8
-  %value3 = getelementptr inbounds %ref.bool, %ref.bool* %4, i32 0, i32 0
-  %5 = load i1*, i1** %value3, align 8
+  %bool3 = getelementptr inbounds %ref.bool, %ref.bool* %4, i32 0, i32 0
+  %5 = load i1*, i1** %bool3, align 8
   store i1 %3, i1* %5, align 1
   %6 = load %ref.bool*, %ref.bool** %ref, align 8
   %count = getelementptr inbounds %ref.bool, %ref.bool* %6, i32 0, i32 1
@@ -424,23 +424,23 @@ exit:                                             ; preds = %if.else, %if.then
   ret %type.string %6
 }
 
-define %ref.float* @"newref:float"(float %value) {
+define %ref.float* @"newref:float"(float %float) {
 entry:
-  %value.addr = alloca float, align 4
+  %float.addr = alloca float, align 4
   %ref = alloca %ref.float*, align 8
-  store float %value, float* %value.addr, align 4
+  store float %float, float* %float.addr, align 4
   %call = call i8* @malloc(i32 16)
   %0 = bitcast i8* %call to %ref.float*
   store %ref.float* %0, %ref.float** %ref, align 8
   %call1 = call i8* @malloc(i32 4)
   %1 = bitcast i8* %call1 to float*
   %2 = load %ref.float*, %ref.float** %ref, align 8
-  %value2 = getelementptr inbounds %ref.float, %ref.float* %2, i32 0, i32 0
-  store float* %1, float** %value2, align 8
-  %3 = load float, float* %value.addr, align 4
+  %float2 = getelementptr inbounds %ref.float, %ref.float* %2, i32 0, i32 0
+  store float* %1, float** %float2, align 8
+  %3 = load float, float* %float.addr, align 4
   %4 = load %ref.float*, %ref.float** %ref, align 8
-  %value3 = getelementptr inbounds %ref.float, %ref.float* %4, i32 0, i32 0
-  %5 = load float*, float** %value3, align 8
+  %float3 = getelementptr inbounds %ref.float, %ref.float* %4, i32 0, i32 0
+  %5 = load float*, float** %float3, align 8
   store float %3, float* %5, align 4
   %6 = load %ref.float*, %ref.float** %ref, align 8
   %count = getelementptr inbounds %ref.float, %ref.float* %6, i32 0, i32 1
@@ -1718,23 +1718,23 @@ entry:
   ret void
 }
 
-define %ref.int* @"newref:int"(i32 %value) {
+define %ref.int* @"newref:int"(i32 %int) {
 entry:
-  %value.addr = alloca i32, align 4
+  %int.addr = alloca i32, align 4
   %ref = alloca %ref.int*, align 8
-  store i32 %value, i32* %value.addr, align 4
+  store i32 %int, i32* %int.addr, align 4
   %call = call i8* @malloc(i32 16)
   %0 = bitcast i8* %call to %ref.int*
   store %ref.int* %0, %ref.int** %ref, align 8
   %call1 = call i8* @malloc(i32 4)
   %1 = bitcast i8* %call1 to i32*
   %2 = load %ref.int*, %ref.int** %ref, align 8
-  %value2 = getelementptr inbounds %ref.int, %ref.int* %2, i32 0, i32 0
-  store i32* %1, i32** %value2, align 8
-  %3 = load i32, i32* %value.addr, align 4
+  %int2 = getelementptr inbounds %ref.int, %ref.int* %2, i32 0, i32 0
+  store i32* %1, i32** %int2, align 8
+  %3 = load i32, i32* %int.addr, align 4
   %4 = load %ref.int*, %ref.int** %ref, align 8
-  %value3 = getelementptr inbounds %ref.int, %ref.int* %4, i32 0, i32 0
-  %5 = load i32*, i32** %value3, align 8
+  %int3 = getelementptr inbounds %ref.int, %ref.int* %4, i32 0, i32 0
+  %5 = load i32*, i32** %int3, align 8
   store i32 %3, i32* %5, align 4
   %6 = load %ref.int*, %ref.int** %ref, align 8
   %count = getelementptr inbounds %ref.int, %ref.int* %6, i32 0, i32 1
@@ -1796,6 +1796,65 @@ entry:
   store i32* %6, i32** %3, align 8
   %9 = load %type.string, %type.string* %.ret, align 8
   ret %type.string %9
+}
+
+define %ref.int* @"newref:uint"(i32 %uint) {
+entry:
+  %uint.addr = alloca i32, align 4
+  %ref = alloca %ref.int*, align 8
+  store i32 %uint, i32* %uint.addr, align 4
+  %call = call i8* @malloc(i32 16)
+  %0 = bitcast i8* %call to %ref.int*
+  store %ref.int* %0, %ref.int** %ref, align 8
+  %call1 = call i8* @malloc(i32 4)
+  %1 = bitcast i8* %call1 to i32*
+  %2 = load %ref.int*, %ref.int** %ref, align 8
+  %uint2 = getelementptr inbounds %ref.int, %ref.int* %2, i32 0, i32 0
+  store i32* %1, i32** %uint2, align 8
+  %3 = load i32, i32* %uint.addr, align 4
+  %4 = load %ref.int*, %ref.int** %ref, align 8
+  %uint3 = getelementptr inbounds %ref.int, %ref.int* %4, i32 0, i32 0
+  %5 = load i32*, i32** %uint3, align 8
+  store i32 %3, i32* %5, align 4
+  %6 = load %ref.int*, %ref.int** %ref, align 8
+  %count = getelementptr inbounds %ref.int, %ref.int* %6, i32 0, i32 1
+  store i32 0, i32* %count, align 4
+  %7 = load %ref.int*, %ref.int** %ref, align 8
+  ret %ref.int* %7
+}
+
+define void @"ref:uint"(%ref.int* %ref) {
+entry:
+  %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
+  %1 = load i32, i32* %0, align 4
+  %2 = add i32 %1, 1
+  call void @countMsg(i32 %2)
+  store i32 %2, i32* %0, align 4
+  ret void
+}
+
+define void @"deref:uint"(%ref.int* %ref) {
+entry:
+  %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
+  %1 = load i32, i32* %0, align 4
+  %2 = add i32 %1, -1
+  call void @countMsg(i32 %2)
+  store i32 %2, i32* %0, align 4
+  %3 = icmp eq i32 %2, 0
+  br i1 %3, label %if.then, label %exit
+
+if.then:                                          ; preds = %entry
+  %4 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 0
+  %5 = load i32*, i32** %4, align 8
+  %6 = bitcast i32* %5 to i8*
+  call void @free(i8* %6)
+  %7 = bitcast %ref.int* %ref to i8*
+  call void @free(i8* %7)
+  call void @freeMsg()
+  br label %exit
+
+exit:                                             ; preds = %if.then, %entry
+  ret void
 }
 
 define %type.string @".conv:uint_string"(i32 %uint) {
@@ -1895,9 +1954,35 @@ exit:                                             ; preds = %for.cond, %if.then1
 
 define void @main() {
 entry:
-  %0 = icmp sgt i32 3, 5
-  %1 = call %type.string @".conv:bool_string"(i1 %0)
-  call void @.println(%type.string %1)
+  %x = alloca %ref.int*, align 8
+  %0 = call %ref.int* @"newref:uint"(i32 14)
+  store %ref.int* %0, %ref.int** %x, align 8
+  %1 = load %ref.int*, %ref.int** %x, align 8
+  call void @"ref:uint"(%ref.int* %1)
+  call void @mod.change(%ref.int* %1)
+  %2 = load %ref.int*, %ref.int** %x, align 8
+  %3 = getelementptr inbounds %ref.int, %ref.int* %2, i32 0, i32 0
+  %4 = load i32*, i32** %3, align 8
+  %5 = load i32, i32* %4, align 4
+  %6 = call %type.string @".conv:uint_string"(i32 %5)
+  call void @.println(%type.string %6)
+  %7 = load %ref.int*, %ref.int** %x, align 8
+  call void @"deref:uint"(%ref.int* %7)
+  br label %exit
+
+exit:                                             ; preds = %entry
+  ret void
+}
+
+define private void @mod.change(%ref.int* %0) {
+entry:
+  %1 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+  %2 = load i32*, i32** %1, align 8
+  %3 = load i32, i32* %2, align 4
+  %4 = add i32 %3, 4
+  %5 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+  %6 = load i32*, i32** %5, align 8
+  store i32 %4, i32* %6, align 8
   br label %exit
 
 exit:                                             ; preds = %entry
