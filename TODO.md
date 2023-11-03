@@ -1,7 +1,4 @@
 # TODO
-- Export syntax
-- Think of module hierarchy with imports and exports
-    - Create module syntax
 - Unsigned integer references
 - Work on error syntax (see Zig, V & Python)
 - Better token to string handling
