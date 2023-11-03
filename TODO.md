@@ -1,14 +1,14 @@
 # TODO
 - Work on error syntax (see Zig, V & Python)
 - Better token to string handling
-- Look into removing `>>` and simply applying it to `uint`s 
+- Look into removing `>>` and simply applying it to `uint`s
 - Have intrinics be stored somewhere as consts
-- Basic Sulfur CLI
 - Loop blocks (`loop {}`)
+- Basic Sulfur CLI
 - Rethink one-line blocks (`=>`)
-- Force all variables and functions to have a visibility modifier
+- Force all variables and functions to have a visibility modifier inside classes
 - Classes
-- String equals string 
+- String equals string
 - Type promotion vs demotion syntax
 - Type demotion implementation
 - Only link functions when needed
@@ -22,3 +22,7 @@
 - Seperate errors from global to file-based
     - Add error directly into lexer/parser/checker/generation (no name)
 - Try parsing multiple files
+- Implement modules
+- Create package name
+- Implement way of storing project name, modules etc (maybe TOML?)
+- Implement import & exports
