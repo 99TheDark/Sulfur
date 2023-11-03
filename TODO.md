@@ -1,5 +1,4 @@
 # TODO
-- Import syntax
 - Export syntax
 - Think of module hierarchy with imports and exports
     - Create module syntax
