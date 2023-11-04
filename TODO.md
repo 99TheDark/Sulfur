@@ -1,4 +1,5 @@
 # TODO
+- Move compiling to assembly step to Go
 - `-o` for the output file
 - Work on error syntax (see Zig, V & Python)
 - Better token to string handling
@@ -31,3 +32,4 @@
 - More sensical errors for missing braces, brackets & parentheses
 - Check for too large integers and unsigned integers
 - More sensical unknown token errors
+- More sensicle EOF errors

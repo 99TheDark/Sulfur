@@ -1,4 +1,1 @@
-println(-5 >> 3)
-println(int!(!5u >> 3u)) 
-println(-5 << 3)
-println(int!(!5u << 3u))
+for 
