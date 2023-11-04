@@ -23,7 +23,6 @@ var BinaryOps = []BinaryOpSignature{
 	QuickBinOp("int", "int", lexer.Nand),
 	QuickBinOp("int", "int", lexer.RightShift),
 	QuickBinOp("int", "int", lexer.LeftShift),
-	QuickBinOp("int", "int", lexer.ZeroFillRightShift),
 
 	// uint
 	QuickBinOp("uint", "uint", lexer.Addition),
@@ -35,7 +34,8 @@ var BinaryOps = []BinaryOpSignature{
 	QuickBinOp("uint", "uint", lexer.And),
 	QuickBinOp("uint", "uint", lexer.Nor),
 	QuickBinOp("uint", "uint", lexer.Nand),
-	// TODO: Add shifts
+	QuickBinOp("uint", "uint", lexer.RightShift),
+	QuickBinOp("uint", "uint", lexer.LeftShift),
 
 	// float
 	QuickBinOp("float", "float", lexer.Addition),

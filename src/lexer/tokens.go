@@ -49,7 +49,6 @@ const (
 	Not                            // '!'
 	RightShift                     // '>>'
 	LeftShift                      // '<<'
-	ZeroFillRightShift             // '>>>'
 	CountLeadingZeros              // '<..'
 	CountTrailingZeros             // '>..'
 	NaN                            // 'nan'
@@ -181,7 +180,6 @@ var Symbols = map[string]TokenType{
 	"!":   Not,
 	">>":  RightShift,
 	"<<":  LeftShift,
-	">>>": ZeroFillRightShift,
 	"<..": CountLeadingZeros,
 	">..": CountTrailingZeros,
 	"==":  EqualTo,
@@ -282,8 +280,6 @@ func (tt TokenType) String() string {
 		return "RightShift"
 	case LeftShift:
 		return "LeftShift"
-	case ZeroFillRightShift:
-		return "ZeroFillRightShift"
 	case CountLeadingZeros:
 		return "CountLeadingZeros"
 	case CountTrailingZeros:

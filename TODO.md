@@ -1,5 +1,4 @@
 # TODO
-- Look into removing `>>` and simply applying it to `uint`s
 - `-o` for the output file
 - Work on error syntax (see Zig, V & Python)
 - Better token to string handling
@@ -20,6 +19,7 @@
 - Complex numbers
 - Complex number to string
 - Complex number operations
+- Add syntax when no mode is included
 - Seperate errors from global to file-based
     - Add error directly into lexer/parser/checker/generation (no name)
 - Try parsing multiple files
@@ -29,3 +29,5 @@
 - Implement import & exports
 - Ignore unused things in main modules
 - More sensical errors for missing braces, brackets & parentheses
+- Check for too large integers and unsigned integers
+- More sensical unknown token errors

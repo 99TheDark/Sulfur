@@ -1,9 +1,4 @@
-for i := 0; i < 10; i++ {
-    print(i % 10 + 1 + " ")
-}
-
-func add(int a, int b) (int) {
-    return a + b
-}
-
-println("\n" + add(-2, -5))
+println(-5 >> 3)
+println(int!(!5u >> 3u)) 
+println(-5 << 3)
+println(int!(!5u << 3u))

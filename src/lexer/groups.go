@@ -13,7 +13,6 @@ var BinaryOperator = []TokenType{
 	Nand,
 	RightShift,
 	LeftShift,
-	ZeroFillRightShift,
 	Nullish,
 }
 
@@ -42,7 +41,6 @@ var Logical = []TokenType{
 	Is,
 	RightShift,
 	LeftShift,
-	ZeroFillRightShift,
 }
 
 var Additive = []TokenType{

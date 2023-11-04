@@ -20,10 +20,8 @@ source_filename = "llvm-link"
 @.strCount = private unnamed_addr constant [13 x i32] [i32 32, i32 114, i32 101, i32 102, i32 101, i32 114, i32 101, i32 110, i32 99, i32 101, i32 40, i32 115, i32 41], align 4
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
 @.strZero.11 = private unnamed_addr constant [1 x i32] [i32 48], align 4
-@.str0 = private unnamed_addr constant [1 x i32] [i32 32], align 4
-@.str1 = private unnamed_addr constant [1 x i32] [i32 10], align 4
 
-define %ref.bool* @"newref:bool"(i1 %bool) {
+define fastcc %ref.bool* @"newref:bool"(i1 %bool) {
 entry:
   %bool.addr = alloca i1, align 1
   %ref = alloca %ref.bool*, align 8
@@ -50,7 +48,7 @@ entry:
 
 declare i8* @malloc(i32)
 
-define void @"ref:bool"(%ref.bool* %ref) {
+define fastcc void @"ref:bool"(%ref.bool* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.bool, %ref.bool* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
@@ -60,7 +58,7 @@ entry:
   ret void
 }
 
-define void @countMsg(i32 %0) {
+define fastcc void @countMsg(i32 %0) {
 entry:
   %1 = call %type.string @".conv:int_string"(i32 %0)
   %2 = getelementptr inbounds [13 x i32], [13 x i32]* @.strCount, i32 0, i32 0
@@ -200,7 +198,7 @@ exit:                                             ; preds = %for.end, %if.then1
   ret %type.string %50
 }
 
-define %type.string @".add:string_string"(%type.string %a, %type.string %b) {
+define fastcc %type.string @".add:string_string"(%type.string %a, %type.string %b) {
 entry:
   %.ret = alloca %type.string, align 8
   %ptr.a = alloca %type.string, align 8
@@ -234,14 +232,14 @@ entry:
   ret %type.string %19
 }
 
-define void @.println(%type.string %str) {
+define fastcc void @.println(%type.string %str) {
 entry:
   call void @.print(%type.string %str)
   call void @putchar(i32 10)
   ret void
 }
 
-define void @.print(%type.string %str) {
+define fastcc void @.print(%type.string %str) {
 entry:
   %ptr.str = alloca %type.string, align 8
   store %type.string %str, %type.string* %ptr.str, align 8
@@ -277,7 +275,7 @@ for.exit:                                         ; preds = %for.cond
 
 declare void @putchar(i32)
 
-define private void @printChar(i32 %cp) {
+define private fastcc void @printChar(i32 %cp) {
 entry:
   %cp.addr = alloca i32, align 4
   store i32 %cp, i32* %cp.addr, align 4
@@ -363,7 +361,7 @@ declare void @llvm.memcpy.p0i32.p0i32.i32(i32* noalias nocapture writeonly, i32*
 
 declare void @free(i8*)
 
-define void @"deref:bool"(%ref.bool* %ref) {
+define fastcc void @"deref:bool"(%ref.bool* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.bool, %ref.bool* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
@@ -387,7 +385,7 @@ exit:                                             ; preds = %if.then, %entry
   ret void
 }
 
-define void @freeMsg() {
+define fastcc void @freeMsg() {
 entry:
   %0 = getelementptr inbounds [17 x i32], [17 x i32]* @.strFree, i32 0, i32 0
   %1 = alloca %type.string, align 8
@@ -426,7 +424,7 @@ exit:                                             ; preds = %if.else, %if.then
   ret %type.string %6
 }
 
-define %ref.float* @"newref:float"(float %float) {
+define fastcc %ref.float* @"newref:float"(float %float) {
 entry:
   %float.addr = alloca float, align 4
   %ref = alloca %ref.float*, align 8
@@ -451,7 +449,7 @@ entry:
   ret %ref.float* %7
 }
 
-define void @"ref:float"(%ref.float* %ref) {
+define fastcc void @"ref:float"(%ref.float* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
@@ -461,7 +459,7 @@ entry:
   ret void
 }
 
-define void @"deref:float"(%ref.float* %ref) {
+define fastcc void @"deref:float"(%ref.float* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
@@ -593,7 +591,7 @@ return:                                           ; preds = %if.else20, %if.end,
 ; Function Attrs: argmemonly nofree nounwind willreturn
 declare void @llvm.memcpy.p0i8.p0i8.i64(i8* noalias nocapture writeonly, i8* noalias nocapture readonly, i64, i1 immarg) #0
 
-define private %type.string @normalString(float %num, i32 %bits) {
+define private fastcc %type.string @normalString(float %num, i32 %bits) {
 entry:
   %.ret = alloca %type.string, align 8
   %num.ptr = alloca float, align 4
@@ -1544,7 +1542,7 @@ entry:
   ret i32 %call
 }
 
-define private i32 @multipleOfPow5(i32 %x, i32 %p) {
+define private fastcc i32 @multipleOfPow5(i32 %x, i32 %p) {
 entry:
   %x.ptr = alloca i32, align 4
   %p.ptr = alloca i32, align 4
@@ -1576,7 +1574,7 @@ entry:
   ret i32 %call
 }
 
-define private i32 @decimalLength(i32 %val) {
+define private fastcc i32 @decimalLength(i32 %val) {
 entry:
   %val.ptr = alloca i32, align 4
   %len = alloca i32, align 4
@@ -1666,7 +1664,7 @@ entry:
   ret i32 %conv9
 }
 
-define private i32 @pow5Factor(i32 %val) {
+define private fastcc i32 @pow5Factor(i32 %val) {
 entry:
   %.ret = alloca i32, align 4
   %val.ptr = alloca i32, align 4
@@ -1720,7 +1718,7 @@ entry:
   ret void
 }
 
-define %ref.int* @"newref:int"(i32 %int) {
+define fastcc %ref.int* @"newref:int"(i32 %int) {
 entry:
   %int.addr = alloca i32, align 4
   %ref = alloca %ref.int*, align 8
@@ -1745,7 +1743,7 @@ entry:
   ret %ref.int* %7
 }
 
-define void @"ref:int"(%ref.int* %ref) {
+define fastcc void @"ref:int"(%ref.int* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
@@ -1755,7 +1753,7 @@ entry:
   ret void
 }
 
-define void @"deref:int"(%ref.int* %ref) {
+define fastcc void @"deref:int"(%ref.int* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
@@ -1779,7 +1777,7 @@ exit:                                             ; preds = %if.then, %entry
   ret void
 }
 
-define %type.string @".copy:string"(%type.string %str) {
+define fastcc %type.string @".copy:string"(%type.string %str) {
 entry:
   %.ret = alloca %type.string, align 8
   %ptr.str = alloca %type.string, align 8
@@ -1800,7 +1798,7 @@ entry:
   ret %type.string %9
 }
 
-define %ref.int* @"newref:uint"(i32 %uint) {
+define fastcc %ref.int* @"newref:uint"(i32 %uint) {
 entry:
   %uint.addr = alloca i32, align 4
   %ref = alloca %ref.int*, align 8
@@ -1825,7 +1823,7 @@ entry:
   ret %ref.int* %7
 }
 
-define void @"ref:uint"(%ref.int* %ref) {
+define fastcc void @"ref:uint"(%ref.int* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
@@ -1835,7 +1833,7 @@ entry:
   ret void
 }
 
-define void @"deref:uint"(%ref.int* %ref) {
+define fastcc void @"deref:uint"(%ref.int* %ref) {
 entry:
   %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
@@ -1859,7 +1857,7 @@ exit:                                             ; preds = %if.then, %entry
   ret void
 }
 
-define %type.string @".conv:uint_string"(i32 %uint) {
+define fastcc %type.string @".conv:uint_string"(i32 %uint) {
 entry:
   %.ret = alloca %type.string, align 8
   %uint.ptr = alloca i32, align 4
@@ -1956,68 +1954,24 @@ exit:                                             ; preds = %for.cond, %if.then1
 
 define void @main() {
 entry:
-  %i = alloca i32, align 4
-  store i32 0, i32* %i, align 4
-  br label %for.cond0
-
-exit:                                             ; preds = %for.end0
-  ret void
-
-for.cond0:                                        ; preds = %for.inc0, %entry
-  %0 = load i32, i32* %i, align 4
-  %1 = icmp slt i32 %0, 10
-  br i1 %1, label %for.body0, label %for.end0
-
-for.body0:                                        ; preds = %for.cond0
-  %2 = load i32, i32* %i, align 4
-  %3 = srem i32 %2, 10
-  %4 = add i32 %3, 1
-  %5 = call %type.string @".conv:int_string"(i32 %4)
-  %6 = getelementptr inbounds [1 x i32], [1 x i32]* @.str0, i32 0, i32 0
-  %7 = alloca %type.string, align 8
-  %8 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 0
-  store i32 1, i32* %8, align 8
-  %9 = getelementptr inbounds %type.string, %type.string* %7, i32 0, i32 1
-  store i32* %6, i32** %9, align 8
-  %10 = load %type.string, %type.string* %7, align 8
-  %11 = call %type.string @".copy:string"(%type.string %10)
-  %12 = call %type.string @".add:string_string"(%type.string %5, %type.string %11)
-  call void @.print(%type.string %12)
-  call void @".free:string"(%type.string %11)
-  br label %for.inc0
-
-for.inc0:                                         ; preds = %for.body0
-  %13 = load i32, i32* %i, align 4
-  %14 = add i32 %13, 1
-  store i32 %14, i32* %i, align 4
-  br label %for.cond0
-
-for.end0:                                         ; preds = %for.cond0
-  %15 = getelementptr inbounds [1 x i32], [1 x i32]* @.str1, i32 0, i32 0
-  %16 = alloca %type.string, align 8
-  %17 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 0
-  store i32 1, i32* %17, align 8
-  %18 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 1
-  store i32* %15, i32** %18, align 8
-  %19 = load %type.string, %type.string* %16, align 8
-  %20 = call %type.string @".copy:string"(%type.string %19)
-  %21 = call i32 @mod.add(i32 -2, i32 -5)
-  %22 = call %type.string @".conv:int_string"(i32 %21)
-  %23 = call %type.string @".add:string_string"(%type.string %20, %type.string %22)
-  call void @.println(%type.string %23)
-  br label %exit
-}
-
-define private fastcc i32 @mod.add(i32 %0, i32 %1) {
-entry:
-  %.ret = alloca i32, align 4
-  %2 = add i32 %0, %1
-  store i32 %2, i32* %.ret, align 4
+  %0 = ashr i32 -5, 3
+  %1 = call %type.string @".conv:int_string"(i32 %0)
+  call void @.println(%type.string %1)
+  %2 = xor i32 5, -1
+  %3 = lshr i32 %2, 3
+  %4 = call %type.string @".conv:int_string"(i32 %3)
+  call void @.println(%type.string %4)
+  %5 = shl i32 -5, 3
+  %6 = call %type.string @".conv:int_string"(i32 %5)
+  call void @.println(%type.string %6)
+  %7 = xor i32 5, -1
+  %8 = shl i32 %7, 3
+  %9 = call %type.string @".conv:int_string"(i32 %8)
+  call void @.println(%type.string %9)
   br label %exit
 
 exit:                                             ; preds = %entry
-  %3 = load i32, i32* %.ret, align 4
-  ret i32 %3
+  ret void
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }

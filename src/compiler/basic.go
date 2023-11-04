@@ -150,16 +150,15 @@ func (g *generator) genBasicBinaryOp(left, right value.Value, op lexer.TokenType
 		switch typ {
 		case typing.Integer: // = int >> int
 			return bl.NewAShr(left, right)
+		case typing.Unsigned: // = uint >> uint
+			return bl.NewLShr(left, right)
 		}
 	case lexer.LeftShift:
 		switch typ {
 		case typing.Integer: // = int << int
 			return bl.NewShl(left, right)
-		}
-	case lexer.ZeroFillRightShift:
-		switch typ {
-		case typing.Integer: // = int >>> int
-			return bl.NewLShr(left, right)
+		case typing.Unsigned: // = uint << uint
+			return bl.NewShl(left, right)
 		}
 	}
 
