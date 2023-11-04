@@ -41,6 +41,8 @@ func (g *generator) genStmt(expr ast.Expr) {
 		g.genWhileLoop(x)
 	case ast.DoWhileLoop:
 		g.genDoWhileLoop(x)
+	case ast.Loop:
+		g.genLoop(x)
 	case ast.Return:
 		g.genReturn(x)
 	case ast.Break:
@@ -303,6 +305,29 @@ func (g *generator) genDoWhileLoop(x ast.DoWhileLoop) {
 		g.exit()
 
 		condBl.NewCondBr(cond, bodyBl, endBl)
+
+		main.NewBr(bodyBl)
+		g.bl = endBl
+	})
+}
+
+func (g *generator) genLoop(x ast.Loop) {
+	main := g.bl
+	top := g.ctx.fun
+	id := g.id()
+
+	g.scope(x.Body.Scope, func() {
+		bodyBl := top.NewBlock("loop.body" + id)
+		endBl := top.NewBlock("loop.end" + id)
+
+		x.Body.Scope.Entrance = bodyBl
+		x.Body.Scope.Exit = endBl
+
+		g.enter(bodyBl)
+		g.bl = bodyBl
+		g.genBlock(x.Body)
+		g.autoFree()
+		g.exit()
 
 		main.NewBr(bodyBl)
 		g.bl = endBl

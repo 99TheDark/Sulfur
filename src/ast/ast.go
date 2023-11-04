@@ -237,6 +237,11 @@ type (
 		Cond Expr
 	}
 
+	Loop struct {
+		Pos  *typing.Location `json:"-"`
+		Body Block
+	}
+
 	Return struct {
 		Pos   *typing.Location `json:"-"`
 		Value Expr
@@ -286,6 +291,7 @@ func (x IfStatement) Loc() *typing.Location     { return x.Pos }
 func (x ForLoop) Loc() *typing.Location         { return x.Pos }
 func (x WhileLoop) Loc() *typing.Location       { return x.Pos }
 func (x DoWhileLoop) Loc() *typing.Location     { return x.Pos }
+func (x Loop) Loc() *typing.Location            { return x.Pos }
 func (x Return) Loc() *typing.Location          { return x.Pos }
 func (x Break) Loc() *typing.Location           { return x.Pos }
 func (x Continue) Loc() *typing.Location        { return x.Pos }

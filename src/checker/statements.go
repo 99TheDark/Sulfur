@@ -30,6 +30,8 @@ func (c *checker) inferStmt(expr ast.Expr) {
 		c.inferWhileLoop(x)
 	case ast.DoWhileLoop:
 		c.inferDoWhileLoop(x)
+	case ast.Loop:
+		c.inferLoop(x)
 	case ast.Return:
 		c.inferReturn(x)
 	case ast.Break:
@@ -205,6 +207,11 @@ func (c *checker) inferDoWhileLoop(x ast.DoWhileLoop) {
 		Errors.Error("Expected "+typing.Boolean+", but got "+cond.String()+" instead", x.Cond.Loc())
 	}
 
+	c.inferBlock(x.Body, nil)
+}
+
+func (c *checker) inferLoop(x ast.Loop) {
+	x.Body.Scope.Loop = true
 	c.inferBlock(x.Body, nil)
 }
 

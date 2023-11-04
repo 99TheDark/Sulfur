@@ -1,1 +1,11 @@
-for 
+i := 1
+loop {
+    if i % 8 == 0 & i % 3 == 0 & i % 107 == 0 {
+        print("This is divisible by 8, 3 and 107: ")
+        break
+    }
+
+    i++
+}
+
+println(i)

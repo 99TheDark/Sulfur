@@ -89,6 +89,7 @@ const (
 	In                             // 'in'
 	While                          // 'while'
 	Do                             // 'do'
+	Loop                           // 'loop'
 	If                             // 'if'
 	Else                           // 'else'
 	Match                          // 'match'
@@ -141,6 +142,7 @@ var Keywords = map[string]TokenType{
 	"in":          In,
 	"while":       While,
 	"do":          Do,
+	"loop":        Loop,
 	"if":          If,
 	"else":        Else,
 	"match":       Match,
@@ -358,6 +360,8 @@ func (tt TokenType) String() string {
 		return "While"
 	case Do:
 		return "Do"
+	case Loop:
+		return "Loop"
 	case If:
 		return "If"
 	case Else:

@@ -3,9 +3,9 @@
 - `-o` for the output file
 - Work on error syntax (see Zig, V & Python)
 - Better token to string handling
-- Loop blocks (`loop {}`)
+- Helper function for `g.enter(bl)`, `g.bl = bl`, `generate()`, `g.autoFree()` & `g.exit()` all at once
 - Have intrinics be stored somewhere as consts
-- Rethink one-line blocks (`=>`)
+- Rethink one-line blocks (`=>`), maybe just use for `match` statements
 - Autofree message
 - Force all variables and functions to have a visibility modifier inside classes
 - Classes
@@ -21,6 +21,7 @@
 - Complex number to string
 - Complex number operations
 - Add syntax when no mode is included
+- Warn unused variables
 - Seperate errors from global to file-based
     - Add error directly into lexer/parser/checker/generation (no name)
 - Try parsing multiple files
@@ -33,3 +34,5 @@
 - Check for too large integers and unsigned integers
 - More sensical unknown token errors
 - More sensicle EOF errors
+- 0x, 0b, 0o etc numbers
+- Underscore assignment

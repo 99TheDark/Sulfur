@@ -27,6 +27,8 @@ func (p *parser) parseStmt() ast.Expr {
 		return p.parseWhileLoop()
 	case lexer.Do:
 		return p.parseDoWhileLoop()
+	case lexer.Loop:
+		return p.parseLoop()
 	case lexer.Return:
 		return p.parseReturn()
 	case lexer.Break:
@@ -245,6 +247,15 @@ func (p *parser) parseDoWhileLoop() ast.DoWhileLoop {
 		Pos:  tok.Location,
 		Body: body,
 		Cond: cond,
+	}
+}
+
+func (p *parser) parseLoop() ast.Loop {
+	tok := p.expect(lexer.Loop)
+	body := p.parseBlock()
+	return ast.Loop{
+		Pos:  tok.Location,
+		Body: body,
 	}
 }
 
