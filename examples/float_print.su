@@ -1,0 +1,8 @@
+println(0.0)
+println(-0.0)
+println(0.0 / 0.0)
+println(1.0 / 0.0)
+println(-1.0 / 0.0)
+println(123404217.9543)
+println(-0.0000283947912803)
+println(64.8043)
