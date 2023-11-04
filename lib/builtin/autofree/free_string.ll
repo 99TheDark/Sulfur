@@ -4,7 +4,7 @@ source_filename = "lib/builtin/autofree/free_string.ll"
 
 declare void @free(i8*)
 
-define void @".free:string"(%type.string %str) {
+define fastcc void @".free:string"(%type.string %str) {
 entry:
     %ptr.str = alloca %type.string, align 8
     store %type.string %str, %type.string* %ptr.str, align 8

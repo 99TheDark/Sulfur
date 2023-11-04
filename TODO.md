@@ -1,5 +1,4 @@
 # TODO
-- Build vs run commands
 - Look into removing `>>` and simply applying it to `uint`s
 - `-o` for the output file
 - Work on error syntax (see Zig, V & Python)

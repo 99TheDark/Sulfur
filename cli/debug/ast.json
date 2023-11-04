@@ -72,6 +72,81 @@
       }
      ]
     }
+   },
+   {
+    "Name": {
+     "Name": "add"
+    },
+    "Params": [
+     {
+      "Type": {
+       "Name": "int"
+      },
+      "Name": {
+       "Name": "a"
+      },
+      "Referenced": false
+     },
+     {
+      "Type": {
+       "Name": "int"
+      },
+      "Name": {
+       "Name": "b"
+      },
+      "Referenced": false
+     }
+    ],
+    "Return": {
+     "Name": "int"
+    },
+    "Body": {
+     "Body": [
+      {
+       "Value": {
+        "Left": {
+         "Name": "a"
+        },
+        "Right": {
+         "Name": "b"
+        },
+        "Op": {
+         "Type": "Addition",
+         "Value": "+"
+        }
+       }
+      }
+     ]
+    }
+   },
+   {
+    "Func": {
+     "Name": "println"
+    },
+    "Params": [
+     {
+      "Left": {
+       "Value": "\n"
+      },
+      "Right": {
+       "Func": {
+        "Name": "add"
+       },
+       "Params": [
+        {
+         "Value": -2
+        },
+        {
+         "Value": -5
+        }
+       ]
+      },
+      "Op": {
+       "Type": "Addition",
+       "Value": "+"
+      }
+     }
+    ]
    }
   ]
  }

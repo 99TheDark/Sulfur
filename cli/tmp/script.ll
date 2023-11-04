@@ -4,6 +4,7 @@ source_filename = "examples/main/script.su"
 %type.string = type { i32, i32* }
 
 @.str0 = private unnamed_addr constant [1 x i32] [i32 32], align 4
+@.str1 = private unnamed_addr constant [1 x i32] [i32 10], align 4
 
 define void @main() {
 entry:
@@ -44,10 +45,36 @@ for.inc0:
 	br label %for.cond0
 
 for.end0:
+	%15 = getelementptr inbounds [1 x i32], [1 x i32]* @.str1, i32 0, i32 0
+	%16 = alloca %type.string, align 8
+	%17 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 0
+	store i32 1, i32* %17, align 8
+	%18 = getelementptr inbounds %type.string, %type.string* %16, i32 0, i32 1
+	store i32* %15, i32** %18, align 8
+	%19 = load %type.string, %type.string* %16, align 8
+	%20 = call %type.string @".copy:string"(%type.string %19)
+	%21 = call i32 @mod.add(i32 -2, i32 -5)
+	%22 = call %type.string @".conv:int_string"(i32 %21)
+	%23 = call %type.string @".add:string_string"(%type.string %20, %type.string %22)
+	call void @.println(%type.string %23)
 	br label %exit
 }
 
-declare void @.print(%type.string %0)
+define private fastcc i32 @mod.add(i32 %0, i32 %1) {
+entry:
+	%.ret = alloca i32
+	%2 = add i32 %0, %1
+	store i32 %2, i32* %.ret
+	br label %exit
+
+exit:
+	%3 = load i32, i32* %.ret
+	ret i32 %3
+}
+
+declare fastcc void @.print(%type.string %0)
+
+declare fastcc void @.println(%type.string %0)
 
 declare %type.string @".add:string_string"(%type.string %0, %type.string %1)
 

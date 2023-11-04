@@ -6,7 +6,7 @@ declare i8* @malloc(i32)
 
 declare void @llvm.memcpy.p0i32.p0i32.i32(i32* noalias nocapture writeonly, i32* noalias nocapture readonly, i32, i1 immarg)
 
-define %type.string @".copy:string"(%type.string %str) {
+define fastcc %type.string @".copy:string"(%type.string %str) {
 entry:
     %.ret = alloca %type.string, align 8
     %ptr.str = alloca %type.string, align 8

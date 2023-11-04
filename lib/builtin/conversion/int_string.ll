@@ -7,7 +7,7 @@ declare void @free(i8*)
 
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
 
-define %type.string @".conv:int_string"(i32 %int) {
+define fastcc %type.string @".conv:int_string"(i32 %int) {
 entry:
     %.ret = alloca %type.string, align 8
     %int.ptr = alloca i32, align 4

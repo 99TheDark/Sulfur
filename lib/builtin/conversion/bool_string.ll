@@ -5,7 +5,7 @@ source_filename = "lib/builtin/conversion/bool_string.ll"
 @.strTrue = private unnamed_addr constant [4 x i32] [i32 116, i32 114, i32 117, i32 101], align 4
 @.strFalse = private unnamed_addr constant [5 x i32] [i32 102, i32 97, i32 108, i32 115, i32 101], align 4
 
-define %type.string @".conv:bool_string"(i1 %bool) {
+define fastcc %type.string @".conv:bool_string"(i1 %bool) {
 entry:
 	%.ret = alloca %type.string, align 8
     br i1 %bool, label %if.then, label %if.else

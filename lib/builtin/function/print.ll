@@ -4,7 +4,7 @@ declare void @putchar(i32)
 
 %type.string = type { i32, i32* }
 
-define private void @printChar(i32 %cp) {
+define private fastcc void @printChar(i32 %cp) {
 entry:
     %cp.addr = alloca i32, align 4
     store i32 %cp, i32* %cp.addr, align 4
@@ -85,7 +85,7 @@ if.end35:
     ret void
 }
 
-define void @.print(%type.string %str) {
+define fastcc void @.print(%type.string %str) {
 entry:
     %ptr.str = alloca %type.string, align 8
 	store %type.string %str, %type.string* %ptr.str, align 8
@@ -119,7 +119,7 @@ for.exit:
     ret void
 }
 
-define void @.println(%type.string %str) {
+define fastcc void @.println(%type.string %str) {
 entry:
     call void @.print(%type.string %str)
     call void @putchar(i32 10)

@@ -2019,6 +2019,30 @@ LBB32_1:                                ; %for.body0
 	cmp	w8, #9
 	b.le	LBB32_1
 LBB32_2:                                ; %for.end0
+	mov	x8, sp
+Lloh32:
+	adrp	x1, l_.str1@PAGE
+	sub	x9, x8, #16
+Lloh33:
+	add	x1, x1, l_.str1@PAGEOFF
+	mov	sp, x9
+	mov	w9, #1
+	mov	w0, #1
+	stur	x1, [x8, #-8]
+	stur	w9, [x8, #-16]
+	bl	"_.copy:string"
+	mov	w19, w0
+	mov	x20, x1
+	mov	w0, #-2
+	mov	w1, #-5
+	bl	l_mod.add
+	bl	"_.conv:int_string"
+	mov	w2, w0
+	mov	x3, x1
+	mov	w0, w19
+	mov	x1, x20
+	bl	"_.add:string_string"
+	bl	_.println
 	sub	sp, x29, #64
 	ldp	x29, x30, [sp, #64]             ; 16-byte Folded Reload
 	ldp	x20, x19, [sp, #48]             ; 16-byte Folded Reload
@@ -2027,6 +2051,19 @@ LBB32_2:                                ; %for.end0
 	ldp	x26, x25, [sp], #80             ; 16-byte Folded Reload
 	ret
 	.loh AdrpAdd	Lloh30, Lloh31
+	.loh AdrpAdd	Lloh32, Lloh33
+	.cfi_endproc
+                                        ; -- End function
+	.p2align	2                               ; -- Begin function mod.add
+l_mod.add:                              ; @mod.add
+	.cfi_startproc
+; %bb.0:                                ; %entry
+	sub	sp, sp, #16
+	.cfi_def_cfa_offset 16
+	add	w0, w0, w1
+	str	w0, [sp, #12]
+	add	sp, sp, #16
+	ret
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal16,16byte_literals
@@ -2214,5 +2251,9 @@ l_.strZero.11:
 	.p2align	2                               ; @.str0
 l_.str0:
 	.long	32                              ; 0x20
+
+	.p2align	2                               ; @.str1
+l_.str1:
+	.long	10                              ; 0xa
 
 .subsections_via_symbols

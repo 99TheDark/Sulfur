@@ -8,7 +8,7 @@ declare void @free(i8*)
 declare void @freeMsg()
 declare void @countMsg(i32)
 
-define %ref.uint* @"newref:uint"(i32 %uint) {
+define fastcc %ref.uint* @"newref:uint"(i32 %uint) {
 entry:
     %uint.addr = alloca i32, align 4
     %ref = alloca %ref.uint*, align 8
@@ -33,7 +33,7 @@ entry:
     ret %ref.uint* %7
 }
 
-define void @"ref:uint"(%ref.uint* %ref) {
+define fastcc void @"ref:uint"(%ref.uint* %ref) {
 entry:
     %0 = getelementptr inbounds %ref.uint, %ref.uint* %ref, i32 0, i32 1
     %1 = load i32, i32* %0, align 4
@@ -43,7 +43,7 @@ entry:
     ret void
 }
 
-define void @"deref:uint"(%ref.uint* %ref) {
+define fastcc void @"deref:uint"(%ref.uint* %ref) {
 entry:
     %0 = getelementptr inbounds %ref.uint, %ref.uint* %ref, i32 0, i32 1
     %1 = load i32, i32* %0, align 4

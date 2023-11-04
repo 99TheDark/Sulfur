@@ -17,7 +17,7 @@ declare void @free(i8*)
 
 declare void @llvm.memcpy.p0i8.p0i8.i64(i8* noalias nocapture writeonly, i8* noalias nocapture readonly, i64, i1 immarg)
 
-define private i32 @pow5bits(i32 %e) {
+define private fastcc i32 @pow5bits(i32 %e) {
 entry:
     %e.ptr = alloca i32, align 4
     store i32 %e, i32* %e.ptr, align 4
@@ -40,7 +40,7 @@ cond.end:
     ret i32 %cond
 }
 
-define private i32 @mulShift(i32 %m, i64 %factor, i32 %shift) {
+define private fastcc i32 @mulShift(i32 %m, i64 %factor, i32 %shift) {
 entry:
     %m.ptr = alloca i32, align 4
     %factor.ptr = alloca i64, align 8
@@ -89,7 +89,7 @@ entry:
     ret i32 %conv9
 }
 
-define private i32 @mulPow5InvDivPow2(i32 %m, i32 %q, i32 %j) {
+define private fastcc i32 @mulPow5InvDivPow2(i32 %m, i32 %q, i32 %j) {
 entry:
     %m.ptr = alloca i32, align 4
     %q.ptr = alloca i32, align 4
@@ -107,7 +107,7 @@ entry:
     ret i32 %call
 }
 
-define private i32 @mulPow5divPow2(i32 %m, i32 %i, i32 %j) {
+define private fastcc i32 @mulPow5divPow2(i32 %m, i32 %i, i32 %j) {
 entry:
     %m.ptr = alloca i32, align 4
     %i.ptr = alloca i32, align 4
@@ -125,7 +125,7 @@ entry:
     ret i32 %call
 }
 
-define private i32 @multipleOfPow5(i32 %x, i32 %p) {
+define private fastcc i32 @multipleOfPow5(i32 %x, i32 %p) {
 entry:
     %x.ptr = alloca i32, align 4
     %p.ptr = alloca i32, align 4
@@ -139,7 +139,7 @@ entry:
     ret i32 %conv
 }
 
-define private i32 @pow5Factor(i32 %val) {
+define private fastcc i32 @pow5Factor(i32 %val) {
 entry:
     %.ret = alloca i32, align 4
     %val.ptr = alloca i32, align 4
@@ -182,7 +182,7 @@ return:
     ret i32 %5
 }
 
-define private i32 @decimalLength(i32 %val) {
+define private fastcc i32 @decimalLength(i32 %val) {
 entry:
     %val.ptr = alloca i32, align 4
     %len = alloca i32, align 4
@@ -223,7 +223,7 @@ for.end:
     ret i32 %5
 }
 
-define private %type.string @normalString(float %num, i32 %bits) {
+define private fastcc %type.string @normalString(float %num, i32 %bits) {
 entry:
     %.ret = alloca %type.string, align 8
     %num.ptr = alloca float, align 4

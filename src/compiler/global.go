@@ -107,6 +107,7 @@ func (g *generator) genFuncs() {
 			g.lltyp(fun.Return),
 			params...,
 		)
+		fun.Ir.CallingConv = enum.CallingConvFast
 
 		g.program.Functions[i] = fun
 		g.builtins.funcs[fun.Name] = &g.program.Functions[i]
