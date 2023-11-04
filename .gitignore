@@ -1,9 +1,0 @@
-io/unfiltered.txt
-io/tokens.txt
-io/ast.json
-io/future/*
-notes/*
-psuedo/*
-tools/*
-.DS_Store
-.DS_Store?

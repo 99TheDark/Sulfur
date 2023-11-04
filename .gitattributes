@@ -1,4 +1,0 @@
-*.ll linguist-language=LLVM
-io/asm/** linguist-vendored
-lib/**/*.ll linguist-vendored
-lib/**/*.bc linguist-vendored
