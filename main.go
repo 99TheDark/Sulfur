@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
+	"os/exec"
 	"sulfur/src/checker"
 	"sulfur/src/compiler"
 	"sulfur/src/errors"
@@ -22,7 +22,7 @@ func main() {
 	if arg, ok := args.Next(); ok {
 		input = *arg
 	} else {
-		log.Fatalln("No file given")
+		utils.Panic("No file given")
 	}
 
 	for !args.Empty() {
@@ -36,6 +36,12 @@ func main() {
 				settings.Debug = true
 			case "colorless":
 				settings.Colored = false
+			case "o":
+				if arg, ok := args.Next(); ok {
+					fmt.Println(*arg)
+				} else {
+					utils.Panic("No output file given")
+				}
 			}
 		}
 	}
@@ -50,7 +56,7 @@ func build(path string) {
 
 	code, err := lexer.GetSourceCode(path)
 	if err != nil {
-		log.Fatalln(err)
+		utils.Panic(err)
 	}
 
 	errors.Errors = errors.NewErrorGenerator(code)
@@ -80,4 +86,8 @@ func build(path string) {
 	utils.ForceSave(func() error {
 		return compiler.Save("; ModuleID = '"+path+"'\n"+llcode, "tmp/"+name+".ll")
 	})
+
+	if _, err := exec.Command("bash", utils.Absolute()+"/compile.sh", name).Output(); err != nil {
+		utils.Panic(err)
+	}
 }

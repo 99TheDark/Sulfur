@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"log"
 	"sulfur/src/settings"
 )
 
@@ -13,10 +12,6 @@ func AttemptSave(save func() error) {
 
 func ForceSave(save func() error) {
 	if err := save(); err != nil {
-		if settings.Stacktrace {
-			panic(err)
-		} else {
-			log.Fatalln(err)
-		}
+		Panic(err)
 	}
 }

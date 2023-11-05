@@ -26,5 +26,9 @@ func SaveFile(value []byte, location string) error {
 }
 
 func Relative(path string) string {
-	return filepath.Dir(os.Args[0]) + "/" + path
+	return Absolute() + "/" + path
+}
+
+func Absolute() string {
+	return filepath.Dir(os.Args[0])
 }

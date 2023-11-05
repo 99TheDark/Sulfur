@@ -1,4 +1,4 @@
-; ModuleID = '/Users/benkeston/Downloads/Coding/SulfurLang/cli/tmp/test-optimized.bc'
+; ModuleID = 'cli/tmp/script-optimized.bc'
 source_filename = "llvm-link"
 
 %ref.bool = type { i1*, i32 }
@@ -20,6 +20,7 @@ source_filename = "llvm-link"
 @.strCount = private unnamed_addr constant [13 x i32] [i32 32, i32 114, i32 101, i32 102, i32 101, i32 114, i32 101, i32 110, i32 99, i32 101, i32 40, i32 115, i32 41], align 4
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
 @.strZero.11 = private unnamed_addr constant [1 x i32] [i32 48], align 4
+@.str0 = private unnamed_addr constant [35 x i32] [i32 84, i32 104, i32 105, i32 115, i32 32, i32 105, i32 115, i32 32, i32 100, i32 105, i32 118, i32 105, i32 115, i32 105, i32 98, i32 108, i32 101, i32 32, i32 98, i32 121, i32 32, i32 56, i32 44, i32 32, i32 51, i32 32, i32 97, i32 110, i32 100, i32 32, i32 49, i32 48, i32 55, i32 58, i32 32], align 4
 
 define fastcc %ref.bool* @"newref:bool"(i1 %bool) {
 entry:
@@ -1955,31 +1956,50 @@ exit:                                             ; preds = %for.cond, %if.then1
 define void @main() {
 entry:
   %i = alloca i32, align 4
-  store i32 0, i32* %i, align 4
-  br label %for.cond0
+  store i32 1, i32* %i, align 4
+  br label %loop.body0
 
-exit:                                             ; preds = %for.end0
+exit:                                             ; preds = %loop.end0
   ret void
 
-for.cond0:                                        ; preds = %for.inc0, %entry
+loop.body0:                                       ; preds = %if.end1, %entry
   %0 = load i32, i32* %i, align 4
-  %1 = icmp slt i32 %0, 10
-  br i1 %1, label %for.body0, label %for.end0
+  %1 = srem i32 %0, 8
+  %2 = icmp eq i32 %1, 0
+  %3 = load i32, i32* %i, align 4
+  %4 = srem i32 %3, 3
+  %5 = icmp eq i32 %4, 0
+  %6 = and i1 %2, %5
+  %7 = load i32, i32* %i, align 4
+  %8 = srem i32 %7, 107
+  %9 = icmp eq i32 %8, 0
+  %10 = and i1 %6, %9
+  br i1 %10, label %if.then1, label %if.end1
 
-for.body0:                                        ; preds = %for.cond0
-  %2 = load i32, i32* %i, align 4
-  %3 = call %type.string @".conv:int_string"(i32 %2)
-  call void @.println(%type.string %3)
-  br label %for.inc0
-
-for.inc0:                                         ; preds = %for.body0
-  %4 = load i32, i32* %i, align 4
-  %5 = add i32 %4, 1
-  store i32 %5, i32* %i, align 4
-  br label %for.cond0
-
-for.end0:                                         ; preds = %for.cond0
+loop.end0:                                        ; preds = %if.then1
+  %11 = load i32, i32* %i, align 4
+  %12 = call %type.string @".conv:int_string"(i32 %11)
+  call void @.println(%type.string %12)
   br label %exit
+
+if.then1:                                         ; preds = %loop.body0
+  %13 = getelementptr inbounds [35 x i32], [35 x i32]* @.str0, i32 0, i32 0
+  %14 = alloca %type.string, align 8
+  %15 = getelementptr inbounds %type.string, %type.string* %14, i32 0, i32 0
+  store i32 35, i32* %15, align 8
+  %16 = getelementptr inbounds %type.string, %type.string* %14, i32 0, i32 1
+  store i32* %13, i32** %16, align 8
+  %17 = load %type.string, %type.string* %14, align 8
+  %18 = call %type.string @".copy:string"(%type.string %17)
+  call void @.print(%type.string %18)
+  call void @".free:string"(%type.string %18)
+  br label %loop.end0
+
+if.end1:                                          ; preds = %loop.body0
+  %19 = load i32, i32* %i, align 4
+  %20 = add i32 %19, 1
+  store i32 %20, i32* %i, align 4
+  br label %loop.body0
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }
