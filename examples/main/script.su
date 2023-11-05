@@ -8,4 +8,4 @@ loop {
     i++
 }
 
-println(i + "\u3F2E" + "\UF9921446")
+println(i)
