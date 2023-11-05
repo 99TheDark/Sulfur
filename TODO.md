@@ -8,6 +8,7 @@
 - Rethink one-line blocks (`=>`), maybe just use for `match` statements
 - Autofree message
 - Force all variables and functions to have a visibility modifier inside classes
+- Enum syntax
 - Classes
 - String equals string
 - Type promotion vs demotion syntax
