@@ -257,14 +257,13 @@
         return safeRead(path)
     }
 
-    text := try read("./assets/text/secret.txt") {
-        catch FileError.FileNotFound {
+    text := try read("./assets/text/secret.txt") catch {
+        FileError.FileNotFound {
             println("File Error: File not found")
             yield "404"
         }
-        catch FileError.AccessDenied {
+        FileError.AccessDenied {
             println("File Error: Access deined")
         }
-        // TODO: Add success
     }
     ```

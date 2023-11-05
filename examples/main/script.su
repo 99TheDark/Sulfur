@@ -1,11 +1,11 @@
 i := 1
 loop {
     if i % 8 == 0 & i % 3 == 0 & i % 107 == 0 {
-        print("This is divisible by 8, 3 and 107: ")
+        print("This number is divisible by 8, 3 and 107: ")
         break
     }
 
     i++
 }
 
-println(i)
+println(i + "\u3F2E" + "\UF9921446")
