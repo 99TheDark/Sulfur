@@ -1954,7 +1954,7 @@ _main:                                  ; @main
 	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
 	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
 	add	x29, sp, #16
-	sub	sp, sp, #16
+	sub	sp, sp, #32
 	.cfi_def_cfa w29, 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
@@ -2019,6 +2019,14 @@ Lloh31:
 	ldur	w0, [x29, #-20]
 	bl	"_.conv:int_string"
 	bl	_.println
+	mov	w0, #42
+	bl	"_newref:int"
+	mov	x19, x0
+	stur	x0, [x29, #-32]
+	bl	"_ref:int"
+	ldur	x0, [x29, #-32]
+	stur	x19, [x29, #-40]
+	bl	"_deref:int"
 	mov	w0, wzr
 	sub	sp, x29, #16
 	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload

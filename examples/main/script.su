@@ -1,11 +1,12 @@
-i := 1
-loop {
-    if i % 8 == 0 & i % 3 == 0 & i % 107 == 0 {
-        print("This number is divisible by 8, 3 and 107: ")
-        break
-    }
+// Works
+x := 42
+y := &x
 
-    i++
+// Doesn't work
+r := 0
+if true {
+    x := 42
+    r = &x
 }
 
-println(i)
+println(r)

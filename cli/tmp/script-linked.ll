@@ -1956,6 +1956,8 @@ exit:                                             ; preds = %for.cond, %if.then1
 define i32 @main() {
 entry:
   %i = alloca i32, align 4
+  %x = alloca %ref.int*, align 8
+  %y = alloca %ref.int*, align 8
   store i32 1, i32* %i, align 4
   br label %loop.body0
 
@@ -1980,25 +1982,32 @@ loop.end0:                                        ; preds = %if.then1
   %11 = load i32, i32* %i, align 4
   %12 = call %type.string @".conv:int_string"(i32 %11)
   call void @.println(%type.string %12)
+  %13 = call %ref.int* @"newref:int"(i32 42)
+  store %ref.int* %13, %ref.int** %x, align 8
+  %14 = load %ref.int*, %ref.int** %x, align 8
+  call void @"ref:int"(%ref.int* %14)
+  store %ref.int* %14, %ref.int** %y, align 8
+  %15 = load %ref.int*, %ref.int** %x, align 8
+  call void @"deref:int"(%ref.int* %15)
   br label %exit
 
 if.then1:                                         ; preds = %loop.body0
-  %13 = getelementptr inbounds [42 x i32], [42 x i32]* @.str0, i32 0, i32 0
-  %14 = alloca %type.string, align 8
-  %15 = getelementptr inbounds %type.string, %type.string* %14, i32 0, i32 0
-  store i32 42, i32* %15, align 8
-  %16 = getelementptr inbounds %type.string, %type.string* %14, i32 0, i32 1
-  store i32* %13, i32** %16, align 8
-  %17 = load %type.string, %type.string* %14, align 8
-  %18 = call %type.string @".copy:string"(%type.string %17)
-  call void @.print(%type.string %18)
-  call void @".free:string"(%type.string %18)
+  %16 = getelementptr inbounds [42 x i32], [42 x i32]* @.str0, i32 0, i32 0
+  %17 = alloca %type.string, align 8
+  %18 = getelementptr inbounds %type.string, %type.string* %17, i32 0, i32 0
+  store i32 42, i32* %18, align 8
+  %19 = getelementptr inbounds %type.string, %type.string* %17, i32 0, i32 1
+  store i32* %16, i32** %19, align 8
+  %20 = load %type.string, %type.string* %17, align 8
+  %21 = call %type.string @".copy:string"(%type.string %20)
+  call void @.print(%type.string %21)
+  call void @".free:string"(%type.string %21)
   br label %loop.end0
 
 if.end1:                                          ; preds = %loop.body0
-  %19 = load i32, i32* %i, align 4
-  %20 = add i32 %19, 1
-  store i32 %20, i32* %i, align 4
+  %22 = load i32, i32* %i, align 4
+  %23 = add i32 %22, 1
+  store i32 %23, i32* %i, align 4
   br label %loop.body0
 }
 
