@@ -25,3 +25,10 @@ func (q *Queue[T]) Next() (*T, bool) {
 func (q *Queue[T]) Empty() bool {
 	return len(q.items) == 0
 }
+
+func (q *Queue[T]) AttemptNext(err string) T {
+	if q.Empty() {
+		Panic(err)
+	}
+	return *q.Consume()
+}

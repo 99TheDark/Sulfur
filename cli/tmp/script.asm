@@ -2019,6 +2019,7 @@ Lloh31:
 	ldur	w0, [x29, #-20]
 	bl	"_.conv:int_string"
 	bl	_.println
+	mov	w0, wzr
 	sub	sp, x29, #16
 	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
 	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload

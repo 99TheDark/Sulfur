@@ -1953,14 +1953,14 @@ exit:                                             ; preds = %for.cond, %if.then1
   ret %type.string %40
 }
 
-define void @main() {
+define i32 @main() {
 entry:
   %i = alloca i32, align 4
   store i32 1, i32* %i, align 4
   br label %loop.body0
 
 exit:                                             ; preds = %loop.end0
-  ret void
+  ret i32 0
 
 loop.body0:                                       ; preds = %if.end1, %entry
   %0 = load i32, i32* %i, align 4

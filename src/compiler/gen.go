@@ -65,7 +65,7 @@ func Generate(program *ast.Program, props *checker.VariableProperties, path stri
 		types.I32Ptr, // address
 	))
 
-	main := mod.NewFunc("main", types.Void)
+	main := mod.NewFunc("main", types.I32)
 	bl := main.NewBlock("entry")
 	exit := main.NewBlock("exit")
 
@@ -123,10 +123,10 @@ func Generate(program *ast.Program, props *checker.VariableProperties, path stri
 		g.genStmt(x)
 	}
 	g.leaveRefs()
-	// g.autoFree()
+	g.autoFree()
 
 	g.exit()
-	exit.NewRet(nil)
+	exit.NewRet(Zero)
 
 	return mod.String()
 }

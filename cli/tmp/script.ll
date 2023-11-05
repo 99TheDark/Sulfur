@@ -5,14 +5,14 @@ source_filename = "examples/main/script.su"
 
 @.str0 = private unnamed_addr constant [35 x i32] [i32 84, i32 104, i32 105, i32 115, i32 32, i32 105, i32 115, i32 32, i32 100, i32 105, i32 118, i32 105, i32 115, i32 105, i32 98, i32 108, i32 101, i32 32, i32 98, i32 121, i32 32, i32 56, i32 44, i32 32, i32 51, i32 32, i32 97, i32 110, i32 100, i32 32, i32 49, i32 48, i32 55, i32 58, i32 32], align 4
 
-define void @main() {
+define i32 @main() {
 entry:
 	%i = alloca i32, align 4
 	store i32 1, i32* %i
 	br label %loop.body0
 
 exit:
-	ret void
+	ret i32 0
 
 loop.body0:
 	%0 = load i32, i32* %i, align 4
