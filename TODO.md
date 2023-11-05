@@ -1,5 +1,4 @@
 # TODO
-- `-o` for the output file
 - Work on error syntax (see Zig, V & Python)
 - Better token to string handling
 - Helper function for `g.enter(bl)`, `g.bl = bl`, `generate()`, `g.autoFree()` & `g.exit()` all at once
