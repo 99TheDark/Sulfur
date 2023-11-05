@@ -7,6 +7,8 @@
 - Autofree message
 - Force all variables and functions to have a visibility modifier inside classes
 - Enum syntax
+- Add the `undef` keyword and it's uses
+    - Possibly remove implicit assignment (`:=`) in favor of `let` or `var`
 - Classes
 - String equals string
 - Type promotion vs demotion syntax

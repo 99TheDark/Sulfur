@@ -1951,88 +1951,31 @@ LBB31_6:                                ; %exit
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
-	stp	x20, x19, [sp, #-32]!           ; 16-byte Folded Spill
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	add	x29, sp, #16
-	sub	sp, sp, #32
-	.cfi_def_cfa w29, 16
+	sub	sp, sp, #48
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 48
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
 	.cfi_offset w19, -24
 	.cfi_offset w20, -32
-	mov	w8, #21846
-	mov	w9, #36137
-	mov	w11, #1
-	movk	w8, #21845, lsl #16
-	movk	w9, #19599, lsl #16
-	mov	w10, #107
-	b	LBB32_2
-LBB32_1:                                ; %if.end1
-                                        ;   in Loop: Header=BB32_2 Depth=1
-	ldur	w11, [x29, #-20]
-	add	w11, w11, #1
-LBB32_2:                                ; %loop.body0
-                                        ; =>This Inner Loop Header: Depth=1
-	stur	w11, [x29, #-20]
-	ldursw	x11, [x29, #-20]
-	mul	x12, x11, x8
-	add	w13, w11, #7
-	cmp	w11, #0
-	lsr	x14, x12, #63
-	lsr	x12, x12, #32
-	add	w12, w12, w14
-	csel	w13, w13, w11, lt
-	and	w13, w13, #0xfffffff8
-	add	w12, w12, w12, lsl #1
-	sub	w13, w11, w13
-	sub	w12, w11, w12
-	cbnz	w13, LBB32_1
-; %bb.3:                                ; %loop.body0
-                                        ;   in Loop: Header=BB32_2 Depth=1
-	mul	x13, x11, x9
-	cmp	w12, #0
-	lsr	x14, x13, #63
-	asr	x13, x13, #37
-	add	w13, w13, w14
-	msub	w11, w13, w10, w11
-	ccmp	w11, #0, #0, eq
-	b.ne	LBB32_1
-; %bb.4:                                ; %if.then1
-	mov	x8, sp
-Lloh30:
-	adrp	x1, l_.str0@PAGE
-	sub	x9, x8, #16
-Lloh31:
-	add	x1, x1, l_.str0@PAGEOFF
-	mov	sp, x9
-	mov	w9, #42
-	mov	w0, #42
-	stur	x1, [x8, #-8]
-	stur	w9, [x8, #-16]
-	bl	"_.copy:string"
-	mov	w19, w0
-	mov	x20, x1
-	bl	_.print
-	mov	w0, w19
-	mov	x1, x20
-	bl	"_.free:string"
-	ldur	w0, [x29, #-20]
-	bl	"_.conv:int_string"
-	bl	_.println
 	mov	w0, #42
 	bl	"_newref:int"
 	mov	x19, x0
-	stur	x0, [x29, #-32]
+	str	x0, [sp, #8]
 	bl	"_ref:int"
-	ldur	x0, [x29, #-32]
-	stur	x19, [x29, #-40]
+	ldr	x8, [x19]
+	str	x19, [sp]
+	ldr	w0, [x8]
+	bl	"_.conv:int_string"
+	bl	_.println
+	ldr	x0, [sp, #8]
 	bl	"_deref:int"
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
 	mov	w0, wzr
-	sub	sp, x29, #16
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	ldp	x20, x19, [sp], #32             ; 16-byte Folded Reload
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #48
 	ret
-	.loh AdrpAdd	Lloh30, Lloh31
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal16,16byte_literals
@@ -2216,51 +2159,5 @@ l_.strZero:
 	.p2align	2                               ; @.strZero.11
 l_.strZero.11:
 	.long	48                              ; 0x30
-
-	.section	__TEXT,__const
-	.p2align	2                               ; @.str0
-l_.str0:
-	.long	84                              ; 0x54
-	.long	104                             ; 0x68
-	.long	105                             ; 0x69
-	.long	115                             ; 0x73
-	.long	32                              ; 0x20
-	.long	110                             ; 0x6e
-	.long	117                             ; 0x75
-	.long	109                             ; 0x6d
-	.long	98                              ; 0x62
-	.long	101                             ; 0x65
-	.long	114                             ; 0x72
-	.long	32                              ; 0x20
-	.long	105                             ; 0x69
-	.long	115                             ; 0x73
-	.long	32                              ; 0x20
-	.long	100                             ; 0x64
-	.long	105                             ; 0x69
-	.long	118                             ; 0x76
-	.long	105                             ; 0x69
-	.long	115                             ; 0x73
-	.long	105                             ; 0x69
-	.long	98                              ; 0x62
-	.long	108                             ; 0x6c
-	.long	101                             ; 0x65
-	.long	32                              ; 0x20
-	.long	98                              ; 0x62
-	.long	121                             ; 0x79
-	.long	32                              ; 0x20
-	.long	56                              ; 0x38
-	.long	44                              ; 0x2c
-	.long	32                              ; 0x20
-	.long	51                              ; 0x33
-	.long	32                              ; 0x20
-	.long	97                              ; 0x61
-	.long	110                             ; 0x6e
-	.long	100                             ; 0x64
-	.long	32                              ; 0x20
-	.long	49                              ; 0x31
-	.long	48                              ; 0x30
-	.long	55                              ; 0x37
-	.long	58                              ; 0x3a
-	.long	32                              ; 0x20
 
 .subsections_via_symbols

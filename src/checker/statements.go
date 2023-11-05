@@ -100,8 +100,13 @@ func (c *checker) inferAssignment(x ast.Assignment) {
 		if ok {
 			val, _ = AutoSwitch(val, vari.Type, conv)
 		} else {
-			Errors.Error("Expected "+vari.Type.String()+", but got "+val.String()+" instead", x.Loc())
+			Errors.Error("Expected "+vari.Type.String()+", but got "+val.String()+" instead", x.Value.Loc())
 		}
+	}
+
+	if !vari.References && c.Refs.Has(x.Value) {
+		typ := vari.Type.String()
+		Errors.Error("Expected "+typ+", but got &"+typ+" instead", x.Value.Loc())
 	}
 
 	if lexer.Empty(x.Op) {
@@ -116,7 +121,6 @@ func (c *checker) inferAssignment(x ast.Assignment) {
 		if binop.Left == vari.Type && binop.Right == val {
 			binop.Uses++
 			c.program.BinaryOps[i] = binop
-
 			return
 		}
 	}

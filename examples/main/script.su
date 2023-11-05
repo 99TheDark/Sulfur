@@ -1,12 +1,4 @@
 // Works
 x := 42
 y := &x
-
-// Doesn't work
-r := 0
-if true {
-    x := 42
-    r = &x
-}
-
-println(r)
+println(y)
