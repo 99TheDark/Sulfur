@@ -1,9 +1,12 @@
 package utils
 
-import "os"
+import (
+	"os"
+	"path/filepath"
+)
 
 func SaveFile(value []byte, location string) error {
-	file, err := os.Create(location)
+	file, err := os.Create(Relative(location))
 	if err != nil {
 		return err
 	}
@@ -20,4 +23,8 @@ func SaveFile(value []byte, location string) error {
 	}
 
 	return err
+}
+
+func Relative(path string) string {
+	return filepath.Dir(os.Args[0]) + "/" + path
 }

@@ -58,18 +58,18 @@ func build(path string) {
 	errors.Step = errors.Lexing
 	unfiltered := lexer.Lex(code)
 	utils.AttemptSave(func() error {
-		return lexer.Save(unfiltered, "cli/debug/unfiltered.txt")
+		return lexer.Save(unfiltered, "debug/unfiltered.txt")
 	})
 
 	tokens := lexer.Filter(unfiltered)
 	utils.AttemptSave(func() error {
-		return lexer.Save(tokens, "cli/debug/tokens.txt")
+		return lexer.Save(tokens, "debug/tokens.txt")
 	})
 
 	errors.Step = errors.Parsing
 	ast := parser.Parse(code, tokens)
 	utils.AttemptSave(func() error {
-		return parser.Save(ast, 1, "cli/debug/ast.json")
+		return parser.Save(ast, 1, "debug/ast.json")
 	})
 
 	errors.Step = errors.Inferring
@@ -77,7 +77,7 @@ func build(path string) {
 
 	errors.Step = errors.Generating
 	llcode := compiler.Generate(ast, props, path)
-	utils.AttemptSave(func() error {
-		return compiler.Save("; ModuleID = '"+path+"'\n"+llcode, "cli/tmp/"+name+".ll")
+	utils.ForceSave(func() error {
+		return compiler.Save("; ModuleID = '"+path+"'\n"+llcode, "tmp/"+name+".ll")
 	})
 }
