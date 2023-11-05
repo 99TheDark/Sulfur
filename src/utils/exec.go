@@ -7,8 +7,10 @@ import (
 
 func Exec(cmd string, args ...string) {
 	if out, err := exec.Command(cmd, args...).Output(); err != nil {
-		fmt.Println(string(out))
-		fmt.Println(err)
 		Panic(err)
+	} else {
+		if len(out) > 0 {
+			fmt.Print(string(out))
+		}
 	}
 }

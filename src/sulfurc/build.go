@@ -9,9 +9,7 @@ import (
 	"sulfur/src/utils"
 )
 
-func Compile(input, output string) {
-	name := utils.FileName(input)
-
+func Compile(name, input, output string) {
 	code, err := lexer.GetSourceCode(input)
 	if err != nil {
 		utils.Panic(err)
@@ -46,6 +44,4 @@ func Compile(input, output string) {
 	})
 
 	utils.Exec("bash", utils.Absolute()+"/compile.sh", name)
-
-	Execute(name, output)
 }

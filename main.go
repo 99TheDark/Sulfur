@@ -13,6 +13,8 @@ func main() {
 	start := time.Now()
 	args := utils.NewQueue(os.Args[1:])
 
+	sulfurc.Clear()
+
 	mode := args.AttemptNext("No mode given")
 	input := args.AttemptNext("No file given")
 	output := utils.FileName(input)
@@ -38,8 +40,11 @@ func main() {
 		}
 	}
 
-	sulfurc.SetMode(mode)
-	sulfurc.Compile(input, output)
+	name := utils.FileName(input)
 
+	sulfurc.SetMode(mode)
+	sulfurc.Compile(name, input, output)
 	fmt.Println("Compile time:", time.Since(start))
+
+	sulfurc.Execute(name, output)
 }
