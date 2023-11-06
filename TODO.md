@@ -11,6 +11,7 @@
 - Force all variables and functions to have a visibility modifier inside classes
 - Classes
 - String equals string
+- Replace add, shl, etc naming with +, <<, etc
 - Type promotion vs demotion syntax
 - Type demotion implementation
 - Only link functions when needed
