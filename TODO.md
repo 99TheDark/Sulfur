@@ -1,14 +1,15 @@
 # TODO
-- Work on error syntax (see Zig, V & Python)
 - Better token to string handling
 - Helper function for `g.enter(bl)`, `g.bl = bl`, `generate()`, `g.autoFree()` & `g.exit()` all at once
-- Have intrinics be stored somewhere as consts
 - Rethink one-line blocks (`=>`), maybe just use for `match` statements
+- Add more syntax
+- Have intrinics be stored somewhere as consts
+- Enum syntax
+- Add the `undef` keyword and its uses
+    - Remove implicit assignment (`:=`) in favor of `let` or `var` + `const`
+    - Add `val` prefix for constant but fields can change
 - Autofree message
 - Force all variables and functions to have a visibility modifier inside classes
-- Enum syntax
-- Add the `undef` keyword and it's uses
-    - Possibly remove implicit assignment (`:=`) in favor of `let` or `var`
 - Classes
 - String equals string
 - Type promotion vs demotion syntax
@@ -27,7 +28,7 @@
     - Add error directly into lexer/parser/checker/generation (no name)
 - Try parsing multiple files
 - Implement modules
-- Create package name
+- Create name for packages
 - Implement way of storing project name, modules etc (maybe TOML?)
 - Implement import & exports
 - Ignore unused things in main modules

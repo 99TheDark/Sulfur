@@ -238,32 +238,3 @@
     // y is an int
     y := x ?? 4
     ```
-- Error Handling
-        ```
-    // Similar to enum syntax
-    error FileError {
-        FileNotFound,
-        AccessDenied
-    }
-
-    read(string path) (string) throws FileError {
-        if !fileExists() {
-            throw FileError.FileNotFound
-        }
-        if !hasAccess() {
-            throw FileError.AccessDenied
-        }
-
-        return safeRead(path)
-    }
-
-    text := try read("./assets/text/secret.txt") catch {
-        FileError.FileNotFound {
-            println("File Error: File not found")
-            yield "404"
-        }
-        FileError.AccessDenied {
-            println("File Error: Access deined")
-        }
-    }
-    ```
