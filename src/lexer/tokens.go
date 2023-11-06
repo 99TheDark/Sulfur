@@ -93,7 +93,6 @@ const (
 	If                             // 'if'
 	Else                           // 'else'
 	Match                          // 'match'
-	Yield                          // 'yield'
 	QuestionMark                   // '?'
 	Colon                          // ':'
 	Null                           // 'null'
@@ -146,7 +145,6 @@ var Keywords = map[string]TokenType{
 	"if":          If,
 	"else":        Else,
 	"match":       Match,
-	"yield":       Yield,
 	"null":        Null,
 	"import":      Import,
 	"export":      Export,
@@ -368,8 +366,6 @@ func (tt TokenType) String() string {
 		return "Else"
 	case Match:
 		return "Match"
-	case Yield:
-		return "Yield"
 	case QuestionMark:
 		return "QuestionMark"
 	case Colon:
