@@ -246,7 +246,7 @@ func (p *parser) parseString() ast.String {
 }
 
 func (p *parser) parseIdentifier() ast.Identifier {
-	tok := p.expect(lexer.Identifier)
+	tok := p.expect(lexer.Identifier, lexer.Let, lexer.Const, lexer.Value)
 	return ast.Identifier{
 		Pos:  tok.Location,
 		Name: tok.Value,

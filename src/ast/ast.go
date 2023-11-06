@@ -179,14 +179,9 @@ type (
 	}
 
 	Declaration struct {
-		Type  Identifier
-		Name  Identifier
-		Value Expr
-	}
-
-	ImplicitDecl struct {
-		Name  Identifier
-		Value Expr
+		Prefix Identifier
+		Name   Identifier
+		Value  Expr
 	}
 
 	Assignment struct {
@@ -281,8 +276,7 @@ func (x UnaryOp) Loc() *typing.Location         { return x.Value.Loc() }
 func (x Reference) Loc() *typing.Location       { return x.Pos }
 func (x Pipe) Loc() *typing.Location            { return x.Left.Func.Loc() }
 func (x Comparison) Loc() *typing.Location      { return x.Left.Loc() }
-func (x Declaration) Loc() *typing.Location     { return x.Type.Loc() }
-func (x ImplicitDecl) Loc() *typing.Location    { return x.Name.Loc() }
+func (x Declaration) Loc() *typing.Location     { return x.Prefix.Loc() }
 func (x Assignment) Loc() *typing.Location      { return x.Name.Loc() }
 func (x IncDec) Loc() *typing.Location          { return x.Name.Loc() }
 func (x FuncCall) Loc() *typing.Location        { return x.Func.Loc() }

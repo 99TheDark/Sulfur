@@ -12,8 +12,6 @@ func (c *checker) inferStmt(expr ast.Expr) {
 	switch x := expr.(type) {
 	case ast.Declaration:
 		c.inferDeclaration(x)
-	case ast.ImplicitDecl:
-		c.inferImplicitDecl(x)
 	case ast.Assignment:
 		c.inferAssignment(x)
 	case ast.IncDec:
@@ -64,23 +62,8 @@ func (c *checker) inferDeclaration(x ast.Declaration) {
 		Errors.Error("Cannot declare a variable to have no type", x.Value.Loc())
 	}
 
-	if typing.Type(x.Type.Name) != val {
-		Errors.Error("Expected "+x.Type.Name+", but got "+val.String()+" instead", x.Loc())
-	}
-
-	vari := ast.NewVariable(c.topfun, x.Name.Name, c.Refs.Has(x.Value), val, ast.Local)
-	c.top.Vars[x.Name.Name] = vari
-	c.topfun.Decls[vari] = nil
-}
-
-func (c *checker) inferImplicitDecl(x ast.ImplicitDecl) {
-	if _, ok := c.top.Vars[x.Name.Name]; ok {
-		Errors.Error(x.Name.Name+" is already defined", x.Name.Loc())
-	}
-
-	val := c.inferExpr(x.Value)
-	if val == typing.Void {
-		Errors.Error("Cannot declare a variable to have no type", x.Value.Loc())
+	if typing.Type(x.Prefix.Name) != val {
+		Errors.Error("Expected "+x.Prefix.Name+", but got "+val.String()+" instead", x.Loc())
 	}
 
 	vari := ast.NewVariable(c.topfun, x.Name.Name, c.Refs.Has(x.Value), val, ast.Local)

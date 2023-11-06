@@ -30,22 +30,9 @@ func (p *parser) parseDeclaration(iden ast.Identifier) ast.Expr {
 		p.expect(lexer.Assignment)
 		val := p.parseExpr()
 		return ast.Declaration{
-			Type:  iden,
-			Name:  name,
-			Value: val,
-		}
-	}
-
-	return p.parseImplicitDecl(iden)
-}
-
-func (p *parser) parseImplicitDecl(iden ast.Identifier) ast.Expr {
-	if p.tt() == lexer.ImplicitDeclaration {
-		p.eat()
-		val := p.parseExpr()
-		return ast.ImplicitDecl{
-			Name:  iden,
-			Value: val,
+			Prefix: iden,
+			Name:   name,
+			Value:  val,
 		}
 	}
 

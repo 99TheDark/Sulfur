@@ -11,7 +11,7 @@ import (
 func (p *parser) parseStmt() ast.Expr {
 	tok := p.at()
 	switch tok.Type {
-	case lexer.Identifier:
+	case lexer.Identifier, lexer.Let, lexer.Const, lexer.Value:
 		return p.parseHybridStmt()
 	case lexer.Function:
 		return p.parseFunction()

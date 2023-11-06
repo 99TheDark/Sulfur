@@ -1,15 +1,15 @@
-i := 0
+let i = 0
 while i < 10 {
     i += 2
 }
 
 print("| ")
-for j := 0; j < 10; j++ {
+for int j = 0; j < 10; j++ {
     print(j + " ")
 }
 println("|")
 
-x := 5.0
+float x = 5.0
 loop {
     x *= 4.2
 

@@ -1,8 +1,10 @@
 # TODO
-- Have intrinics be stored somewhere as consts
+- Add `val` prefix for constant but fields can change
 - Add the `undef` keyword and its uses
-    - Remove implicit assignment (`:=`) in favor of `let` or `var` + `const`
-    - Add `val` prefix for constant but fields can change
+- Remove `:=` from syntax
+- Add `val` to syntax
+- Move `Location` out of `typing`
+- Move `Value` next to `Let` and `Const`
 - Enum syntax
 - Autofree message
 - Add more syntax

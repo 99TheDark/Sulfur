@@ -23,8 +23,6 @@ func (g *generator) genStmt(expr ast.Expr) {
 	switch x := expr.(type) {
 	case ast.Declaration:
 		g.genBasicDecl(x.Name.Name, g.typ(x.Value), g.genExpr(x.Value), x.Name.Loc())
-	case ast.ImplicitDecl:
-		g.genBasicDecl(x.Name.Name, g.typ(x.Value), g.genExpr(x.Value), x.Name.Loc())
 	case ast.Assignment:
 		g.genAssignment(x)
 	case ast.IncDec:

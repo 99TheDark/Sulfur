@@ -31,8 +31,10 @@ const (
 	NumericalSuffix                // 'u', 'f'
 	Boolean                        // 'true', 'false'
 	String                         // '"' -> some text -> '"'
+	Let                            // 'let'
+	Const                          // 'const'
+	Undefined                      // 'undef'
 	Assignment                     // '='
-	ImplicitDeclaration            // ':='
 	Increment                      // '++'
 	Decrement                      // '--'
 	Addition                       // '+'
@@ -115,6 +117,9 @@ const (
 var Keywords = map[string]TokenType{
 	"true":        Boolean,
 	"false":       Boolean,
+	"let":         Let,
+	"const":       Const,
+	"undef":       Undefined,
 	"nan":         NaN,
 	"inf":         Infinity,
 	"is":          Is,
@@ -166,7 +171,6 @@ var Symbols = map[string]TokenType{
 	"[":   OpenBracket,
 	"]":   CloseBracket,
 	"=":   Assignment,
-	":=":  ImplicitDeclaration,
 	"+":   Addition,
 	"-":   Subtraction,
 	"*":   Multiplication,
@@ -245,10 +249,14 @@ func (tt TokenType) String() string {
 		return "Boolean"
 	case String:
 		return "String"
+	case Let:
+		return "Let"
+	case Const:
+		return "Const"
+	case Undefined:
+		return "Undefined"
 	case Assignment:
 		return "Assignment"
-	case ImplicitDeclaration:
-		return "ImplicitDeclaration"
 	case Increment:
 		return "Increment"
 	case Decrement:
