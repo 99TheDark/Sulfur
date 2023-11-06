@@ -1978,39 +1978,50 @@ LBB32_6:                                ; %exit
 _main:                                  ; @main
 	.cfi_startproc
 ; %bb.0:                                ; %entry
+	sub	sp, sp, #48
+	stp	x20, x19, [sp, #16]             ; 16-byte Folded Spill
+	stp	x29, x30, [sp, #32]             ; 16-byte Folded Spill
+	.cfi_def_cfa_offset 48
+	.cfi_offset w30, -8
+	.cfi_offset w29, -16
+	.cfi_offset w19, -24
+	.cfi_offset w20, -32
+	mov	w0, #3
+	bl	"_newref:uint"
+	mov	x19, x0
+	str	x0, [sp, #8]
+	bl	"_ref:uint"
+	mov	x0, x19
+	bl	l_mod.doSomething
+	ldr	x8, [sp, #8]
+	ldr	x8, [x8]
+	ldr	w0, [x8]
+	bl	"_.conv:uint_string"
+	bl	_.println
+	ldr	x0, [sp, #8]
+	bl	"_deref:uint"
+	ldp	x29, x30, [sp, #32]             ; 16-byte Folded Reload
+	mov	w0, wzr
+	ldp	x20, x19, [sp, #16]             ; 16-byte Folded Reload
+	add	sp, sp, #48
+	ret
+	.cfi_endproc
+                                        ; -- End function
+	.p2align	2                               ; -- Begin function mod.doSomething
+l_mod.doSomething:                      ; @mod.doSomething
+	.cfi_startproc
+; %bb.0:                                ; %entry
 	stp	x29, x30, [sp, #-16]!           ; 16-byte Folded Spill
 	.cfi_def_cfa_offset 16
 	.cfi_offset w30, -8
 	.cfi_offset w29, -16
-	bl	l_mod.free_msg
-	mov	w0, wzr
+	ldr	x8, [x0]
+	ldr	w8, [x8]
+	lsr	w0, w8, #4
+	bl	"_.conv:uint_string"
+	bl	_.println
 	ldp	x29, x30, [sp], #16             ; 16-byte Folded Reload
 	ret
-	.cfi_endproc
-                                        ; -- End function
-	.p2align	2                               ; -- Begin function mod.free_msg
-l_mod.free_msg:                         ; @mod.free_msg
-	.cfi_startproc
-; %bb.0:                                ; %entry
-	sub	sp, sp, #32
-	stp	x29, x30, [sp, #16]             ; 16-byte Folded Spill
-	.cfi_def_cfa_offset 32
-	.cfi_offset w30, -8
-	.cfi_offset w29, -16
-Lloh32:
-	adrp	x1, l_.str0.1@PAGE
-	mov	w8, #19
-Lloh33:
-	add	x1, x1, l_.str0.1@PAGEOFF
-	mov	w0, #19
-	str	w8, [sp]
-	str	x1, [sp, #8]
-	bl	"_.copy:string"
-	bl	_.println
-	ldp	x29, x30, [sp, #16]             ; 16-byte Folded Reload
-	add	sp, sp, #32
-	ret
-	.loh AdrpAdd	Lloh32, Lloh33
 	.cfi_endproc
                                         ; -- End function
 	.section	__TEXT,__literal16,16byte_literals
@@ -2216,28 +2227,5 @@ l_.strZero:
 	.p2align	2                               ; @.strZero.13
 l_.strZero.13:
 	.long	48                              ; 0x30
-
-	.section	__TEXT,__const
-	.p2align	2                               ; @.str0.1
-l_.str0.1:
-	.long	65                              ; 0x41
-	.long	117                             ; 0x75
-	.long	116                             ; 0x74
-	.long	111                             ; 0x6f
-	.long	109                             ; 0x6d
-	.long	97                              ; 0x61
-	.long	116                             ; 0x74
-	.long	105                             ; 0x69
-	.long	99                              ; 0x63
-	.long	97                              ; 0x61
-	.long	108                             ; 0x6c
-	.long	108                             ; 0x6c
-	.long	121                             ; 0x79
-	.long	32                              ; 0x20
-	.long	102                             ; 0x66
-	.long	114                             ; 0x72
-	.long	101                             ; 0x65
-	.long	101                             ; 0x65
-	.long	100                             ; 0x64
 
 .subsections_via_symbols

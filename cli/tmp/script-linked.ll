@@ -21,7 +21,6 @@ source_filename = "llvm-link"
 @.strCount = private unnamed_addr constant [13 x i32] [i32 32, i32 114, i32 101, i32 102, i32 101, i32 114, i32 101, i32 110, i32 99, i32 101, i32 40, i32 115, i32 41], align 4
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
 @.strZero.13 = private unnamed_addr constant [1 x i32] [i32 48], align 4
-@.str0.1 = private unnamed_addr constant [19 x i32] [i32 65, i32 117, i32 116, i32 111, i32 109, i32 97, i32 116, i32 105, i32 99, i32 97, i32 108, i32 108, i32 121, i32 32, i32 102, i32 114, i32 101, i32 101, i32 100], align 4
 
 define fastcc %ref.bool* @"newref:bool"(i1 %bool) {
 entry:
@@ -1974,23 +1973,33 @@ exit:                                             ; preds = %for.cond, %if.then1
 
 define i32 @main() {
 entry:
-  call void @mod.free_msg()
+  %x = alloca %ref.int*, align 8
+  %0 = call %ref.int* @"newref:uint"(i32 3)
+  store %ref.int* %0, %ref.int** %x, align 8
+  %1 = load %ref.int*, %ref.int** %x, align 8
+  call void @"ref:uint"(%ref.int* %1)
+  call void @mod.doSomething(%ref.int* %1)
+  %2 = load %ref.int*, %ref.int** %x, align 8
+  %3 = getelementptr inbounds %ref.int, %ref.int* %2, i32 0, i32 0
+  %4 = load i32*, i32** %3, align 8
+  %5 = load i32, i32* %4, align 4
+  %6 = call %type.string @".conv:uint_string"(i32 %5)
+  call void @.println(%type.string %6)
+  %7 = load %ref.int*, %ref.int** %x, align 8
+  call void @"deref:uint"(%ref.int* %7)
   br label %exit
 
 exit:                                             ; preds = %entry
   ret i32 0
 }
 
-define private fastcc void @mod.free_msg() {
+define private fastcc void @mod.doSomething(%ref.int* %0) {
 entry:
-  %0 = getelementptr inbounds [19 x i32], [19 x i32]* @.str0.1, i32 0, i32 0
-  %1 = alloca %type.string, align 8
-  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 19, i32* %2, align 8
-  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
-  store i32* %0, i32** %3, align 8
-  %4 = load %type.string, %type.string* %1, align 8
-  %5 = call %type.string @".copy:string"(%type.string %4)
+  %1 = getelementptr inbounds %ref.int, %ref.int* %0, i32 0, i32 0
+  %2 = load i32*, i32** %1, align 8
+  %3 = load i32, i32* %2, align 4
+  %4 = lshr i32 %3, 4
+  %5 = call %type.string @".conv:uint_string"(i32 %4)
   call void @.println(%type.string %5)
   br label %exit
 

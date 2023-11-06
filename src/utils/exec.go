@@ -16,8 +16,13 @@ func Exec(cmd string, args ...string) {
 	stdout.Reset()
 	stderr.Reset()
 
-	if command.Run() != nil {
-		Panic(stderr.String())
+	if err := command.Run(); err != nil {
+		out := stderr.String()
+		if len(out) > 0 {
+			Panic(out)
+		} else {
+			Panic(err)
+		}
 	} else {
 		out := stdout.String()
 		if len(out) > 0 {

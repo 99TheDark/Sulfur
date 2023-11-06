@@ -1,5 +1,10 @@
-func free_msg() {
-    println("Automatically freed")
-}
+let x: uint = 3u
 
-free_msg()
+func doSomething(&uint num) {
+    println(num >> 4u)
+
+    // Should work
+    // num++
+}
+doSomething(&x)
+println(x)
