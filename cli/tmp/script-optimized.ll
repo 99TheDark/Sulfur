@@ -20,9 +20,7 @@ source_filename = "llvm-link"
 @.strCount = private unnamed_addr constant [13 x i32] [i32 32, i32 114, i32 101, i32 102, i32 101, i32 114, i32 101, i32 110, i32 99, i32 101, i32 40, i32 115, i32 41], align 4
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
 @.strZero.11 = private unnamed_addr constant [1 x i32] [i32 48], align 4
-@.str0 = private unnamed_addr constant [2 x i32] [i32 124, i32 32], align 4
-@.str1 = private unnamed_addr constant [1 x i32] [i32 32], align 4
-@.str2 = private unnamed_addr constant [1 x i32] [i32 124], align 4
+@.str0 = private unnamed_addr constant [5 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111], align 4
 
 define fastcc %ref.bool* @"newref:bool"(i1 %bool) {
 entry:
@@ -1957,111 +1955,37 @@ exit:                                             ; preds = %for.cond, %if.then1
 
 define i32 @main() {
 entry:
-  %i = alloca i32, align 4
-  %j = alloca i32, align 4
-  %x = alloca float, align 4
-  store i32 0, i32* %i, align 4
-  br label %while.cond0
-
-exit:                                             ; preds = %loop.end2
-  ret i32 0
-
-while.cond0:                                      ; preds = %while.body0, %entry
-  %0 = load i32, i32* %i, align 4
-  %1 = icmp slt i32 %0, 10
-  br i1 %1, label %while.body0, label %while.end0
-
-while.body0:                                      ; preds = %while.cond0
-  %2 = load i32, i32* %i, align 4
-  %3 = add i32 %2, 2
-  store i32 %3, i32* %i, align 4
-  br label %while.cond0
-
-while.end0:                                       ; preds = %while.cond0
-  %4 = getelementptr inbounds [2 x i32], [2 x i32]* @.str0, i32 0, i32 0
-  %5 = alloca %type.string, align 8
-  %6 = getelementptr inbounds %type.string, %type.string* %5, i32 0, i32 0
-  store i32 2, i32* %6, align 8
-  %7 = getelementptr inbounds %type.string, %type.string* %5, i32 0, i32 1
-  store i32* %4, i32** %7, align 8
-  %8 = load %type.string, %type.string* %5, align 8
-  %9 = call %type.string @".copy:string"(%type.string %8)
-  call void @.print(%type.string %9)
-  store i32 0, i32* %j, align 4
-  br label %for.cond1
-
-for.cond1:                                        ; preds = %for.inc1, %while.end0
-  %10 = load i32, i32* %j, align 4
-  %11 = icmp slt i32 %10, 10
-  br i1 %11, label %for.body1, label %for.end1
-
-for.body1:                                        ; preds = %for.cond1
-  %12 = load i32, i32* %j, align 4
-  %13 = call %type.string @".conv:int_string"(i32 %12)
-  %14 = getelementptr inbounds [1 x i32], [1 x i32]* @.str1, i32 0, i32 0
-  %15 = alloca %type.string, align 8
-  %16 = getelementptr inbounds %type.string, %type.string* %15, i32 0, i32 0
-  store i32 1, i32* %16, align 8
-  %17 = getelementptr inbounds %type.string, %type.string* %15, i32 0, i32 1
-  store i32* %14, i32** %17, align 8
-  %18 = load %type.string, %type.string* %15, align 8
-  %19 = call %type.string @".copy:string"(%type.string %18)
-  %20 = call %type.string @".add:string_string"(%type.string %13, %type.string %19)
-  call void @.print(%type.string %20)
-  call void @".free:string"(%type.string %19)
-  br label %for.inc1
-
-for.inc1:                                         ; preds = %for.body1
-  %21 = load i32, i32* %j, align 4
-  %22 = add i32 %21, 1
-  store i32 %22, i32* %j, align 4
-  br label %for.cond1
-
-for.end1:                                         ; preds = %for.cond1
-  %23 = getelementptr inbounds [1 x i32], [1 x i32]* @.str2, i32 0, i32 0
-  %24 = alloca %type.string, align 8
-  %25 = getelementptr inbounds %type.string, %type.string* %24, i32 0, i32 0
-  store i32 1, i32* %25, align 8
-  %26 = getelementptr inbounds %type.string, %type.string* %24, i32 0, i32 1
-  store i32* %23, i32** %26, align 8
-  %27 = load %type.string, %type.string* %24, align 8
-  %28 = call %type.string @".copy:string"(%type.string %27)
-  call void @.println(%type.string %28)
-  store float 5.000000e+00, float* %x, align 4
-  br label %loop.body2
-
-loop.body2:                                       ; preds = %if.end3, %for.end1
-  %29 = load float, float* %x, align 4
-  %30 = fmul float %29, 0x4010CCCCC0000000
-  store float %30, float* %x, align 4
-  %31 = load i32, i32* %i, align 4
-  %32 = srem i32 %31, 7
-  %33 = icmp eq i32 %32, 0
-  %34 = load i32, i32* %i, align 4
-  %35 = srem i32 %34, 10
-  %36 = icmp eq i32 %35, 0
-  %37 = and i1 %33, %36
-  br i1 %37, label %if.then3, label %if.end3
-
-loop.end2:                                        ; preds = %if.then3
-  %38 = load i32, i32* %i, align 4
-  %39 = call %type.string @".conv:int_string"(i32 %38)
-  call void @.println(%type.string %39)
-  %40 = load float, float* %x, align 4
-  %41 = call %type.string @".conv:float_string"(float %40)
-  call void @.println(%type.string %41)
-  call void @".free:string"(%type.string %9)
-  call void @".free:string"(%type.string %28)
+  call void @mod.outer()
   br label %exit
 
-if.then3:                                         ; preds = %loop.body2
-  br label %loop.end2
+exit:                                             ; preds = %entry
+  ret i32 0
+}
 
-if.end3:                                          ; preds = %loop.body2
-  %42 = load i32, i32* %i, align 4
-  %43 = add i32 %42, 1
-  store i32 %43, i32* %i, align 4
-  br label %loop.body2
+define private fastcc void @mod.outer() {
+entry:
+  call void @mod.inner()
+  br label %exit
+
+exit:                                             ; preds = %entry
+  ret void
+}
+
+define private fastcc void @mod.inner() {
+entry:
+  %0 = getelementptr inbounds [5 x i32], [5 x i32]* @.str0, i32 0, i32 0
+  %1 = alloca %type.string, align 8
+  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
+  store i32 5, i32* %2, align 8
+  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
+  store i32* %0, i32** %3, align 8
+  %4 = load %type.string, %type.string* %1, align 8
+  %5 = call %type.string @".copy:string"(%type.string %4)
+  call void @.println(%type.string %5)
+  br label %exit
+
+exit:                                             ; preds = %entry
+  ret void
 }
 
 attributes #0 = { argmemonly nofree nounwind willreturn }

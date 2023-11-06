@@ -1,23 +1,8 @@
-let i = 0
-while i < 10 {
-    i += 2
-}
-
-print("| ")
-for let j = 0; j < 10; j++ {
-    print(j + " ")
-}
-println("|")
-
-let x = 5.0
-loop {
-    x *= 4.2
-
-    if i % 7 == 0 & i % 10 == 0 {
-        break
+func outer() {
+    func inner() {
+        println("Hello")
     }
-    i++
+    inner()
 }
 
-println(i)
-println(x)
+outer()

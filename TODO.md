@@ -1,6 +1,4 @@
 # TODO
-- Enum syntax
-- Add more syntax
 - Autofree message
 - Force all variables and functions to have a visibility modifier inside classes
 - Classes
@@ -10,6 +8,7 @@
 - Type promotion vs demotion syntax
 - Type demotion implementation
 - Only link functions when needed
+- Figure out a quick way to link builtins rather than bundle them all together
 - Remove allocas from single-use variables
 - Add `string.length` and `string[idx]`
 - Raw strings using backticks
@@ -35,4 +34,5 @@
 - More sensicle EOF errors
 - 0x, 0b, 0o etc numbers
 - Underscore assignment
+- Closures
 - Add control flow analysis!

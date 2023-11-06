@@ -61,3 +61,52 @@ enum WarmMonth from Month {
 }
 ```
 In this case, no enum values can be assigned. You simply specify the included elements in the subcatagory.
+
+In Sulfur, enums can have more than just one value; they can have multiple by simply adding a comma between each value alonside giving a name, which can also be done with only single values in an enum. This can be very useful for matching many other things to an enum without using giant `match` cases or `if`-`else` chains. 
+
+Under the hood, Sulfur stores the enums as something all together, so giving underlying type(s) just allows type conversion(s) between the `enum` and another type.
+
+An example might be with the US states:
+```
+enum US_State {
+    Delaware = name: "Delaware", abbr: "DE", entry: 1
+    Pennsylvania = name: "Pennsylvania", abbr: "PA", entry: 2
+    NewJersey = name: "New Jersey", abbr: "NJ", entry: 3
+}
+```
+You may also want to format everything to line up
+```
+enum US_State {
+    Delaware     = name: "Delaware",     abbr: "DE", entry: 1
+    Pennsylvania = name: "Pennsylvania", abbr: "PA", entry: 2
+    NewJersey    = name: "New Jersey",   abbr: "NJ", entry: 3
+}
+```
+If an enum gets too long, you may even want to split it onto multiple lines per value:
+```
+enum US_State {
+    Delaware = 
+        name: "Delaware",     
+        abbreviation: "DE", 
+        entry: 1,
+        population: 1003000u
+
+    Pennsylvania = 
+        name: "Pennsylvania", 
+        abbreviation: "PA", 
+        entry: 2,
+        population: 9267000u
+        
+    NewJersey = 
+        name: "New Jersey",   
+        abbreviation: "NJ", 
+        entry: 3,
+        population: 12960000u
+}
+```
+To access named enums, just access the named values like fields of a `class` or `struct`.
+```
+let delaware: US_State  = US_State.Delaware
+let pop_of_del: uint    = US_State.Delaware.population
+let name_of_del: string = delaware.name
+```
