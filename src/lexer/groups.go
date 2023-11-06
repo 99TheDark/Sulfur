@@ -59,3 +59,9 @@ var Multiplicative = []TokenType{
 var Exponential = []TokenType{
 	Exponentiation,
 }
+
+var Prefix = []TokenType{
+	Let,
+	Const,
+	Value,
+}

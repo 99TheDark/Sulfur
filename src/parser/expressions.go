@@ -181,8 +181,11 @@ func (p *parser) parsePrimary() ast.Expr {
 		return p.parseString()
 	case lexer.OpenParen:
 		return p.parseGroup()
-	case lexer.Identifier:
-		return p.parseHybrid()
+	default:
+		hybrid := p.parseHybrid()
+		if !ast.Empty(hybrid) {
+			return hybrid
+		}
 	}
 
 	Errors.Error("Unknown token '"+strings.ReplaceAll(p.at().Value, "\n", "\\n")+"'", p.at().Location)
@@ -246,7 +249,7 @@ func (p *parser) parseString() ast.String {
 }
 
 func (p *parser) parseIdentifier() ast.Identifier {
-	tok := p.expect(lexer.Identifier, lexer.Let, lexer.Const, lexer.Value)
+	tok := p.expect(lexer.Identifier)
 	return ast.Identifier{
 		Pos:  tok.Location,
 		Name: tok.Value,

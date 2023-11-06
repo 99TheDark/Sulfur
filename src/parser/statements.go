@@ -11,8 +11,6 @@ import (
 func (p *parser) parseStmt() ast.Expr {
 	tok := p.at()
 	switch tok.Type {
-	case lexer.Identifier, lexer.Let, lexer.Const, lexer.Value:
-		return p.parseHybridStmt()
 	case lexer.Function:
 		return p.parseFunction()
 	case lexer.Class:
@@ -35,6 +33,11 @@ func (p *parser) parseStmt() ast.Expr {
 		return p.parseBreak()
 	case lexer.Continue:
 		return p.parseContinue()
+	default:
+		hybrid := p.parseHybrid()
+		if !ast.Empty(hybrid) {
+			return hybrid
+		}
 	}
 
 	Errors.Error("Invalid statement", tok.Location)
@@ -202,11 +205,11 @@ func (p *parser) parseIfStmt() ast.IfStatement {
 
 func (p *parser) parseForLoop() ast.ForLoop {
 	tok := p.expect(lexer.For)
-	init := p.parseHybridStmt()
+	init := p.parseHybrid()
 	p.expect(lexer.NewLine, lexer.Semicolon)
 	comp := p.parseComparison()
 	p.expect(lexer.NewLine, lexer.Semicolon)
-	inc := p.parseHybridStmt()
+	inc := p.parseHybrid()
 	body := p.parseBlock()
 	return ast.ForLoop{
 		Pos:  tok.Location,

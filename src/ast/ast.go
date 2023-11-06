@@ -179,9 +179,11 @@ type (
 	}
 
 	Declaration struct {
-		Prefix Identifier
-		Name   Identifier
-		Value  Expr
+		Pos        *typing.Location `json:"-"`
+		Prefix     lexer.TokenType
+		Name       Identifier
+		Annotation Identifier
+		Value      Expr
 	}
 
 	Assignment struct {
@@ -276,7 +278,7 @@ func (x UnaryOp) Loc() *typing.Location         { return x.Value.Loc() }
 func (x Reference) Loc() *typing.Location       { return x.Pos }
 func (x Pipe) Loc() *typing.Location            { return x.Left.Func.Loc() }
 func (x Comparison) Loc() *typing.Location      { return x.Left.Loc() }
-func (x Declaration) Loc() *typing.Location     { return x.Prefix.Loc() }
+func (x Declaration) Loc() *typing.Location     { return x.Pos }
 func (x Assignment) Loc() *typing.Location      { return x.Name.Loc() }
 func (x IncDec) Loc() *typing.Location          { return x.Name.Loc() }
 func (x FuncCall) Loc() *typing.Location        { return x.Func.Loc() }

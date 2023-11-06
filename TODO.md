@@ -1,10 +1,12 @@
 # TODO
 - Add `val` prefix for constant but fields can change
+- Move `Value` next to `Let` and `Const`
 - Add the `undef` keyword and its uses
 - Remove `:=` from syntax
 - Add `val` to syntax
 - Move `Location` out of `typing`
-- Move `Value` next to `Let` and `Const`
+- Change declaration syntax
+- Make it illegal to use let, const or val as variable or function names
 - Enum syntax
 - Autofree message
 - Add more syntax

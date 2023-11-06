@@ -26,8 +26,11 @@ func (p *parser) at() lexer.Token {
 }
 
 func (p *parser) tt() lexer.TokenType {
-	// Shorthand
 	return p.peek(0).Type
+}
+
+func (p *parser) ptt(ahead int) lexer.TokenType {
+	return p.peek(ahead).Type
 }
 
 func (p *parser) peek(ahead int) lexer.Token {

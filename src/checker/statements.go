@@ -62,8 +62,8 @@ func (c *checker) inferDeclaration(x ast.Declaration) {
 		Errors.Error("Cannot declare a variable to have no type", x.Value.Loc())
 	}
 
-	if typing.Type(x.Prefix.Name) != val {
-		Errors.Error("Expected "+x.Prefix.Name+", but got "+val.String()+" instead", x.Loc())
+	if typing.Type(x.Annotation.Name) != val {
+		Errors.Error("Expected "+x.Annotation.Name+", but got "+val.String()+" instead", x.Value.Loc())
 	}
 
 	vari := ast.NewVariable(c.topfun, x.Name.Name, c.Refs.Has(x.Value), val, ast.Local)

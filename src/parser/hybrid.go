@@ -7,69 +7,67 @@ import (
 	"sulfur/src/utils"
 )
 
-func (p *parser) parseHybridStmt() ast.Expr {
-	hybrid := p.parseHybrid()
-	if iden, ok := hybrid.(ast.Identifier); ok {
-		Errors.Error("Incomplete statement", iden.Pos)
-		return &ast.NoExpr{
-			Pos: iden.Pos,
-		}
-	}
-
-	return hybrid
-}
-
 func (p *parser) parseHybrid() ast.Expr {
-	iden := p.parseIdentifier()
-	return p.parseDeclaration(iden)
+	return p.parseDeclaration()
 }
 
-func (p *parser) parseDeclaration(iden ast.Identifier) ast.Expr {
-	if p.tt() == lexer.Identifier {
+func (p *parser) parseDeclaration() ast.Expr {
+	if p.is(lexer.Prefix) {
+		prefix := p.eat()
 		name := p.parseIdentifier()
+
+		var annotation ast.Identifier
+		if p.tt() == lexer.Colon {
+			p.eat()
+			annotation = p.parseIdentifier()
+		} else {
+			annotation = ast.Identifier{}
+		}
+
 		p.expect(lexer.Assignment)
 		val := p.parseExpr()
 		return ast.Declaration{
-			Prefix: iden,
-			Name:   name,
-			Value:  val,
+			Pos:        prefix.Location,
+			Prefix:     prefix.Type,
+			Name:       name,
+			Annotation: annotation,
+			Value:      val,
 		}
 	}
 
-	return p.parseAssignment(iden)
+	return p.parseAssignment()
 }
 
-func (p *parser) parseAssignment(iden ast.Identifier) ast.Expr {
-	if p.tt() == lexer.Assignment {
-		p.eat()
-		val := p.parseExpr()
-		return ast.Assignment{
-			Name:  iden,
-			Value: val,
-			Op:    lexer.Token{},
+func (p *parser) parseAssignment() ast.Expr {
+	if p.tt() == lexer.Identifier {
+		if p.ptt(1) == lexer.Assignment {
+			iden := p.parseIdentifier()
+			p.eat()
+			val := p.parseExpr()
+			return ast.Assignment{
+				Name:  iden,
+				Value: val,
+				Op:    lexer.Token{},
+			}
+		} else if p.ptt(2) == lexer.Assignment && utils.Contains(lexer.BinaryOperator, p.ptt(1)) {
+			iden := p.parseIdentifier()
+			op := p.eat()
+			p.expect(lexer.Assignment)
+			val := p.parseExpr()
+			return ast.Assignment{
+				Name:  iden,
+				Value: val,
+				Op:    op,
+			}
 		}
 	}
 
-	return p.parseOpAssign(iden)
+	return p.parseIncDec()
 }
 
-func (p *parser) parseOpAssign(iden ast.Identifier) ast.Expr {
-	if utils.Contains(lexer.BinaryOperator, p.tt()) && p.peek(1).Type == lexer.Assignment {
-		op := p.eat()
-		p.expect(lexer.Assignment)
-		val := p.parseExpr()
-		return ast.Assignment{
-			Name:  iden,
-			Value: val,
-			Op:    op,
-		}
-	}
-
-	return p.parseIncDec(iden)
-}
-
-func (p *parser) parseIncDec(iden ast.Identifier) ast.Expr {
-	if p.tt() == lexer.Increment || p.tt() == lexer.Decrement {
+func (p *parser) parseIncDec() ast.Expr {
+	if p.tt() == lexer.Identifier && p.ptt(1) == lexer.Increment || p.ptt(1) == lexer.Decrement {
+		iden := p.parseIdentifier()
 		op := p.eat()
 		return ast.IncDec{
 			Name: iden,
@@ -77,25 +75,31 @@ func (p *parser) parseIncDec(iden ast.Identifier) ast.Expr {
 		}
 	}
 
-	return p.parseFuncCall(iden)
+	return p.parseFuncCall()
 }
 
-func (p *parser) parseFuncCall(iden ast.Identifier) ast.Expr {
-	if p.tt() == lexer.OpenParen {
-		p.eat()
-		params := []ast.Expr{}
-		p.parseList(
-			func() {
-				params = append(params, p.parseExpr())
-			},
-			[]lexer.TokenType{lexer.CloseParen},
-			[]lexer.TokenType{lexer.Delimiter},
-		)
-		return ast.FuncCall{
-			Func:   iden,
-			Params: &params,
+func (p *parser) parseFuncCall() ast.Expr {
+	if p.tt() == lexer.Identifier {
+		iden := p.parseIdentifier()
+		if p.tt() == lexer.OpenParen {
+			p.eat()
+			params := []ast.Expr{}
+			p.parseList(
+				func() {
+					params = append(params, p.parseExpr())
+				},
+				[]lexer.TokenType{lexer.CloseParen},
+				[]lexer.TokenType{lexer.Delimiter},
+			)
+			return ast.FuncCall{
+				Func:   iden,
+				Params: &params,
+			}
+		} else {
+			return iden
 		}
 	}
 
-	return iden
+	Errors.Error("Incomplete statement", p.at().Location)
+	return &ast.NoExpr{}
 }
