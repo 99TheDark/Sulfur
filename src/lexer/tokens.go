@@ -33,7 +33,7 @@ const (
 	String                         // '"' -> some text -> '"'
 	Let                            // 'let'
 	Const                          // 'const'
-	Undefined                      // 'undef'
+	Value                          // 'val'
 	Assignment                     // '='
 	Increment                      // '++'
 	Decrement                      // '--'
@@ -83,7 +83,6 @@ const (
 	Extends                        // 'extends'
 	Public                         // 'pub'
 	Private                        // 'pri'
-	Value                          // 'val'
 	Static                         // 'stat'
 	From                           // 'from'
 	Enum                           // 'enum'
@@ -119,7 +118,7 @@ var Keywords = map[string]TokenType{
 	"false":       Boolean,
 	"let":         Let,
 	"const":       Const,
-	"undef":       Undefined,
+	"val":         Value,
 	"nan":         NaN,
 	"inf":         Infinity,
 	"is":          Is,
@@ -139,7 +138,6 @@ var Keywords = map[string]TokenType{
 	"extends":     Extends,
 	"pub":         Public,
 	"pri":         Private,
-	"val":         Value,
 	"stat":        Static,
 	"from":        From,
 	"enum":        Enum,
@@ -253,8 +251,8 @@ func (tt TokenType) String() string {
 		return "Let"
 	case Const:
 		return "Const"
-	case Undefined:
-		return "Undefined"
+	case Value:
+		return "Value"
 	case Assignment:
 		return "Assignment"
 	case Increment:
@@ -351,8 +349,6 @@ func (tt TokenType) String() string {
 		return "Public"
 	case Private:
 		return "Private"
-	case Value:
-		return "Value"
 	case Static:
 		return "Static"
 	case From:

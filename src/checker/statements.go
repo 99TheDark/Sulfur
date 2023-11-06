@@ -62,7 +62,7 @@ func (c *checker) inferDeclaration(x ast.Declaration) {
 		Errors.Error("Cannot declare a variable to have no type", x.Value.Loc())
 	}
 
-	if typing.Type(x.Annotation.Name) != val {
+	if !ast.Empty(x.Annotation) && typing.Type(x.Annotation.Name) != val {
 		Errors.Error("Expected "+x.Annotation.Name+", but got "+val.String()+" instead", x.Value.Loc())
 	}
 

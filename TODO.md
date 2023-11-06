@@ -1,7 +1,4 @@
 # TODO
-- Add `val` prefix for constant but fields can change
-- Move `Value` next to `Let` and `Const`
-- Add the `undef` keyword and its uses
 - Remove `:=` from syntax
 - Add `val` to syntax
 - Move `Location` out of `typing`
