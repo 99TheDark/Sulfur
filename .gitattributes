@@ -1,4 +1,4 @@
 *.ll linguist-language=LLVM
 cli/tmp/** linguist-vendored
-lib/builtin/conversion/float_string.ll linguist-vendored
+lib/builtin/conversion/** linguist-vendored
 lib/bytecode/** linguist-vendored
