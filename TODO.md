@@ -1,5 +1,4 @@
 # TODO
-- Autofree message
 - Force all variables and functions to have a visibility modifier inside classes
 - Classes
 - Implement `const` & `val` declarations
