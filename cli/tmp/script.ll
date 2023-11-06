@@ -27,15 +27,15 @@ exit:
 	ret i32 0
 }
 
-declare %ref.int* @"newref:int"(i32 %0)
+declare fastcc %ref.int* @"newref:int"(i32 %0)
 
-declare void @"ref:int"(%ref.int* %0)
+declare fastcc void @"ref:int"(%ref.int* %0)
 
-declare void @"deref:int"(%ref.int* %0)
+declare fastcc void @"deref:int"(%ref.int* %0)
 
 declare fastcc void @.println(%type.string %0)
 
-declare %type.string @".conv:int_string"(i32 %0)
+declare fastcc %type.string @".conv:int_string"(i32 %0)
 
 declare i32 @llvm.ctlz.i32(i32 %0, i1 immarg %1)
 

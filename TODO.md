@@ -1,14 +1,14 @@
 # TODO
-- Better token to string handling
 - Helper function for `g.enter(bl)`, `g.bl = bl`, `generate()`, `g.autoFree()` & `g.exit()` all at once
+- Better token to string handling
 - Rethink one-line blocks (`=>`), maybe just use for `match` statements
-- Add more syntax
 - Have intrinics be stored somewhere as consts
-- Enum syntax
 - Add the `undef` keyword and its uses
     - Remove implicit assignment (`:=`) in favor of `let` or `var` + `const`
     - Add `val` prefix for constant but fields can change
+- Enum syntax
 - Autofree message
+- Add more syntax
 - Force all variables and functions to have a visibility modifier inside classes
 - Classes
 - String equals string
@@ -19,6 +19,8 @@
 - Add `string.length` and `string[idx]`
 - Raw strings using backticks
 - String interpolation
+- Only use `llvm-dis` on `-debug` mode
+- Add an `opt` flag to control optimization
 - Complex numbers
 - Complex number to string
 - Complex number operations
@@ -38,3 +40,4 @@
 - More sensicle EOF errors
 - 0x, 0b, 0o etc numbers
 - Underscore assignment
+- Add control flow analysis!

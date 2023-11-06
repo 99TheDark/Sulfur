@@ -60,16 +60,21 @@ func (g *generator) genReferences() {
 			refptr,
 			ir.NewParam("", lltyp),
 		)
+		newref.CallingConv = enum.CallingConvFast
+
 		ref := mod.NewFunc(
 			"ref:"+string(typ),
 			types.Void,
 			ir.NewParam("", refptr),
 		)
+		ref.CallingConv = enum.CallingConvFast
+
 		deref := mod.NewFunc(
 			"deref:"+string(typ),
 			types.Void,
 			ir.NewParam("", refptr),
 		)
+		deref.CallingConv = enum.CallingConvFast
 
 		g.refs[typ] = ref_bundle{
 			reftyp,
@@ -143,6 +148,7 @@ func (g *generator) genBinOps() {
 				ir.NewParam("", g.lltyp(binop.Left)),
 				ir.NewParam("", g.lltyp(binop.Right)),
 			)
+			binop.Ir.CallingConv = enum.CallingConvFast
 			binop.Complex = true
 		}
 
@@ -165,6 +171,7 @@ func (g *generator) genUnOps() {
 				g.lltyp(unop.Return),
 				ir.NewParam("", g.lltyp(unop.Value)),
 			)
+			unop.Ir.CallingConv = enum.CallingConvFast
 			unop.Complex = true
 		}
 
@@ -186,6 +193,7 @@ func (g *generator) genIncDecs() {
 				name,
 				g.lltyp(incdec.Var),
 			)
+			incdec.Ir.CallingConv = enum.CallingConvFast
 			incdec.Complex = true
 		}
 
@@ -222,6 +230,7 @@ func (g *generator) genTypeConvs() {
 				g.lltyp(conv.To),
 				ir.NewParam("", g.lltyp(conv.From)),
 			)
+			conv.Ir.CallingConv = enum.CallingConvFast
 			conv.Complex = true
 		}
 
