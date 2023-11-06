@@ -4,6 +4,8 @@ source_filename = "lib/builtin/autofree/free_string.ll"
 
 declare void @free(i8*)
 
+declare fastcc void @freeAutoMsg()
+
 define fastcc void @".free:string"(%type.string %str) {
 entry:
     %ptr.str = alloca %type.string, align 8
@@ -12,5 +14,6 @@ entry:
     %1 = load i32*, i32** %0, align 8
     %2 = bitcast i32* %1 to i8*
     call void @free(i8* %2)
+    call void @freeAutoMsg()
     ret void
 }

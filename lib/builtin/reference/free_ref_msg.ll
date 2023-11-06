@@ -1,15 +1,15 @@
-source_filename = "lib/builtin/reference/free_msg.ll"
+source_filename = "lib/builtin/reference/free_ref_msg.ll"
 
 %type.string = type { i32, i32* }
 
-declare void @.println(%type.string %0)
-declare %type.string @".add:string_string"(%type.string %0, %type.string %1)
-declare %type.string @".conv:int_string"(i32 %0)
+declare fastcc void @.println(%type.string %0)
+declare fastcc %type.string @".add:string_string"(%type.string %0, %type.string %1)
+declare fastcc %type.string @".conv:int_string"(i32 %0)
 
 @.strFree = private unnamed_addr constant [17 x i32] [i32 70, i32 114, i32 101, i32 101, i32 100, i32 32, i32 102, i32 114, i32 111, i32 109, i32 32, i32 109, i32 101, i32 109, i32 111, i32 114, i32 121], align 4
 @.strCount = private unnamed_addr constant [13 x i32] [i32 32, i32 114, i32 101, i32 102, i32 101, i32 114, i32 101, i32 110, i32 99, i32 101, i32 40, i32 115, i32 41], align 4
 
-define fastcc void @freeMsg() {
+define fastcc void @freeRefMsg() {
 entry:
 	%0 = getelementptr inbounds [17 x i32], [17 x i32]* @.strFree, i32 0, i32 0
 	%1 = alloca %type.string, align 8
@@ -22,7 +22,7 @@ entry:
 	ret void
 }
 
-define fastcc void @countMsg(i32 %0) {
+define fastcc void @countRefMsg(i32 %0) {
 entry:
 	%1 = call %type.string @".conv:int_string"(i32 %0)
 	%2 = getelementptr inbounds [13 x i32], [13 x i32]* @.strCount, i32 0, i32 0

@@ -5,8 +5,8 @@ source_filename = "lib/builtin/reference/float_ref.ll"
 declare i8* @malloc(i32)
 declare void @free(i8*)
 
-declare void @freeMsg()
-declare void @countMsg(i32)
+declare fastcc void @freeRefMsg()
+declare fastcc void @countRefMsg(i32)
 
 define fastcc %ref.float* @"newref:float"(float %float) {
 entry:
@@ -38,7 +38,7 @@ entry:
     %0 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 1
     %1 = load i32, i32* %0, align 4
     %2 = add i32 %1, 1
-    call void @countMsg(i32 %2)
+    call void @countRefMsg(i32 %2)
     store i32 %2, i32* %0, align 4
     ret void
 }
@@ -48,7 +48,7 @@ entry:
     %0 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 1
     %1 = load i32, i32* %0, align 4
     %2 = add i32 %1, -1
-    call void @countMsg(i32 %2)
+    call void @countRefMsg(i32 %2)
     store i32 %2, i32* %0, align 4
     %3 = icmp eq i32 %2, 0
     br i1 %3, label %if.then, label %exit
@@ -60,7 +60,7 @@ if.then:
     call void @free(i8* %6)
     %7 = bitcast %ref.float* %ref to i8*
     call void @free(i8* %7)
-    call void @freeMsg()
+    call void @freeRefMsg()
     br label %exit
 
 exit:

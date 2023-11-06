@@ -10,6 +10,7 @@
 - Only link functions when needed
 - Figure out a quick way to link builtins rather than bundle them all together
 - Remove allocas from single-use variables
+- String references
 - Add `string.length` and `string[idx]`
 - Raw strings using backticks
 - String interpolation
@@ -32,7 +33,8 @@
 - Check for too large integers and unsigned integers
 - More sensical unknown token errors
 - More sensicle EOF errors
+- Add control flow analysis!
 - 0x, 0b, 0o etc numbers
 - Underscore assignment
 - Closures
-- Add control flow analysis!
+- Empty blocks

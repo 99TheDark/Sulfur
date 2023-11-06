@@ -16,11 +16,12 @@ source_filename = "llvm-link"
 @strNegInf = private unnamed_addr constant [4 x i32] [i32 45, i32 105, i32 110, i32 102], align 16
 @strPosZero = private unnamed_addr constant [3 x i32] [i32 48, i32 46, i32 48], align 4
 @strNegZero = private unnamed_addr constant [4 x i32] [i32 45, i32 48, i32 46, i32 48], align 16
+@.str0 = private unnamed_addr constant [19 x i32] [i32 65, i32 117, i32 116, i32 111, i32 109, i32 97, i32 116, i32 105, i32 99, i32 97, i32 108, i32 108, i32 121, i32 32, i32 102, i32 114, i32 101, i32 101, i32 100], align 4
 @.strFree = private unnamed_addr constant [17 x i32] [i32 70, i32 114, i32 101, i32 101, i32 100, i32 32, i32 102, i32 114, i32 111, i32 109, i32 32, i32 109, i32 101, i32 109, i32 111, i32 114, i32 121], align 4
 @.strCount = private unnamed_addr constant [13 x i32] [i32 32, i32 114, i32 101, i32 102, i32 101, i32 114, i32 101, i32 110, i32 99, i32 101, i32 40, i32 115, i32 41], align 4
 @.strZero = private unnamed_addr constant [1 x i32] [i32 48], align 4
-@.strZero.11 = private unnamed_addr constant [1 x i32] [i32 48], align 4
-@.str0 = private unnamed_addr constant [5 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111], align 4
+@.strZero.13 = private unnamed_addr constant [1 x i32] [i32 48], align 4
+@.str0.1 = private unnamed_addr constant [19 x i32] [i32 65, i32 117, i32 116, i32 111, i32 109, i32 97, i32 116, i32 105, i32 99, i32 97, i32 108, i32 108, i32 121, i32 32, i32 102, i32 114, i32 101, i32 101, i32 100], align 4
 
 define fastcc %ref.bool* @"newref:bool"(i1 %bool) {
 entry:
@@ -54,12 +55,12 @@ entry:
   %0 = getelementptr inbounds %ref.bool, %ref.bool* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, 1
-  call void @countMsg(i32 %2)
+  call void @countRefMsg(i32 %2)
   store i32 %2, i32* %0, align 4
   ret void
 }
 
-define fastcc void @countMsg(i32 %0) {
+define fastcc void @countRefMsg(i32 %0) {
 entry:
   %1 = call %type.string @".conv:int_string"(i32 %0)
   %2 = getelementptr inbounds [13 x i32], [13 x i32]* @.strCount, i32 0, i32 0
@@ -367,7 +368,7 @@ entry:
   %0 = getelementptr inbounds %ref.bool, %ref.bool* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, -1
-  call void @countMsg(i32 %2)
+  call void @countRefMsg(i32 %2)
   store i32 %2, i32* %0, align 4
   %3 = icmp eq i32 %2, 0
   br i1 %3, label %if.then, label %exit
@@ -379,14 +380,14 @@ if.then:                                          ; preds = %entry
   call void @free(i8* %6)
   %7 = bitcast %ref.bool* %ref to i8*
   call void @free(i8* %7)
-  call void @freeMsg()
+  call void @freeRefMsg()
   br label %exit
 
 exit:                                             ; preds = %if.then, %entry
   ret void
 }
 
-define fastcc void @freeMsg() {
+define fastcc void @freeRefMsg() {
 entry:
   %0 = getelementptr inbounds [17 x i32], [17 x i32]* @.strFree, i32 0, i32 0
   %1 = alloca %type.string, align 8
@@ -455,7 +456,7 @@ entry:
   %0 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, 1
-  call void @countMsg(i32 %2)
+  call void @countRefMsg(i32 %2)
   store i32 %2, i32* %0, align 4
   ret void
 }
@@ -465,7 +466,7 @@ entry:
   %0 = getelementptr inbounds %ref.float, %ref.float* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, -1
-  call void @countMsg(i32 %2)
+  call void @countRefMsg(i32 %2)
   store i32 %2, i32* %0, align 4
   %3 = icmp eq i32 %2, 0
   br i1 %3, label %if.then, label %exit
@@ -477,7 +478,7 @@ if.then:                                          ; preds = %entry
   call void @free(i8* %6)
   %7 = bitcast %ref.float* %ref to i8*
   call void @free(i8* %7)
-  call void @freeMsg()
+  call void @freeRefMsg()
   br label %exit
 
 exit:                                             ; preds = %if.then, %entry
@@ -1708,6 +1709,44 @@ return:                                           ; preds = %while.end, %if.then
   ret i32 %5
 }
 
+define fastcc void @freeAutoMsg() {
+entry:
+  %0 = getelementptr inbounds [19 x i32], [19 x i32]* @.str0, i32 0, i32 0
+  %1 = alloca %type.string, align 8
+  %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
+  store i32 19, i32* %2, align 8
+  %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
+  store i32* %0, i32** %3, align 8
+  %4 = load %type.string, %type.string* %1, align 8
+  %5 = call %type.string @".copy:string"(%type.string %4)
+  call void @.println(%type.string %5)
+  br label %exit
+
+exit:                                             ; preds = %entry
+  ret void
+}
+
+define fastcc %type.string @".copy:string"(%type.string %str) {
+entry:
+  %.ret = alloca %type.string, align 8
+  %ptr.str = alloca %type.string, align 8
+  store %type.string %str, %type.string* %ptr.str, align 8
+  %0 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
+  %1 = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 0
+  %2 = load i32, i32* %1, align 4
+  store i32 %2, i32* %0, align 4
+  %3 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
+  %4 = mul i32 %2, 4
+  %5 = call i8* @malloc(i32 %4)
+  %6 = bitcast i8* %5 to i32*
+  %7 = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 1
+  %8 = load i32*, i32** %7, align 8
+  call void @llvm.memcpy.p0i32.p0i32.i32(i32* %6, i32* %8, i32 %4, i1 false)
+  store i32* %6, i32** %3, align 8
+  %9 = load %type.string, %type.string* %.ret, align 8
+  ret %type.string %9
+}
+
 define fastcc void @".free:string"(%type.string %str) {
 entry:
   %ptr.str = alloca %type.string, align 8
@@ -1716,6 +1755,7 @@ entry:
   %1 = load i32*, i32** %0, align 8
   %2 = bitcast i32* %1 to i8*
   call void @free(i8* %2)
+  call void @freeAutoMsg()
   ret void
 }
 
@@ -1749,7 +1789,7 @@ entry:
   %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, 1
-  call void @countMsg(i32 %2)
+  call void @countRefMsg(i32 %2)
   store i32 %2, i32* %0, align 4
   ret void
 }
@@ -1759,7 +1799,7 @@ entry:
   %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, -1
-  call void @countMsg(i32 %2)
+  call void @countRefMsg(i32 %2)
   store i32 %2, i32* %0, align 4
   %3 = icmp eq i32 %2, 0
   br i1 %3, label %if.then, label %exit
@@ -1771,32 +1811,11 @@ if.then:                                          ; preds = %entry
   call void @free(i8* %6)
   %7 = bitcast %ref.int* %ref to i8*
   call void @free(i8* %7)
-  call void @freeMsg()
+  call void @freeRefMsg()
   br label %exit
 
 exit:                                             ; preds = %if.then, %entry
   ret void
-}
-
-define fastcc %type.string @".copy:string"(%type.string %str) {
-entry:
-  %.ret = alloca %type.string, align 8
-  %ptr.str = alloca %type.string, align 8
-  store %type.string %str, %type.string* %ptr.str, align 8
-  %0 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
-  %1 = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 0
-  %2 = load i32, i32* %1, align 4
-  store i32 %2, i32* %0, align 4
-  %3 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
-  %4 = mul i32 %2, 4
-  %5 = call i8* @malloc(i32 %4)
-  %6 = bitcast i8* %5 to i32*
-  %7 = getelementptr inbounds %type.string, %type.string* %ptr.str, i32 0, i32 1
-  %8 = load i32*, i32** %7, align 8
-  call void @llvm.memcpy.p0i32.p0i32.i32(i32* %6, i32* %8, i32 %4, i1 false)
-  store i32* %6, i32** %3, align 8
-  %9 = load %type.string, %type.string* %.ret, align 8
-  ret %type.string %9
 }
 
 define fastcc %ref.int* @"newref:uint"(i32 %uint) {
@@ -1829,7 +1848,7 @@ entry:
   %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, 1
-  call void @countMsg(i32 %2)
+  call void @countRefMsg(i32 %2)
   store i32 %2, i32* %0, align 4
   ret void
 }
@@ -1839,7 +1858,7 @@ entry:
   %0 = getelementptr inbounds %ref.int, %ref.int* %ref, i32 0, i32 1
   %1 = load i32, i32* %0, align 4
   %2 = add i32 %1, -1
-  call void @countMsg(i32 %2)
+  call void @countRefMsg(i32 %2)
   store i32 %2, i32* %0, align 4
   %3 = icmp eq i32 %2, 0
   br i1 %3, label %if.then, label %exit
@@ -1851,7 +1870,7 @@ if.then:                                          ; preds = %entry
   call void @free(i8* %6)
   %7 = bitcast %ref.int* %ref to i8*
   call void @free(i8* %7)
-  call void @freeMsg()
+  call void @freeRefMsg()
   br label %exit
 
 exit:                                             ; preds = %if.then, %entry
@@ -1874,7 +1893,7 @@ if.then1:                                         ; preds = %entry
   %1 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 0
   store i32 1, i32* %1, align 8
   %2 = getelementptr inbounds %type.string, %type.string* %.ret, i32 0, i32 1
-  %3 = getelementptr inbounds [1 x i32], [1 x i32]* @.strZero.11, i32 0, i32 0
+  %3 = getelementptr inbounds [1 x i32], [1 x i32]* @.strZero.13, i32 0, i32 0
   store i32* %3, i32** %2, align 8
   br label %exit
 
@@ -1955,28 +1974,19 @@ exit:                                             ; preds = %for.cond, %if.then1
 
 define i32 @main() {
 entry:
-  call void @mod.outer()
+  call void @mod.free_msg()
   br label %exit
 
 exit:                                             ; preds = %entry
   ret i32 0
 }
 
-define private fastcc void @mod.outer() {
+define private fastcc void @mod.free_msg() {
 entry:
-  call void @mod.inner()
-  br label %exit
-
-exit:                                             ; preds = %entry
-  ret void
-}
-
-define private fastcc void @mod.inner() {
-entry:
-  %0 = getelementptr inbounds [5 x i32], [5 x i32]* @.str0, i32 0, i32 0
+  %0 = getelementptr inbounds [19 x i32], [19 x i32]* @.str0.1, i32 0, i32 0
   %1 = alloca %type.string, align 8
   %2 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 0
-  store i32 5, i32* %2, align 8
+  store i32 19, i32* %2, align 8
   %3 = getelementptr inbounds %type.string, %type.string* %1, i32 0, i32 1
   store i32* %0, i32** %3, align 8
   %4 = load %type.string, %type.string* %1, align 8

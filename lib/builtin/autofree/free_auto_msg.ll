@@ -1,20 +1,13 @@
-; ModuleID = 'examples/main/script.su'
-source_filename = "examples/main/script.su"
+source_filename = "lib/builtin/autofree/free_auto_msg.ll"
 
 %type.string = type { i32, i32* }
 
 @.str0 = private unnamed_addr constant [19 x i32] [i32 65, i32 117, i32 116, i32 111, i32 109, i32 97, i32 116, i32 105, i32 99, i32 97, i32 108, i32 108, i32 121, i32 32, i32 102, i32 114, i32 101, i32 101, i32 100], align 4
 
-define i32 @main() {
-entry:
-	call void @mod.free_msg()
-	br label %exit
+declare fastcc %type.string @".copy:string"(%type.string)
+declare fastcc void @.println(%type.string)
 
-exit:
-	ret i32 0
-}
-
-define private fastcc void @mod.free_msg() {
+define fastcc void @freeAutoMsg() {
 entry:
 	%0 = getelementptr inbounds [19 x i32], [19 x i32]* @.str0, i32 0, i32 0
 	%1 = alloca %type.string, align 8
@@ -30,13 +23,3 @@ entry:
 exit:
 	ret void
 }
-
-declare fastcc void @.println(%type.string %0)
-
-declare i32 @llvm.ctlz.i32(i32 %0, i1 immarg %1)
-
-declare i32 @llvm.cttz.i32(i32 %0, i1 immarg %1)
-
-declare %type.string @".copy:string"(%type.string %0)
-
-declare void @".free:string"(%type.string %0)

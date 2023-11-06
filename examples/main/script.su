@@ -1,8 +1,5 @@
-func outer() {
-    func inner() {
-        println("Hello")
-    }
-    inner()
+func free_msg() {
+    println("Automatically freed")
 }
 
-outer()
+free_msg()
