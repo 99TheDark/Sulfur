@@ -1,5 +1,4 @@
 # TODO
-- Helper function for `g.enter(bl)`, `g.bl = bl`, `generate()`, `g.autoFree()` & `g.exit()` all at once
 - Better token to string handling
 - Rethink one-line blocks (`=>`), maybe just use for `match` statements
 - Have intrinics be stored somewhere as consts

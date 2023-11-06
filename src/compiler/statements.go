@@ -174,12 +174,7 @@ func (g *generator) genIfStmt(x ast.IfStatement) {
 		endBl := top.NewBlock("if.end" + id)
 
 		g.scope(x.Body.Scope, func() {
-			g.enter(endBl)
-			g.bl = thenBl
-
-			g.genBlock(x.Body)
-			g.autoFree()
-			g.exit()
+			g.block(thenBl, endBl, func() { g.genBlock(x.Body) })
 
 			g.bl = endBl
 		})
@@ -269,11 +264,7 @@ func (g *generator) genWhileLoop(x ast.WhileLoop) {
 		g.bl = condBl
 		cond := g.genExpr(x.Cond)
 
-		g.enter(condBl)
-		g.bl = bodyBl
-		g.genBlock(x.Body)
-		g.autoFree()
-		g.exit()
+		g.block(bodyBl, condBl, func() { g.genBlock(x.Body) })
 
 		condBl.NewCondBr(cond, bodyBl, endBl)
 
@@ -298,11 +289,7 @@ func (g *generator) genDoWhileLoop(x ast.DoWhileLoop) {
 		g.bl = condBl
 		cond := g.genExpr(x.Cond)
 
-		g.enter(condBl)
-		g.bl = bodyBl
-		g.genBlock(x.Body)
-		g.autoFree()
-		g.exit()
+		g.block(bodyBl, condBl, func() { g.genBlock(x.Body) })
 
 		condBl.NewCondBr(cond, bodyBl, endBl)
 
@@ -323,11 +310,7 @@ func (g *generator) genLoop(x ast.Loop) {
 		x.Body.Scope.Entrance = bodyBl
 		x.Body.Scope.Exit = endBl
 
-		g.enter(bodyBl)
-		g.bl = bodyBl
-		g.genBlock(x.Body)
-		g.autoFree()
-		g.exit()
+		g.block(bodyBl, bodyBl, func() { g.genBlock(x.Body) })
 
 		main.NewBr(bodyBl)
 		g.bl = endBl
