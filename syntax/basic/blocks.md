@@ -1,10 +1,9 @@
 ## Blocks
-A block is any set of statements surrounded with curly braces (`{` and `}`), or a single statement connected with an arrow (`=>`).
-
-Some examples of blocks are if statements and functions.
+A block is any set of statements surrounded with curly braces (`{` and `}`). Some examples of blocks are if statements and functions.
 ```
-// This block uses an arrow, so it contains only one statement
-if x > 5 => println("It's true!")
+if x > 5 { 
+    println("It's true!") 
+}
 
 func something(int x, int y) (int) { 
     // This block containing two statements
@@ -12,7 +11,6 @@ func something(int x, int y) (int) {
     return (x + y) ^ n
 }
 ```
-
 Blocks each have their own scope. A scope contains all the variables created within it. When you have duplicate naming, scope decides which to use.
 ```
 // Define x to be 8 in the top scope

@@ -1,5 +1,4 @@
 # TODO
-- Rethink one-line blocks (`=>`), maybe just use for `match` statements
 - Have intrinics be stored somewhere as consts
 - Add the `undef` keyword and its uses
     - Remove implicit assignment (`:=`) in favor of `let` or `var` + `const`

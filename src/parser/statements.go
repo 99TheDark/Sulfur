@@ -66,35 +66,25 @@ func (p *parser) parseList(stmtgen func(), ending []lexer.TokenType, delim []lex
 }
 
 func (p *parser) parseBlock() ast.Block {
-	tok := p.expect(lexer.OpenBrace, lexer.Arrow)
-	if tok.Type == lexer.Arrow {
-		scope := ast.NewScope()
-		scope.Parent = p.top
-		return ast.Block{
-			Pos:   tok.Location,
-			Body:  []ast.Expr{p.parseStmt()},
-			Scope: scope,
-		}
-	} else {
-		scope := ast.NewScope()
-		scope.Parent = p.top
-		p.top = scope
+	tok := p.expect(lexer.OpenBrace)
+	scope := ast.NewScope()
+	scope.Parent = p.top
+	p.top = scope
 
-		stmts := []ast.Expr{}
-		p.parseList(
-			func() {
-				stmts = append(stmts, p.parseStmt())
-			},
-			[]lexer.TokenType{lexer.CloseBrace},
-			[]lexer.TokenType{lexer.NewLine, lexer.Semicolon},
-		)
+	stmts := []ast.Expr{}
+	p.parseList(
+		func() {
+			stmts = append(stmts, p.parseStmt())
+		},
+		[]lexer.TokenType{lexer.CloseBrace},
+		[]lexer.TokenType{lexer.NewLine, lexer.Semicolon},
+	)
 
-		p.top = scope.Parent
-		return ast.Block{
-			Pos:   tok.Location,
-			Body:  stmts,
-			Scope: scope,
-		}
+	p.top = scope.Parent
+	return ast.Block{
+		Pos:   tok.Location,
+		Body:  stmts,
+		Scope: scope,
 	}
 }
 
