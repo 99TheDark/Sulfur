@@ -3,7 +3,7 @@ package visibility
 import (
 	"encoding/json"
 	"sulfur/src/lexer"
-	"sulfur/src/typing"
+	"sulfur/src/location"
 )
 
 type Visibility int
@@ -31,7 +31,7 @@ func (v Visibility) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.String())
 }
 
-func TokenVis(tok lexer.Token, auto Visibility, next *typing.Location) (Visibility, *typing.Location) {
+func TokenVis(tok lexer.Token, auto Visibility, next *location.Location) (Visibility, *location.Location) {
 	switch tok.Type {
 	case lexer.Public:
 		return Public, tok.Location

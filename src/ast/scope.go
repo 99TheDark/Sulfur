@@ -2,6 +2,7 @@ package ast
 
 import (
 	. "sulfur/src/errors"
+	"sulfur/src/location"
 	"sulfur/src/typing"
 
 	"github.com/llir/llvm/ir"
@@ -20,7 +21,7 @@ type Scope struct {
 	Strings    map[value.Value]typing.Type
 }
 
-func (s *Scope) Lookup(name string, loc *typing.Location) *Variable {
+func (s *Scope) Lookup(name string, loc *location.Location) *Variable {
 	if vari, ok := s.Vars[name]; ok {
 		return vari
 	}
@@ -30,7 +31,7 @@ func (s *Scope) Lookup(name string, loc *typing.Location) *Variable {
 	return s.Parent.Lookup(name, loc)
 }
 
-func (s *Scope) RefLookup(name string, loc *typing.Location) value.Value {
+func (s *Scope) RefLookup(name string, loc *location.Location) value.Value {
 	if ref, ok := s.Refs[name]; ok {
 		return ref
 	}
@@ -50,7 +51,7 @@ func (s *Scope) Has(name string) bool {
 	return s.Parent.Has(name)
 }
 
-func (s *Scope) FindEntrance(loc *typing.Location) *ir.Block {
+func (s *Scope) FindEntrance(loc *location.Location) *ir.Block {
 	if s.Entrance != nil {
 		return s.Entrance
 	}
@@ -60,7 +61,7 @@ func (s *Scope) FindEntrance(loc *typing.Location) *ir.Block {
 	return s.Parent.FindEntrance(loc)
 }
 
-func (s *Scope) FindExit(loc *typing.Location) *ir.Block {
+func (s *Scope) FindExit(loc *location.Location) *ir.Block {
 	if s.Exit != nil {
 		return s.Exit
 	}

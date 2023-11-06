@@ -3,6 +3,7 @@ package compiler
 import (
 	"sulfur/src/ast"
 	"sulfur/src/lexer"
+	"sulfur/src/location"
 	"sulfur/src/typing"
 
 	"github.com/llir/llvm/ir"
@@ -52,7 +53,7 @@ func (g *generator) genBasicIden(vari *ast.Variable) value.Value {
 	return load
 }
 
-func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, loc *typing.Location) {
+func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, loc *location.Location) {
 	bl := g.bl
 
 	vari := g.top.Lookup(name, loc)
@@ -77,7 +78,7 @@ func (g *generator) genBasicDecl(name string, typ types.Type, val value.Value, l
 	}
 }
 
-func (g *generator) genBasicAssign(name string, val value.Value, loc *typing.Location) {
+func (g *generator) genBasicAssign(name string, val value.Value, loc *location.Location) {
 	bl := g.bl
 	vari := g.top.Lookup(name, loc)
 

@@ -3,7 +3,7 @@ package lexer
 import (
 	"encoding/json"
 	"fmt"
-	"sulfur/src/typing"
+	"sulfur/src/location"
 )
 
 type TokenType int
@@ -11,7 +11,7 @@ type TokenType int
 type Token struct {
 	Type     TokenType
 	Value    string
-	Location *typing.Location `json:"-"`
+	Location *location.Location `json:"-"`
 }
 
 const (
@@ -211,7 +211,7 @@ func NewToken(tokentype TokenType, value string, row, col, idx int) *Token {
 	return &Token{
 		tokentype,
 		value,
-		typing.NewLocation(row, col, idx),
+		location.NewLocation(row, col, idx),
 	}
 }
 
@@ -430,7 +430,7 @@ func (t Token) Symbol() string {
 }
 
 func Empty(tok Token) bool {
-	if tok.Location == (*typing.Location)(nil) {
+	if tok.Location == (*location.Location)(nil) {
 		return true
 	}
 	return false

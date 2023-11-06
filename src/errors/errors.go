@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sulfur/src/location"
 	"sulfur/src/settings"
-	"sulfur/src/typing"
 	"sulfur/src/utils"
 )
 
@@ -22,7 +22,7 @@ func size(num int) int {
 	return len(fmt.Sprint(num))
 }
 
-func (gen *ErrorGenerator) message(msg, typ, colorStart, colorEnd string, loc *typing.Location) string {
+func (gen *ErrorGenerator) message(msg, typ, colorStart, colorEnd string, loc *location.Location) string {
 	row, col, _ := loc.Get()
 
 	numSize := size(row + 1)
@@ -49,7 +49,7 @@ func (gen *ErrorGenerator) message(msg, typ, colorStart, colorEnd string, loc *t
 	return err
 }
 
-func (gen *ErrorGenerator) Error(msg string, loc *typing.Location) {
+func (gen *ErrorGenerator) Error(msg string, loc *location.Location) {
 	err := gen.message(msg, "Error", "\033[31m", "\033[0m", loc)
 
 	if settings.Stacktrace {
@@ -60,7 +60,7 @@ func (gen *ErrorGenerator) Error(msg string, loc *typing.Location) {
 	}
 }
 
-func (gen *ErrorGenerator) Warn(msg string, loc *typing.Location) {
+func (gen *ErrorGenerator) Warn(msg string, loc *location.Location) {
 	err := gen.message(msg, "Warning", "\033[33m", "\033[0m", loc)
 	fmt.Println(err)
 }

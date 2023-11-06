@@ -43,7 +43,7 @@
 <br><br>
 - Array
     ```
-    x := int[-8, 2, 6, -1, 0, 4]
+    let x = int[-8, 2, 6, -1, 0, 4]
     ```
     Operations: `[]`
 <br><br>

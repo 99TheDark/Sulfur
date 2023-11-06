@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 	. "sulfur/src/errors"
-	"sulfur/src/typing"
+	"sulfur/src/location"
 	"sulfur/src/utils"
 	"unicode"
 )
@@ -13,10 +13,10 @@ import (
 type lexer struct {
 	source []rune
 	tokens []Token
-	iden   typing.Location
-	begin  typing.Location
+	iden   location.Location
+	begin  location.Location
 	mode   TokenType
-	loc    typing.Location
+	loc    location.Location
 }
 
 func (l *lexer) at() rune {
@@ -55,7 +55,7 @@ func (l *lexer) pop() {
 	l.tokens = l.tokens[:len(l.tokens)-1]
 }
 
-func (l *lexer) get(loc typing.Location, count int) string {
+func (l *lexer) get(loc location.Location, count int) string {
 	return string(l.source[loc.Idx : loc.Idx+count])
 }
 
@@ -63,7 +63,7 @@ func (l *lexer) next(count int) string {
 	return l.get(l.loc, count)
 }
 
-func (l *lexer) addAt(tt TokenType, value string, loc typing.Location) {
+func (l *lexer) addAt(tt TokenType, value string, loc location.Location) {
 	token := NewToken(
 		tt,
 		value,
@@ -163,10 +163,10 @@ func Lex(source string) *[]Token {
 	l := lexer{
 		[]rune(source),
 		[]Token{},
-		*typing.NoLocation,
-		*typing.NoLocation,
+		*location.NoLocation,
+		*location.NoLocation,
 		None,
-		*typing.NoLocation,
+		*location.NoLocation,
 	}
 
 	for l.loc.Idx != len(l.source) {

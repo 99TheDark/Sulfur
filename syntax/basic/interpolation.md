@@ -14,10 +14,10 @@ given that `saying` and `x` are valid variables. As stated previously, they can 
 If you would like to write a dollar sign and a parenthesis next to each other without interpolating a string, simply escape the character with a backslash, like 
 ```
 // msg = `You can interpolate a string like this: "I said $(saying) $(x) times!"`
-msg := "You can interpolate a string like this: \"I said \$(saying) \$(x) times!\"
+let msg = "You can interpolate a string like this: \"I said \$(saying) \$(x) times!\"
 ```
 Finally, to not have to write any escaped characters, like escaped dolar signs or escaped quotes, you can use a raw string by using backticks (`` ` ``) instead of double quotes. For example, 
 ```
-passage := `And he exclaimed, "Today will be a great day!"`
+let passage = `And he exclaimed, "Today will be a great day!"`
 ```
 However, as backticks negate *all* escape characters, you cannot have backticks in a raw string.

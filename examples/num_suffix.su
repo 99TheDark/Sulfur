@@ -1,6 +1,6 @@
-for i := 1; i <= 100; i++ {
-    end := i % 10
-    suffix := "th"
+for let i = 1; i <= 100; i++ {
+    let end = i % 10
+    let suffix = "th"
     if i <= 10 | i > 20 {
         if end == 1 {
             suffix = "st"
@@ -11,7 +11,7 @@ for i := 1; i <= 100; i++ {
         }
     }
 
-    strNum := i + suffix
+    let strNum = i + suffix
     if end == 0 {
         println(strNum)
     } else {

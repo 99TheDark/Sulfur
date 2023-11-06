@@ -1,9 +1,5 @@
 # TODO
-- Remove `:=` from syntax
-- Add `val` to syntax
-- Move `Location` out of `typing`
-- Change declaration syntax
-- Make it illegal to use let, const or val as variable or function names
+- Explain the differences between `let`, `const` and `val` in syntax
 - Enum syntax
 - Autofree message
 - Add more syntax

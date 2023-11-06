@@ -8,6 +8,7 @@ import (
 	"sulfur/src/builtins"
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
+	"sulfur/src/location"
 	"sulfur/src/typing"
 	"sulfur/src/utils"
 )
@@ -123,7 +124,7 @@ func Parse(source string, tokens *[]lexer.Token) *ast.Program {
 	)
 
 	prog.Contents = ast.Block{
-		Pos:   typing.NoLocation,
+		Pos:   location.NoLocation,
 		Body:  body,
 		Scope: scope,
 	}

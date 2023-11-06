@@ -15,7 +15,7 @@ and the second parameter b is set to 5.
 
 The resulting value of adding 2 and 5 is 7, so sum = 7
 */
-sum := add(2, 5) 
+let sum: int = add(2, 5) 
 ```
 Functions don't always have to return something; they can simply be called on their own. For example:
 ```
@@ -27,7 +27,7 @@ func doSomething(string greeting) { // No return value given
 doSomething("Hello, world!")
 
 // Incorrect
-x := doSomething("Heya")
+let x = doSomething("Heya")
 ```
 Functions can also return *multiple* values, not just zero or one. Here's an example:
 ```
@@ -40,7 +40,7 @@ Finally, functions can have a varied number of arguments, or parameters, called 
 ```
 // Function with varargs
 func varargs(int x, int y, string ...names, float z) {
-    for i := 0; i < names.length; i++ {
+    for let i = 0; i < names.length; i++ {
         println("$(names[i]) is a name")
     }
     println((x + y) ^ z)

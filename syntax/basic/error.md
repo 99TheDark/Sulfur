@@ -16,7 +16,7 @@ All functions can throw errors, and these errors must be handled, or the functio
 import "fs"
 
 func saveFile(string loc, string name, string ext, string contents) throws FileError {
-    path := location + name + extension
+    let path = location + name + extension
     
     fs.File file = undef
     if fs.exists(path) {
@@ -50,7 +50,7 @@ try apps.run() catch {
     FatalError.InfiniteLoop => log(apps.getRunningCode())
     FatalError.SaveError => log(apps.saveStep().file)
     FatalError.CurruptedFile => {
-        files := apps.files()
+        let files: fs.File[] = apps.files()
         foreach file in files {
             log(file.contents())
         }
@@ -59,10 +59,10 @@ try apps.run() catch {
 ```
 or simply use an automatic value.
 ```
-array := float[-9.7, 4.2, 0.3, -0.5, -7.1, 2.6]
+let array = float[-9.7, 4.2, 0.3, -0.5, -7.1, 2.6]
 
 // Since 0 is not in array, it will throw, so idx = -1
-idx := try getIndex(array, 0) catch -1
+let idx = try getIndex(array, 0) catch -1
 ```
 However, some errors are non-recoverable, and will immediately stop the execution of your program. These kinds of errors are all built-in, such as array indexing. These cannot be handled.
 

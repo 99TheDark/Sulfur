@@ -1,4 +1,4 @@
-package typing
+package location
 
 import "fmt"
 

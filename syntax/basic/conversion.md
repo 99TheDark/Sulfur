@@ -19,7 +19,7 @@ func add(int a, int b) (int) {
     return a + b
 } 
 
-truthy := true
-x := add(1, true)
+let truthy = true
+let x = add(1, true)
 ```
 never happen.

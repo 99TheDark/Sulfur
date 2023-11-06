@@ -55,8 +55,8 @@
         }
 
         pri suffixedGrade() (string) {
-            end := .grade % 10
-            suffix := "th"
+            let end = .grade % 10
+            let suffix = "th"
             if .grade <= 10 | .grade > 20 {
                 if end == 1 {
                     suffix = "st"
@@ -137,13 +137,13 @@
         println(float!(.self)) 
     } extends int
 
-    x := 5
+    let x = 5
     x.printFloat() // prints "5.0"
     ```
 - Loops
     ```
     // For loop
-    for x := 0; x < 5; x++ {
+    let for x = 0; x < 5; x++ {
         println("#$(x + 1)")
     }
     
@@ -157,7 +157,7 @@
         sum += prompt("What number?")
     } while sum < 100
 
-    arr := int[6, 5, -2, 8, -4, 0, -1]
+    let arr = int[6, 5, -2, 8, -4, 0, -1]
 
     // For each loop
     for el, i in arr {
@@ -184,11 +184,11 @@
     if x > 3 => println("$(x) is bigger than 3")
 
     // Ternary operator
-    x := y < z ? x : 4
+    let x = y < z ? x : 4
     ```
 - Match
     ```
-    age := 12
+    let age = 12
     match age {
         case 0 => println("baby")
         case 1 {
@@ -200,18 +200,18 @@
         else => println("some other age")
     }
 
-    boolean := true
-    bitBoolean := match boolean {
-        true => yield 1
-        false => yield 0
+    let boolean = true
+    let bitBoolean = match boolean {
+        true => 1
+        false => 0
     }
     ```
 - Destructuring
     ```
-    letters := ["a", "b", "c", "d", "e", "f"]
+    let letters = ["a", "b", "c", "d", "e", "f"]
     
     // Similar to varargs
-    first, second, ...middle, last := letters
+    let first, second, ...middle, last = letters
     
     /*
     first = "a" 
@@ -229,12 +229,12 @@
     string x = null
 
     // Legal
-    x? := 5
+    let x? = 5
 
     // Illegal
-    x? := null
+    let x? = null
 
     // y becomes 4 if x is null, otherwise is x
     // y is an int
-    y := x ?? 4
+    let y = x ?? 4
     ```
