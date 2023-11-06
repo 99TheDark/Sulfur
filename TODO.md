@@ -10,6 +10,7 @@
 - Enum syntax
 - Autofree message
 - Add more syntax
+- Implement `const` & `val` declarations
 - Force all variables and functions to have a visibility modifier inside classes
 - Classes
 - String equals string
