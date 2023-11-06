@@ -1,5 +1,4 @@
 # TODO
-- Better token to string handling
 - Rethink one-line blocks (`=>`), maybe just use for `match` statements
 - Have intrinics be stored somewhere as consts
 - Add the `undef` keyword and its uses

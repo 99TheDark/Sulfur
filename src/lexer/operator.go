@@ -34,6 +34,8 @@ func (tt TokenType) OperatorName() string {
 		return "shr"
 	case LeftShift:
 		return "shl"
+	case ZeroFillRightShift:
+		return "zshr"
 	case CountLeadingZeros:
 		return "clz"
 	case CountTrailingZeros:

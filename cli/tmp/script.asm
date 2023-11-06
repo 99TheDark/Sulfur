@@ -1969,15 +1969,15 @@ _main:                                  ; @main
 	.cfi_offset w24, -64
 	.cfi_offset w25, -72
 	.cfi_offset w26, -80
-	stur	wzr, [x29, #-68]
+	stur	wzr, [x29, #-76]
 	mov	w8, wzr
 	cmp	w8, #9
 	b.gt	LBB32_2
 LBB32_1:                                ; %while.body0
                                         ; =>This Inner Loop Header: Depth=1
-	ldur	w8, [x29, #-68]
+	ldur	w8, [x29, #-76]
 	add	w8, w8, #2
-	stur	w8, [x29, #-68]
+	stur	w8, [x29, #-76]
 	mov	w8, w8
 	cmp	w8, #9
 	b.le	LBB32_1
@@ -2002,13 +2002,13 @@ Lloh32:
 	mov	w26, #1
 Lloh33:
 	add	x21, x21, l_.str1@PAGEOFF
-	stur	wzr, [x29, #-72]
+	stur	wzr, [x29, #-68]
 	mov	w8, wzr
 	cmp	w8, #9
 	b.gt	LBB32_4
 LBB32_3:                                ; %for.body1
                                         ; =>This Inner Loop Header: Depth=1
-	ldur	w0, [x29, #-72]
+	ldur	w0, [x29, #-68]
 	bl	"_.conv:int_string"
 	mov	x8, sp
 	mov	w22, w0
@@ -2031,9 +2031,9 @@ LBB32_3:                                ; %for.body1
 	mov	w0, w24
 	mov	x1, x25
 	bl	"_.free:string"
-	ldur	w8, [x29, #-72]
+	ldur	w8, [x29, #-68]
 	add	w8, w8, #1
-	stur	w8, [x29, #-72]
+	stur	w8, [x29, #-68]
 	mov	w8, w8
 	cmp	w8, #9
 	b.le	LBB32_3
@@ -2066,19 +2066,19 @@ Lloh35:
 	movk	w11, #9362, lsl #16
 	movk	w12, #52428, lsl #16
 	movk	w13, #6553, lsl #16
-	stur	w14, [x29, #-76]
+	stur	w14, [x29, #-72]
 LBB32_5:                                ; %loop.body2
                                         ; =>This Inner Loop Header: Depth=1
-	ldur	w0, [x29, #-68]
+	ldur	w0, [x29, #-76]
 	fmov	s1, w8
-	ldur	s0, [x29, #-76]
+	ldur	s0, [x29, #-72]
 	madd	w14, w0, w12, w13
 	madd	w15, w0, w9, w10
 	fmul	s0, s0, s1
 	cmp	w15, w11
 	ror	w14, w14, #1
 	cset	w15, hi
-	stur	s0, [x29, #-76]
+	stur	s0, [x29, #-72]
 	cmp	w14, w13
 	cset	w14, hi
 	orr	w14, w15, w14
@@ -2086,12 +2086,12 @@ LBB32_5:                                ; %loop.body2
 ; %bb.6:                                ; %if.end3
                                         ;   in Loop: Header=BB32_5 Depth=1
 	add	w14, w0, #1
-	stur	w14, [x29, #-68]
+	stur	w14, [x29, #-76]
 	b	LBB32_5
 LBB32_7:                                ; %if.then3
 	bl	"_.conv:int_string"
 	bl	_.println
-	ldur	s0, [x29, #-76]
+	ldur	s0, [x29, #-72]
 	bl	"_.conv:float_string"
 	bl	_.println
 	mov	w0, w19

@@ -13,7 +13,7 @@ func (p *parser) parseStmt() ast.Expr {
 	switch tok.Type {
 	case lexer.Identifier:
 		return p.parseHybridStmt()
-	case lexer.Func:
+	case lexer.Function:
 		return p.parseFunction()
 	case lexer.Class:
 		return p.parseClass()
@@ -99,7 +99,7 @@ func (p *parser) parseBlock() ast.Block {
 }
 
 func (p *parser) parseFunction() ast.Function {
-	tok := p.expect(lexer.Func)
+	tok := p.expect(lexer.Function)
 	name := p.parseIdentifier()
 
 	p.expect(lexer.OpenParen)
