@@ -55,3 +55,19 @@ if x % 5 == 0 {
     x--
 }
 ```
+The three variable prefixes, `let`, `const` and `val` all give special meaning. The most common declaration you will use is `let`. Using `let` creates a variable that is mutable everywhere, meaning it is free to be changed. Using `const`, on the other hand, make a variable that is immutable everywhere, meaning it and its fields can never be changed. Finally, `val` creates a variable that is immutable at its root, meaning you cannot chanage its value, just the value's fields or contents. 
+```
+let otherPerson = new Person()
+
+let x = new Person()
+x = otherPerson // Legal
+x.name = "Sam"  // Legal
+
+const x = new Person()
+x = otherPerson   // Illegal
+x.name = "Olivia" // Illegal
+
+val x = new Person()
+x = otherPerson   // Illegal
+x.name = "Jared"  // Legal
+```

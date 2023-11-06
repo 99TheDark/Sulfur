@@ -1,11 +1,10 @@
 # TODO
-- Explain the differences between `let`, `const` and `val` in syntax
 - Enum syntax
-- Autofree message
 - Add more syntax
-- Implement `const` & `val` declarations
+- Autofree message
 - Force all variables and functions to have a visibility modifier inside classes
 - Classes
+- Implement `const` & `val` declarations
 - String equals string
 - Replace add, shl, etc naming with +, <<, etc
 - Type promotion vs demotion syntax
