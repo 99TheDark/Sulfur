@@ -194,7 +194,7 @@ var Symbols = map[string]TokenType{
 	">=":  GreaterThanOrEqualTo,
 	"<=":  LessThanOrEqualTo,
 	",":   Delimiter,
-	".":   Access,
+	"314": Access,
 	"?.":  SafeAccess,
 	"[]":  Index,
 	"|>":  Pipe,

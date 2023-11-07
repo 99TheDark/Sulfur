@@ -1,6 +1,9 @@
 # TODO
-- Force all variables and functions to have a visibility modifier inside classes
-- Classes
+- Add classes syntax
+- Add type inference to classes
+- Add accessing syntax & checking
+- Add type generation to classes
+- Add methods to classes
 - Implement `const` & `val` declarations
 - String equals string
 - Replace add, shl, etc naming with +, <<, etc

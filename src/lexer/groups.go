@@ -65,3 +65,9 @@ var Prefix = []TokenType{
 	Const,
 	Value,
 }
+
+var Visibility = []TokenType{
+	Public,
+	Private,
+	Value,
+}

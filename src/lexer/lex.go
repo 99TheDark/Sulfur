@@ -19,18 +19,19 @@ type lexer struct {
 	loc    location.Location
 }
 
-func (l *lexer) at() rune {
-	if l.loc.Idx == len(l.source) {
+func (l *lexer) rune(idx int) rune {
+	if idx < 0 || idx >= len(l.source) {
 		return '\x00'
 	}
-	return l.source[l.loc.Idx]
+	return l.source[idx]
+}
+
+func (l *lexer) at() rune {
+	return l.rune(l.loc.Idx)
 }
 
 func (l *lexer) peek() rune {
-	if l.loc.Idx+1 == len(l.source) {
-		return '\x00'
-	}
-	return l.source[l.loc.Idx+1]
+	return l.rune(l.loc.Idx + 1)
 }
 
 func (l *lexer) step() {
@@ -222,7 +223,7 @@ func Lex(source string) *[]Token {
 			} else if l.mode == Number {
 				if !decimal(l.at()) {
 					num := l.get(l.begin, l.loc.Idx-l.begin.Idx)
-					prev := l.source[l.begin.Idx-1]
+					prev := l.rune(l.begin.Idx - 1)
 
 					if prev == '-' {
 						l.pop()

@@ -6,7 +6,6 @@ import (
 	"sulfur/src/location"
 	"sulfur/src/typing"
 	"sulfur/src/utils"
-	"sulfur/src/visibility"
 )
 
 type Expr interface {
@@ -84,15 +83,8 @@ type (
 	}
 
 	Class struct {
-		Pos         *location.Location `json:"-"`
-		Name        Identifier
-		Extends     []Identifier `json:",omitempty"`
-		Fields      []Field
-		Constuctors []Method `json:",omitempty"`
-		Destructors []Method `json:",omitempty"`
-		Methods     []Method
-		Conversions []To
-		Operations  []Operation
+		Pos  *location.Location `json:"-"`
+		Name Identifier
 	}
 
 	Enum struct {
@@ -109,16 +101,18 @@ type (
 		Referenced bool
 	}
 
-	Method struct {
-		Function
-		Status visibility.Visibility
+	Field struct {
+		Visibility lexer.Token
+		Type       Identifier
+		Name       Identifier
 	}
 
-	Field struct {
-		Pos    *location.Location `json:"-"`
-		Status visibility.Visibility
-		Type   Identifier
-		Name   Identifier
+	Method struct {
+		Visibility lexer.Token
+		Name       Identifier
+		Params     []Param
+		Return     Identifier
+		Body       Block
 	}
 
 	To struct {
@@ -268,8 +262,8 @@ func (x Function) Loc() *location.Location        { return x.Pos }
 func (x Class) Loc() *location.Location           { return x.Pos }
 func (x Enum) Loc() *location.Location            { return x.Pos }
 func (x Param) Loc() *location.Location           { return x.Pos }
-func (x Method) Loc() *location.Location          { return x.Pos }
-func (x Field) Loc() *location.Location           { return x.Pos }
+func (x Field) Loc() *location.Location           { return x.Visibility.Location }
+func (x Method) Loc() *location.Location          { return x.Visibility.Location }
 func (x To) Loc() *location.Location              { return x.Pos }
 func (x Operation) Loc() *location.Location       { return x.Pos }
 func (x Access) Loc() *location.Location          { return x.Parent.Loc() }

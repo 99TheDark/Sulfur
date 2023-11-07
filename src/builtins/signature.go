@@ -3,7 +3,6 @@ package builtins
 import (
 	"sulfur/src/lexer"
 	"sulfur/src/typing"
-	"sulfur/src/visibility"
 
 	"github.com/llir/llvm/ir"
 	"github.com/llir/llvm/ir/types"
@@ -32,7 +31,7 @@ type (
 	}
 
 	FieldSignature struct {
-		Visibility visibility.Visibility
+		Visibility lexer.TokenType
 		Type       typing.Type
 		Name       string
 	}

@@ -1,10 +1,15 @@
-let x: uint = 3u
+314
 
-func doSomething(&uint num) {
-    println(num >> 4u)
+class Person {
+    val string name
+    pub int    age
+    
+    /*pub new(string name, int age) {
+        .name = name
+        .age  = age
+    }*/
 
-    // Should work
-    // num++
+    pub speak() (string) {
+        println("Hello, my name is " + .name + ", and I am " + age + " years old")
+    }
 }
-doSomething(&x)
-println(x)
