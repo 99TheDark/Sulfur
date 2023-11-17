@@ -130,6 +130,7 @@ type (
 	}
 
 	Access struct {
+		Pos    *location.Location `json:"-"`
 		Parent Expr
 		Access lexer.Token
 		Child  Identifier
@@ -266,7 +267,7 @@ func (x Field) Loc() *location.Location           { return x.Visibility.Location
 func (x Method) Loc() *location.Location          { return x.Visibility.Location }
 func (x To) Loc() *location.Location              { return x.Pos }
 func (x Operation) Loc() *location.Location       { return x.Pos }
-func (x Access) Loc() *location.Location          { return x.Parent.Loc() }
+func (x Access) Loc() *location.Location          { return x.Pos }
 func (x New) Loc() *location.Location             { return x.Pos }
 func (x BinaryOp) Loc() *location.Location        { return x.Left.Loc() }
 func (x UnaryOp) Loc() *location.Location         { return x.Value.Loc() }

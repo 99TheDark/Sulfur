@@ -2,7 +2,6 @@ package parser
 
 import (
 	"sulfur/src/ast"
-	. "sulfur/src/errors"
 	"sulfur/src/lexer"
 	"sulfur/src/utils"
 )
@@ -79,27 +78,53 @@ func (p *parser) parseIncDec() ast.Expr {
 }
 
 func (p *parser) parseFuncCall() ast.Expr {
-	if p.tt() == lexer.Identifier {
+	if p.tt() == lexer.Identifier && p.ptt(1) == lexer.OpenParen {
 		iden := p.parseIdentifier()
-		if p.tt() == lexer.OpenParen {
-			p.eat()
-			params := []ast.Expr{}
-			p.parseList(
-				func() {
-					params = append(params, p.parseExpr())
-				},
-				[]lexer.TokenType{lexer.CloseParen},
-				[]lexer.TokenType{lexer.Delimiter},
-			)
-			return ast.FuncCall{
-				Func:   iden,
-				Params: &params,
-			}
-		} else {
-			return iden
+		p.eat()
+
+		params := []ast.Expr{}
+		p.parseList(
+			func() {
+				params = append(params, p.parseExpr())
+			},
+			[]lexer.TokenType{lexer.CloseParen},
+			[]lexer.TokenType{lexer.Delimiter},
+		)
+		return ast.FuncCall{
+			Func:   iden,
+			Params: &params,
 		}
 	}
 
-	Errors.Error("Incomplete statement", p.at().Location)
+	return p.parseAccess()
+}
+
+func (p *parser) parseAccess() ast.Expr {
+	if p.tt() == lexer.Access || p.ptt(1) == lexer.Access {
+		iden := ast.Identifier{}
+		pos := p.at().Location
+		if p.tt() == lexer.Identifier {
+			iden = p.parseIdentifier()
+			pos = iden.Loc()
+		}
+
+		access := ast.Access{
+			Pos:    pos,
+			Parent: iden,
+			Access: p.eat(),
+			Child:  p.parseIdentifier(),
+		}
+		for p.tt() == lexer.Access {
+			iden := p.parseIdentifier()
+			access = ast.Access{
+				Pos:    iden.Loc(),
+				Parent: access,
+				Access: p.eat(),
+				Child:  iden,
+			}
+		}
+		return access
+	}
+
 	return &ast.NoExpr{}
 }

@@ -223,23 +223,26 @@ func Lex(source string) *[]Token {
 			} else if l.mode == Number {
 				if !decimal(l.at()) {
 					num := l.get(l.begin, l.loc.Idx-l.begin.Idx)
-					prev := l.rune(l.begin.Idx - 1)
-
-					if prev == '-' {
-						l.pop()
-						l.addAt(Number, "-"+num, l.begin)
+					if num == "." {
+						l.add(Access, num)
 					} else {
-						if prev == '+' {
+						prev := l.rune(l.begin.Idx - 1)
+
+						if prev == '-' {
 							l.pop()
+							l.addAt(Number, "-"+num, l.begin)
+						} else {
+							if prev == '+' {
+								l.pop()
+							}
+							l.addAt(Number, num, l.begin)
 						}
-						l.addAt(Number, num, l.begin)
-					}
 
-					if utils.Contains(NumericalSuffixes, l.at()) {
-						l.add(NumericalSuffix, string(l.at()))
-						l.step()
+						if utils.Contains(NumericalSuffixes, l.at()) {
+							l.add(NumericalSuffix, string(l.at()))
+							l.step()
+						}
 					}
-
 					l.mode = None
 				} else {
 					l.step()

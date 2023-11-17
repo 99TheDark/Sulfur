@@ -135,26 +135,6 @@ func (p *parser) parseNew() ast.Expr {
 			Params: &params,
 		}
 	}
-	return p.parseAccess()
-}
-
-func (p *parser) parseAccess() ast.Expr {
-	if p.tt() == lexer.Identifier && p.peek(1).Type == lexer.Access {
-		expr := ast.Access{
-			Parent: p.parseIdentifier(),
-			Access: p.eat(),
-			Child:  p.parseIdentifier(),
-		}
-
-		for p.tt() == lexer.Access {
-			expr = ast.Access{
-				Parent: expr,
-				Access: p.eat(),
-				Child:  p.parseIdentifier(),
-			}
-		}
-		return expr
-	}
 	return p.parseReference()
 }
 
@@ -185,6 +165,8 @@ func (p *parser) parsePrimary() ast.Expr {
 		hybrid := p.parseHybrid()
 		if !ast.Empty(hybrid) {
 			return hybrid
+		} else if p.tt() == lexer.Identifier {
+			return p.parseIdentifier()
 		}
 	}
 

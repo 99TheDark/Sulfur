@@ -40,10 +40,11 @@ func main() {
 
 	name := utils.FileName(input)
 
+	sulfurc.Clear()
+
 	sulfurc.SetMode(mode)
 	sulfurc.Compile(name, input, output)
 	fmt.Println("Compile time:", time.Since(start))
 
-	sulfurc.Clear()
 	sulfurc.Execute(name, output)
 }

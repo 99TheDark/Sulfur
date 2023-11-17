@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"sulfur/src/ast"
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
@@ -21,12 +20,12 @@ func (p *parser) parseClass() ast.Class {
 		[]lexer.TokenType{lexer.NewLine, lexer.Semicolon},
 	)
 
-	fmt.Println(ast.Class{
+	class := ast.Class{
 		Pos:  tok.Location,
 		Name: name,
-	})
+	}
+	_ = class
 
-	Errors.Error("Classes have not yet been implemented", p.at().Location)
 	return ast.Class{}
 }
 
