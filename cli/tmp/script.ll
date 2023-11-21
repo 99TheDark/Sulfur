@@ -2,6 +2,7 @@
 source_filename = "examples/main/script.su"
 
 %type.string = type { i32, i32* }
+%class.Person = type { %type.string, i32 }
 
 define i32 @main() {
 entry:

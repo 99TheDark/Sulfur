@@ -83,8 +83,9 @@ type (
 	}
 
 	Class struct {
-		Pos  *location.Location `json:"-"`
-		Name Identifier
+		Pos    *location.Location `json:"-"`
+		Fields []Field
+		Name   Identifier
 	}
 
 	Enum struct {
@@ -112,6 +113,13 @@ type (
 		Name       Identifier
 		Params     []Param
 		Return     Identifier
+		Body       Block
+	}
+
+	NewDel struct {
+		Visibility lexer.Token
+		Which      lexer.TokenType
+		Params     []Param
 		Body       Block
 	}
 
@@ -265,6 +273,7 @@ func (x Enum) Loc() *location.Location            { return x.Pos }
 func (x Param) Loc() *location.Location           { return x.Pos }
 func (x Field) Loc() *location.Location           { return x.Visibility.Location }
 func (x Method) Loc() *location.Location          { return x.Visibility.Location }
+func (x NewDel) Loc() *location.Location          { return x.Visibility.Location }
 func (x To) Loc() *location.Location              { return x.Pos }
 func (x Operation) Loc() *location.Location       { return x.Pos }
 func (x Access) Loc() *location.Location          { return x.Pos }

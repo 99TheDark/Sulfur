@@ -24,6 +24,15 @@ func QuickModParam(typ typing.Type, ref bool) ParamSignature {
 	}
 }
 
+func QuickModClass(mod string, name string, fields []FieldSignature) ClassSignature {
+	return ClassSignature{
+		name,
+		fields,
+		mod,
+		nil,
+	}
+}
+
 func QuickModBinOp(mod string, left, right typing.Type, op lexer.TokenType) BinaryOpSignature {
 	return BinaryOpSignature{
 		left,

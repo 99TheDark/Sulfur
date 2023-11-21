@@ -2,12 +2,13 @@ class Person {
     val string name
     pub int    age
     
-    /*pub new(string name, int age) {
-        .name = name
-        .age  = age
-    }*/
+    pub new(string name, int age) {
+        // .name = name
+        // .age  = age
+    }
 
     pub speak() (string) {
         println("Hello, my name is " + .name + ", and I am " + age + " years old")
     }
 }
+

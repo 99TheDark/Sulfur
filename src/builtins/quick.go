@@ -18,6 +18,18 @@ func QuickParam(typ typing.Type) ParamSignature {
 	return QuickModParam(typ, false)
 }
 
+func QuickClass(name string, fields []FieldSignature) ClassSignature {
+	return QuickModClass("", name, fields)
+}
+
+func QuickField(vis lexer.TokenType, typ typing.Type, name string) FieldSignature {
+	return FieldSignature{
+		vis,
+		typ,
+		name,
+	}
+}
+
 func QuickBinOp(left, right typing.Type, op lexer.TokenType) BinaryOpSignature {
 	return QuickModBinOp("", left, right, op)
 }

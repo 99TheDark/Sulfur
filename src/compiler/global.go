@@ -127,7 +127,7 @@ func (g *generator) genClasses() {
 			typs = append(typs, g.lltyp(field.Type))
 		}
 
-		class.Ir = mod.NewTypeDef("class:"+class.Name, types.NewStruct(typs...))
+		class.Ir = mod.NewTypeDef("class."+class.Name, types.NewStruct(typs...))
 
 		g.program.Classes[i] = class
 		g.builtins.classes[class.Name] = &g.program.Classes[i]

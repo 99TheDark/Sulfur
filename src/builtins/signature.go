@@ -27,6 +27,7 @@ type (
 	ClassSignature struct {
 		Name   string
 		Fields []FieldSignature
+		Module string
 		Ir     types.Type
 	}
 

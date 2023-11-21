@@ -2,29 +2,46 @@ package parser
 
 import (
 	"sulfur/src/ast"
+	"sulfur/src/builtins"
 	. "sulfur/src/errors"
 	"sulfur/src/lexer"
+	"sulfur/src/typing"
 )
 
 func (p *parser) parseClass() ast.Class {
 	tok := p.expect(lexer.Class)
 	name := p.parseIdentifier()
 
-	body := []ast.Expr{}
+	fields := []ast.Field{}
 	p.expect(lexer.OpenBrace)
 	p.parseList(
 		func() {
-			body = append(body, p.parseClassStmt())
+			stmt := p.parseClassStmt()
+			switch x := stmt.(type) {
+			case ast.Field:
+				fields = append(fields, x)
+			}
 		},
 		[]lexer.TokenType{lexer.CloseBrace},
 		[]lexer.TokenType{lexer.NewLine, lexer.Semicolon},
 	)
 
 	class := ast.Class{
-		Pos:  tok.Location,
-		Name: name,
+		Pos:    tok.Location,
+		Fields: fields,
+		Name:   name,
 	}
-	_ = class
+
+	fieldSigs := []builtins.FieldSignature{}
+	for _, field := range class.Fields {
+		fieldSigs = append(fieldSigs, builtins.QuickField(
+			field.Visibility.Type,
+			typing.Type(field.Type.Name),
+			field.Name.Name,
+		))
+	}
+	sig := builtins.QuickClass(class.Name.Name, fieldSigs)
+	p.program.Classes = append(p.program.Classes, sig)
 
 	return ast.Class{}
 }
@@ -46,8 +63,7 @@ func (p *parser) parseVisibleStmt() ast.Expr {
 			params := []ast.Param{}
 			p.parseList(
 				func() {
-					p := p.parseParam()
-					params = append(params, p)
+					params = append(params, p.parseParam())
 				},
 				[]lexer.TokenType{lexer.CloseParen},
 				[]lexer.TokenType{lexer.Delimiter},
@@ -78,6 +94,27 @@ func (p *parser) parseVisibleStmt() ast.Expr {
 				Type:       typ,
 				Name:       name,
 			}
+		}
+	} else if p.tt() == lexer.New || p.tt() == lexer.Delete {
+		which := p.expect(lexer.New, lexer.Delete)
+
+		p.expect(lexer.OpenParen)
+		params := []ast.Param{}
+		p.parseList(
+			func() {
+				params = append(params, p.parseParam())
+			},
+			[]lexer.TokenType{lexer.CloseParen},
+			[]lexer.TokenType{lexer.Delimiter},
+		)
+
+		body := p.parseBlock()
+
+		return ast.NewDel{
+			Visibility: vis,
+			Which:      which.Type,
+			Params:     params,
+			Body:       body,
 		}
 	}
 

@@ -36,6 +36,7 @@
 - More sensical unknown token errors
 - More sensicle EOF errors
 - Add control flow analysis!
+    - Disable looped definitions (ex: Person has a Computer, which can an array of Person)
 - 0x, 0b, 0o etc numbers
 - Underscore assignment
 - Closures
